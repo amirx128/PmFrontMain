@@ -18,6 +18,7 @@ import { useTheme } from "@mui/material/styles";
 import { DrawerHeader } from "./style";
 import { useNavigate } from "react-router-dom";
 import { ListItemText } from "@mui/material";
+import {Abc} from "@mui/icons-material";
 
 const drawerWidth = 280;
 
@@ -112,6 +113,17 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
        
       ),
       route: "/",
+    },
+    {
+      id: 9,
+      name: "  تعاریف ",
+      icon: (
+          <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
+            <Abc />
+          </ListItemIcon>
+
+      ),
+      route: "/definitions",
     },
   ];
   const handleClick = (route: any) => {

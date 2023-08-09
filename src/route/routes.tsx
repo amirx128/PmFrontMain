@@ -2,12 +2,13 @@ import { ReactElement } from "react";
 import HomePage from "../pages/home/home";
 import LoginPage from "../pages/login/login";
 import ProductRequestForm from "../pages/product-request/product-request-form/product-request-form";
-import Roles from "../pages/roles/roles";
+import Definitions from "../pages/definitions/definitions.tsx";
 import Users from "../pages/users/user";
 import ApproveRequestList from "../pages/support/approve/approve-list";
 import FinalApproveRequestList from "../pages/support/finalApprove/finalApproveList";
 import ApproveDetail from "../pages/support/approve/approve-detail";
 import FinalApproveDetail from "../pages/support/finalApprove/final-approve-detail";
+import Roles from "../pages/roles/roles.tsx";
 
 export enum Layouts {
   AUTH = "auth",
@@ -76,6 +77,13 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: " >  درخواست کالا",
+  },
+  {
+    path: "/definitions",
+    component: <Definitions />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: " >  تعاریف",
   },
   {
     path: "/login",
