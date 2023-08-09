@@ -13,6 +13,7 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
+import {useSelector} from "react-redux";
 
 const Users = () => {
   const columns: GridColDef[] = [
@@ -99,14 +100,14 @@ const Users = () => {
     console.log("delete", row);
   };
   const [data, setData] = useState<any[]>([]);
-
+  const {user} = useSelector((state) => state.user)
   useEffect(() => {
     getUsers();
   }, []);
   const getUsers = async () => {
     try {
       const response: any = await axios.post("/Administration/GetAllUsers", {
-        userId: "1",
+        userId: user?.id,
       });
       console.log(response);
       setData(response.data.model);

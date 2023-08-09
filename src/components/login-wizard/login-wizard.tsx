@@ -4,12 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { ILogin } from "../../core/user/user.model";
 import { withSnackbar } from "../../utils/snackbar-hook";
 import LoginForm from "./login-form/login-form";
+import {useDispatch, useSelector} from "react-redux";
+import {setLoggined, setUser} from "../../redux/features/userSlicer.ts";
 const LoginWizard = (props) => {
   const [wizardLoading, setWizardLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [step, setStep] = useState<number>(1);
+  const {user} = useSelector((state) => state.user)
   const onsubmitLoginForm = (data) => {
-    data = { ...data, userId: "1", captchaId: "1", captchaValues: "1" };
+    data = { ...data, userId: user?.id, captchaId: "1", captchaValues: "1" };
     // console.log('from wizard', data)
     login(data);
     // setStep(2);
@@ -29,6 +33,8 @@ const LoginWizard = (props) => {
           "user",
           JSON.stringify(response.data.model)
         );
+        dispatch(setUser(response.data.model));
+        dispatch(setLoggined(true));
       }
       props.snackbarShowMessage("ورود با موفقیت انجام شد");
       setWizardLoading(false);

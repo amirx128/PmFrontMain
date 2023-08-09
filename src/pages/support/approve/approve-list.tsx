@@ -22,6 +22,7 @@ import SelectComponent from "../../../components/select/selects";
 import JalaliDatePicker from "../../../components/date-picker/date-picker";
 import { Row } from "./style";
 import Grid from "../../../components/grid/grid";
+import {useSelector} from "react-redux";
 const SupportList: React.FC<any> = (props) => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<any>(new Date());
@@ -201,10 +202,11 @@ const SupportList: React.FC<any> = (props) => {
     console.log(watch);
     getList();
   }, [watch]);
+  const {user} = useSelector((state) => state.user)
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: "1",
+        userId: user?.id,
       });
       setApproveStates(response.data.model);
     } catch (error) {
@@ -221,7 +223,7 @@ const SupportList: React.FC<any> = (props) => {
     console.log(filters);
     try {
       const response = await axios.post("/Support/ApproveQ", {
-        userId: "1",
+        userId: user?.id,
         pageIndex: 1,
         pageCount: 10,
         orderType: "asc",

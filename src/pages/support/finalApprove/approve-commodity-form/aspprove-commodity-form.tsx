@@ -8,6 +8,7 @@ import { InputContent } from "../../../../components/comodity-form/style";
 import SelectComponent from "../../../../components/select/selects";
 import theme from "../../../../utils/theme";
 import { StyledBox } from "../../approve/style";
+import {useSelector} from "react-redux";
 const ApproveCommodityForm: React.FC<any> = ({
   commodity,
   loading,
@@ -46,10 +47,12 @@ const ApproveCommodityForm: React.FC<any> = ({
     getCountCommodityInWarehouse();
   }, []);
 
+  const {user} = useSelector((state) => state.user)
+
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: "1",
+        userId: user?.id,
       });
       setStates(response.data.model);
     } catch (error) {
@@ -61,7 +64,7 @@ const ApproveCommodityForm: React.FC<any> = ({
       const response = await axios.post(
         "/Support/GetCountCommodityInWarehouse",
         {
-          userId: "1",
+          userId: user?.id,
           commodityId: commodity.requestCaseRowCommodityId,
         }
       );

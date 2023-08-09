@@ -7,6 +7,7 @@ import axios from "../../utils/axios.config";
 import { useEffect, useState } from "react";
 import Grid from "../../components/grid/grid";
 import { ActionRow } from "./style";
+import {useSelector} from "react-redux";
 
 const Roles = () => {
   const columns: GridColDef[] = [
@@ -37,10 +38,11 @@ const Roles = () => {
   useEffect(() => {
     getUsers();
   }, []);
+  const {user} = useSelector((state) => state.user)
   const getUsers = async () => {
     try {
       const response: any = await axios.post("/Administration/GetAllRoles", {
-          userId: "1",
+          userId: user?.id,
         });
       console.log(response);
       setData(response.data.model);

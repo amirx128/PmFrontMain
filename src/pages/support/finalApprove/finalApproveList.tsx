@@ -22,6 +22,7 @@ import axios from "../../../utils/axios.config";
 import { Row } from "../style";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
+import {useSelector} from "react-redux";
 const FinalApproveRequestList = () => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState(
@@ -210,11 +211,12 @@ const FinalApproveRequestList = () => {
     getList();
     getApproveStates();
   }, []);
+  const {user} = useSelector((state) => state.user)
 
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: "1",
+        userId: user?.id,
       });
 
       setApproveStates(response.data.model);
@@ -235,7 +237,7 @@ const FinalApproveRequestList = () => {
         fromDate:
           filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
         orderType: "asc",
-        userId: "1",
+        userId: user?.id,
         pageIndex: 1,
         pageCount: 10,
         orderBy: "CreateDate",

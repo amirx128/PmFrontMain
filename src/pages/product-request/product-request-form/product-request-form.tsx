@@ -12,6 +12,7 @@ import { withSnackbar } from "../../../utils/snackbar-hook";
 import theme from "../../../utils/theme";
 import RequestDetail from "../request-detail/request-detail";
 import { Row } from "./style";
+import {useSelector} from "react-redux";
 type FormFields = {
   unitId: string;
   placeOfUseId: string;
@@ -46,11 +47,12 @@ const ProductRequest: React.FC<any> = (props: any) => {
     console.log("errors...", errors);
     addNew(data);
   });
+  const {user} = useSelector((state) => state.user)
   const addNew = async (data) => {
     try {
       setLoading(true);
       const response = await axios.post("/RequestCase/NewRequestCase", {
-        userId: "1",
+        userId: user?.id,
         unitId: data.unitId,
 
         placeOfUseId: data.placeOfUseId,
@@ -98,7 +100,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const getAllUnits = async () => {
     try {
       const response = axios.post("/Definition/GetAllUnit", {
-        userId: "1",
+        userId: user?.id,
         name: "",
         projectId: 0,
         floorId: 0,
@@ -114,7 +116,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
   //       axios.post(
   //         "http://46.225.237.138:33004/Definition/GetAllCommpdityOnTree",
   //         {
-  //           userId: "1",
+  //           userId: user?.id,
   //           projectId: 0,
   //           name: "",
   //           code: "",
@@ -138,7 +140,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
       const response: any = await axios.post(
         "/RequestCase/GetAllCommoditiesForOnePlaceOfUse",
         {
-          userId: "1",
+          userId: user?.id,
           placeId: getValues("placeOfUseId"),
           requesterBussinessRoleId: getValues("unitId"),
         }
@@ -153,7 +155,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
       const response: any = await axios.post(
         "/Definition/GetScheduleActivities",
         {
-          userId: "1",
+          userId: user?.id,
         }
       );
       setActivities(response.data.model);
@@ -167,7 +169,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const getPlacedOfUse = async () => {
     try {
       const response = await axios.post("/RequestCase/GetAllPlaseOfUse", {
-        userId: "1",
+        userId: user?.id,
       });
       console.log(response.data.model);
       setPlacedOdUse(response.data.model);

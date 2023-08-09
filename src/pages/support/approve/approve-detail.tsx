@@ -14,6 +14,7 @@ import { InputContent } from "../../../components/comodity-form/style";
 import SelectComponent from "../../../components/select/selects";
 import { withSnackbar } from "../../../utils/snackbar-hook";
 import RequestDetail from "../request-detail";
+import {useSelector} from "react-redux";
 const ApproveDetail = (props) => {
   const theme = useTheme();
   const {
@@ -37,10 +38,11 @@ const ApproveDetail = (props) => {
     getRequestDetail();
     console.log(getValues());
   }, []);
+  const {user} = useSelector((state) => state.user)
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: "1",
+        userId: user?.id,
       });
       setStates(response.data.model);
     } catch (error) {
@@ -52,7 +54,7 @@ const ApproveDetail = (props) => {
       const response = await axios.post(
         "/Support/GetRequestCaseCommodityDetails",
         {
-          userId: "1",
+          userId: user?.id,
           requestId: params.id,
         }
       );
@@ -74,7 +76,7 @@ const ApproveDetail = (props) => {
     setLoading(true);
     try {
       const response = await axios.post("/Support/SetApproveData", {
-        userId: "1",
+        userId: user?.id,
         requestCaseCommodityId: params.id,
         state: getValues("stateId"),
         newCount: getValues("newCount"),
