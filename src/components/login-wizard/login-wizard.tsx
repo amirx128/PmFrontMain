@@ -13,7 +13,7 @@ const LoginWizard = (props) => {
   const [step, setStep] = useState<number>(1);
   const {user} = useSelector((state) => state.user)
   const onsubmitLoginForm = (data) => {
-    data = { ...data, userId: user?.id, captchaId: "1", captchaValues: "1" };
+    data = { ...data, userId: user?.id ?? '0', captchaId: "1", captchaValues: "1" };
     // console.log('from wizard', data)
     login(data);
     // setStep(2);
@@ -35,16 +35,14 @@ const LoginWizard = (props) => {
         );
         dispatch(setUser(response.data.model));
         dispatch(setLoggined(true));
+        const token = response.data.model?.token;
+        localStorage.setItem("atkn", token);
       }
       props.snackbarShowMessage("ورود با موفقیت انجام شد");
       setWizardLoading(false);
 
-      console.log(response.data.model.token);
-      const token = response.data.model.token;
       navigate("/");
 
-      //   const hashedToken = bcrypt.hash("building-secret-token");
-      localStorage.setItem("atkn", token);
     } catch (error) {
       setWizardLoading(false)
       console.error("Error fetching data:", error);

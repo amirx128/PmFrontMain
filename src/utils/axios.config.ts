@@ -1,8 +1,11 @@
-
 import axios from 'axios';
 
+let token = localStorage.getItem('atkn');
+
+axios.defaults.headers.common['token'] = token;
+
 const axiosInstance = axios.create({
-  baseURL: 'http://46.225.237.138:33004' // Replace with your API base URL
+    baseURL: 'http://46.225.237.138:33004',
 });
 
 axiosInstance.interceptors.response.use(

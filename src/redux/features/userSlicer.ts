@@ -15,10 +15,10 @@ export const userSlicer = createSlice({
     name: 'user',
     initialState,
     reducers: {
-        setUser: (state, action: PayloadAction<any>) => {
+        setUser: (state:UserState, action: PayloadAction<any>) => {
             state.user = action.payload
         },
-        setLoggined: (state, action: PayloadAction<any>) => {
+        setLoggined: (state:UserState, action: PayloadAction<any>) => {
             state.isLoggined = action.payload
         },
     },
