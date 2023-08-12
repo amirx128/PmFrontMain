@@ -1,8 +1,9 @@
 import {Box, Button, Grid, Typography} from "@mui/material";
 import moment from "jalali-moment";
 import {Apartment,Numbers} from "@mui/icons-material";
+import Divider from "@mui/material/Divider";
 
-export const ProjectCard = ({project}) => {
+export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog}) => {
     return (
         <Grid item md={4} sm={6} xs={12}>
             <Box sx={{
@@ -25,7 +26,7 @@ export const ProjectCard = ({project}) => {
                         project?.projectfloor?.length > 0 ? (
                             <Box display={"flex"} alignItems={"center"} gap={1} sx={{flexWrap:"wrap"}}>
                                 {project?.projectfloor?.map(floor => (
-                                    <Button size={"small"} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
+                                    <Button key={floor?.id} size={"small"} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
                                         <Typography fontSize={16}>{floor?.name}</Typography>
                                         <Typography fontSize={13}>کد : {floor?.code}</Typography>
                                         <Typography fontSize={10}>{moment(floor?.createDate).locale('fa').format('LL')}</Typography>
@@ -46,7 +47,7 @@ export const ProjectCard = ({project}) => {
                         project?.projectUnit?.length > 0 ? (
                             <Box display={"flex"} alignItems={"center"} gap={1} sx={{flexWrap:"wrap"}}>
                                 {project?.projectUnit?.map(unit => (
-                                    <Button size={"small"} color={"info"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
+                                    <Button key={unit?.id} size={"small"} color={"info"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
                                         <Typography fontSize={16}>{unit?.name}</Typography>
                                         <Typography fontSize={13}>کد : {unit?.code}</Typography>
                                         <Typography fontSize={10}>{moment(unit?.createDate).locale('fa').format('LL')}</Typography>
@@ -58,6 +59,13 @@ export const ProjectCard = ({project}) => {
                         )
                     }
                 </Box>
+                <Divider my={1} />
+                <Button color={"warning"} variant={"contained"} fullWidth={true} sx={{mt:1}} onClick={() => {
+                    setSelectedProject(project);
+                    setAddProjectDialog(true);
+                }}>
+                    ویرایش
+                </Button>
             </Box>
         </Grid>
     )

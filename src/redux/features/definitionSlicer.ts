@@ -34,14 +34,17 @@ export interface DefinitionState {
     projects: {
         data: I_Project[],
         pending: boolean,
+        addState: boolean,
     },
     floors: {
         data: I_FLOOR[],
         pending: boolean,
+        addState: boolean,
     },
     units: {
         data: I_UNIT[],
         pending: boolean,
+        addState: boolean,
     },
     commodities: {
         data: any[],
@@ -50,14 +53,17 @@ export interface DefinitionState {
     persons: {
         data: I_PERSON[],
         pending: boolean,
+        addState: boolean,
     },
     businessRoles: {
         data: I_Business_ROLE[],
         pending: boolean,
+        addState: boolean,
     },
     scheduledActivities: {
         data: I_SCHEDULED_ACTIVITIES[],
         pending: boolean,
+        addState: boolean,
     }
 }
 
@@ -65,14 +71,17 @@ const initialState: DefinitionState = {
     projects: {
         data: [],
         pending: false,
+        addState: false,
     },
     floors: {
         data: [],
         pending: false,
+        addState: false,
     },
     units: {
         data: [],
         pending: false,
+        addState: false,
     },
     commodities: {
         data: [],
@@ -81,21 +90,24 @@ const initialState: DefinitionState = {
     persons: {
         data: [],
         pending: false,
+        addState: false,
     },
     businessRoles: {
         data: [],
         pending: false,
+        addState: false,
     },
     scheduledActivities: {
         data: [],
         pending: false,
+        addState: false,
     }
 };
 
 export const getAllProjects = createAsyncThunk(
     "definition/getAllProjects",
     async (
-        body=null,
+        body=undefined,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
@@ -143,12 +155,15 @@ export const getAllUnits = createAsyncThunk(
 export const AddNewProject = createAsyncThunk(
     "definition/AddNewProject",
     async (
-        newName:string,
+        newName:any,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
             const state = getState();
             const {data} = await AddNewProjectReq(state?.user?.user?.id,newName);
+            if(data?.isSuccess){
+                dispatch(getAllProjects());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -490,6 +505,18 @@ export const definitionSlicer = createSlice({
             })
             .addCase(getAllUnits.rejected, (state:DefinitionState, {error}) => {
                 state.units.pending = false;
+            });
+        //#endregion
+        // #region AddNewProject-----
+        builder
+            .addCase(AddNewProject.pending, (state:DefinitionState) => {
+                state.projects.addState = true;
+            })
+            .addCase(AddNewProject.fulfilled, (state:DefinitionState, {payload}) => {
+                state.projects.addState = false;
+            })
+            .addCase(AddNewProject.rejected, (state:DefinitionState, {error}) => {
+                state.projects.addState = false;
             });
         //#endregion
     }

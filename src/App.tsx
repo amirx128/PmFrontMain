@@ -30,7 +30,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <ToastContainer />
+            <ToastContainer rtl />
             <div dir="rtl">
               <Router>
               <Routes>
