@@ -4,7 +4,7 @@ export const getAllProjectsReq = async (userId) =>
     await axiosInstance.post(
         `/Definition/GetAllProject`,
         {
-            userId: '8'
+            userId: userId ?? '1',
         }
     );
 
@@ -38,6 +38,16 @@ export const AddNewProjectReq = async (userId,projectName) =>
         }
     );
 
+export const UpdateProjectReq = async (userId,id,projectName) =>
+    await axiosInstance.post(
+        `/Definition/UpdateProject`,
+        {
+            userId,
+            id,
+            name: projectName,
+        }
+    );
+
 export const AddNewUnitReq = async (userId,projectId,projectfloorId,unitName,code) =>
     await axiosInstance.post(
         `/Definition/AddNewUnit`,
@@ -50,11 +60,36 @@ export const AddNewUnitReq = async (userId,projectId,projectfloorId,unitName,cod
         }
     );
 
+export const UpdateUnitReq = async (userId,id,projectId,projectfloorId,unitName,code) =>
+    await axiosInstance.post(
+        `/Definition/UpdateUnit`,
+        {
+            userId,
+            id,
+            projectId,
+            projectfloorId,
+            name: unitName,
+            code
+        }
+    );
+
 export const AddNewFloorReq = async (userId,projectId,floorName,code) =>
     await axiosInstance.post(
         `/Definition/AddNewFloor`,
         {
             userId,
+            projectId,
+            name: floorName,
+            code
+        }
+    );
+
+export const UpdateFloorReq = async (userId,id,projectId,floorName,code) =>
+    await axiosInstance.post(
+        `/Definition/UpdateFloor`,
+        {
+            userId,
+            id,
             projectId,
             name: floorName,
             code

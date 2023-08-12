@@ -1,9 +1,9 @@
 import {Box, Button, Grid, Typography} from "@mui/material";
 import moment from "jalali-moment";
-import {Apartment,Numbers} from "@mui/icons-material";
+import {Add, Apartment, Edit, Numbers} from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 
-export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog}) => {
+export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setAddFloorDialog,setSelectedFloor}) => {
     return (
         <Grid item md={4} sm={6} xs={12}>
             <Box sx={{
@@ -26,15 +26,33 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog}) =>
                         project?.projectfloor?.length > 0 ? (
                             <Box display={"flex"} alignItems={"center"} gap={1} sx={{flexWrap:"wrap"}}>
                                 {project?.projectfloor?.map(floor => (
-                                    <Button key={floor?.id} size={"small"} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
+                                    <Button onClick={() => {
+                                        setSelectedFloor(floor);
+                                        setAddFloorDialog(true);
+                                    }} key={floor?.id} size={"small"} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
                                         <Typography fontSize={16}>{floor?.name}</Typography>
                                         <Typography fontSize={13}>کد : {floor?.code}</Typography>
                                         <Typography fontSize={10}>{moment(floor?.createDate).locale('fa').format('LL')}</Typography>
+                                        <Edit />
                                     </Button>
                                 ))}
+                                <Button onClick={() => {
+                                    setSelectedFloor(null);
+                                    setAddFloorDialog(true);
+                                }} size={"small"} fullWidth={true} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1,width:"100%"}}>
+                                    <Typography fontSize={14} sx={{display:"flex",alignItems:"center"}}><Add /> افزودن</Typography>
+                                </Button>
                             </Box>
                             ) : (
-                            <Typography color={"error"} variant={"body2"}>طبقه ای تعریف نشده</Typography>
+                            <Box align={"center"}>
+                                <Typography color={"error"} variant={"body2"}>طبقه ای تعریف نشده</Typography>
+                                <Button onClick={() => {
+                                    setSelectedFloor(null);
+                                    setAddFloorDialog(true);
+                                }} size={"small"} fullWidth={true} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1,mt:1,width:"100%"}}>
+                                    <Typography fontSize={14} sx={{display:"flex",alignItems:"center"}}><Add /> افزودن</Typography>
+                                </Button>
+                            </Box>
                         )
                     }
                 </Box>
@@ -51,6 +69,7 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog}) =>
                                         <Typography fontSize={16}>{unit?.name}</Typography>
                                         <Typography fontSize={13}>کد : {unit?.code}</Typography>
                                         <Typography fontSize={10}>{moment(unit?.createDate).locale('fa').format('LL')}</Typography>
+                                        <Edit />
                                     </Button>
                                 ))}
                             </Box>

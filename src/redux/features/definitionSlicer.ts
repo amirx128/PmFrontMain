@@ -26,8 +26,8 @@ import {
     GetBusinessRoleDetailesReq,
     GetOneCommodityDetailsReq,
     GetPersonDetailsReq, GetScheduleActivitiesReq,
-    UpdateBusinessRoleReq, UpdateNewActivityScheduleReq,
-    UpdatePersonReq
+    UpdateBusinessRoleReq, UpdateFloorReq, UpdateNewActivityScheduleReq,
+    UpdatePersonReq, UpdateProjectReq, UpdateUnitReq
 } from "../../core/definition/definition.service.ts";
 
 export interface DefinitionState {
@@ -171,6 +171,25 @@ export const AddNewProject = createAsyncThunk(
     }
 );
 
+export const UpdateProject = createAsyncThunk(
+    "definition/UpdateProject",
+    async (
+        body:{id:any,name:any},
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state = getState();
+            const {data} = await UpdateProjectReq(state?.user?.user?.id,body?.id,body?.name);
+            if(data?.isSuccess){
+                dispatch(getAllProjects());
+            }
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
 export const AddNewUnit = createAsyncThunk(
     "definition/AddNewUnit",
     async (
@@ -187,10 +206,29 @@ export const AddNewUnit = createAsyncThunk(
     }
 );
 
+export const UpdateUnit = createAsyncThunk(
+    "definition/UpdateUnit",
+    async (
+        body:{projectId: any,id:any,projectfloorId:any,unitName:string,code:string},
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state = getState();
+            const {data} = await UpdateUnitReq(state?.user?.user?.id,body.id,body.projectId,body.projectfloorId,body.unitName,body.code);
+            if(data?.isSuccess){
+                dispatch(getAllProjects());
+            }
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
 export const AddNewFloor = createAsyncThunk(
     "definition/AddNewFloor",
     async (
-        body:{projectId:any,floorName:string,code:string},
+        body:{projectId:any,floorName:any,code:any},
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
@@ -203,6 +241,24 @@ export const AddNewFloor = createAsyncThunk(
     }
 );
 
+export const UpdateFloor = createAsyncThunk(
+    "definition/UpdateFloor",
+    async (
+        body:{projectId:any,id:any,floorName:any,code:any},
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state = getState();
+            const {data} = await UpdateFloorReq(state?.user?.user?.id,body.id,body.projectId,body.floorName,body.code);
+            if(data?.isSuccess){
+                dispatch(getAllProjects());
+            }
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
 export const GetAllCommodityOnTree = createAsyncThunk(
     "definition/GetAllCommodityOnTree",
     async (
@@ -517,6 +573,66 @@ export const definitionSlicer = createSlice({
             })
             .addCase(AddNewProject.rejected, (state:DefinitionState, {error}) => {
                 state.projects.addState = false;
+            });
+        //#endregion
+        // #region UpdateProject-----
+        builder
+            .addCase(UpdateProject.pending, (state:DefinitionState) => {
+                state.projects.addState = true;
+            })
+            .addCase(UpdateProject.fulfilled, (state:DefinitionState, {payload}) => {
+                state.projects.addState = false;
+            })
+            .addCase(UpdateProject.rejected, (state:DefinitionState, {error}) => {
+                state.projects.addState = false;
+            });
+        //#endregion
+        // #region AddNewFloor-----
+        builder
+            .addCase(AddNewFloor.pending, (state:DefinitionState) => {
+                state.floors.addState = true;
+            })
+            .addCase(AddNewFloor.fulfilled, (state:DefinitionState, {payload}) => {
+                state.floors.addState = false;
+            })
+            .addCase(AddNewFloor.rejected, (state:DefinitionState, {error}) => {
+                state.floors.addState = false;
+            });
+        //#endregion
+        // #region UpdateFloor-----
+        builder
+            .addCase(UpdateFloor.pending, (state:DefinitionState) => {
+                state.floors.addState = true;
+            })
+            .addCase(UpdateFloor.fulfilled, (state:DefinitionState, {payload}) => {
+                state.floors.addState = false;
+            })
+            .addCase(UpdateFloor.rejected, (state:DefinitionState, {error}) => {
+                state.floors.addState = false;
+            });
+        //#endregion
+        // #region AddNewUnit-----
+        builder
+            .addCase(AddNewUnit.pending, (state:DefinitionState) => {
+                state.units.addState = true;
+            })
+            .addCase(AddNewUnit.fulfilled, (state:DefinitionState, {payload}) => {
+                state.units.addState = false;
+            })
+            .addCase(AddNewUnit.rejected, (state:DefinitionState, {error}) => {
+                state.units.addState = false;
+            });
+        //#endregion
+        // #region UpdateUnit-----
+        builder
+            .addCase(UpdateUnit.pending, (state:DefinitionState) => {
+                state.units.addState = true;
+            })
+            .addCase(UpdateUnit.fulfilled, (state:DefinitionState, {payload}) => {
+                state.units.addState = false;
+            })
+            .addCase(UpdateUnit.rejected, (state:DefinitionState, {error}) => {
+                state.units.addState = false;
             });
         //#endregion
     }

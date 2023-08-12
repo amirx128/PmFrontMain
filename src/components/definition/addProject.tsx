@@ -12,7 +12,7 @@ import {useTheme} from "@mui/material/styles";
 import {HighlightOff} from "@mui/icons-material";
 import {useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {AddNewProject} from "../../redux/features/definitionSlicer.ts";
+import {AddNewProject, UpdateProject} from "../../redux/features/definitionSlicer.ts";
 import {toast} from "react-toastify";
 
 export const AddProject = ({addProjectDialog,selectedProject,onClose}) => {
@@ -44,7 +44,7 @@ export const AddProject = ({addProjectDialog,selectedProject,onClose}) => {
 
     const onSubmit = () => {
         if(selectedProject){
-            toast.error('در دست راه اندازی');
+            dispatch(UpdateProject({id:selectedProject?.id,name:info.name}));
         }else {
             dispatch(AddNewProject(info.name));
         }
@@ -59,7 +59,7 @@ export const AddProject = ({addProjectDialog,selectedProject,onClose}) => {
                 </IconButton>
             </DialogTitle>
             <DialogContent>
-                <TextField value={info?.name} name={'name'} onChange={handleChange} placeholder={'نام پروژه'} fullWidth={true} />
+                <TextField value={info?.name} name={'name'} onChange={handleChange} label={'نام پروژه'} fullWidth={true} sx={{mt:2}}/>
             </DialogContent>
             <DialogActions>
                 <Button  variant={"contained"} color={"success"} onClick={onSubmit}>
