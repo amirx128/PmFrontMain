@@ -4,7 +4,7 @@ export const getAllProjectsReq = async (userId) =>
     await axiosInstance.post(
         `/Definition/GetAllProject`,
         {
-            userId: userId
+            userId: '8'
         }
     );
 
@@ -35,7 +35,6 @@ export const AddNewProjectReq = async (userId,projectName) =>
         {
             userId,
             name: projectName,
-            masterId: 0,
         }
     );
 
