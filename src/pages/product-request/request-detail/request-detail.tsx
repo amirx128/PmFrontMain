@@ -11,7 +11,7 @@ const RequestDetail = () => {
   useEffect(() => {
     getMainData();
   }, []);
-    const {user} = useSelector((state) => state.user)
+    const {user} = useSelector((state:any) => state?.user)
   const getMainData = async () => {
     try {
       const response: any = await axios.post("/RequestCase/GetMainData", {

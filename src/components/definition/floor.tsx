@@ -26,8 +26,8 @@ export const FloorCard = ({floor,setSelectedFloor,setAddFloorDialog}) => {
                         <Typography color={"secondary"} variant={"subtitle2"}>{floor?.projectName}</Typography>
                     </Box>
                 </Box>
-                <Divider my={1} />
-                <Button color={"warning"} variant={"contained"} fullWidth={true} sx={{mt:1}} onClick={() => {
+                <Divider sx={{my:1}} />
+                <Button color={"warning"} variant={"contained"} fullWidth={true} onClick={() => {
                     setSelectedFloor(floor);
                     setAddFloorDialog(true);
                 }}>

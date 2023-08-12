@@ -202,7 +202,7 @@ const SupportList: React.FC<any> = (props) => {
     console.log(watch);
     getList();
   }, [watch]);
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {

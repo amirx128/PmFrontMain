@@ -17,7 +17,7 @@ import {toast} from "react-toastify";
 
 export const AddFloor = ({addFloorDialog,selectedFloor,onClose}) => {
     const theme = useTheme();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
     const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
     const [info,setInfo] = useState({
         floorName: selectedFloor?.name,
@@ -40,7 +40,7 @@ export const AddFloor = ({addFloorDialog,selectedFloor,onClose}) => {
             });
         }
     }, [selectedFloor]);
-    const {projects} = useSelector((state) => state.definition);
+    const {projects} = useSelector((state:any) => state.definition);
     const handleChange = (e) => {
         setInfo({
             ...info,

@@ -100,7 +100,7 @@ const Users = () => {
     console.log("delete", row);
   };
   const [data, setData] = useState<any[]>([]);
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
   useEffect(() => {
     getUsers();
   }, []);

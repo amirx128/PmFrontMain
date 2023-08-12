@@ -47,7 +47,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
     console.log("errors...", errors);
     addNew(data);
   });
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
   const addNew = async (data) => {
     try {
       setLoading(true);

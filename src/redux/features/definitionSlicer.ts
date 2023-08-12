@@ -111,7 +111,7 @@ export const getAllProjects = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await getAllProjectsReq(state?.user?.user?.id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -127,7 +127,7 @@ export const getAllFloors = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await getAllFloorsReq(state?.user?.user?.id,projectId);
             return fulfillWithValue(data);
         } catch (err) {
@@ -143,7 +143,7 @@ export const getAllUnits = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetAllUnitReq(state?.user?.user?.id,body.projectId,body.floorId);
             return fulfillWithValue(data);
         } catch (err) {
@@ -159,7 +159,7 @@ export const AddNewProject = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewProjectReq(state?.user?.user?.id,newName);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
@@ -178,7 +178,7 @@ export const UpdateProject = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await UpdateProjectReq(state?.user?.user?.id,body?.id,body?.name);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
@@ -197,7 +197,7 @@ export const AddNewUnit = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewUnitReq(state?.user?.user?.id,body.projectId,body.projectfloorId,body.unitName,body.code);
             return fulfillWithValue(data);
         } catch (err) {
@@ -213,7 +213,7 @@ export const UpdateUnit = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await UpdateUnitReq(state?.user?.user?.id,body.id,body.projectId,body.projectfloorId,body.unitName,body.code);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
@@ -232,7 +232,7 @@ export const AddNewFloor = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewFloorReq(state?.user?.user?.id,body.projectId,body.floorName,body.code);
             return fulfillWithValue(data);
         } catch (err) {
@@ -248,7 +248,7 @@ export const UpdateFloor = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await UpdateFloorReq(state?.user?.user?.id,body.id,body.projectId,body.floorName,body.code);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
@@ -266,7 +266,7 @@ export const GetAllCommodityOnTree = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetAllCommodityOnTreeReq(state?.user?.user?.id,body.projectId,body.commodityName,body.code);
             return fulfillWithValue(data);
         } catch (err) {
@@ -282,7 +282,7 @@ export const GetAllCommodities = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetAllCommoditiesReq(state?.user?.user?.id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -298,7 +298,7 @@ export const AddNewCommodity = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewCommodityReq(state?.user?.user?.id,body);
             return fulfillWithValue(data);
         } catch (err) {
@@ -314,7 +314,7 @@ export const GetOneCommodityDetails = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetOneCommodityDetailsReq(state?.user?.user?.id,commodityId);
             return fulfillWithValue(data);
         } catch (err) {
@@ -330,7 +330,7 @@ export const GetAllPersons = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetAllPersonsReq(state?.user?.user?.id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -346,7 +346,7 @@ export const GetPersonDetails = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetPersonDetailsReq(state?.user?.user?.id,id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -362,7 +362,7 @@ export const AddNewPerson = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewPersonReq(state?.user?.user?.id,body);
             return fulfillWithValue(data);
         } catch (err) {
@@ -378,7 +378,7 @@ export const UpdatePerson = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await UpdatePersonReq(state?.user?.user?.id,body?.id,body);
             return fulfillWithValue(data);
         } catch (err) {
@@ -394,7 +394,7 @@ export const GetAllBusinessRoles = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetAllBusinessRolesReq(state?.user?.user?.id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -410,7 +410,7 @@ export const GetBusinessRoleDetailes = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetBusinessRoleDetailesReq(state?.user?.user?.id,id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -426,7 +426,7 @@ export const AddNewBusinessRole = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewBusinessRoleReq(state?.user?.user?.id,body.name,body.title);
             return fulfillWithValue(data);
         } catch (err) {
@@ -442,7 +442,7 @@ export const UpdateBusinessRole = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await UpdateBusinessRoleReq(state?.user?.user?.id,body.id,body.name,body.title);
             return fulfillWithValue(data);
         } catch (err) {
@@ -458,7 +458,7 @@ export const GetScheduleActivities = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetScheduleActivitiesReq(state?.user?.user?.id);
             return fulfillWithValue(data);
         } catch (err) {
@@ -474,7 +474,7 @@ export const AddNewActivitySchedule = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await AddNewActivityScheduleReq(state?.user?.user?.id,body.activityName,body.desc);
             return fulfillWithValue(data);
         } catch (err) {
@@ -490,7 +490,7 @@ export const UpdateNewActivitySchedule = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await UpdateNewActivityScheduleReq(state?.user?.user?.id,body.id,body.activityName,body.desc);
             return fulfillWithValue(data);
         } catch (err) {
@@ -506,7 +506,7 @@ export const GetActivityScheduleDetails = createAsyncThunk(
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
-            const state = getState();
+            const state:any = getState();
             const {data} = await GetActivityScheduleDetailsReq(state?.user?.user?.id,id);
             return fulfillWithValue(data);
         } catch (err) {

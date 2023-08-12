@@ -22,7 +22,7 @@ const FinalApproveDetail = (props) => {
     getRequestDetail();
   }, []);
 
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
 
   const getRequestDetail = async () => {
     try {

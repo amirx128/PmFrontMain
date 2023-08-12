@@ -38,7 +38,7 @@ const Roles = () => {
   useEffect(() => {
     getUsers();
   }, []);
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
   const getUsers = async () => {
     try {
       const response: any = await axios.post("/Administration/GetAllRoles", {

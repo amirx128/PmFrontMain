@@ -10,8 +10,8 @@ import {FloorCard} from "../../components/definition/floor.tsx";
 import {AddFloor} from "../../components/definition/addFloor.tsx";
 
 const Definitions = () => {
-    const dispatch = useDispatch();
-    const {projects,units,floors} = useSelector((state) => state.definition);
+    const dispatch = useDispatch<any>();
+    const {projects,units,floors} = useSelector((state:any) => state.definition);
 
     const [addProjectDialog,setAddProjectDialog] = useState<boolean>(false);
     const [selectedProject,setSelectedProject] = useState<any>(null);

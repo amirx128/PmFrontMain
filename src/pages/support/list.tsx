@@ -207,7 +207,7 @@ const SupportList: React.FC<any> = (props) => {
     navigate("/supportApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = () => {};
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
   const getList = async () => {
     const filters = getValues();
     console.log(filters);

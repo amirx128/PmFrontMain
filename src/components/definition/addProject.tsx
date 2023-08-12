@@ -17,7 +17,7 @@ import {toast} from "react-toastify";
 
 export const AddProject = ({addProjectDialog,selectedProject,onClose}) => {
     const theme = useTheme();
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<any>();
     const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
     const [info,setInfo] = useState({
         name: selectedProject?.name
@@ -34,7 +34,7 @@ export const AddProject = ({addProjectDialog,selectedProject,onClose}) => {
             });
         }
     }, [selectedProject]);
-    const {projects} = useSelector((state) => state.definition);
+    const {projects} = useSelector((state:any) => state.definition);
     const handleChange = (e) => {
         setInfo({
             ...info,

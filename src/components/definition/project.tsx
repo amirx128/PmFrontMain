@@ -44,7 +44,7 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setA
                                 </Button>
                             </Box>
                             ) : (
-                            <Box align={"center"}>
+                            <Box sx={{textAlign:"center"}}>
                                 <Typography color={"error"} variant={"body2"}>طبقه ای تعریف نشده</Typography>
                                 <Button onClick={() => {
                                     setSelectedFloor(null);
@@ -78,8 +78,8 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setA
                         )
                     }
                 </Box>
-                <Divider my={1} />
-                <Button color={"warning"} variant={"contained"} fullWidth={true} sx={{mt:1}} onClick={() => {
+                <Divider sx={{my:1}} />
+                <Button color={"warning"} variant={"contained"} fullWidth={true} onClick={() => {
                     setSelectedProject(project);
                     setAddProjectDialog(true);
                 }}>

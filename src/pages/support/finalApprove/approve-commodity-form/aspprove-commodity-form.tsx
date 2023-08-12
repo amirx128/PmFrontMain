@@ -47,7 +47,7 @@ const ApproveCommodityForm: React.FC<any> = ({
     getCountCommodityInWarehouse();
   }, []);
 
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
 
   const getApproveStates = async () => {
     try {

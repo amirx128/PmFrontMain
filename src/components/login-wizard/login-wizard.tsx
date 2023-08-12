@@ -9,9 +9,9 @@ import {setLoggined, setUser} from "../../redux/features/userSlicer.ts";
 const LoginWizard = (props) => {
   const [wizardLoading, setWizardLoading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const [step, setStep] = useState<number>(1);
-  const {user} = useSelector((state) => state.user)
+  const {user} = useSelector((state:any) => state?.user)
   const onsubmitLoginForm = (data) => {
     data = { ...data, userId: user?.id ?? '0', captchaId: "1", captchaValues: "1" };
     // console.log('from wizard', data)
