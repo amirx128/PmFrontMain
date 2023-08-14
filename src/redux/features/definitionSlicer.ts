@@ -465,6 +465,7 @@ export const AddNewBusinessRole = createAsyncThunk(
             const userId = getUserId(state);
             const {data} = await AddNewBusinessRoleReq(userId,body.name,body.title);
             if(data?.isSuccess){
+                // @ts-ignore
                 dispatch(GetAllBusinessRoles());
             }
             return fulfillWithValue(data);
@@ -485,6 +486,7 @@ export const UpdateBusinessRole = createAsyncThunk(
             const userId = getUserId(state);
             const {data} = await UpdateBusinessRoleReq(userId,body.id,body.name,body.title);
             if(data?.isSuccess){
+                // @ts-ignore
                 dispatch(GetAllBusinessRoles());
             }
             return fulfillWithValue(data);

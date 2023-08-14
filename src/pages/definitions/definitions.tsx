@@ -83,9 +83,13 @@ const Definitions = () => {
     }
 
     useEffect(() => {
+        // @ts-ignore
         dispatch(getAllProjects());
+        // @ts-ignore
         dispatch(GetAllPersons());
+        // @ts-ignore
         dispatch(GetAllBusinessRoles());
+        // @ts-ignore
         dispatch(GetScheduleActivities());
     }, [])
 
