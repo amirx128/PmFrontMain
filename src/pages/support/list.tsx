@@ -22,6 +22,7 @@ import JalaliDatePicker from "../../components/date-picker/date-picker";
 import { Row } from "./style";
 import Grid from "../../components/grid/grid";
 import {useSelector} from "react-redux";
+import {getUserIdFromStorage} from "../../utils/functions.ts";
 const SupportList: React.FC<any> = (props) => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<any>(new Date());
@@ -195,7 +196,7 @@ const SupportList: React.FC<any> = (props) => {
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
       });
       setApproveStates(response.data.model);
     } catch (error) {
@@ -213,7 +214,7 @@ const SupportList: React.FC<any> = (props) => {
     console.log(filters);
     try {
       const response = await axios.post(props.apiUrl, {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         pageIndex: 1,
         pageCount: 10,
         orderType: "asc",

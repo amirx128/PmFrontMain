@@ -3,7 +3,7 @@ import moment from "jalali-moment";
 import {Add, Apartment, Edit, Numbers} from "@mui/icons-material";
 import Divider from "@mui/material/Divider";
 
-export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setAddFloorDialog,setSelectedFloor}) => {
+export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setAddFloorDialog,setSelectedFloor,setSelectedUnit,setAddUnitDialog,setCurrentProject}) => {
     return (
         <Grid item md={4} sm={6} xs={12}>
             <Box sx={{
@@ -37,6 +37,7 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setA
                                     </Button>
                                 ))}
                                 <Button onClick={() => {
+                                    setCurrentProject(project);
                                     setSelectedFloor(null);
                                     setAddFloorDialog(true);
                                 }} size={"small"} fullWidth={true} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1,width:"100%"}}>
@@ -47,6 +48,7 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setA
                             <Box sx={{textAlign:"center"}}>
                                 <Typography color={"error"} variant={"body2"}>طبقه ای تعریف نشده</Typography>
                                 <Button onClick={() => {
+                                    setCurrentProject(project);
                                     setSelectedFloor(null);
                                     setAddFloorDialog(true);
                                 }} size={"small"} fullWidth={true} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1,mt:1,width:"100%"}}>
@@ -65,16 +67,36 @@ export const ProjectCard = ({project,setSelectedProject,setAddProjectDialog,setA
                         project?.projectUnit?.length > 0 ? (
                             <Box display={"flex"} alignItems={"center"} gap={1} sx={{flexWrap:"wrap"}}>
                                 {project?.projectUnit?.map(unit => (
-                                    <Button key={unit?.id} size={"small"} color={"info"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
+                                    <Button onClick={() => {
+                                        setCurrentProject(project);
+                                        setSelectedUnit(unit);
+                                        setAddUnitDialog(true);
+                                    }} key={unit?.id} size={"small"} color={"info"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1}}>
                                         <Typography fontSize={16}>{unit?.name}</Typography>
                                         <Typography fontSize={13}>کد : {unit?.code}</Typography>
                                         <Typography fontSize={10}>{moment(unit?.createDate).locale('fa').format('LL')}</Typography>
                                         <Edit />
                                     </Button>
                                 ))}
+                                <Button onClick={() => {
+                                    setCurrentProject({...project});
+                                    setSelectedUnit(null);
+                                    setAddUnitDialog(true);
+                                }} size={"small"} fullWidth={true} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1,width:"100%"}}>
+                                    <Typography fontSize={14} sx={{display:"flex",alignItems:"center"}}><Add /> افزودن</Typography>
+                                </Button>
                             </Box>
                         ) : (
-                            <Typography color={"error"} variant={"body2"}>واحدی تعریف نشده</Typography>
+                            <Box sx={{textAlign:"center"}}>
+                                <Typography color={"error"} variant={"body2"}>واحدی تعریف نشده</Typography>
+                                <Button onClick={() => {
+                                    setCurrentProject({...project});
+                                    setSelectedUnit(null);
+                                    setAddUnitDialog(true);
+                                }} size={"small"} fullWidth={true} color={"warning"} variant={"outlined"} sx={{display:"flex",flexDirection:"column",justifyContent:"center",flexGrow:1,width:"100%"}}>
+                                    <Typography fontSize={14} sx={{display:"flex",alignItems:"center"}}><Add /> افزودن</Typography>
+                                </Button>
+                            </Box>
                         )
                     }
                 </Box>

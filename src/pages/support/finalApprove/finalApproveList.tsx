@@ -23,6 +23,7 @@ import { Row } from "../style";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import {useSelector} from "react-redux";
+import {getUserIdFromStorage} from "../../../utils/functions.ts";
 const FinalApproveRequestList = () => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState(
@@ -216,7 +217,7 @@ const FinalApproveRequestList = () => {
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
       });
 
       setApproveStates(response.data.model);
@@ -237,7 +238,7 @@ const FinalApproveRequestList = () => {
         fromDate:
           filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
         orderType: "asc",
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         pageIndex: 1,
         pageCount: 10,
         orderBy: "CreateDate",

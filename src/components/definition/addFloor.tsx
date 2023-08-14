@@ -15,7 +15,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {AddNewFloor, AddNewProject, UpdateFloor} from "../../redux/features/definitionSlicer.ts";
 import {toast} from "react-toastify";
 
-export const AddFloor = ({addFloorDialog,selectedFloor,onClose}) => {
+export const AddFloor = ({addFloorDialog,selectedFloor,onClose,setCurrentProject}) => {
     const theme = useTheme();
     const dispatch = useDispatch<any>();
     const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));

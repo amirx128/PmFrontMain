@@ -8,6 +8,7 @@ import { withSnackbar } from "../../../utils/snackbar-hook";
 import RequestDetail from "../request-detail";
 import ApproveCommodityForm from "./approve-commodity-form/aspprove-commodity-form";
 import {useSelector} from "react-redux";
+import {getUserIdFromStorage} from "../../../utils/functions.ts";
 const FinalApproveDetail = (props) => {
   const theme = useTheme();
 
@@ -27,7 +28,7 @@ const FinalApproveDetail = (props) => {
   const getRequestDetail = async () => {
     try {
       const response = await axios.post("/Support/GetRequestCaseCommodityDetails", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         requestId: params.id,
       });
     
@@ -47,7 +48,7 @@ const FinalApproveDetail = (props) => {
     setLoading(true);
     try {
       const response = await axios.post("/Support/SetFinalApproveData", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         requestCaseCommodityId: commodityDetail.requestCaseRowCommodityId,
         stateId: commodityDetail.approveStateId,
         requestCaseId: params.id,

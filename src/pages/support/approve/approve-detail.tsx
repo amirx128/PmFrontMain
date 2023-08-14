@@ -15,6 +15,7 @@ import SelectComponent from "../../../components/select/selects";
 import { withSnackbar } from "../../../utils/snackbar-hook";
 import RequestDetail from "../request-detail";
 import {useSelector} from "react-redux";
+import {getUserIdFromStorage} from "../../../utils/functions.ts";
 const ApproveDetail = (props) => {
   const theme = useTheme();
   const {
@@ -42,7 +43,7 @@ const ApproveDetail = (props) => {
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
       });
       setStates(response.data.model);
     } catch (error) {
@@ -54,7 +55,7 @@ const ApproveDetail = (props) => {
       const response = await axios.post(
         "/Support/GetRequestCaseCommodityDetails",
         {
-          userId: user?.id,
+          userId: user?.id ?? getUserIdFromStorage(),
           requestId: params.id,
         }
       );
@@ -76,7 +77,7 @@ const ApproveDetail = (props) => {
     setLoading(true);
     try {
       const response = await axios.post("/Support/SetApproveData", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         requestCaseCommodityId: params.id,
         state: getValues("stateId"),
         newCount: getValues("newCount"),

@@ -14,6 +14,7 @@ import AddIcon from "@mui/icons-material/AddOutlined";
 import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
 import {useSelector} from "react-redux";
+import {getUserIdFromStorage} from "../../utils/functions.ts";
 
 const Users = () => {
   const columns: GridColDef[] = [
@@ -107,7 +108,7 @@ const Users = () => {
   const getUsers = async () => {
     try {
       const response: any = await axios.post("/Administration/GetAllUsers", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
       });
       console.log(response);
       setData(response.data.model);

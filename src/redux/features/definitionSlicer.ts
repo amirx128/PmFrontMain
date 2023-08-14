@@ -30,6 +30,11 @@ import {
     UpdatePersonReq, UpdateProjectReq, UpdateUnitReq
 } from "../../core/definition/definition.service.ts";
 
+
+const getUserId = (state) => {
+    return state?.user?.user?.id ?? localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'))?.id : '1';
+}
+
 export interface DefinitionState {
     projects: {
         data: I_Project[],
@@ -112,7 +117,8 @@ export const getAllProjects = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await getAllProjectsReq(state?.user?.user?.id);
+            const userId = getUserId(state);
+            const {data} = await getAllProjectsReq(userId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -123,12 +129,13 @@ export const getAllProjects = createAsyncThunk(
 export const getAllFloors = createAsyncThunk(
     "definition/getAllFloors",
     async (
-        projectId,
+        projectId:any,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
             const state:any = getState();
-            const {data} = await getAllFloorsReq(state?.user?.user?.id,projectId);
+            const userId = getUserId(state);
+            const {data} = await getAllFloorsReq(userId,projectId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -144,7 +151,8 @@ export const getAllUnits = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetAllUnitReq(state?.user?.user?.id,body.projectId,body.floorId);
+            const userId = getUserId(state);
+            const {data} = await GetAllUnitReq(userId,body.projectId,body.floorId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -160,7 +168,8 @@ export const AddNewProject = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await AddNewProjectReq(state?.user?.user?.id,newName);
+            const userId = getUserId(state);
+            const {data} = await AddNewProjectReq(userId,newName);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
             }
@@ -179,7 +188,8 @@ export const UpdateProject = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await UpdateProjectReq(state?.user?.user?.id,body?.id,body?.name);
+            const userId = getUserId(state);
+            const {data} = await UpdateProjectReq(userId,body?.id,body?.name);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
             }
@@ -198,7 +208,11 @@ export const AddNewUnit = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await AddNewUnitReq(state?.user?.user?.id,body.projectId,body.projectfloorId,body.unitName,body.code);
+            const userId = getUserId(state);
+            const {data} = await AddNewUnitReq(userId,body.projectId,body.projectfloorId,body.unitName,body.code);
+            if(data?.isSuccess){
+                dispatch(getAllProjects());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -214,7 +228,8 @@ export const UpdateUnit = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await UpdateUnitReq(state?.user?.user?.id,body.id,body.projectId,body.projectfloorId,body.unitName,body.code);
+            const userId = getUserId(state);
+            const {data} = await UpdateUnitReq(userId,body.id,body.projectId,body.projectfloorId,body.unitName,body.code);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
             }
@@ -233,7 +248,8 @@ export const AddNewFloor = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await AddNewFloorReq(state?.user?.user?.id,body.projectId,body.floorName,body.code);
+            const userId = getUserId(state);
+            const {data} = await AddNewFloorReq(userId,body.projectId,body.floorName,body.code);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -249,7 +265,8 @@ export const UpdateFloor = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await UpdateFloorReq(state?.user?.user?.id,body.id,body.projectId,body.floorName,body.code);
+            const userId = getUserId(state);
+            const {data} = await UpdateFloorReq(userId,body.id,body.projectId,body.floorName,body.code);
             if(data?.isSuccess){
                 dispatch(getAllProjects());
             }
@@ -267,7 +284,8 @@ export const GetAllCommodityOnTree = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetAllCommodityOnTreeReq(state?.user?.user?.id,body.projectId,body.commodityName,body.code);
+            const userId = getUserId(state);
+            const {data} = await GetAllCommodityOnTreeReq(userId,body.projectId,body.commodityName,body.code);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -283,7 +301,8 @@ export const GetAllCommodities = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetAllCommoditiesReq(state?.user?.user?.id);
+            const userId = getUserId(state);
+            const {data} = await GetAllCommoditiesReq(userId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -299,7 +318,8 @@ export const AddNewCommodity = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await AddNewCommodityReq(state?.user?.user?.id,body);
+            const userId = getUserId(state);
+            const {data} = await AddNewCommodityReq(userId,body);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -315,7 +335,8 @@ export const GetOneCommodityDetails = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetOneCommodityDetailsReq(state?.user?.user?.id,commodityId);
+            const userId = getUserId(state);
+            const {data} = await GetOneCommodityDetailsReq(userId,commodityId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -326,12 +347,13 @@ export const GetOneCommodityDetails = createAsyncThunk(
 export const GetAllPersons = createAsyncThunk(
     "definition/GetAllPersons",
     async (
-        commodityId:any,
+        body=undefined,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetAllPersonsReq(state?.user?.user?.id);
+            const userId = getUserId(state);
+            const {data} = await GetAllPersonsReq(userId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -347,7 +369,8 @@ export const GetPersonDetails = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetPersonDetailsReq(state?.user?.user?.id,id);
+            const userId = getUserId(state);
+            const {data} = await GetPersonDetailsReq(userId,id);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -361,9 +384,14 @@ export const AddNewPerson = createAsyncThunk(
         body:any,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
+        body.businessRoles = [body.businessRoles];
         try {
             const state:any = getState();
-            const {data} = await AddNewPersonReq(state?.user?.user?.id,body);
+            const userId = getUserId(state);
+            const {data} = await AddNewPersonReq(userId,body);
+            if(data?.isSuccess){
+                dispatch(GetAllPersons());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -377,9 +405,14 @@ export const UpdatePerson = createAsyncThunk(
         body:any,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
+        body.businessRoles = [body.businessRoles];
         try {
             const state:any = getState();
-            const {data} = await UpdatePersonReq(state?.user?.user?.id,body?.id,body);
+            const userId = getUserId(state);
+            const {data} = await UpdatePersonReq(userId,body?.id,body);
+            if(data?.isSuccess){
+                dispatch(GetAllPersons());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -395,7 +428,8 @@ export const GetAllBusinessRoles = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetAllBusinessRolesReq(state?.user?.user?.id);
+            const userId = getUserId(state);
+            const {data} = await GetAllBusinessRolesReq(userId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -411,7 +445,8 @@ export const GetBusinessRoleDetailes = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetBusinessRoleDetailesReq(state?.user?.user?.id,id);
+            const userId = getUserId(state);
+            const {data} = await GetBusinessRoleDetailesReq(userId,id);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -427,7 +462,11 @@ export const AddNewBusinessRole = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await AddNewBusinessRoleReq(state?.user?.user?.id,body.name,body.title);
+            const userId = getUserId(state);
+            const {data} = await AddNewBusinessRoleReq(userId,body.name,body.title);
+            if(data?.isSuccess){
+                dispatch(GetAllBusinessRoles());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -443,7 +482,11 @@ export const UpdateBusinessRole = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await UpdateBusinessRoleReq(state?.user?.user?.id,body.id,body.name,body.title);
+            const userId = getUserId(state);
+            const {data} = await UpdateBusinessRoleReq(userId,body.id,body.name,body.title);
+            if(data?.isSuccess){
+                dispatch(GetAllBusinessRoles());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -454,12 +497,13 @@ export const UpdateBusinessRole = createAsyncThunk(
 export const GetScheduleActivities = createAsyncThunk(
     "definition/GetScheduleActivities",
     async (
-        body: { name: string,title: string,id: any },
+        body=undefined,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetScheduleActivitiesReq(state?.user?.user?.id);
+            const userId = getUserId(state);
+            const {data} = await GetScheduleActivitiesReq(userId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -470,12 +514,16 @@ export const GetScheduleActivities = createAsyncThunk(
 export const AddNewActivitySchedule = createAsyncThunk(
     "definition/AddNewActivitySchedule",
     async (
-        body: { activityName: string,desc: string},
+        body: { name: string,desc: string},
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
             const state:any = getState();
-            const {data} = await AddNewActivityScheduleReq(state?.user?.user?.id,body.activityName,body.desc);
+            const userId = getUserId(state);
+            const {data} = await AddNewActivityScheduleReq(userId,body.name,body.desc);
+            if(data?.isSuccess){
+                dispatch(GetScheduleActivities());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -486,12 +534,17 @@ export const AddNewActivitySchedule = createAsyncThunk(
 export const UpdateNewActivitySchedule = createAsyncThunk(
     "definition/UpdateNewActivitySchedule",
     async (
-        body: { id:any,activityName: string,desc: string},
+        body: { id:any,name: string,desc: string},
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
         try {
             const state:any = getState();
-            const {data} = await UpdateNewActivityScheduleReq(state?.user?.user?.id,body.id,body.activityName,body.desc);
+            debugger;
+            const userId = getUserId(state);
+            const {data} = await UpdateNewActivityScheduleReq(userId,body.id,body.name,body.desc);
+            if(data?.isSuccess){
+                dispatch(GetScheduleActivities());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -507,7 +560,8 @@ export const GetActivityScheduleDetails = createAsyncThunk(
     ) => {
         try {
             const state:any = getState();
-            const {data} = await GetActivityScheduleDetailsReq(state?.user?.user?.id,id);
+            const userId = getUserId(state);
+            const {data} = await GetActivityScheduleDetailsReq(userId,id);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -633,6 +687,45 @@ export const definitionSlicer = createSlice({
             })
             .addCase(UpdateUnit.rejected, (state:DefinitionState, {error}) => {
                 state.units.addState = false;
+            });
+        //#endregion
+        // #region businessRoles-----
+        builder
+            .addCase(GetAllBusinessRoles.pending, (state:DefinitionState) => {
+                state.businessRoles.pending = true;
+            })
+            .addCase(GetAllBusinessRoles.fulfilled, (state:DefinitionState, {payload}) => {
+                state.businessRoles.pending = false;
+                state.businessRoles.data = [...payload?.model];
+            })
+            .addCase(GetAllBusinessRoles.rejected, (state:DefinitionState, {error}) => {
+                state.businessRoles.pending = false;
+            });
+        //#endregion
+        // #region GetAllPersons-----
+        builder
+            .addCase(GetAllPersons.pending, (state:DefinitionState) => {
+                state.persons.pending = true;
+            })
+            .addCase(GetAllPersons.fulfilled, (state:DefinitionState, {payload}) => {
+                state.persons.pending = false;
+                state.persons.data = [...payload?.model];
+            })
+            .addCase(GetAllPersons.rejected, (state:DefinitionState, {error}) => {
+                state.persons.pending = false;
+            });
+        //#endregion
+        // #region GetScheduleActivities-----
+        builder
+            .addCase(GetScheduleActivities.pending, (state:DefinitionState) => {
+                state.scheduledActivities.pending = true;
+            })
+            .addCase(GetScheduleActivities.fulfilled, (state:DefinitionState, {payload}) => {
+                state.scheduledActivities.pending = false;
+                state.scheduledActivities.data = [...payload?.model];
+            })
+            .addCase(GetScheduleActivities.rejected, (state:DefinitionState, {error}) => {
+                state.scheduledActivities.pending = false;
             });
         //#endregion
     }

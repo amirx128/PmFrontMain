@@ -13,6 +13,7 @@ import theme from "../../../utils/theme";
 import RequestDetail from "../request-detail/request-detail";
 import { Row } from "./style";
 import {useSelector} from "react-redux";
+import {getUserIdFromStorage} from "../../../utils/functions.ts";
 type FormFields = {
   unitId: string;
   placeOfUseId: string;
@@ -52,7 +53,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
     try {
       setLoading(true);
       const response = await axios.post("/RequestCase/NewRequestCase", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         unitId: data.unitId,
 
         placeOfUseId: data.placeOfUseId,
@@ -100,7 +101,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const getAllUnits = async () => {
     try {
       const response = axios.post("/Definition/GetAllUnit", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
         name: "",
         projectId: 0,
         floorId: 0,
@@ -140,7 +141,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
       const response: any = await axios.post(
         "/RequestCase/GetAllCommoditiesForOnePlaceOfUse",
         {
-          userId: user?.id,
+          userId: user?.id ?? getUserIdFromStorage(),
           placeId: getValues("placeOfUseId"),
           requesterBussinessRoleId: getValues("unitId"),
         }
@@ -155,7 +156,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
       const response: any = await axios.post(
         "/Definition/GetScheduleActivities",
         {
-          userId: user?.id,
+          userId: user?.id ?? getUserIdFromStorage(),
         }
       );
       setActivities(response.data.model);
@@ -169,7 +170,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const getPlacedOfUse = async () => {
     try {
       const response = await axios.post("/RequestCase/GetAllPlaseOfUse", {
-        userId: user?.id,
+        userId: user?.id ?? getUserIdFromStorage(),
       });
       console.log(response.data.model);
       setPlacedOdUse(response.data.model);
