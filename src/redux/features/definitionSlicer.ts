@@ -384,7 +384,6 @@ export const AddNewPerson = createAsyncThunk(
         body:any,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
-        body.businessRoles = [body.businessRoles];
         try {
             const state:any = getState();
             const userId = getUserId(state);
@@ -405,7 +404,6 @@ export const UpdatePerson = createAsyncThunk(
         body:any,
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
-        body.businessRoles = [body.businessRoles];
         try {
             const state:any = getState();
             const userId = getUserId(state);

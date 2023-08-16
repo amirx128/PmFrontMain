@@ -20,8 +20,8 @@ axiosInstance.interceptors.response.use(
       return response;
   },
   error => {
-    if(error?.response?.data?.title){
-        toast.error(error?.response?.data?.title,{
+    if(error?.response?.data?.title || (error?.response?.data?.isSuccess === false && error?.response?.data?.model === false)){
+        toast.error(error?.response?.data?.title ?? error?.response?.data?.message,{
             toastId: error?.response?.data?.status
         });
     }
@@ -32,7 +32,7 @@ axiosInstance.interceptors.response.use(
     } else {
       console.error('Error:', error.message);
     }
-    
+
     return Promise.reject(error);
   }
 );

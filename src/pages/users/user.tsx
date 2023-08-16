@@ -15,6 +15,7 @@ import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
 import {useSelector} from "react-redux";
 import {getUserIdFromStorage} from "../../utils/functions.ts";
+import {AddUser} from "../../components/administrations/addUser.tsx";
 
 const Users = () => {
   const columns: GridColDef[] = [
@@ -95,13 +96,23 @@ const Users = () => {
   ];
 
   const handleEditClick = (row) => {
-    console.log("edit", row);
+    setUserDialog(true);
+    setSelectedUser(row);
   };
   const handleDeleteClick = (row) => {
     console.log("delete", row);
   };
   const [data, setData] = useState<any[]>([]);
   const {user} = useSelector((state:any) => state?.user)
+
+  const [showUserDialog,setUserDialog] = useState(false);
+  const [selectedUser,setSelectedUser] = useState(null);
+
+  const userOnClose = () => {
+    setSelectedUser(null);
+    setUserDialog(false);
+  }
+
   useEffect(() => {
     getUsers();
   }, []);
@@ -143,6 +154,9 @@ const Users = () => {
             sx={{ justifySelf: "flex-start", marginRight: "20px" }}
             color="info"
             variant="outlined"
+            onClick={() => {
+              setUserDialog(true);
+            }}
           >
             <AddIcon />
             افزودن
@@ -157,6 +171,7 @@ const Users = () => {
           onSortModelChange={handleSortModelChange}
         ></Grid>
       </Card>
+      <AddUser selectedUser={selectedUser} showUserDialog={showUserDialog} onClose={userOnClose} />
     </CardGrid>
   );
 };

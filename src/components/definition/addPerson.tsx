@@ -27,7 +27,7 @@ export const AddPerson = ({addPersonsDialog,selectedPerson,onClose}) => {
         phoneNumber: selectedPerson?.phoneNumber,
         address: selectedPerson?.address,
         otherDescriptions: selectedPerson?.otherDescriptions,
-        businessRoles: selectedPerson?.businessRoles,
+        businessRoles: selectedPerson?.businessRoles?.map(item => item.id),
     });
 
     useEffect(() => {
@@ -40,7 +40,7 @@ export const AddPerson = ({addPersonsDialog,selectedPerson,onClose}) => {
                 phoneNumber: selectedPerson?.phoneNumber,
                 address: selectedPerson?.address,
                 otherDescriptions: selectedPerson?.otherDescriptions,
-                businessRoles: selectedPerson?.businessRoles,
+                businessRoles: selectedPerson?.businessRoles?.map(item => item.id),
             });
         }else {
             setInfo({
@@ -51,7 +51,7 @@ export const AddPerson = ({addPersonsDialog,selectedPerson,onClose}) => {
                 phoneNumber: '',
                 address: '',
                 otherDescriptions: '',
-                businessRoles: '',
+                businessRoles: [],
             });
         }
     }, [selectedPerson]);
@@ -84,11 +84,11 @@ export const AddPerson = ({addPersonsDialog,selectedPerson,onClose}) => {
                 <TextField value={info?.firstName} name={'firstName'} onChange={handleChange} label={'نام'} fullWidth={true} sx={{mt:2}}/>
                 <TextField value={info?.lastName} name={'lastName'} onChange={handleChange} label={'نام خانوادگی'} fullWidth={true} sx={{mt:2}}/>
                 <TextField value={info?.nationalCode} name={'nationalCode'} onChange={handleChange} label={'کد ملی'} fullWidth={true} sx={{mt:2}}/>
-                <TextField value={info?.mobileNumber} name={'mobileNumber'} onChange={handleChange} label={'شماره تماس'} fullWidth={true} sx={{mt:2}}/>
-                <TextField value={info?.phoneNumber} name={'phoneNumber'} onChange={handleChange} label={'شماره موبایل'} fullWidth={true} sx={{mt:2}}/>
+                <TextField value={info?.phoneNumber} name={'phoneNumber'} onChange={handleChange} label={'شماره تماس'} fullWidth={true} sx={{mt:2}}/>
+                <TextField value={info?.mobileNumber} name={'mobileNumber'} onChange={handleChange} label={'شماره موبایل'} fullWidth={true} sx={{mt:2}}/>
                 <TextField value={info?.address} name={'address'} onChange={handleChange} label={'آدرس'} fullWidth={true} sx={{mt:2}}/>
                 <TextField value={info?.otherDescriptions} name={'otherDescriptions'} onChange={handleChange} label={'توضیحات'} fullWidth={true} sx={{mt:2}}/>
-                <Select value={info?.businessRoles} fullWidth={true} name={"businessRoles"} label={"نقش تجاری"}
+                <Select multiple value={info?.businessRoles} fullWidth={true} name={"businessRoles"} label={"نقش تجاری"}
                         onChange={handleChange} sx={{mt: 2}}>
                     {businessRoles?.data?.map(item => <MenuItem value={item.id} key={item?.id}>{item?.name}</MenuItem>)}
                 </Select>

@@ -5,10 +5,12 @@ import storage from 'redux-persist/lib/storage';
 import {combineReducers} from 'redux';
 import {persistReducer} from 'redux-persist';
 import thunk from 'redux-thunk';
+import administrationSlicer from "./features/administrationSlicer.ts";
 
 const reducers = combineReducers({
     user: userReducer,
-    definition: definitionReducer
+    definition: definitionReducer,
+    administrations: administrationSlicer
 });
 
 const persistConfig = {
