@@ -1,7 +1,7 @@
 import type {PayloadAction} from '@reduxjs/toolkit'
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {
-    I_Business_ROLE,
+    I_Business_ROLE, I_COMMODITY,
     I_FLOOR,
     I_PERSON,
     I_Project,
@@ -51,10 +51,6 @@ export interface DefinitionState {
         pending: boolean,
         addState: boolean,
     },
-    commodities: {
-        data: any[],
-        pending: boolean,
-    },
     persons: {
         data: I_PERSON[],
         pending: boolean,
@@ -69,6 +65,11 @@ export interface DefinitionState {
         data: I_SCHEDULED_ACTIVITIES[],
         pending: boolean,
         addState: boolean,
+    },
+    commodities: {
+        data: I_COMMODITY[],
+        pending: boolean,
+        addState: boolean
     }
 }
 
@@ -88,10 +89,6 @@ const initialState: DefinitionState = {
         pending: false,
         addState: false,
     },
-    commodities: {
-        data: [],
-        pending: false,
-    },
     persons: {
         data: [],
         pending: false,
@@ -103,6 +100,11 @@ const initialState: DefinitionState = {
         addState: false,
     },
     scheduledActivities: {
+        data: [],
+        pending: false,
+        addState: false,
+    },
+    commodities: {
         data: [],
         pending: false,
         addState: false,
@@ -293,23 +295,6 @@ export const GetAllCommodityOnTree = createAsyncThunk(
     }
 );
 
-export const GetAllCommodities = createAsyncThunk(
-    "definition/GetAllCommodities",
-    async (
-        body:{projectId:any,commodityName:string,code:string},
-        {rejectWithValue, fulfillWithValue, dispatch, getState}
-    ) => {
-        try {
-            const state:any = getState();
-            const userId = getUserId(state);
-            const {data} = await GetAllCommoditiesReq(userId);
-            return fulfillWithValue(data);
-        } catch (err) {
-            throw rejectWithValue(err);
-        }
-    }
-);
-
 export const AddNewCommodity = createAsyncThunk(
     "definition/AddNewCommodity",
     async (
@@ -320,6 +305,9 @@ export const AddNewCommodity = createAsyncThunk(
             const state:any = getState();
             const userId = getUserId(state);
             const {data} = await AddNewCommodityReq(userId,body);
+            if(data?.isSuccess){
+                dispatch(GetAllCommodities());
+            }
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -552,6 +540,23 @@ export const UpdateNewActivitySchedule = createAsyncThunk(
     }
 );
 
+export const GetAllCommodities = createAsyncThunk(
+    "definition/GetAllCommodities",
+    async (
+        body=undefined,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state:any = getState();
+            const userId = getUserId(state);
+            const {data} = await GetAllCommoditiesReq(userId);
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
 export const GetActivityScheduleDetails = createAsyncThunk(
     "definition/GetActivityScheduleDetails",
     async (
@@ -726,6 +731,32 @@ export const definitionSlicer = createSlice({
             })
             .addCase(GetScheduleActivities.rejected, (state:DefinitionState, {error}) => {
                 state.scheduledActivities.pending = false;
+            });
+        //#endregion
+        // #region GetAllCommodities-----
+        builder
+            .addCase(GetAllCommodities.pending, (state:DefinitionState) => {
+                state.commodities.pending = true;
+            })
+            .addCase(GetAllCommodities.fulfilled, (state:DefinitionState, {payload}) => {
+                state.commodities.pending = false;
+                state.commodities.data = [...payload?.model];
+            })
+            .addCase(GetAllCommodities.rejected, (state:DefinitionState, {error}) => {
+                state.commodities.pending = false;
+            });
+        //#endregion
+
+        // #region AddNewCommodity-----
+        builder
+            .addCase(AddNewCommodity.pending, (state:DefinitionState) => {
+                state.commodities.addState = true;
+            })
+            .addCase(AddNewCommodity.fulfilled, (state:DefinitionState, {payload}) => {
+                state.commodities.addState = false;
+            })
+            .addCase(AddNewCommodity.rejected, (state:DefinitionState, {error}) => {
+                state.commodities.addState = false;
             });
         //#endregion
     }

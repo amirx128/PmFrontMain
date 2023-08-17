@@ -4,7 +4,7 @@ import {toast} from "react-toastify";
 let token = localStorage.getItem('atkn');
 let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {};
 axios.defaults.headers.common['token'] = token;
-console.log(user ? 'h' : 'v');
+
 const axiosInstance = axios.create({
     baseURL: 'http://46.225.237.138:33004',
     data: user ? {userId: user?.id} : {}
@@ -13,8 +13,13 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(
   response => {
       if(response.data?.model == true){
-          toast.error(response.data?.title,{
-              toastId: response.data?.message
+          toast.success(response.data?.title ?? response.data?.message ,{
+              toastId: response.data?.statusCode
+          });
+      }
+      if(!response?.data?.isSuccess && !response?.data?.model){
+          toast.error(response?.data?.message,{
+              toastId: response?.data?.status
           });
       }
       return response;

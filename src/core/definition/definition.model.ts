@@ -58,3 +58,13 @@ export interface I_SCHEDULED_ACTIVITIES  {
   "name": string,
   "descriptions": string
 }
+
+export interface I_COMMODITY {
+  "id": number | string,
+  "parents": I_COMMODITY[],
+  "parentId": number | string,
+  "rowId": number | string,
+  "serchableName": string,
+  "commodityAddress": string,
+  "unit": string
+}

@@ -9,6 +9,7 @@ import FinalApproveRequestList from "../pages/support/finalApprove/finalApproveL
 import ApproveDetail from "../pages/support/approve/approve-detail";
 import FinalApproveDetail from "../pages/support/finalApprove/final-approve-detail";
 import Roles from "../pages/roles/roles.tsx";
+import Commodities from "../pages/commodities/commodities.tsx";
 
 export enum Layouts {
   AUTH = "auth",
@@ -77,6 +78,13 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: " >  درخواست کالا",
+  },
+  {
+    path: "/commodities",
+    component: <Commodities />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: " >  کالا ها",
   },
   {
     path: "/definitions",

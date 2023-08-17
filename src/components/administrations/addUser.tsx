@@ -20,7 +20,7 @@ import {
     UpdateProject
 } from "../../redux/features/definitionSlicer.ts";
 import {toast} from "react-toastify";
-import {GetAllRoles} from "../../redux/features/administrationSlicer.ts";
+import {AddNewUser, GetAllRoles, UpdateUser} from "../../redux/features/administrationSlicer.ts";
 
 export const AddUser = ({showUserDialog,selectedUser,onClose}) => {
     const theme = useTheme();
@@ -89,9 +89,9 @@ export const AddUser = ({showUserDialog,selectedUser,onClose}) => {
 
     const onSubmit = () => {
         if(selectedUser){
-            dispatch(UpdatePerson({id:selectedUser?.id,...info}));
+            dispatch(UpdateUser({id:selectedUser?.id,...info}));
         }else {
-            dispatch(AddNewPerson({...info}));
+            dispatch(AddNewUser({...info}));
         }
         onClose();
     }
