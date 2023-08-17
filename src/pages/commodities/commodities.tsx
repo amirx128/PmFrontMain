@@ -7,7 +7,7 @@ import {
     getAllProjects, getAllUnits,
     GetScheduleActivities
 } from "../../redux/features/definitionSlicer.ts";
-import {Add, GifBox} from "@mui/icons-material";
+import {Add, GifBox, Inventory} from "@mui/icons-material";
 import {AddCommodity} from "../../components/definition/addCommodity.tsx";
 import {CommodityCard} from "../../components/definition/commodity.tsx";
 
@@ -45,7 +45,7 @@ const Commodities = () => {
                 }}>
                     <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"} mb={1}>
                         <Typography sx={{display: "flex", alignItems: "center", mb: 1}}>
-                            <GifBox/>
+                            <Inventory/>
                             کالا ها
                         </Typography>
 
