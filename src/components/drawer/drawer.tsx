@@ -439,10 +439,9 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
   ];
-  const handleClickMenu = (id, route) => {
+  const handleClickMenu = (id) => {
     setActiveMenu(id);
     setOpenCollapse((prev) => !prev);
-    navigate(route);
   };
   const handleClickSubMenu = (route) => {
     console.log(route);
@@ -493,7 +492,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                   }}
                 >
                   <ListItemButton
-                    onClick={() => handleClickMenu(item.id, item.route)}
+                    onClick={() => handleClickMenu(item.id)}
                     style={{
                       display: "flex",
                       flexDirection: "column",

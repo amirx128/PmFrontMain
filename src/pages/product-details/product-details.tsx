@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import axios from "../../utils/axios.config.ts";
 import { useEffect, useState } from "react";
-import RequestDetail from "../product-request/request-detail/request-detail.tsx";
+import RequestDetail from "../support/request-detail.tsx";
 import { useTheme } from "@mui/material";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
