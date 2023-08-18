@@ -11,7 +11,7 @@ import FinalApproveDetail from "../pages/support/finalApprove/final-approve-deta
 import Roles from "../pages/roles/roles.tsx";
 import Commodities from "../pages/commodities/commodities.tsx";
 import ProductDetails from "../pages/product-details/product-details.tsx";
-
+import RequesterUser from "../pages/requester/RequesterUser.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -107,5 +107,12 @@ export const routes: IRoute[] = [
     layout: Layouts.AUTH,
     protected: false,
     title: "برنامه ها",
+  },
+  {
+    path: "/requesteruser",
+    component: <RequesterUser />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تحویل دریافت",
   },
 ];

@@ -83,7 +83,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/requesteruser",
           role: UserRole.Requester,
         },
         {
@@ -139,7 +139,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/definitions",
           role: UserRole.Admin,
         },
         {
@@ -440,7 +440,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     },
   ];
   const handleClickMenu = (id) => {
-    setActiveMenu(id);
+    setActiveMenu(openCollapse ? null : id);
     setOpenCollapse((prev) => !prev);
   };
   const handleClickSubMenu = (route) => {
