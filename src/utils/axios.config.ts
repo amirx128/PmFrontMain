@@ -9,6 +9,7 @@ axios.defaults.headers.common["token"] = token;
 
 const axiosInstance = axios.create({
   baseURL: "http://46.225.237.138:33004",
+  // baseURL: "http://127.0.0.1:5170",
   data: user ? { userId: user?.id } : {},
 });
 
