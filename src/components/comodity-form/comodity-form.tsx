@@ -50,14 +50,6 @@ const ComodiryForm: React.FC<Iprops> = ({
     console.log("submitting...", data);
     console.log("errors...", errors);
   });
-  // useEffect(() => {
-  //   if (comodity) {
-  //     setValue("activityId", comodity.activityId);
-  //     setValue("commodityId", comodity.commodityId);
-  //     setValue("count", comodity.count);
-  //     setValue("requiredDate", comodity.requiredDate);
-  //   }
-  // }, [comodity]);
   useEffect(() => {
     if (date) {
       setValue("requiredDate", date);
@@ -65,10 +57,10 @@ const ComodiryForm: React.FC<Iprops> = ({
     }
   }, [date]);
   useEffect(() => {
-    console.log(commodityDescription);
     onCommodityChange(getValues());
     setValue("requiredDate", new Date());
   }, []);
+
   const comoditiDescriptionChanged = (event, val) => {
     setUnit(val.unit);
     setValue("commodityId", val.id);
@@ -79,14 +71,14 @@ const ComodiryForm: React.FC<Iprops> = ({
     onCommodityChange(getValues());
   };
   const countChange = (event) => {
-    setValue("count", event);
+    setValue("count", +event.target.value);
     onCommodityChange(getValues());
   };
   const setSelectedDate = (e) => {
     const date = new Date(e).toISOString();
     setDate(date);
     setValue("requiredDate", date);
-   };
+  };
   return (
     <>
       <Row>
@@ -121,18 +113,7 @@ const ComodiryForm: React.FC<Iprops> = ({
           )}
         />
       </Row>
-      {/* <Form onSubmit={onSubmit}> */}
       <Row>
-        {/* <TreeWrapper>
-            <Tree treeData={commodityDescription}></Tree>
-          </TreeWrapper> */}
-
-        {/* <InputContent
-              name="activityId"
-              label="  نام فعالیت"
-                register={register}
-                errors={errors}
-              /> */}
         <Controller
           control={control}
           name="activityId"
@@ -154,19 +135,25 @@ const ComodiryForm: React.FC<Iprops> = ({
         <Controller
           control={control}
           name="count"
-          defaultValue={undefined}
+          defaultValue={null}
           render={() => (
-            <InputContent
-              // onChange={(event) => countChange(event)}
+            // <InputContent
+            //   name="count"
+            //   label="  تعداد/مقدار "
+            //   register={register}
+            //   errors={errors}
+            //   type="number"
+            //   onChange={countChange}
+            // />
+            <TextField
               name="count"
-              label="  تعداد/مقدار "
-              register={register}
-              errors={errors}
+              type="number"
+              label="تعداد/مقدار"
+              onChange={countChange}
             />
           )}
         />
         <Box sx={{ flex: 1, display: "flex", alignItems: "unset" }}>
-          {/* <Typography fontFamily="IRANSans" component="p">واحد شمارش</Typography> */}
           <Typography
             fontFamily="IRANSans"
             sx={{ lineHeight: "70px" }}
@@ -175,27 +162,6 @@ const ComodiryForm: React.FC<Iprops> = ({
             {unit}
           </Typography>
         </Box>
-        {/* <Controller
-            control={control}
-            name="requiredDate"
-            defaultValue={undefined}
-            render={({ field }) => (
-              <InputContent
-                name="requiredDate"
-                label=" تاریخ نیاز"
-                register={register}
-                errors={errors}
-              />
-            )}
-          /> */}
-        {/* <DatePickerWrapper>
-          <DatePicker
-            calendar={persian}
-            locale={persian_fa}
-            value={date}
-            onChange={setSelectedDate}
-          />
-        </DatePickerWrapper> */}
         <Box sx={{ flex: 1 }}>
           <JalaliDatePicker
             defaultValue={date}
@@ -212,7 +178,6 @@ const ComodiryForm: React.FC<Iprops> = ({
           <DeleteIcon />
         </IconButton>
       </Row>
-      {/* </Form> */}
     </>
   );
 };

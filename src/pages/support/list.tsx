@@ -21,8 +21,8 @@ import SelectComponent from "../../components/select/selects";
 import JalaliDatePicker from "../../components/date-picker/date-picker";
 import { Row } from "./style";
 import Grid from "../../components/grid/grid";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../utils/functions.ts";
 const SupportList: React.FC<any> = (props) => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<any>(new Date());
@@ -208,7 +208,7 @@ const SupportList: React.FC<any> = (props) => {
     navigate("/supportApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = () => {};
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
   const getList = async () => {
     const filters = getValues();
     console.log(filters);

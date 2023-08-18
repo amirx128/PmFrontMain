@@ -11,13 +11,12 @@ import { MainLayout } from "./components/layouts/main/main-layout";
 import ProtectedRoute from "./route/protected-route";
 import { IRoute, Layouts, routes } from "./route/routes";
 import theme from "./utils/theme";
-import store from './redux/store';
-import { Provider } from 'react-redux';
-import { PersistGate } from 'redux-persist/integration/react';
-import { persistStore } from 'redux-persist';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import store from "./redux/store";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   const cacheRtl = createCache({
@@ -29,29 +28,40 @@ function App() {
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <ToastContainer rtl />
-            <div dir="rtl">
-              <Router>
+          <ToastContainer rtl />
+          <div dir="rtl">
+            <Router>
               <Routes>
                 {routes.map((item: IRoute, index: number) => {
                   return (
-                    <Route key={index}
+                    <Route
+                      key={index}
                       path={item.path}
                       element={
-                        (item.protected) ? (
+                        item.protected ? (
                           <ProtectedRoute>
-                            {item.layout === Layouts.AUTH ? (<div><AuthLayout>{item.component}</AuthLayout></div>) : (<div><MainLayout>{item.component}</MainLayout></div>)}
-                          </ProtectedRoute>)
-                          : item.layout === Layouts.AUTH ? <AuthLayout>{item.component}</AuthLayout> : <MainLayout>{item.component}</MainLayout>
+                            {item.layout === Layouts.AUTH ? (
+                              <div>
+                                <AuthLayout>{item.component}</AuthLayout>
+                              </div>
+                            ) : (
+                              <div>
+                                <MainLayout>{item.component}</MainLayout>
+                              </div>
+                            )}
+                          </ProtectedRoute>
+                        ) : item.layout === Layouts.AUTH ? (
+                          <AuthLayout>{item.component}</AuthLayout>
+                        ) : (
+                          <MainLayout>{item.component}</MainLayout>
+                        )
                       }
                     />
-                  )
+                  );
                 })}
               </Routes>
             </Router>
-            </div>
-          </PersistGate>
+          </div>
         </Provider>
       </ThemeProvider>
     </CacheProvider>

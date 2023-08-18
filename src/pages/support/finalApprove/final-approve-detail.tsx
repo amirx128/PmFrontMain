@@ -7,8 +7,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { withSnackbar } from "../../../utils/snackbar-hook";
 import RequestDetail from "../request-detail";
 import ApproveCommodityForm from "./approve-commodity-form/aspprove-commodity-form";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
 const FinalApproveDetail = (props) => {
   const theme = useTheme();
 
@@ -23,24 +23,24 @@ const FinalApproveDetail = (props) => {
     getRequestDetail();
   }, []);
 
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
 
   const getRequestDetail = async () => {
     try {
-      const response = await axios.post("/Support/GetRequestCaseCommodityDetails", {
-        userId: user?.id ?? getUserIdFromStorage(),
-        requestId: params.id,
-      });
-    
-      setDetail(response.data.model);
+      const response = await axios.post(
+        "/Support/GetRequestCaseCommodityDetails",
+        {
+          userId: user?.id ?? getUserIdFromStorage(),
+          requestId: params.id,
+        }
+      );
 
+      setDetail(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
   const onSubmit = (commodityDetail, newValues) => {
-    console.log(newValues);
-
     setApproveDate(commodityDetail, newValues);
   };
   const setApproveDate = async function (commodityDetail: any, newValues) {
@@ -99,19 +99,18 @@ const FinalApproveDetail = (props) => {
         />
         لیست کالاها
       </Typography>
-      {detail && detail.commodities
-        ? detail.commodities.map((item, index) => (
-            <ApproveCommodityForm
-            isEditable={detail.isEditable}
-              key={index}
-              defaults={{ stateId: item.approveStateId }}
-              commodity={item}
-              loading={loading}
-              
-              onSubmitForm={(e) => onSubmit(item, e)}
-            />
-          ))
-        : ""}
+      {detail &&
+        detail.commodities &&
+        detail.commodities.map((item, index) => (
+          <ApproveCommodityForm
+            isEditable={item.finalApproveEditabe}
+            key={index}
+            defaults={{ stateId: item.approveStateId }}
+            commodity={item}
+            loading={loading}
+            onSubmitForm={(e) => onSubmit(item, e)}
+          />
+        ))}
     </Card>
   );
 };

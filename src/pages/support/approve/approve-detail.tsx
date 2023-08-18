@@ -14,8 +14,8 @@ import { InputContent } from "../../../components/comodity-form/style";
 import SelectComponent from "../../../components/select/selects";
 import { withSnackbar } from "../../../utils/snackbar-hook";
 import RequestDetail from "../request-detail";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
 const ApproveDetail = (props) => {
   const theme = useTheme();
   const {
@@ -39,7 +39,7 @@ const ApproveDetail = (props) => {
     getRequestDetail();
     console.log(getValues());
   }, []);
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
@@ -116,9 +116,9 @@ const ApproveDetail = (props) => {
           }}
           color="info"
         />
-        لیست کالاها
+        کالا
       </Typography>
-      {detail && detail.commodities ? (
+      {detail && detail.commodities && (
         <form onSubmit={onSubmit}>
           <Grid container spacing={5} p={2}>
             <Grid item xs={12} sm={4} fontFamily="IRANSans">
@@ -166,6 +166,7 @@ const ApproveDetail = (props) => {
                           register={register}
                           required={true}
                           errors={errors}
+                          disabled={!detail?.commodities[0]?.approveEditabe}
                         />
                       )}
                     />
@@ -208,22 +209,23 @@ const ApproveDetail = (props) => {
                   ).toLocaleDateString("fa-IR")}{" "}
                 </Typography>
               </Box>
-            </Grid>
-            <Grid item xs={12} sm={4}>
-              <Controller
-                control={control}
-                rules={{ required: " approve state is required" }}
-                name="stateId"
-                render={({ field }) => (
-                  <SelectComponent
-                    label="وضعیت تایید"
-                    valuefieldName="id"
-                    labelFieldName="state"
-                    options={states}
-                    field={field}
-                  />
-                )}
-              />
+              <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                <Controller
+                  control={control}
+                  rules={{ required: " approve state is required" }}
+                  name="stateId"
+                  render={({ field }) => (
+                    <SelectComponent
+                      label="وضعیت تایید"
+                      valuefieldName="id"
+                      labelFieldName="state"
+                      options={states}
+                      field={field}
+                      disabled={!detail?.commodities[0]?.approveEditabe}
+                    />
+                  )}
+                />
+              </Box>
             </Grid>
           </Grid>
           <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
@@ -252,8 +254,6 @@ const ApproveDetail = (props) => {
 
           <Divider sx={{ width: "80%", margin: "20px auto" }} />
         </form>
-      ) : (
-        ""
       )}
     </Card>
   );

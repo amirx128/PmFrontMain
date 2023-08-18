@@ -8,8 +8,8 @@ import { InputContent } from "../../../../components/comodity-form/style";
 import SelectComponent from "../../../../components/select/selects";
 import theme from "../../../../utils/theme";
 import { StyledBox } from "../../approve/style";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../../utils/functions.ts";
 const ApproveCommodityForm: React.FC<any> = ({
   commodity,
   loading,
@@ -35,7 +35,6 @@ const ApproveCommodityForm: React.FC<any> = ({
   });
   const cancel = () => {};
   const onSubmit = handleSubmit((entity: any) => {
-    console.log(entity);
     onSubmitForm({ ...entity, exitWarehouseCount });
   });
   useEffect(() => {
@@ -48,7 +47,7 @@ const ApproveCommodityForm: React.FC<any> = ({
     getCountCommodityInWarehouse();
   }, []);
 
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
 
   const getApproveStates = async () => {
     try {
@@ -86,7 +85,17 @@ const ApproveCommodityForm: React.FC<any> = ({
       onSubmit={onSubmit}
     >
       <Grid container spacing={5} p={2}>
-        <Grid item xs={12} sm={4} fontFamily="IRANSans">
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          fontFamily="IRANSans"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
           <StyledBox theme={theme}>
             <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
               <Typography
@@ -150,7 +159,7 @@ const ApproveCommodityForm: React.FC<any> = ({
                       register={register}
                       required={true}
                       errors={errors}
-                        disabled={!isEditable}
+                      disabled={!isEditable}
                     />
                   )}
                 />
@@ -161,7 +170,16 @@ const ApproveCommodityForm: React.FC<any> = ({
             </Box>
           </StyledBox>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "space-between",
+          }}
+        >
           <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
             <Typography
               variant="body2"
@@ -242,7 +260,15 @@ const ApproveCommodityForm: React.FC<any> = ({
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12} sm={4}>
+        <Grid
+          item
+          xs={12}
+          sm={4}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           <Controller
             control={control}
             rules={{ required: " approve state is required" }}

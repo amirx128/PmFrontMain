@@ -13,9 +13,9 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../utils/functions.ts";
-import {AddUser} from "../../components/administrations/addUser.tsx";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../utils/functions.ts";
+import { AddUser } from "../../components/administrations/addUser.tsx";
 
 const Users = () => {
   const columns: GridColDef[] = [
@@ -103,15 +103,15 @@ const Users = () => {
     console.log("delete", row);
   };
   const [data, setData] = useState<any[]>([]);
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
 
-  const [showUserDialog,setUserDialog] = useState(false);
-  const [selectedUser,setSelectedUser] = useState(null);
+  const [showUserDialog, setUserDialog] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
 
   const userOnClose = () => {
     setSelectedUser(null);
     setUserDialog(false);
-  }
+  };
 
   useEffect(() => {
     getUsers();
@@ -171,7 +171,11 @@ const Users = () => {
           onSortModelChange={handleSortModelChange}
         ></Grid>
       </Card>
-      <AddUser selectedUser={selectedUser} showUserDialog={showUserDialog} onClose={userOnClose} />
+      <AddUser
+        selectedUser={selectedUser}
+        showUserDialog={showUserDialog}
+        onClose={userOnClose}
+      />
     </CardGrid>
   );
 };

@@ -10,6 +10,7 @@ import ApproveDetail from "../pages/support/approve/approve-detail";
 import FinalApproveDetail from "../pages/support/finalApprove/final-approve-detail";
 import Roles from "../pages/roles/roles.tsx";
 import Commodities from "../pages/commodities/commodities.tsx";
+import ProductDetails from "../pages/product-details/product-details.tsx";
 
 export enum Layouts {
   AUTH = "auth",
@@ -64,6 +65,13 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: " >    جزئیات درخواست تصویب ",
+  },
+  {
+    path: "/product-details/:id",
+    component: <ProductDetails />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: " >    جزئیات کالا ها ",
   },
   {
     path: "/supportFinalApprove",

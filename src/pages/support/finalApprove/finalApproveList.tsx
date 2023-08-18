@@ -22,8 +22,9 @@ import axios from "../../../utils/axios.config";
 import { Row } from "../style";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
+import { Link } from "react-router-dom";
 const FinalApproveRequestList = () => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState(
@@ -112,13 +113,13 @@ const FinalApproveRequestList = () => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
+      renderCell: ({ value, row }) => (
         <Typography
           variant="body1"
           color="secondary"
           sx={{ cursor: "pointer" }}
         >
-          {params.row.trackingCode}
+          <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
         </Typography>
       ),
     },
@@ -212,7 +213,7 @@ const FinalApproveRequestList = () => {
     getList();
     getApproveStates();
   }, []);
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
 
   const getApproveStates = async () => {
     try {
@@ -240,7 +241,7 @@ const FinalApproveRequestList = () => {
         orderType: "asc",
         userId: user?.id ?? getUserIdFromStorage(),
         pageIndex: 1,
-        pageCount: 10,
+        pageCount: 200,
         orderBy: "CreateDate",
 
         toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",

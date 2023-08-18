@@ -8,13 +8,9 @@ import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
 import { FunctionComponent, PropsWithChildren, useState } from "react";
 import PersistentDrawerLeft from "../../drawer/drawer";
-import { AppBarWrapper, DrawerHeader, Container,  Main } from "./style";
+import { AppBarWrapper, DrawerHeader, Container, Main } from "./style";
 
 const drawerWidth = 280;
-
-// interface AppBarProps extends MuiAppBarProps {
-//   open?: boolean;
-// }
 
 export const MainLayout: FunctionComponent<PropsWithChildren> = ({
   children,
@@ -25,13 +21,22 @@ export const MainLayout: FunctionComponent<PropsWithChildren> = ({
   };
   const theme = useTheme();
   return (
-    <Container sx={{backgroundColor:theme.palette.background.default,color:theme.palette.primary.main}} theme={theme} >
+    <Container
+      sx={{
+        backgroundColor: theme.palette.background.default,
+        color: theme.palette.primary.main,
+      }}
+      theme={theme}
+    >
       <CssBaseline />
       <AppBarWrapper
         position="fixed"
         open={open}
         theme={theme}
-        sx={{backgroundColor:theme.palette.background.default,boxShadow:"none !important"}} 
+        sx={{
+          backgroundColor: theme.palette.background.default,
+          boxShadow: "none !important",
+        }}
         drawerwidth={280}
       >
         <Toolbar>
@@ -40,11 +45,11 @@ export const MainLayout: FunctionComponent<PropsWithChildren> = ({
             aria-label="open drawer"
             onClick={toggleMenu}
             edge="start"
-            sx={{ boxShadow:'none',mr: 2, ...(open && { display: "none" }) }}
+            sx={{ boxShadow: "none", mr: 2, ...(open && { display: "none" }) }}
           >
-            <MenuIcon color="primary"/>
+            <MenuIcon color="primary" />
           </IconButton>
-          <Typography  color="primary" variant="h6" noWrap component="div">
+          <Typography color="primary" variant="h6" noWrap component="div">
             Header
           </Typography>
         </Toolbar>
@@ -55,8 +60,7 @@ export const MainLayout: FunctionComponent<PropsWithChildren> = ({
       ></PersistentDrawerLeft>
       <Main open={open} theme={theme} drawerwidth={drawerWidth}>
         <DrawerHeader theme={theme} />
-      {children}
-
+        {children}
       </Main>
 
       {/* <Title>Main Layout </Title> */}

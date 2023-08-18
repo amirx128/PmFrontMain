@@ -1,7 +1,14 @@
 import { Paper } from "@material-ui/core";
 import AddIcon from "@mui/icons-material/Add";
 import LoadingButton from "@mui/lab/LoadingButton";
-import { Box, Card, Divider, IconButton, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  Divider,
+  IconButton,
+  Typography,
+  Modal,
+} from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import ComodityForm from "../../../components/comodity-form/comodity-form";
@@ -12,8 +19,9 @@ import { withSnackbar } from "../../../utils/snackbar-hook";
 import theme from "../../../utils/theme";
 import RequestDetail from "../request-detail/request-detail";
 import { Row } from "./style";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
+import { Link } from "react-router-dom";
 type FormFields = {
   unitId: string;
   placeOfUseId: string;
@@ -28,6 +36,11 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const [businessRoleDetails, setbusinessRoleDetails] = useState<any[]>([]);
   const [userData, setUserData] = useState<any>("");
   const [loading, setLoading] = useState<any>(false);
+  const [isShowModal, setIsShowModal] = useState<boolean>(false);
+  const [trackingCode, setTrackingCode] = useState<string>("");
+  const [requestId, setRequestId] = useState<number>(null);
+  const { user } = useSelector((state: any) => state?.user);
+
   const {
     register,
     handleSubmit,
@@ -38,65 +51,61 @@ const ProductRequest: React.FC<any> = (props: any) => {
     formState: { errors, isValid, isDirty },
   } = useForm<FormFields>({
     defaultValues: {
-      unitId: " ",
-      placeOfUseId: " ",
+      unitId: "",
+      placeOfUseId: "",
     },
   });
 
+  useEffect(() => {
+    if (getValues("placeOfUseId") && getValues("unitId")) {
+      getAllCommodities();
+    }
+  }, [watch("placeOfUseId"), watch("unitId")]);
+  useEffect(() => {
+    getAllUnits();
+    getAllActivities();
+    getPlacedOfUse();
+    const storageData = localStorage.getItem("user");
+    if (storageData) {
+      const data = JSON.parse(storageData);
+      setUserData(data);
+      setbusinessRoleDetails(data?.businessRoles);
+    }
+  }, []);
+
   const onSubmit = handleSubmit((data) => {
-    console.log("submitting...", data);
-    console.log("errors...", errors);
     addNew(data);
   });
-  const {user} = useSelector((state:any) => state?.user)
+  const reset = () => {
+    setValue("unitId", "");
+    setValue("placeOfUseId", "");
+    setComodoties([]);
+  };
   const addNew = async (data) => {
     try {
       setLoading(true);
       const response = await axios.post("/RequestCase/NewRequestCase", {
         userId: user?.id ?? getUserIdFromStorage(),
         unitId: data.unitId,
-
         placeOfUseId: data.placeOfUseId,
         commodites: [...comodities],
       });
-      if (response.data.statusCode === 200) {
+      if (response.data.statusCode === 200 && response.data.model) {
         props.snackbarShowMessage("ثبت کالا با موفقیت انجام شد");
+        setIsShowModal(true);
+        setTrackingCode(response.data.model.trackingCode);
+        setRequestId(response.data.model.requestId);
+        reset();
       } else {
         props.snackbarShowMessage("ثبت کالا با خطا مواجه شد", "error");
       }
       setLoading(false);
-      console.log(response);
     } catch (error) {
       props.snackbarShowMessage("ثبت کالا با خطا مواجه شد", "error");
       setLoading(false);
       console.error("Error fetching data:", error);
     }
   };
-  useEffect(() => {
-    getAllCommodities();
-  }, [watch("placeOfUseId"), watch("unitId")]);
-  useEffect(() => {
-    //
-    getAllUnits();
-    getAllActivities();
-    localStorage.getItem("user");
-    const storageData = localStorage.getItem("user");
-    if (storageData) {
-      const data = JSON.parse(storageData);
-      setUserData(data);
-      setbusinessRoleDetails(data.businessRoleDetailsModel);
-      // setValue("departmentUnitName", data.departmentUnitName);
-    }
-    // console.log(makeTree([
-    //   { "id" : "root"                     },
-    //   { "id" : "a1",   "parentId" : "root", },
-    //   { "id" : "a2",   "parentId" : "a1",   },
-    //   { "id" : "a3",   "parentId" : "a2",   },
-    //   { "id" : "b1",   "parentId" : "root", },
-    //   { "id" : "b2",   "parentId" : "b1",   },
-    //   { "id" : "b3",   "parentId" : "b1",   }
-    // ]))
-  }, []);
 
   const getAllUnits = async () => {
     try {
@@ -106,37 +115,15 @@ const ProductRequest: React.FC<any> = (props: any) => {
         projectId: 0,
         floorId: 0,
       });
-      console.log(response);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  // const getAllCommodities = async () => {
-  //   try {
-  //     const response: any = await axios.all([
-  //       axios.post(
-  //         "http://46.225.237.138:33004/Definition/GetAllCommpdityOnTree",
-  //         {
-  //           userId: user?.id,
-  //           projectId: 0,
-  //           name: "",
-  //           code: "",
-  //         }
-  //       ),
-  //     ]);
-  //     console.log(response.data.model);
-  //     setCommodityDescription(makeTree(response.data.model).items);
-  //     // console.log('im a tree', makeTree(response.data.model));
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
+
   const getAllCommodities = async () => {
     const placeOfUseId = getValues("placeOfUseId");
     const unitId = getValues("unitId");
-    if (!placeOfUseId || placeOfUseId === "" || !unitId || unitId === "") {
-      return;
-    }
+    if (!placeOfUseId && !unitId) return;
     try {
       const response: any = await axios.post(
         "/RequestCase/GetAllCommoditiesForOnePlaceOfUse",
@@ -164,15 +151,12 @@ const ProductRequest: React.FC<any> = (props: any) => {
       console.error("Error fetching data:", error);
     }
   };
-  useEffect(() => {
-    getPlacedOfUse();
-  }, []);
+
   const getPlacedOfUse = async () => {
     try {
       const response = await axios.post("/RequestCase/GetAllPlaseOfUse", {
         userId: user?.id ?? getUserIdFromStorage(),
       });
-      console.log(response.data.model);
       setPlacedOdUse(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -189,7 +173,6 @@ const ProductRequest: React.FC<any> = (props: any) => {
     const newList = [...comodities];
     newList[index] = value;
     setComodoties(newList);
-    console.log(comodities);
   };
   const deleteComodityRow = (index: number) => {
     let comodityList = [...comodities];
@@ -197,7 +180,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
     setComodoties(comodityList);
   };
   return (
-    <Card sx={{padding:'20px'}}>
+    <Card sx={{ padding: "20px" }}>
       <Box
         sx={{
           display: "flex",
@@ -227,18 +210,6 @@ const ProductRequest: React.FC<any> = (props: any) => {
               control={control}
               name="unitId"
               render={({ field }) => (
-                // <TextField
-                //   {...field}
-                //   fullWidth
-                //   sx={{ maxWidth: 600 }}
-                //   label=" تاریخ تکمیل فرم"
-                //   margin="dense"
-                //   required
-                //   error={!!errors.registerDate}
-                //   helperText={
-                //     errors.registerDate && `${errors.registerDate.message}`
-                //   }
-                // />
                 <Select
                   field={field}
                   valuefieldName="id"
@@ -265,7 +236,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
             />
             <Box></Box>
           </Row>
-          <Divider sx={{m:'40px 0'}} />
+          <Divider sx={{ m: "40px 0" }} />
           <Typography
             component="h6"
             sx={{
@@ -316,6 +287,28 @@ const ProductRequest: React.FC<any> = (props: any) => {
           </Row>
         </form>
       </div>
+      <Modal open={isShowModal} onClose={() => setIsShowModal(false)}>
+        <Box
+          sx={{
+            width: "40%",
+            backgroundColor: "#fff",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%,-50%)",
+            padding: "1.6rem 3.2rem",
+          }}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            ثبت کالا با موفقیت انجام شد
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            کد رهگیری شما برابر :{" "}
+            <Link to={`/product-details/${requestId}`}>{trackingCode}</Link>{" "}
+            میباشد
+          </Typography>
+        </Box>
+      </Modal>
     </Card>
   );
 };

@@ -5,6 +5,7 @@ import ListIcon from "@mui/icons-material/ListOutlined";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -16,127 +17,435 @@ import SupportApprove from "@mui/icons-material/SupportTwoTone";
 import ProductIcon from "@mui/icons-material/CategoryOutlined";
 import { useTheme } from "@mui/material/styles";
 import { DrawerHeader } from "./style";
-import { useNavigate } from "react-router-dom";
-import { ListItemText } from "@mui/material";
-import {Abc, GifBox, Inventory} from "@mui/icons-material";
-
-const drawerWidth = 280;
+import { useLocation, useNavigate } from "react-router-dom";
+import { ListItemText, Typography } from "@mui/material";
+import { Abc, ExpandMore, ExpandLess } from "@mui/icons-material";
+import { Collapse } from "@mui/material";
+import { useState, Fragment, useRef, useEffect } from "react";
+import UserRole from "../../core/enums/userRoleEnum";
+const drawerWidth = 200;
 
 export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const theme = useTheme();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [openCollapse, setOpenCollapse] = useState(false);
+  const [userRoles, setUserRoles] = useState(
+    () => JSON.parse(localStorage.getItem("user")).usersRoles
+  );
+
+  useEffect(() => {
+    const { pathname } = location;
+    const isActive = MenuList.find((menu) =>
+      menu.subMenus.some((sub) => sub.route === pathname)
+    );
+    setActiveMenu(isActive ? isActive.id : null);
+    setOpenCollapse(!!isActive);
+  }, []);
+
   const MenuList = [
-    {
-      id: 1,
-      name: " داشبورد",
-      icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <HomeIcon />
-      </ListItemIcon>
-      ),
-      route: "/",
-    },
     {
       id: 2,
       name: " درخواست کالا ",
       icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <ListIcon />
-      </ListItemIcon>
-       
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <ListIcon fontSize="large" />
+        </ListItemIcon>
       ),
-      route: "/productRequest",
+
+      subMenus: [
+        {
+          id: 0,
+          name: "ثبت درخواست جدید",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/productRequest",
+          role: UserRole.Requester,
+        },
+        {
+          id: 1,
+          name: "تحویل دریافت",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.Requester,
+        },
+        {
+          id: 2,
+          name: "درخواست های ارسال شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.Requester,
+        },
+      ],
     },
     {
       id: 3,
-      name: "لیست کاربران ",
+      name: "مدیریت",
       icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <RoleIcon />
-      </ListItemIcon>
-       
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <RoleIcon fontSize="large" />
+        </ListItemIcon>
       ),
-      route: "/users",
+      subMenus: [
+        {
+          id: 0,
+          name: "کاربران",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/users",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "تعاریف",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.Admin,
+        },
+        {
+          id: 2,
+          name: "نقش ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/roles",
+          role: UserRole.Admin,
+        },
+      ],
     },
     {
       id: 4,
-      name: "لیست نقش ها ",
+      name: "پشتیبانی",
       icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <RoleIcon />
-      </ListItemIcon>
-       
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <RoleIcon fontSize="large" />
+        </ListItemIcon>
       ),
-      route: "/roles",
+      subMenus: [
+        {
+          id: 0,
+          name: "منتظر تایید",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/supportApprove",
+          role: UserRole.Approver,
+        },
+        {
+          id: 1,
+          name: "تایید شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.Approver,
+        },
+        {
+          id: 2,
+          name: "در صف تایید تهایی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/supportFinalApprove",
+          role: UserRole.FinalApprove,
+        },
+        {
+          id: 3,
+          name: "تایید شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.FinalApprove,
+        },
+      ],
     },
     {
       id: 5,
-      name: "دسته بندی کالا ها ",
+      name: "خرید",
       icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <ProductIcon />
-      </ListItemIcon>
-       
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <ProductIcon fontSize="large" />
+        </ListItemIcon>
       ),
-      route: "/",
+      subMenus: [
+        {
+          id: 0,
+          name: "تدارکات-منتظر بررسی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Purchase.Logistics"],
+        },
+        {
+          id: 1,
+          name: "تدارکات-بررسی شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Purchase.Logistics"],
+        },
+        {
+          id: 2,
+          name: "مالی-منتظر بررسی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Purchase.Financial"],
+        },
+        {
+          id: 3,
+          name: "مالی-بررسی شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Purchase.Financial"],
+        },
+        {
+          id: 4,
+          name: "تایید خرید",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Purchase.Approver"],
+        },
+        {
+          id: 5,
+          name: "تایید شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Purchase.Financial"],
+        },
+      ],
     },
     {
       id: 6,
-      name: "  پشتیبانی - تصویب ",
+      name: "تامین کننده",
       icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <Support />
-      </ListItemIcon>
-       
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <Support fontSize="large" />
+        </ListItemIcon>
       ),
-      route: "/supportFinalApprove",
+      subMenus: [
+        {
+          id: 0,
+          name: "در صف بررسی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.Supplier,
+        },
+        {
+          id: 1,
+          name: "بررسی شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole.Supplier,
+        },
+      ],
     },
     {
       id: 7,
-      name: "پشتیبانی - تایید ",
+      name: "انبار",
       icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <SupportApprove />
-      </ListItemIcon>
-       
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <SupportApprove fontSize="large" />
+        </ListItemIcon>
       ),
-      route: "/supportApprove",
-
-    },
-    {
-      id: 8,
-      name: "  انبار ",
-      icon: (
-        <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-        <Warehouse />
-      </ListItemIcon>
-       
-      ),
-      route: "/",
-    },
-    {
-      id: 8,
-      name: "  کالا ها ",
-      icon: (
-          <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-            <Inventory />
-          </ListItemIcon>
-      ),
-      route: "/commodities",
-    },
-    {
-      id: 10,
-      name: "  تعاریف ",
-      icon: (
-          <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-            <Abc />
-          </ListItemIcon>
-
-      ),
-      route: "/definitions",
+      subMenus: [
+        {
+          id: 0,
+          name: "در صف تحویل",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Warehouse.Warehouser"],
+        },
+        {
+          id: 1,
+          name: "تحویل گرفته شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Warehouse.Warehouser"],
+        },
+        {
+          id: 2,
+          name: "در صف خروج",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Warehouse.Exit"],
+        },
+        {
+          id: 3,
+          name: "خارج شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "",
+          role: UserRole["Warehouse.Exit"],
+        },
+      ],
     },
   ];
-  const handleClick = (route: any) => {
+  const handleClickMenu = (id, route) => {
+    setActiveMenu(id);
+    setOpenCollapse((prev) => !prev);
+    navigate(route);
+  };
+  const handleClickSubMenu = (route) => {
+    console.log(route);
     navigate(route);
   };
   return (
@@ -149,8 +458,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           boxSizing: "border-box",
         },
       }}
-    
-      PaperProps={{ style: { backgroundColor: theme.palette.primary.main} }}
+      PaperProps={{ style: { backgroundColor: theme.palette.primary.main } }}
       variant="persistent"
       anchor="left"
       open={open}
@@ -158,26 +466,107 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       <DrawerHeader theme={theme}>
         <IconButton onClick={closeDrawer}>
           {theme.direction === "ltr" ? (
-            <ChevronLeftIcon color="secondary" sx={{ color: 'secondary' }} />
+            <ChevronLeftIcon color="secondary" sx={{ color: "secondary" }} />
           ) : (
-            <ChevronRightIcon color="secondary" sx={{color:'secondary', colordisablePadding: 'primary' }} />
+            <ChevronRightIcon
+              color="secondary"
+              sx={{ color: "secondary", colordisablePadding: "primary" }}
+            />
           )}
         </IconButton>
       </DrawerHeader>
       <Divider />
       <List>
         {MenuList.map((item, index) => (
-          <ListItem key={item.id} >
-            <ListItemButton onClick={()=>handleClick(item.route)}>
-              <ListItemIcon sx={{ color: theme.palette.secondary.light }}>
-                {item["icon"]}
-              </ListItemIcon>
-              <ListItemText
-                sx={{ color: theme.palette.common.white }}
-                primary={item.name}
-              />
-            </ListItemButton>
-          </ListItem>
+          <Fragment key={index}>
+            {item.subMenus
+              ?.map((subMenu) => subMenu.role)
+              .some((subMneu) =>
+                userRoles.map((role) => role.id).includes(subMneu)
+              ) && (
+              <>
+                <ListItem
+                  key={item.id}
+                  style={{
+                    backgroundColor:
+                      activeMenu === item.id && theme.palette.secondary.main,
+                  }}
+                >
+                  <ListItemButton
+                    onClick={() => handleClickMenu(item.id, item.route)}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      textAlign: "center",
+                    }}
+                  >
+                    <>{item["icon"]}</>
+                    <ListItemText
+                      sx={{ color: theme.palette.common.white }}
+                      primary={item.name}
+                    />
+
+                    {item?.subMenus &&
+                      (openCollapse && activeMenu === item.id ? (
+                        <ExpandLess
+                          sx={{ color: theme.palette.common.white }}
+                        />
+                      ) : (
+                        <ExpandMore
+                          sx={{ color: theme.palette.common.white }}
+                        />
+                      ))}
+                  </ListItemButton>
+                </ListItem>
+                {item?.subMenus && (
+                  <Collapse
+                    in={openCollapse && activeMenu === item.id}
+                    timeout="auto"
+                  >
+                    <List>
+                      {item?.subMenus?.map((sub) => (
+                        <Fragment key={sub.id}>
+                          {userRoles
+                            .map((role) => role.id)
+                            ?.includes(sub.role) && (
+                            <ListItemButton
+                              onClick={() => handleClickSubMenu(sub.route)}
+                              sx={{
+                                "&:hover": {
+                                  backgroundColor:
+                                    theme.palette.secondary.light,
+                                },
+                              }}
+                              key={sub.id}
+                              style={{
+                                backgroundColor:
+                                  sub.route === location.pathname &&
+                                  openCollapse &&
+                                  theme.palette.secondary.main,
+                              }}
+                            >
+                              <ListItem style={{ justifyContent: "center" }}>
+                                <p
+                                  style={{
+                                    color: theme.palette.common.white,
+                                    fontSize: "12px",
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  {sub.name}
+                                </p>
+                              </ListItem>
+                            </ListItemButton>
+                          )}
+                        </Fragment>
+                      ))}
+                    </List>
+                  </Collapse>
+                )}
+              </>
+            )}
+          </Fragment>
         ))}
       </List>
       <Divider />

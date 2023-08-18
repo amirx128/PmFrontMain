@@ -17,13 +17,13 @@ import {
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SelectComponent from "../../../components/select/selects";
 import JalaliDatePicker from "../../../components/date-picker/date-picker";
 import { Row } from "./style";
 import Grid from "../../../components/grid/grid";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
 const SupportList: React.FC<any> = (props) => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<any>(new Date());
@@ -41,7 +41,6 @@ const SupportList: React.FC<any> = (props) => {
   } = useForm<any>({
     defaultValues: { approveStateId: 3, fromDate: "", toDate: "" },
   });
-
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
@@ -98,15 +97,17 @@ const SupportList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <Typography
-          variant="body1"
-          color="secondary"
-          sx={{ cursor: "pointer" }}
-        >
-          {params.row.trackingCode}
-        </Typography>
-      ),
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     // when type of column is number align should be left, because of rtl direction
 
@@ -203,7 +204,7 @@ const SupportList: React.FC<any> = (props) => {
     console.log(watch);
     getList();
   }, [watch]);
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
@@ -226,7 +227,7 @@ const SupportList: React.FC<any> = (props) => {
       const response = await axios.post("/Support/ApproveQ", {
         userId: user?.id ?? getUserIdFromStorage(),
         pageIndex: 1,
-        pageCount: 10,
+        pageCount: 200,
         orderType: "asc",
         orderBy: "CreateDate",
 
@@ -341,19 +342,9 @@ const SupportList: React.FC<any> = (props) => {
             </Row>
           </form>
         </Box>
-        {/* <ActionRow>
-          <Button
-            sx={{ justifySelf: "flex-start", marginRight: "20px" }}
-            color="info"
-            variant="outlined"
-          >
-            <AddIcon />
-            افزودن
-          </Button>
-        </ActionRow> */}
         <Grid
           onDoubleClick={(e) => handleEditClick(e.row)}
-          rowIdFields={["approveStateId", "commodityName"]}
+          rowIdFields={["approveStateId", "commodityName", "approverId"]}
           columns={columns}
           rows={data}
           pagination={{}}
