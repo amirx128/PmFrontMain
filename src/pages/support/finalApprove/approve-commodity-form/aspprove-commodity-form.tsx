@@ -10,6 +10,8 @@ import theme from "../../../../utils/theme";
 import { StyledBox } from "../../approve/style";
 import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../../utils/functions.ts";
+import { getValue } from "@mui/system";
+import { Watch } from "@mui/icons-material";
 const ApproveCommodityForm: React.FC<any> = ({
   commodity,
   loading,
@@ -29,11 +31,14 @@ const ApproveCommodityForm: React.FC<any> = ({
     control,
     setValue,
     getValues,
-    formState: { errors, isDirty, isValid },
+    formState: { errors, isDirty, isValid, dirtyFields },
+    watch,
   } = useForm<any>({
-    defaultValues: { purchaseCount: 0, finalApproveStateId: "" },
+    defaultValues: {
+      purchaseCount: 0,
+      finalApproveStateId: "",
+    },
   });
-  const cancel = () => {};
   const onSubmit = handleSubmit((entity: any) => {
     onSubmitForm({ ...entity, exitWarehouseCount });
   });
@@ -46,6 +51,9 @@ const ApproveCommodityForm: React.FC<any> = ({
     }
     getCountCommodityInWarehouse();
   }, []);
+  useEffect(() => {
+    console.log(dirtyFields);
+  }, [watch("exitWarehouseCount")]);
 
   const { user } = useSelector((state: any) => state?.user);
 
@@ -74,6 +82,7 @@ const ApproveCommodityForm: React.FC<any> = ({
       console.error("Error fetching data:", error);
     }
   };
+
   const countChange = (count) => {
     setValue("purchaseCount", count);
     setHint(+count + exitWarehouseCount != commodity.count ? defaultHint : "");
@@ -85,17 +94,7 @@ const ApproveCommodityForm: React.FC<any> = ({
       onSubmit={onSubmit}
     >
       <Grid container spacing={5} p={2}>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          fontFamily="IRANSans"
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
+        <Grid item xs={12} sm={4} fontFamily="IRANSans">
           <StyledBox theme={theme}>
             <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
               <Typography
@@ -138,7 +137,6 @@ const ApproveCommodityForm: React.FC<any> = ({
 
               <Typography variant="body2">{commodity.count} </Typography>
             </Box>
-
             <Box sx={{ mb: 6.75 }}>
               <div>
                 <Controller
@@ -158,7 +156,7 @@ const ApproveCommodityForm: React.FC<any> = ({
                       label="درخواست از انبار"
                       register={register}
                       required={true}
-                      errors={errors}
+                      // errors={errors}
                       disabled={!isEditable}
                     />
                   )}
@@ -166,20 +164,16 @@ const ApproveCommodityForm: React.FC<any> = ({
                 <Typography color="primary" variant="body2">
                   {"موجودی انبار: " + exitWarehouseCount}
                 </Typography>
+                {dirtyFields.exitWarehouseCount && !isValid && (
+                  <span style={{ color: theme.palette.error.light }}>
+                    مقدار وارد شده نمیتواند از موجودی انبار بیشتر باشد
+                  </span>
+                )}
               </div>
             </Box>
           </StyledBox>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-          }}
-        >
+        <Grid item xs={12} sm={4}>
           <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
             <Typography
               variant="body2"
@@ -260,30 +254,29 @@ const ApproveCommodityForm: React.FC<any> = ({
             </Typography>
           </Box>
         </Grid>
-        <Grid
-          item
-          xs={12}
-          sm={4}
-          style={{
-            display: "flex",
-            flexDirection: "column",
-          }}
-        >
-          <Controller
-            control={control}
-            rules={{ required: " approve state is required" }}
-            name="finalApproveStateId"
-            render={({ field }) => (
-              <SelectComponent
-                label="وضعیت تایید نهایی"
-                valuefieldName="id"
-                labelFieldName="state"
-                options={states}
-                field={field}
-                disabled={!isEditable}
+        <Grid item xs={12} sm={4}>
+          <StyledBox theme={theme}>
+            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}></Box>
+            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}></Box>
+            <Box sx={{ mb: 14, display: "flex", alignItems: "center" }}></Box>
+            <Box>
+              <Controller
+                control={control}
+                rules={{ required: " approve state is required" }}
+                name="finalApproveStateId"
+                render={({ field }) => (
+                  <SelectComponent
+                    label="وضعیت تایید نهایی"
+                    valuefieldName="id"
+                    labelFieldName="state"
+                    options={states}
+                    field={field}
+                    disabled={!isEditable}
+                  />
+                )}
               />
-            )}
-          />
+            </Box>
+          </StyledBox>
         </Grid>
       </Grid>
       <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
