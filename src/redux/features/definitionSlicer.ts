@@ -3,9 +3,9 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {
     I_Business_ROLE, I_COMMODITY,
     I_FLOOR,
-    I_PERSON,
+    I_PERSON, I_PLEASE_OF_USE, I_PRODUCER,
     I_Project,
-    I_SCHEDULED_ACTIVITIES,
+    I_SCHEDULED_ACTIVITIES, I_SUPPLIER,
     I_UNIT
 } from "../../core/definition/definition.model.ts";
 import {
@@ -20,8 +20,8 @@ import {
     GetAllCommoditiesReq,
     GetAllCommodityOnTreeReq,
     getAllFloorsReq,
-    GetAllPersonsReq,
-    getAllProjectsReq,
+    GetAllPersonsReq, GetAllPlaseOfUseReq, GetAllProducersReq,
+    getAllProjectsReq, GetAllSuppliersReq,
     GetAllUnitReq,
     GetBusinessRoleDetailesReq,
     GetOneCommodityDetailsReq,
@@ -70,6 +70,20 @@ export interface DefinitionState {
         data: I_COMMODITY[],
         pending: boolean,
         addState: boolean
+    },
+    suppliers: {
+        data: I_SUPPLIER[],
+        pending: boolean,
+        addState: boolean
+    },
+    producers: {
+        data: I_PRODUCER[],
+        pending: boolean,
+        addState: boolean
+    },
+    pleaseOfUse: {
+        data: I_PLEASE_OF_USE[],
+        pending: boolean,
     }
 }
 
@@ -108,6 +122,20 @@ const initialState: DefinitionState = {
         data: [],
         pending: false,
         addState: false,
+    },
+    producers: {
+        data: [],
+        pending: false,
+        addState: false,
+    },
+    suppliers: {
+        data: [],
+        pending: false,
+        addState: false,
+    },
+    pleaseOfUse: {
+        data: [],
+        pending: false,
     }
 };
 
@@ -121,6 +149,57 @@ export const getAllProjects = createAsyncThunk(
             const state:any = getState();
             const userId = getUserId(state);
             const {data} = await getAllProjectsReq(userId);
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
+export const GetAllProducers = createAsyncThunk(
+    "definition/GetAllProducers",
+    async (
+        body=undefined,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state:any = getState();
+            const userId = getUserId(state);
+            const {data} = await GetAllProducersReq(userId);
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
+export const GetAllPleaseOfUse = createAsyncThunk(
+    "definition/GetAllPleaseOfUse",
+    async (
+        body=undefined,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state:any = getState();
+            const userId = getUserId(state);
+            const {data} = await GetAllPlaseOfUseReq(userId);
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
+export const GetAllSuppliers = createAsyncThunk(
+    "definition/GetAllSuppliers",
+    async (
+        body=undefined,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state:any = getState();
+            const userId = getUserId(state);
+            const {data} = await GetAllSuppliersReq(userId);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -746,7 +825,45 @@ export const definitionSlicer = createSlice({
                 state.commodities.pending = false;
             });
         //#endregion
-
+        // #region GetAllProducers-----
+        builder
+            .addCase(GetAllProducers.pending, (state:DefinitionState) => {
+                state.producers.pending = true;
+            })
+            .addCase(GetAllProducers.fulfilled, (state:DefinitionState, {payload}) => {
+                state.producers.pending = false;
+                state.producers.data = [...payload?.model];
+            })
+            .addCase(GetAllProducers.rejected, (state:DefinitionState, {error}) => {
+                state.producers.pending = false;
+            });
+        //#endregion
+        // #region GetAllSuppliers-----
+        builder
+            .addCase(GetAllSuppliers.pending, (state:DefinitionState) => {
+                state.suppliers.pending = true;
+            })
+            .addCase(GetAllSuppliers.fulfilled, (state:DefinitionState, {payload}) => {
+                state.suppliers.pending = false;
+                state.suppliers.data = [...payload?.model];
+            })
+            .addCase(GetAllSuppliers.rejected, (state:DefinitionState, {error}) => {
+                state.suppliers.pending = false;
+            });
+        //#endregion
+        // #region GetAllPleaseOfUse-----
+        builder
+            .addCase(GetAllPleaseOfUse.pending, (state:DefinitionState) => {
+                state.pleaseOfUse.pending = true;
+            })
+            .addCase(GetAllPleaseOfUse.fulfilled, (state:DefinitionState, {payload}) => {
+                state.pleaseOfUse.pending = false;
+                state.pleaseOfUse.data = [...payload?.model];
+            })
+            .addCase(GetAllPleaseOfUse.rejected, (state:DefinitionState, {error}) => {
+                state.pleaseOfUse.pending = false;
+            });
+        //#endregion
         // #region AddNewCommodity-----
         builder
             .addCase(AddNewCommodity.pending, (state:DefinitionState) => {

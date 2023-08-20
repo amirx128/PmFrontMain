@@ -6,7 +6,7 @@ let user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user'
 axios.defaults.headers.common['token'] = token;
 
 const axiosInstance = axios.create({
-    baseURL: 'http://46.225.237.138:33004',
+    baseURL: 'http://46.225.142.245:1111',
     data: user ? {userId: user?.id} : {}
 });
 

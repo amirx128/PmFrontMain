@@ -244,3 +244,28 @@ export const GetActivityScheduleDetailsReq = async (userId,selectedItemId) =>
             selectedItemId
         }
     );
+
+
+export const GetAllSuppliersReq = async (userId) =>
+    await axiosInstance.post(
+        `/Definition/GetAllSuppliers`,
+        {
+            userId
+        }
+    );
+
+export const GetAllProducersReq = async (userId) =>
+    await axiosInstance.post(
+        `/Definition/GetAllProducers`,
+        {
+            userId
+        }
+    );
+
+export const GetAllPlaseOfUseReq = async (userId) =>
+    await axiosInstance.post(
+        `/RequestCase/GetAllPlaseOfUse`,
+        {
+            userId
+        }
+    );

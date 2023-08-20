@@ -3,8 +3,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {
     GetAllBusinessRoles, GetAllCommodities, getAllFloors,
-    GetAllPersons,
-    getAllProjects, getAllUnits,
+    GetAllPersons, GetAllPleaseOfUse, GetAllProducers,
+    getAllProjects, GetAllSuppliers, getAllUnits,
     GetScheduleActivities
 } from "../../redux/features/definitionSlicer.ts";
 import {Add, GifBox, Inventory} from "@mui/icons-material";
@@ -23,10 +23,14 @@ const Commodities = () => {
         // @ts-ignore
         dispatch(GetAllCommodities());
         // @ts-ignore
-        dispatch(getAllProjects())
-        // @ts-ignore
         dispatch(GetAllBusinessRoles())
-    }, [])
+        // @ts-ignore
+        dispatch(GetAllProducers())
+        // @ts-ignore
+        dispatch(GetAllSuppliers())
+        // @ts-ignore
+        dispatch(GetAllPleaseOfUse())
+    }, [dispatch])
 
     const commodityOnClose = () => {
         setAddCommodityDialog(false);

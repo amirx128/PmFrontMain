@@ -68,3 +68,32 @@ export interface I_COMMODITY {
   "commodityAddress": string,
   "unit": string
 }
+
+export interface I_SUPPLIER {
+  "id": string | number,
+  "createDate": string,
+  "creator": string,
+  "supplierName": string,
+  "phoneNumber": string,
+  "mobileNumber": string,
+  "address": string,
+  "descriptions": string
+}
+
+export interface I_PRODUCER {
+  "id": number | string,
+  "name": string,
+  "phoneNumber": string,
+  "mobileNumber": string,
+  "address": string,
+  "descriptions": string,
+  "createDate": string,
+  "creator": string
+}
+
+export interface I_PLEASE_OF_USE {
+  "userId": number | string,
+  "id": number | string,
+  "name": string,
+  "type": string
+}
