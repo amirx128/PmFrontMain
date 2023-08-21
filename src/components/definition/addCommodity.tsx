@@ -29,6 +29,7 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     name: '',
     unit: '',
     description: '',
+    descriptions: '',
     garanti: '',
     props: [],
     useInProjectsUnitsIds: [],
