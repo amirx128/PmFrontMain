@@ -9,7 +9,7 @@ import {
   DialogTitle,
   FormControl,
   Grid,
-  IconButton,
+  IconButton, InputAdornment,
   MenuItem,
   Select,
   TextField,
@@ -17,8 +17,8 @@ import {
   useMediaQuery
 } from "@mui/material";
 import {useTheme} from "@mui/material/styles";
-import {Add, HighlightOff} from "@mui/icons-material";
-import {useState} from "react";
+import {Add, HighlightOff, Search} from "@mui/icons-material";
+import {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AddNewCommodity} from "../../redux/features/definitionSlicer.ts";
 import TreeView from "@mui/lab/TreeView";
@@ -46,6 +46,8 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     producerId: 0,
     parentId: 0,
   });
+
+  const [term,setTerm] = useState('');
 
   const {
     businessRoles,
@@ -131,8 +133,8 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     })
   }
 
-  const generateTree = (item) => {
-    if (item?.children) {
+  const generateTree = (item,isTree:boolean=true) => {
+    if (item?.children && isTree) {
       return (
           <TreeItem sx={{color: "rgb(62, 104, 168)"}} nodeId={item?.id} label={item?.serchableName}>
             {item?.children?.map(subItem => generateTree(subItem))}
@@ -142,6 +144,16 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
       return <TreeItem sx={{color: "rgb(62, 104, 168)"}} nodeId={item?.id} label={item?.serchableName}/>;
     }
   }
+
+  const getTreeDate = useCallback(() => {
+    let datas = commoditiesOnTree?.data?.filter(item => item?.serchableName?.includes(term));
+    let theTree = makeTree(datas);
+    if(datas?.length > 1 && (theTree?.items?.length && theTree?.items[0]?.children)){
+      return makeTree(datas).items.map(item => generateTree(item));
+    }else {
+      return datas.map(item => generateTree(item,false));
+    }
+  }, [term]);
 
   return (
       <Dialog open={addCommodityDialog} onClose={onClose} fullWidth={true} maxWidth={'md'} fullScreen={mediumOrSmaller}>
@@ -192,13 +204,18 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
             </Select>
           </FormControl>
           <FormControl fullWidth={true}>
-            <Typography sx={{mt: 2, mb: 1}}>انتخاب شاخه</Typography>
+            <Box sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+              <Typography sx={{mt: 2, mb: 1}}>انتخاب شاخه</Typography>
+              <TextField size={"small"} value={term} onChange={(e) => setTerm(e.target?.value)} InputProps={{
+                startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
+              }} placeholder={'جستجو در شاخه ها'} sx={{my:1}}/>
+            </Box>
             <TreeView onNodeSelect={(e, ids) => handleChange({target: {value: ids, name: 'parentId'}})}
                       defaultCollapseIcon={<ExpandMoreIcon/>}
                       defaultExpandIcon={<ChevronLeftIcon/>}
                       sx={{flexGrow: 1}}>
               {
-                  commoditiesOnTree?.data?.length && makeTree(commoditiesOnTree?.data)?.items.map(item => generateTree(item))
+                  commoditiesOnTree?.data?.length && getTreeDate()
               }
             </TreeView>
           </FormControl>
