@@ -19,7 +19,7 @@ import { useTheme } from "@mui/material/styles";
 import { DrawerHeader } from "./style";
 import { useLocation, useNavigate } from "react-router-dom";
 import { ListItemText, Typography } from "@mui/material";
-import { Abc, ExpandMore, ExpandLess } from "@mui/icons-material";
+import { Abc, ExpandMore, ExpandLess, Inventory } from "@mui/icons-material";
 import { Collapse } from "@mui/material";
 import { useState, Fragment, useRef, useEffect } from "react";
 import UserRole from "../../core/enums/userRoleEnum";
@@ -144,6 +144,20 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 2,
+          name: "کالا ها",
+          icon: (
+              <ListItemIcon
+                  sx={{ color: theme.palette.secondary.light }}
+                  style={{ justifyContent: "center" }}
+              >
+                <Inventory fontSize="large" />
+              </ListItemIcon>
+          ),
+          route: "/commodities",
+          role: UserRole.Admin,
+        },
+        {
+          id: 3,
           name: "نقش ها",
           icon: (
             <ListItemIcon
