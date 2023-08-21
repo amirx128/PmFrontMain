@@ -1,25 +1,31 @@
 import {
+  Box,
+  Button,
+  Chip,
+  CircularProgress,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
+  FormControl,
+  Grid,
   IconButton,
+  MenuItem,
+  Select,
   TextField,
-  useMediaQuery,
-  DialogActions,
-  Button, CircularProgress, MenuItem, Select, FormControl, InputLabel, Typography, Box, Chip, Grid
+  Typography,
+  useMediaQuery
 } from "@mui/material";
 import {useTheme} from "@mui/material/styles";
 import {Add, HighlightOff} from "@mui/icons-material";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {
-  AddNewCommodity,
-  AddNewPerson,
-  AddNewProject, getAllFloors, getAllUnits,
-  UpdatePerson,
-  UpdateProject
-} from "../../redux/features/definitionSlicer.ts";
-import {toast} from "react-toastify";
+import {AddNewCommodity} from "../../redux/features/definitionSlicer.ts";
+import TreeView from "@mui/lab/TreeView";
+import {makeTree} from "../../utils/tree.ts";
+import TreeItem from "@mui/lab/TreeItem";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
 export const AddCommodity = ({addCommodityDialog,onClose}) => {
   const theme = useTheme();
@@ -41,7 +47,14 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     parentId: 0,
   });
 
-  const {businessRoles,pleaseOfUse,commodities,suppliers,producers} = useSelector((state:any) => state.definition);
+  const {
+    businessRoles,
+    pleaseOfUse,
+    commodities,
+    suppliers,
+    producers,
+    commoditiesOnTree
+  } = useSelector((state: any) => state.definition);
 
   const getProjects = () => {
     return pleaseOfUse?.data?.filter(item => item.type === 'Project');
@@ -118,6 +131,18 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     })
   }
 
+  const generateTree = (item) => {
+    if (item?.children) {
+      return (
+          <TreeItem sx={{color: "rgb(62, 104, 168)"}} nodeId={item?.id} label={item?.serchableName}>
+            {item?.children?.map(subItem => generateTree(subItem))}
+          </TreeItem>
+      );
+    } else {
+      return <TreeItem sx={{color: "rgb(62, 104, 168)"}} nodeId={item?.id} label={item?.serchableName}/>;
+    }
+  }
+
   return (
       <Dialog open={addCommodityDialog} onClose={onClose} fullWidth={true} maxWidth={'md'} fullScreen={mediumOrSmaller}>
         <DialogTitle sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
@@ -167,11 +192,15 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
             </Select>
           </FormControl>
           <FormControl fullWidth={true}>
-            <Typography sx={{mt: 2,mb:1}}>واحد مرتبط</Typography>
-            <Select multiple value={info?.useInProjectsUnitsIds} fullWidth={true} name={"useInProjectsUnitsIds"} label={"واحد مرتبط"}
-                    onChange={handleChange}>
-              {getUnits().map(item => <MenuItem value={item.id} key={item?.id}>{item?.name}</MenuItem>)}
-            </Select>
+            <Typography sx={{mt: 2, mb: 1}}>انتخاب شاخه</Typography>
+            <TreeView onNodeSelect={(e, ids) => handleChange({target: {value: ids, name: 'parentId'}})}
+                      defaultCollapseIcon={<ExpandMoreIcon/>}
+                      defaultExpandIcon={<ChevronLeftIcon/>}
+                      sx={{flexGrow: 1}}>
+              {
+                  commoditiesOnTree?.data?.length && makeTree(commoditiesOnTree?.data)?.items.map(item => generateTree(item))
+              }
+            </TreeView>
           </FormControl>
           <FormControl fullWidth={true}>
             <Typography sx={{mt: 2,mb:1}}>طبقه مرتبط</Typography>

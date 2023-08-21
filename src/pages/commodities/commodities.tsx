@@ -2,12 +2,14 @@ import {Box, Button, Grid, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {
-    GetAllBusinessRoles, GetAllCommodities, getAllFloors,
-    GetAllPersons, GetAllPleaseOfUse, GetAllProducers,
-    getAllProjects, GetAllSuppliers, getAllUnits,
-    GetScheduleActivities
+    GetAllBusinessRoles,
+    GetAllCommodities,
+    GetAllCommodityOnTree,
+    GetAllPleaseOfUse,
+    GetAllProducers,
+    GetAllSuppliers
 } from "../../redux/features/definitionSlicer.ts";
-import {Add, GifBox, Inventory} from "@mui/icons-material";
+import {Add, Inventory} from "@mui/icons-material";
 import {AddCommodity} from "../../components/definition/addCommodity.tsx";
 import {CommodityCard} from "../../components/definition/commodity.tsx";
 
@@ -30,6 +32,11 @@ const Commodities = () => {
         dispatch(GetAllSuppliers())
         // @ts-ignore
         dispatch(GetAllPleaseOfUse())
+        dispatch(GetAllCommodityOnTree({
+            commodityName: '',
+            code: '',
+            projectId: undefined
+        }))
     }, [dispatch])
 
     const commodityOnClose = () => {

@@ -96,7 +96,7 @@ export const UpdateFloorReq = async (userId,id,projectId,floorName,code) =>
         }
     );
 
-export const GetAllCommodityOnTreeReq = async (userId,projectId,commodityName,code) =>
+export const GetAllCommodityOnTreeReq = async (userId,projectId=undefined,commodityName='',code='') =>
     await axiosInstance.post(
         `/Definition/GetAllCommpdityOnTree`,
         {

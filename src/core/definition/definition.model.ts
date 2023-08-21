@@ -1,3 +1,5 @@
+import {array} from "yup";
+
 export interface I_Project {
   "id": number | string,
   "name": string,
@@ -96,4 +98,14 @@ export interface I_PLEASE_OF_USE {
   "id": number | string,
   "name": string,
   "type": string
+}
+
+export interface I_COMMODITY_TREE {
+  "id": number | string,
+  "parents": array,
+  "parentId": number | string,
+  "rowId": number | string,
+  "serchableName": string,
+  "commodityAddress": string,
+  "unit": string
 }

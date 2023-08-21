@@ -1,7 +1,7 @@
 import type {PayloadAction} from '@reduxjs/toolkit'
 import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
 import {
-  I_Business_ROLE, I_COMMODITY,
+  I_Business_ROLE, I_COMMODITY, I_COMMODITY_TREE,
   I_FLOOR,
   I_PERSON, I_PLEASE_OF_USE, I_PRODUCER,
   I_Project,
@@ -84,6 +84,10 @@ export interface DefinitionState {
   pleaseOfUse: {
     data: I_PLEASE_OF_USE[],
     pending: boolean,
+  },
+  commoditiesOnTree: {
+    data: I_COMMODITY_TREE[],
+    pending: boolean
   }
 }
 
@@ -136,6 +140,10 @@ const initialState: DefinitionState = {
   pleaseOfUse: {
     data: [],
     pending: false,
+  },
+  commoditiesOnTree: {
+    data: [],
+    pending: false
   }
 };
 
@@ -862,6 +870,19 @@ export const definitionSlicer = createSlice({
         })
         .addCase(GetAllPleaseOfUse.rejected, (state:DefinitionState, {error}) => {
           state.pleaseOfUse.pending = false;
+        });
+    //#endregion
+    // #region GetAllCommodityOnTree-----
+    builder
+        .addCase(GetAllCommodityOnTree.pending, (state:DefinitionState) => {
+          state.commoditiesOnTree.pending = true;
+        })
+        .addCase(GetAllCommodityOnTree.fulfilled, (state:DefinitionState, {payload}) => {
+          state.commoditiesOnTree.pending = false;
+          state.commoditiesOnTree.data = [...payload?.model];
+        })
+        .addCase(GetAllCommodityOnTree.rejected, (state:DefinitionState, {error}) => {
+          state.commoditiesOnTree.pending = false;
         });
     //#endregion
     // #region AddNewCommodity-----
