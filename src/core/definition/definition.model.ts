@@ -102,7 +102,7 @@ export interface I_PLEASE_OF_USE {
 
 export interface I_COMMODITY_TREE {
   "id": number | string,
-  "parents": array,
+  "parents": any[],
   "parentId": number | string,
   "rowId": number | string,
   "serchableName": string,
