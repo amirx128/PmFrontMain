@@ -47,7 +47,7 @@ export const CommodityCard = ({commodity, setSelectedCommodity,setAddCommodityDi
                         <TreeView
                             defaultCollapseIcon={<ExpandMoreIcon/>}
                             defaultExpandIcon={<ChevronLeftIcon/>}
-                            expanded={Object.values(commodity?.parents).map(item => item?.id)}
+                            expanded={Object.values(commodity?.parents).map((item:any) => item?.id)}
                             sx={{flexGrow: 1}}>
                             {
                                 commodity?.parents?.length && getTreeDate()
