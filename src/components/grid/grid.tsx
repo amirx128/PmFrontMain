@@ -33,7 +33,7 @@ const Grid: React.FC<Iprops> = (props: Iprops) => {
       <Box sx={{ height: "unset", width: "100%" }}>
         <DataGrid
           sx={{ ml: "auto", direction: "ltr" }}
-          rows={props.rows.map((row, index) => ({ ...row, id: index }))}
+          rows={props.rows.map((row, index) => ({ ...row}))}
           columns={props.columns}
           initialState={{
             pagination: {

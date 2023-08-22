@@ -3,11 +3,11 @@ import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {
     GetAllBusinessRoles,
-    GetAllPersons,
+    GetAllPersons, GetAllProducers,
     getAllProjects,
     GetScheduleActivities
 } from "../../redux/features/definitionSlicer.ts";
-import {Add, Book, Person, Receipt, Timer} from "@mui/icons-material";
+import {Add, Book, Factory, Person, Receipt, Timer} from "@mui/icons-material";
 import {ProjectCard} from "../../components/definition/project.tsx";
 import {AddProject} from "../../components/definition/addProject.tsx";
 import {AddFloor} from "../../components/definition/addFloor.tsx";
@@ -18,10 +18,12 @@ import {AddRole} from "../../components/definition/addRole.tsx";
 import {BusinessRole} from "../../components/definition/businessRole.tsx";
 import {Activity} from "../../components/definition/activity.tsx";
 import {AddActivity} from "../../components/definition/addActivity.tsx";
+import {Producer} from "../../components/definition/producer.tsx";
+import {AddProducer} from "../../components/definition/addProducer.tsx";
 
 const Definitions = () => {
     const dispatch = useDispatch<any>();
-    const {projects, units, floors, persons,businessRoles,scheduledActivities} = useSelector((state: any) => state.definition);
+    const {projects, units, floors, persons,businessRoles,scheduledActivities,producers} = useSelector((state: any) => state.definition);
 
     const [addProjectDialog,setAddProjectDialog] = useState<boolean>(false);
     const [selectedProject,setSelectedProject] = useState<any>(null);
@@ -42,6 +44,8 @@ const Definitions = () => {
     const [selectedRole, setSelectedRole] = useState<any>(null);
     const [addActivitiesDialog, setAddActivitiesDialog] = useState<boolean>(false);
     const [selectedActivity, setSelectedActivity] = useState<any>(null);
+    const [addProducerDialog, setAddProducerDialog] = useState<boolean>(false);
+    const [selectedProducer, setSelectedProducer] = useState<any>(null);
 
     const tabs = [
         {
@@ -75,6 +79,14 @@ const Definitions = () => {
             onClick: () => {
                 setAddActivitiesDialog(true)
             }
+        },
+        {
+            title: "تهیه کننده ها",
+            value: "producers",
+            icon: <Factory sx={{mr: 1}}/>,
+            onClick: () => {
+                setAddProducerDialog(true)
+            }
         }
     ];
 
@@ -91,6 +103,8 @@ const Definitions = () => {
         dispatch(GetAllBusinessRoles());
         // @ts-ignore
         dispatch(GetScheduleActivities());
+        // @ts-ignore
+        dispatch(GetAllProducers());
     }, [])
 
     const projectOnClose = () => {
@@ -121,6 +135,11 @@ const Definitions = () => {
     const roleOnClose = () => {
         setAddRolesDialog(false);
         setSelectedRole(null);
+    };
+
+    const producerOnClose = () => {
+        setAddProducerDialog(false);
+        setSelectedProducer(null);
     };
     return (
         <Grid
@@ -175,12 +194,18 @@ const Definitions = () => {
                                 <Activity activity={activity} setAddActivitiesDialog={setAddActivitiesDialog}
                                               setSelectedActivity={setSelectedActivity} key={activity?.id}/>) : (selectedTab === 'activities' && <Typography>اطلاعاتی برای نمایش وجود ندارد</Typography>)
                         }
+                        {
+                            selectedTab === 'producers' && producers?.data?.length > 0 ? producers?.data?.map(producer =>
+                                <Producer producer={producer} setAddProducerDialog={setAddProducerDialog}
+                                              setSelectedProducer={setSelectedProducer} key={producer?.id}/>) : (selectedTab === 'producers' && <Typography>اطلاعاتی برای نمایش وجود ندارد</Typography>)
+                        }
                     </Grid>
                 </Box>
             </Grid>
             <AddProject addProjectDialog={addProjectDialog} selectedProject={selectedProject} onClose={projectOnClose}/>
             <AddActivity addActivitiesDialog={addActivitiesDialog} selectedActivity={selectedActivity} onClose={activityOnClose}/>
             <AddPerson addPersonsDialog={addPersonsDialog} selectedPerson={selectedPerson} onClose={personOnClose}/>
+            <AddProducer addProducerDialog={addProducerDialog} selectedProducer={selectedProducer} onClose={producerOnClose}/>
             <AddRole  addRolesDialog={addRolesDialog} selectedRole={selectedRole} onClose={roleOnClose}/>
             <AddFloor setCurrentProject={setCurrentProject} addFloorDialog={addFloorDialog}
                       selectedFloor={selectedFloor} onClose={floorOnClose}/>

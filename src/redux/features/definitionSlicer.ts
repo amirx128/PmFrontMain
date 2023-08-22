@@ -13,7 +13,7 @@ import {
   AddNewBusinessRoleReq,
   AddNewCommodityReq,
   AddNewFloorReq,
-  AddNewPersonReq,
+  AddNewPersonReq, AddNewProducerReq,
   AddNewProjectReq,
   AddNewUnitReq, GetActivityScheduleDetailsReq,
   GetAllBusinessRolesReq,
@@ -26,8 +26,8 @@ import {
   GetBusinessRoleDetailesReq,
   GetOneCommodityDetailsReq,
   GetPersonDetailsReq, GetScheduleActivitiesReq,
-  UpdateBusinessRoleReq, UpdateFloorReq, UpdateNewActivityScheduleReq,
-  UpdatePersonReq, UpdateProjectReq, UpdateUnitReq
+  UpdateBusinessRoleReq, UpdateCommodityDetailsReq, UpdateFloorReq, UpdateNewActivityScheduleReq,
+  UpdatePersonReq, UpdateProducerInfoReq, UpdateProjectReq, UpdateUnitReq
 } from "../../core/definition/definition.service.ts";
 
 
@@ -88,7 +88,8 @@ export interface DefinitionState {
   commoditiesOnTree: {
     data: I_COMMODITY_TREE[],
     pending: boolean
-  }
+  },
+  selectedCommodity: any,
 }
 
 const initialState: DefinitionState = {
@@ -144,7 +145,8 @@ const initialState: DefinitionState = {
   commoditiesOnTree: {
     data: [],
     pending: false
-  }
+  },
+  selectedCommodity: null,
 };
 
 export const getAllProjects = createAsyncThunk(
@@ -402,6 +404,26 @@ export const AddNewCommodity = createAsyncThunk(
     }
 );
 
+export const UpdateCommodityDetails = createAsyncThunk(
+    "definition/UpdateCommodityDetails",
+    async (
+        body:any,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+      try {
+        const state:any = getState();
+        const userId = getUserId(state);
+        const {data} = await UpdateCommodityDetailsReq(userId,body);
+        if(data?.isSuccess){
+          dispatch(GetAllCommodities());
+        }
+        return fulfillWithValue(data);
+      } catch (err) {
+        throw rejectWithValue(err);
+      }
+    }
+);
+
 export const GetOneCommodityDetails = createAsyncThunk(
     "definition/GetOneCommodityDetails",
     async (
@@ -606,6 +628,46 @@ export const AddNewActivitySchedule = createAsyncThunk(
     }
 );
 
+export const AddNewProducer = createAsyncThunk(
+    "definition/AddNewProducer",
+    async (
+        body: any,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+      try {
+        const state:any = getState();
+        const userId = getUserId(state);
+        const {data} = await AddNewProducerReq(userId,body);
+        if(data?.isSuccess){
+          dispatch(GetAllProducers());
+        }
+        return fulfillWithValue(data);
+      } catch (err) {
+        throw rejectWithValue(err);
+      }
+    }
+);
+
+export const UpdateProducerInfo = createAsyncThunk(
+    "definition/UpdateProducerInfo",
+    async (
+        body: any,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+      try {
+        const state:any = getState();
+        const userId = getUserId(state);
+        const {data} = await UpdateProducerInfoReq(userId,body);
+        if(data?.isSuccess){
+          dispatch(GetAllProducers());
+        }
+        return fulfillWithValue(data);
+      } catch (err) {
+        throw rejectWithValue(err);
+      }
+    }
+);
+
 export const UpdateNewActivitySchedule = createAsyncThunk(
     "definition/UpdateNewActivitySchedule",
     async (
@@ -665,8 +727,8 @@ export const definitionSlicer = createSlice({
   name: 'definition',
   initialState,
   reducers: {
-    setProjects: (state: DefinitionState, action: PayloadAction<any>) => {
-      state.projects.data = action.payload
+    clearSelectedCommodity: (state: DefinitionState, action: PayloadAction<any>) => {
+      state.selectedCommodity = action.payload
     },
   },
   extraReducers: (builder) => {
@@ -885,6 +947,18 @@ export const definitionSlicer = createSlice({
           state.commoditiesOnTree.pending = false;
         });
     //#endregion
+    // #region GetOneCommodityDetails-----
+    builder
+        .addCase(GetOneCommodityDetails.pending, (state:DefinitionState) => {
+          state.selectedCommodity = null;
+        })
+        .addCase(GetOneCommodityDetails.fulfilled, (state:DefinitionState, {payload}) => {
+          state.selectedCommodity = {...payload?.model};
+        })
+        .addCase(GetOneCommodityDetails.rejected, (state:DefinitionState, {error}) => {
+          state.selectedCommodity = null;
+        });
+    //#endregion
     // #region AddNewCommodity-----
     builder
         .addCase(AddNewCommodity.pending, (state:DefinitionState) => {
@@ -901,6 +975,6 @@ export const definitionSlicer = createSlice({
 })
 
 // Action creators are generated for each case reducer function
-export const {setProjects} = definitionSlicer.actions
+export const {clearSelectedCommodity} = definitionSlicer.actions
 
 export default definitionSlicer.reducer
