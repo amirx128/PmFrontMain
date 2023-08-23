@@ -1,5 +1,7 @@
 import axios from "axios";
 import { toast } from "react-toastify";
+//@ts-ignore
+const appConfig = window?.globalConfig;
 
 let token = localStorage.getItem("atkn");
 let user = localStorage.getItem("user")
@@ -9,7 +11,7 @@ axios.defaults.headers.common["token"] = token;
 
 const axiosInstance = axios.create({
   //@ts-ignore
-  baseURL: import.meta.env.VITE_BASE_URL,
+  baseURL: appConfig?.baseUrl ?? import.meta.env.VITE_BASE_URL,
   data: user ? { userId: user?.id } : {},
 });
 

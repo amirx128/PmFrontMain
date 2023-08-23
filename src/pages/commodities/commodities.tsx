@@ -1,4 +1,14 @@
-import {Box, Button, Dialog, DialogContent, DialogTitle, Grid, ListItemText, Typography} from "@mui/material";
+import {
+    Box,
+    Button,
+    Dialog,
+    DialogContent,
+    DialogTitle,
+    Grid,
+    InputAdornment,
+    ListItemText, TextField,
+    Typography
+} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {useCallback, useEffect, useState} from "react";
 import {
@@ -10,7 +20,7 @@ import {
     GetAllProducers,
     GetAllSuppliers, GetOneCommodityDetails
 } from "../../redux/features/definitionSlicer.ts";
-import {Add, AddBox, BorderColor, Inventory} from "@mui/icons-material";
+import {Add, AddBox, BorderColor, Inventory, Search} from "@mui/icons-material";
 import {AddCommodity} from "../../components/definition/addCommodity.tsx";
 import {CommodityCard} from "../../components/definition/commodity.tsx";
 import List from "@mui/material/List";
@@ -92,7 +102,7 @@ const Commodities = () => {
         }
     }, [term,commoditiesOnTree]);
 
-    const [showActionDialog,setShowActionDialog] = useState(null);
+    const [selectedNode,setSelectedNode] = useState(null);
     const [parent,setParent] = useState(null);
 
 
@@ -114,58 +124,47 @@ const Commodities = () => {
                             کالا ها
                         </Typography>
 
-                        <Button size={"small"} startIcon={<Add/>} variant={"outlined"} color={"secondary"}
-                                onClick={() => setAddCommodityDialog(true)}>
-                            افزودن
-                        </Button>
+                        <Box sx={{display:"flex",alignItems:"center",gap:1}}>
+                            <Button disabled={!selectedNode} size={"small"} startIcon={<BorderColor/>} variant={"outlined"} color={"primary"}
+                                    onClick={() => {
+                                        setParent(null);
+                                        let find = commodities?.data?.filter(item => item?.id == selectedNode);
+                                        if(find){
+                                            setSelectedCommodity(find[0]);
+                                            setSelectedNode(null);
+                                            setAddCommodityDialog(true);
+                                        }
+                                    }}>
+                                ویرایش
+                            </Button>
+                            <Button size={"small"} startIcon={<Add/>} variant={"outlined"} color={"secondary"}
+                                    onClick={() => {
+                                        setParent(selectedNode);
+                                        setSelectedNode(null);
+                                        setAddCommodityDialog(true);
+                                    }}>
+                                افزودن
+                            </Button>
+                        </Box>
                     </Box>
                     <Box sx={{textAlign:"left"}}>
+                        <TextField size={"small"} fullWidth={true} value={term} onChange={(e) => setTerm(e.target?.value)} InputProps={{
+                            startAdornment: <InputAdornment position="start"><Search /></InputAdornment>,
+                        }} placeholder={'جستجو'} sx={{my:1}}/>
                         <TreeView onNodeSelect={(event, nodeIds) => {
-                            setShowActionDialog(nodeIds);
+                            setSelectedNode(nodeIds);
                         }} expanded={Object.values(commoditiesOnTree?.data).map((item:any) => item?.id?.toString())}
                                   defaultCollapseIcon={<ExpandMoreIcon/>}
                                   defaultExpandIcon={<ChevronLeftIcon/>}
                                   sx={{flexGrow: 1}}>
                             {
-                                commoditiesOnTree?.data?.length && getTreeDate()
+                                commoditiesOnTree?.data?.length > 0 && getTreeDate()
                             }
                         </TreeView>
                     </Box>
                 </Box>
             </Grid>
             <AddCommodity addCommodityDialog={addCommodityDialog} parent={parent} onClose={commodityOnClose}/>
-            <Dialog maxWidth={"xs"} fullWidth={true} open={!!showActionDialog} onClose={() => setShowActionDialog(null)}>
-                <List>
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => {
-                            setParent(showActionDialog);
-                            setShowActionDialog(null);
-                            setAddCommodityDialog(true);
-                        }}>
-                            <ListItemIcon>
-                                <AddBox />
-                            </ListItemIcon>
-                            <ListItemText primary="افزودن" />
-                        </ListItemButton>
-                    </ListItem>
-                    <ListItem onClick={() => {
-                        setParent(null);
-                        let find = commodities?.data?.filter(item => item?.id == showActionDialog);
-                        if(find){
-                            setSelectedCommodity(find[0]);
-                            setShowActionDialog(null);
-                            setAddCommodityDialog(true);
-                        }
-                    }} disablePadding>
-                        <ListItemButton>
-                            <ListItemIcon>
-                                <BorderColor />
-                            </ListItemIcon>
-                            <ListItemText primary="ویرایش" />
-                        </ListItemButton>
-                    </ListItem>
-                </List>
-            </Dialog>
         </Grid>
     );
 };
