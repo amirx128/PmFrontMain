@@ -181,7 +181,6 @@ const Users = () => {
         ></Grid>
       </Card>
       <AddUser
-        selectedUser={selectedUser}
         showUserDialog={showUserDialog}
         onClose={userOnClose}
       />

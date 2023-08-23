@@ -27,7 +27,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-export const AddCommodity = ({addCommodityDialog,onClose,showActionDialog}) => {
+export const AddCommodity = ({addCommodityDialog,onClose}) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
   const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
@@ -44,7 +44,7 @@ export const AddCommodity = ({addCommodityDialog,onClose,showActionDialog}) => {
     businessRoleIds: [],
     supplierId: '',
     producerId: 0,
-    parentId: showActionDialog ?? 0,
+    parentId: 0,
   });
 
 
@@ -83,7 +83,7 @@ export const AddCommodity = ({addCommodityDialog,onClose,showActionDialog}) => {
         businessRoleIds: [],
         supplierId: '',
         producerId: 0,
-        parentId: showActionDialog ?? 0,
+        parentId: 0,
       });
     }
   }, [selectedCommodity]);
