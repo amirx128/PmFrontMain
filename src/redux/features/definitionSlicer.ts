@@ -676,7 +676,6 @@ export const UpdateNewActivitySchedule = createAsyncThunk(
     ) => {
       try {
         const state:any = getState();
-        debugger;
         const userId = getUserId(state);
         const {data} = await UpdateNewActivityScheduleReq(userId,body.id,body.name,body.desc);
         if(data?.isSuccess){

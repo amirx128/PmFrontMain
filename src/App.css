@@ -45,3 +45,8 @@ form p{
 .MuiDataGrid-cellContent{
   font-family: IRANSans !important;
 }
+
+.MuiTreeItem-content.Mui-selected , .MuiMenuItem-root.Mui-selected {
+  color: #fff;
+  background-color: #009688!important;
+}

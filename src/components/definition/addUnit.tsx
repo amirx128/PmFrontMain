@@ -92,7 +92,7 @@ export const AddUnit = ({addUnitDialog, selectedUnit, onClose, currentProject}) 
                            fullWidth={true} sx={{mt: 2}}/>
                 <TextField value={info?.code} name={'code'} onChange={handleChange} label={'کد واحد'} fullWidth={true}
                            sx={{mt: 2}}/>
-                <Select value={info?.projectId} fullWidth={true} name={"projectId"} label={"پروژه"} disabled
+                <Select value={info?.projectId} fullWidth={true} name={"projectId"} label={"پروژه"}
                         onChange={handleChange} sx={{mt: 2}}>
                     {projects?.data?.map(item => <MenuItem value={item.id} key={item?.id}>{item?.name}</MenuItem>)}
                 </Select>

@@ -13,11 +13,13 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { AddUser } from "../../components/administrations/addUser.tsx";
+import {GetUserInfo} from "../../redux/features/administrationSlicer.ts";
 
 const Users = () => {
+  const dispatch = useDispatch();
   const columns: GridColDef[] = [
     {
       field: "firstName",
@@ -133,6 +135,13 @@ const Users = () => {
   const handleSortModelChange = (entity) => {
     console.log(entity);
   };
+
+  useEffect(() => {
+    if(selectedUser?.id){
+      //@ts-ignore
+      dispatch(GetUserInfo(selectedUser?.id));
+    }
+  }, [selectedUser]);
   return (
     <CardGrid
       item

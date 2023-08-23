@@ -26,3 +26,12 @@ export const UpdateUserReq = async (userId,body) =>
         }
     );
 
+export const GetUserInfoReq = async (userId,id) =>
+    await axiosInstance.post(
+        `/Administration/GetUserInfo`,
+        {
+            userId: userId,
+            selectedItemId: id,
+        }
+    );
+

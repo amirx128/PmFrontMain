@@ -22,10 +22,12 @@ import {
 import {toast} from "react-toastify";
 import {AddNewUser, GetAllRoles, UpdateUser} from "../../redux/features/administrationSlicer.ts";
 
-export const AddUser = ({showUserDialog,selectedUser,onClose}) => {
+export const AddUser = ({showUserDialog,onClose}) => {
     const theme = useTheme();
     const dispatch = useDispatch<any>();
     const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
+    const {roles,selectedUser} = useSelector((state:any) => state.administrations);
+
     const [info,setInfo] = useState({
         firstName: selectedUser?.firstName,
         lastName: selectedUser?.lastName,
@@ -71,7 +73,6 @@ export const AddUser = ({showUserDialog,selectedUser,onClose}) => {
         console.log(info);
     }, [info]);
     const {businessRoles} = useSelector((state:any) => state.definition);
-    const {roles} = useSelector((state:any) => state.administrations);
 
     const handleChange = (e) => {
         if(e.target?.name === 'isActive'){

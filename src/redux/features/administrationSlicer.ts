@@ -1,6 +1,12 @@
-import {createAsyncThunk, createSlice} from '@reduxjs/toolkit'
-import {AddNewUserReq, GetAllRolesReq, UpdateUserReq} from "../../core/administrations/administrations.service.ts";
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {
+    AddNewUserReq,
+    GetAllRolesReq,
+    GetUserInfoReq,
+    UpdateUserReq
+} from "../../core/administrations/administrations.service.ts";
 import {I_ROLE} from "../../core/administrations/administrations.model.ts";
+import {DefinitionState} from "./definitionSlicer.ts";
 
 
 const getUserId = (state) => {
@@ -15,7 +21,8 @@ export interface AdministrationState {
     }
     users: {
         addState: boolean
-    }
+    },
+    selectedUser: any,
 }
 
 const initialState: AdministrationState = {
@@ -26,7 +33,8 @@ const initialState: AdministrationState = {
     },
     users: {
         addState: false,
-    }
+    },
+    selectedUser: null,
 };
 
 export const GetAllRoles = createAsyncThunk(
@@ -39,6 +47,23 @@ export const GetAllRoles = createAsyncThunk(
             const state: any = getState();
             const userId = getUserId(state);
             const {data} = await GetAllRolesReq(userId);
+            return fulfillWithValue(data);
+        } catch (err) {
+            throw rejectWithValue(err);
+        }
+    }
+);
+
+export const GetUserInfo = createAsyncThunk(
+    "administrations/GetUserInfo",
+    async (
+        id,
+        {rejectWithValue, fulfillWithValue, dispatch, getState}
+    ) => {
+        try {
+            const state: any = getState();
+            const userId = getUserId(state);
+            const {data} = await GetUserInfoReq(userId,id);
             return fulfillWithValue(data);
         } catch (err) {
             throw rejectWithValue(err);
@@ -83,7 +108,11 @@ export const UpdateUser = createAsyncThunk(
 export const administrationSlicer = createSlice({
     name: 'administrations',
     initialState,
-    reducers: undefined,
+    reducers: {
+        clearSelectedUser: (state: AdministrationState, action: PayloadAction<any>) => {
+            state.selectedUser = null
+        },
+    },
     extraReducers: (builder) => {
         //#region GetAllRoles-----
         builder
@@ -96,6 +125,18 @@ export const administrationSlicer = createSlice({
             })
             .addCase(GetAllRoles.rejected, (state: AdministrationState, {error}) => {
                 state.roles.pending = false;
+            });
+        //#endregion
+        // #region GetUserInfo-----
+        builder
+            .addCase(GetUserInfo.pending, (state: AdministrationState) => {
+                state.selectedUser = null;
+            })
+            .addCase(GetUserInfo.fulfilled, (state: AdministrationState, {payload}) => {
+                state.selectedUser = {...payload?.model};
+            })
+            .addCase(GetUserInfo.rejected, (state: AdministrationState, {error}) => {
+                state.selectedUser = null;
             });
         //#endregion
         // #region AddNewUser-----

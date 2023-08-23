@@ -27,7 +27,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-export const AddCommodity = ({addCommodityDialog,onClose}) => {
+export const AddCommodity = ({addCommodityDialog,onClose,showActionDialog}) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
   const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
@@ -44,7 +44,7 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     businessRoleIds: [],
     supplierId: '',
     producerId: 0,
-    parentId: 0,
+    parentId: showActionDialog ?? 0,
   });
 
 
@@ -67,7 +67,7 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
         useInProjectsFloorIds:  selectedCommodity?.placeOfUseFloor?.map(item => item?.id),
         useInProjectsIds:  selectedCommodity?.placeOfUseProject?.map(item => item?.id),
         useInProjectsUnitsIds:  selectedCommodity?.placeOfUseUnit?.map(item => item?.id),
-        businessRoleIds: [],
+        businessRoleIds:  selectedCommodity?.businessRoles?.map(item => item?.id),
       });
     }else {
       setInfo({
@@ -83,14 +83,10 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
         businessRoleIds: [],
         supplierId: '',
         producerId: 0,
-        parentId: 0,
+        parentId: showActionDialog ?? 0,
       });
     }
   }, [selectedCommodity]);
-
-  useEffect(() => {
-    console.log(info);
-  }, [info]);
 
   const [term,setTerm] = useState('');
 
