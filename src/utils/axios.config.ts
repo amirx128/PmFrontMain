@@ -8,7 +8,7 @@ let user = localStorage.getItem("user")
 axios.defaults.headers.common["token"] = token;
 
 const axiosInstance = axios.create({
-    //@ts-ignore
+  //@ts-ignore
   baseURL: import.meta.env.VITE_BASE_URL,
   data: user ? { userId: user?.id } : {},
 });

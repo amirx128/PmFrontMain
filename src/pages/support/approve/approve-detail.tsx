@@ -125,6 +125,21 @@ const ApproveDetail = (props) => {
               <StyledBox theme={theme}>
                 <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
                   <Typography
+                    variant="h5"
+                    sx={{
+                      fontWeight: "bold",
+                      marginRight: "20px",
+                    }}
+                  >
+                    شرح کالا
+                  </Typography>
+
+                  <Typography variant="h5">
+                    {detail.commodities[0].commodity}{" "}
+                  </Typography>
+                </Box>
+                <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                  <Typography
                     variant="body2"
                     sx={{
                       fontSize: "14px",
@@ -138,22 +153,10 @@ const ApproveDetail = (props) => {
                     {detail.commodities[0].activityName}
                   </Typography>
                 </Box>
-                <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      marginRight: "20px",
-                    }}
-                  >
-                    شرح کالا
-                  </Typography>
+                <Box
+                  sx={{ mb: 9, display: "flex", alignItems: "center" }}
+                ></Box>
 
-                  <Typography variant="body2">
-                    {detail.commodities[0].commodity}{" "}
-                  </Typography>
-                </Box>
                 <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
                   <div>
                     <Controller
@@ -177,18 +180,17 @@ const ApproveDetail = (props) => {
             <Grid item xs={12} sm={4}>
               <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
                 <Typography
-                  variant="body2"
+                  variant="h5"
                   sx={{
-                    fontSize: "14px",
                     fontWeight: "bold",
                     marginRight: "20px",
                   }}
                 >
-                  وضعیت تصویب:
+                  تعداد:
                 </Typography>
 
-                <Typography variant="body2">
-                  {detail.commodities[0].finalApproveState}{" "}
+                <Typography variant="h5">
+                  {detail.commodities[0].count || 0}{" "}
                 </Typography>
               </Box>
               <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
@@ -209,6 +211,23 @@ const ApproveDetail = (props) => {
                   ).toLocaleDateString("fa-IR")}{" "}
                 </Typography>
               </Box>
+              <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
+                  وضعیت تصویب:
+                </Typography>
+
+                <Typography variant="body2">
+                  {detail.commodities[0].finalApproveState}{" "}
+                </Typography>
+              </Box>
+
               <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
                 <Controller
                   control={control}

@@ -97,7 +97,7 @@ const FinalApproveDetail = (props) => {
           }}
           color="info"
         />
-        لیست کالاها
+        مشخصات کالا ها
       </Typography>
       {detail &&
         detail.commodities &&
