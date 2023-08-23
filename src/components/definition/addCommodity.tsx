@@ -27,7 +27,7 @@ import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 
-export const AddCommodity = ({addCommodityDialog,onClose}) => {
+export const AddCommodity = ({addCommodityDialog,onClose,parent}) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
   const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
@@ -44,7 +44,7 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     businessRoleIds: [],
     supplierId: '',
     producerId: 0,
-    parentId: 0,
+    parentId: parent ? parseInt(parent) : null ?? 0,
   });
 
 
@@ -83,10 +83,10 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
         businessRoleIds: [],
         supplierId: '',
         producerId: 0,
-        parentId: 0,
+        parentId: parent ? parseInt(parent) : null ?? 0,
       });
     }
-  }, [selectedCommodity]);
+  }, [selectedCommodity,parent]);
 
   const [term,setTerm] = useState('');
 
@@ -189,7 +189,7 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     }else {
       return datas.map(item => generateTree(item,false));
     }
-  }, [term]);
+  }, [term,commoditiesOnTree]);
 
   const [showTreeDialog,setShowTreeDialog] = useState(false);
 
