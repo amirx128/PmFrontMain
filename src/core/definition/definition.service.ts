@@ -123,6 +123,14 @@ export const AddNewCommodityReq = async (userId,body) =>
             ...body
         }
     );
+export const UpdateCommodityDetailsReq = async (userId,body) =>
+    await axiosInstance.post(
+        `/Definition/UpdateCommodityDetails`,
+        {
+            userId,
+            ...body
+        }
+    );
 
 export const GetOneCommodityDetailsReq = async (userId,commodityId) =>
     await axiosInstance.post(
@@ -267,5 +275,23 @@ export const GetAllPlaseOfUseReq = async (userId) =>
         `/RequestCase/GetAllPlaseOfUse`,
         {
             userId
+        }
+    );
+
+export const AddNewProducerReq = async (userId,body) =>
+    await axiosInstance.post(
+        `/Definition/AddNewProducer`,
+        {
+            userId,
+            ...body
+        }
+    );
+
+export const UpdateProducerInfoReq = async (userId,body) =>
+    await axiosInstance.post(
+        `/Definition/UpdateProducerInfo`,
+        {
+            userId,
+            ...body
         }
     );

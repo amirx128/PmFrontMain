@@ -20,7 +20,7 @@ import {useTheme} from "@mui/material/styles";
 import {Add, HighlightOff, Search} from "@mui/icons-material";
 import {useCallback, useEffect, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
-import {AddNewCommodity} from "../../redux/features/definitionSlicer.ts";
+import {AddNewCommodity, UpdateCommodityDetails} from "../../redux/features/definitionSlicer.ts";
 import TreeView from "@mui/lab/TreeView";
 import {makeTree} from "../../utils/tree.ts";
 import TreeItem from "@mui/lab/TreeItem";
@@ -47,7 +47,6 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     parentId: 0,
   });
 
-  const [term,setTerm] = useState('');
 
   const {
     businessRoles,
@@ -55,8 +54,45 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
     commodities,
     suppliers,
     producers,
-    commoditiesOnTree
+    commoditiesOnTree,
+    selectedCommodity
   } = useSelector((state: any) => state.definition);
+
+  useEffect(() => {
+    if(selectedCommodity){
+      setInfo({
+        ...selectedCommodity,
+        producerId: selectedCommodity?.producerId ? selectedCommodity?.producerId : 0,
+        supplierId: selectedCommodity?.supplierId ? selectedCommodity?.supplierId : 0,
+        useInProjectsFloorIds:  selectedCommodity?.placeOfUseFloor?.map(item => item?.id),
+        useInProjectsIds:  selectedCommodity?.placeOfUseProject?.map(item => item?.id),
+        useInProjectsUnitsIds:  selectedCommodity?.placeOfUseUnit?.map(item => item?.id),
+        businessRoleIds: [],
+      });
+    }else {
+      setInfo({
+        name: '',
+        unit: '',
+        description: '',
+        descriptions: '',
+        garanti: '',
+        props: [],
+        useInProjectsUnitsIds: [],
+        useInProjectsIds: [],
+        useInProjectsFloorIds: [],
+        businessRoleIds: [],
+        supplierId: '',
+        producerId: 0,
+        parentId: 0,
+      });
+    }
+  }, [selectedCommodity]);
+
+  useEffect(() => {
+    console.log(info);
+  }, [info]);
+
+  const [term,setTerm] = useState('');
 
   const getProjects = () => {
     return pleaseOfUse?.data?.filter(item => item.type === 'Project');
@@ -91,7 +127,11 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
   }
 
   const onSubmit = () => {
-    dispatch(AddNewCommodity({...info}));
+    if(selectedCommodity){
+      dispatch(UpdateCommodityDetails({...info,id: selectedCommodity?.id}));
+    }else {
+      dispatch(AddNewCommodity({...info}));
+    }
     onClose();
   }
 
@@ -161,7 +201,7 @@ export const AddCommodity = ({addCommodityDialog,onClose}) => {
       <>
         <Dialog open={addCommodityDialog} onClose={onClose} fullWidth={true} maxWidth={'md'} fullScreen={mediumOrSmaller}>
           <DialogTitle sx={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-            افزودن کالا
+            {selectedCommodity ? 'ویرایش کالا' : 'افزودن کالا'}
             <IconButton color={"error"} onClick={onClose}>
               <HighlightOff />
             </IconButton>

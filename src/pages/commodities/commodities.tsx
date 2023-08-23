@@ -2,12 +2,13 @@ import {Box, Button, Grid, Typography} from "@mui/material";
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {
+    clearSelectedCommodity,
     GetAllBusinessRoles,
     GetAllCommodities,
     GetAllCommodityOnTree,
     GetAllPleaseOfUse,
     GetAllProducers,
-    GetAllSuppliers
+    GetAllSuppliers, GetOneCommodityDetails
 } from "../../redux/features/definitionSlicer.ts";
 import {Add, Inventory} from "@mui/icons-material";
 import {AddCommodity} from "../../components/definition/addCommodity.tsx";
@@ -20,6 +21,7 @@ const Commodities = () => {
     } = useSelector((state: any) => state.definition);
 
     const [addCommodityDialog, setAddCommodityDialog] = useState<boolean>(false);
+    const [selectedCommodity, setSelectedCommodity] = useState(null);
 
     useEffect(() => {
         // @ts-ignore
@@ -42,6 +44,19 @@ const Commodities = () => {
     const commodityOnClose = () => {
         setAddCommodityDialog(false);
     };
+
+    useEffect(() => {
+        if(selectedCommodity?.id) {
+            dispatch(GetOneCommodityDetails(selectedCommodity?.id));
+        }
+    }, [selectedCommodity]);
+
+    useEffect(() => {
+        if(!addCommodityDialog){
+            //@ts-ignore
+            dispatch(clearSelectedCommodity());
+        }
+    }, [addCommodityDialog]);
     return (
         <Grid
             container
@@ -68,7 +83,8 @@ const Commodities = () => {
                     <Grid container spacing={1}>
                         {
                             commodities?.data?.length > 0 ? commodities?.data?.map(commodity =>
-                                <CommodityCard commodity={commodity} addCommodityDialog={addCommodityDialog}
+                                <CommodityCard commodity={commodity} setSelectedCommodity={setSelectedCommodity}
+                                               setAddCommodityDialog={setAddCommodityDialog}
                                                key={commodity?.id}/>) : (
                                 <Typography>اطلاعاتی برای نمایش وجود ندارد</Typography>)
                         }
