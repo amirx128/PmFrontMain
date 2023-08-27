@@ -24,6 +24,7 @@ import { Row } from "./style";
 import Grid from "../../../components/grid/grid";
 import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../utils/functions.ts";
+import gridDict from "../../../dictionary/gridDict.ts";
 const SupportList: React.FC<any> = (props) => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<any>(new Date());
@@ -44,7 +45,7 @@ const SupportList: React.FC<any> = (props) => {
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
-      headerName: "درخواست دهنده",
+      headerName: gridDict.requesterUser,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -52,7 +53,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "requestCaseId",
-      headerName: "شناسه کالا",
+      headerName: gridDict.requestCaseId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -60,7 +61,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "commodityName",
-      headerName: "نام کالا",
+      headerName: gridDict.commodityName,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -68,7 +69,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "requesterUserId",
-      headerName: "شناسه درخواست دهنده",
+      headerName: gridDict.requesterUserId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -76,7 +77,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "requiredDate",
-      headerName: "تاریخ نیاز",
+      headerName: gridDict.requiredDate,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -91,7 +92,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "count",
-      headerName: "تعداد مورد نیاز",
+      headerName: gridDict.count,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -99,7 +100,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "newcount",
-      headerName: "تعداد تایید شده ",
+      headerName: gridDict.newcount,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -107,7 +108,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "trackingCode",
-      headerName: "شماره تراکنش ",
+      headerName: gridDict.trackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -126,7 +127,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "isEditable",
-      headerName: "قابل ویرایش",
+      headerName: gridDict.isEditable,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -145,7 +146,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "createDate",
-      headerName: " تاریخ ایجاد",
+      headerName: gridDict.createDate,
       minWidth: 150,
       sortable: false,
       filterable: false,
@@ -158,12 +159,10 @@ const SupportList: React.FC<any> = (props) => {
             .toString()}
         </span>
       ),
-      //   valueGetter: (params: GridValueGetterParams) =>
-      //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
       field: "placeOfUseName",
-      headerName: "محل مصرف ",
+      headerName: gridDict.placeOfUseName,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -171,7 +170,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "requestCommodityId",
-      headerName: "شناسه درخواست کالا",
+      headerName: gridDict.requestCommodityId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -179,7 +178,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "approvestate",
-      headerName: " وضعیت تایید ",
+      headerName: gridDict.approveDate,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -187,7 +186,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "approverId",
-      headerName: "شناسه تایید کننده",
+      headerName: gridDict.approverId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -195,7 +194,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "approverName",
-      headerName: "نام تایید کننده ",
+      headerName: gridDict.approverName,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -203,7 +202,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "approveDate",
-      headerName: "تاریخ تایید ",
+      headerName: gridDict.approveDate,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -218,7 +217,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "finalApprovestate",
-      headerName: "وضعیت نهایی ",
+      headerName: gridDict.finalApprovestate,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -226,7 +225,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "finalApproverId",
-      headerName: "شناسه تایید کننده نهایی",
+      headerName: gridDict.finalApproverId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -234,7 +233,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "finalApproverName",
-      headerName: "نام تایید کننده نهایی",
+      headerName: gridDict.finalApproverName,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -242,7 +241,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "finalApproveDate",
-      headerName: "تاریخ تایید نهایی ",
+      headerName: gridDict.finalApproveDate,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -257,7 +256,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "scheduleActivityId",
-      headerName: "شناسه زمان بندی",
+      headerName: gridDict.scheduleActivityId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -265,7 +264,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "purchaseOrderId",
-      headerName: "شناسه خرید کالا",
+      headerName: gridDict.purchaseOrderId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -273,7 +272,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "purchaseOrderTrackingCode",
-      headerName: "شماره تراکنش خرید کالا",
+      headerName: gridDict.purchaseOrderTrackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -281,7 +280,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "exitFromWarehouseId",
-      headerName: "شناسه خروج از انبار",
+      headerName: gridDict.exitFromWarehouseId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -289,7 +288,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "exitFromWarehouseTrackingCode",
-      headerName: "شماره تراکنش خروج از انبار",
+      headerName: gridDict.exitFromWarehouseTrackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -297,7 +296,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "exitFromWarehouseCount",
-      headerName: "تعداد خروج از انبار",
+      headerName: gridDict.exitFromWarehouseCount,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -305,7 +304,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "purchaseCount",
-      headerName: "تعداد خرید",
+      headerName: gridDict.purchaseCount,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -313,7 +312,7 @@ const SupportList: React.FC<any> = (props) => {
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: gridDict.actions,
       description: "ActionColumn",
       sortable: false,
       minWidth: 150,
