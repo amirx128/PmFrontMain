@@ -97,7 +97,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/requestcase-sentitem",
           role: UserRole.Requester,
         },
       ],
@@ -146,12 +146,12 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           id: 2,
           name: "کالا ها",
           icon: (
-              <ListItemIcon
-                  sx={{ color: theme.palette.secondary.light }}
-                  style={{ justifyContent: "center" }}
-              >
-                <Inventory fontSize="large" />
-              </ListItemIcon>
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <Inventory fontSize="large" />
+            </ListItemIcon>
           ),
           route: "/commodities",
           role: UserRole.Admin,

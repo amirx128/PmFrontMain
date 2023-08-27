@@ -51,8 +51,24 @@ const SupportList: React.FC<any> = (props) => {
       filterable: false,
     },
     {
+      field: "requestCaseId",
+      headerName: "شناسه کالا",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
       field: "commodityName",
       headerName: "نام کالا",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "requesterUserId",
+      headerName: "شناسه درخواست دهنده",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -89,7 +105,6 @@ const SupportList: React.FC<any> = (props) => {
       editable: false,
       filterable: false,
     },
-
     {
       field: "trackingCode",
       headerName: "شماره تراکنش ",
@@ -109,12 +124,28 @@ const SupportList: React.FC<any> = (props) => {
         );
       },
     },
-    // when type of column is number align should be left, because of rtl direction
-
+    {
+      field: "isEditable",
+      headerName: "قابل ویرایش",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            {value ? "بله" : "خیر"}
+          </Typography>
+        );
+      },
+    },
     {
       field: "createDate",
       headerName: " تاریخ ایجاد",
-      //   description: "This column has a value getter and is not sortable.",
       minWidth: 150,
       sortable: false,
       filterable: false,
@@ -139,8 +170,24 @@ const SupportList: React.FC<any> = (props) => {
       filterable: false,
     },
     {
+      field: "requestCommodityId",
+      headerName: "شناسه درخواست کالا",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
       field: "approvestate",
       headerName: " وضعیت تایید ",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "approverId",
+      headerName: "شناسه تایید کننده",
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -169,7 +216,101 @@ const SupportList: React.FC<any> = (props) => {
         </span>
       ),
     },
-
+    {
+      field: "finalApprovestate",
+      headerName: "وضعیت نهایی ",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "finalApproverId",
+      headerName: "شناسه تایید کننده نهایی",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "finalApproverName",
+      headerName: "نام تایید کننده نهایی",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "finalApproveDate",
+      headerName: "تاریخ تایید نهایی ",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <span>
+          {new Date(params.row.approveDate)
+            .toLocaleDateString("fa-IR")
+            .toString()}
+        </span>
+      ),
+    },
+    {
+      field: "scheduleActivityId",
+      headerName: "شناسه زمان بندی",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseOrderId",
+      headerName: "شناسه خرید کالا",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseOrderTrackingCode",
+      headerName: "شماره تراکنش خرید کالا",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitFromWarehouseId",
+      headerName: "شناسه خروج از انبار",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitFromWarehouseTrackingCode",
+      headerName: "شماره تراکنش خروج از انبار",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitFromWarehouseCount",
+      headerName: "تعداد خروج از انبار",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseCount",
+      headerName: "تعداد خرید",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -203,6 +344,7 @@ const SupportList: React.FC<any> = (props) => {
     getList();
   }, [watch]);
   const { user } = useSelector((state: any) => state?.user);
+
   const getApproveStates = async () => {
     try {
       const response = await axios.post("/Support/GetApproveStates", {
@@ -240,7 +382,6 @@ const SupportList: React.FC<any> = (props) => {
   };
   const setSelectedFromDate = (e) => {
     const date = new Date(e).toLocaleDateString("en-US");
-    console.log(date);
     setFromDate(date);
     setValue("fromDate", date);
   };
@@ -250,7 +391,7 @@ const SupportList: React.FC<any> = (props) => {
     setValue("toDate", date);
   };
   const onSubmit = (data) => {};
-
+  console.log(data);
   return (
     <CardGrid
       item

@@ -15,23 +15,24 @@ import {
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import JalaliDatePicker from "../../../components/date-picker/date-picker";
-import Grid from "../../../components/grid/grid";
-import SelectComponent from "../../../components/select/selects";
-import axios from "../../../utils/axios.config";
-import { Row } from "../style";
+import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
+import Grid from "../../components/grid/grid.tsx";
+import SelectComponent from "../../components/select/selects.tsx";
+import axios from "../../utils/axios.config.ts";
+import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../../utils/functions.ts";
+import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { Link } from "react-router-dom";
-const FinalApproveRequestList = () => {
+
+const requestUrl = "warehouse/RequesterUser.Q";
+const RequesterUser = () => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState(
     new Date().toLocaleDateString("fa-IR")
   );
   const [toDate, setToDate] = useState(new Date().toLocaleDateString("fa-IR"));
-
   const [approveStates, setApproveStates] = useState<any[]>([]);
   const {
     register,
@@ -59,24 +60,8 @@ const FinalApproveRequestList = () => {
       filterable: false,
     },
     {
-      field: "requestCaseId",
-      headerName: "شناسه کالا",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
       field: "commodityName",
       headerName: "نام کالا",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requesterUserId",
-      headerName: "شناسه درخواست دهنده",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -98,66 +83,43 @@ const FinalApproveRequestList = () => {
       ),
     },
     {
-      field: "count",
-      headerName: "تعداد مورد نیاز",
+      field: "purchaseOrderId",
+      headerName: "شناسه خرید کالا",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "newcount",
-      headerName: "تعداد تایید شده ",
+      field: "purchaseOrderTrackingCode",
+      headerName: "شماره تراکنش خرید کالا ",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "trackingCode",
-      headerName: "شماره تراکنش ",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "isEditable",
-      headerName: "قابل ویرایش",
+      field: "requestCaseId",
+      headerName: "شناسه درخواست",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            {value ? "بله" : "خیر"}
-          </Typography>
-        );
-      },
     },
     {
-      field: "createDate",
-      headerName: " تاریخ ایجاد",
+      field: "requestCaseTrackingCode",
+      headerName: " شماره تراکنش درخواست ",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "requestCaseCreateDate",
+      headerName: "تاریخ ایجاد درخواست",
       minWidth: 150,
       sortable: false,
       filterable: false,
-
       flex: 1,
       renderCell: (params) => (
         <span>
@@ -166,182 +128,55 @@ const FinalApproveRequestList = () => {
             .toString()}
         </span>
       ),
-      //   valueGetter: (params: GridValueGetterParams) =>
-      //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
-      field: "placeOfUseName",
-      headerName: "محل مصرف ",
+      field: "commodityId",
+      headerName: "شناسه کالا",
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
     },
     {
-      field: "requestCommodityId",
-      headerName: "شناسه درخواست کالا",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approvestate",
-      headerName: " وضعیت تایید ",
+      field: "warehouseOrderCount",
+      headerName: "تعداد سفارش از انبار",
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
     },
     {
-      field: "approverId",
-      headerName: "شناسه تایید کننده",
+      field: "requestCaseCommodityId",
+      headerName: "شناسه کالای درخواستی",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+
+    {
+      field: "countOfDone",
+      headerName: "تعداد مورد تایید",
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
     },
     {
-      field: "approverName",
-      headerName: "نام تایید کننده ",
+      field: "warehouseTrackingCode",
+      headerName: "شماره تراکنش انبار",
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
     },
     {
-      field: "approveDate",
-      headerName: "تاریخ تایید ",
+      field: "warehouseOrderId",
+      headerName: "شناسه سفارش از انبار",
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "finalApprovestate",
-      headerName: "وضعیت نهایی ",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproverId",
-      headerName: "شناسه تایید کننده نهایی",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproverName",
-      headerName: "نام تایید کننده نهایی",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproveDate",
-      headerName: "تاریخ تایید نهایی ",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "scheduleActivityId",
-      headerName: "شناسه زمان بندی",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderId",
-      headerName: "شناسه خرید کالا",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderTrackingCode",
-      headerName: "شماره تراکنش خرید کالا",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitFromWarehouseId",
-      headerName: "شناسه خروج از انبار",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitFromWarehouseTrackingCode",
-      headerName: "شماره تراکنش خروج از انبار",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitFromWarehouseCount",
-      headerName: "تعداد خروج از انبار",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseCount",
-      headerName: "تعداد خرید",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "actions",
-      headerName: "Actions",
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => handleEditClick(params.row)}
-            color="inherit"
-          />
-        </>
-      ),
     },
   ];
   useEffect(() => {
@@ -362,34 +197,21 @@ const FinalApproveRequestList = () => {
     }
   };
   const handleEditClick = (entity) => {
-    console.log(entity);
     navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = () => {};
   const getList = async () => {
     const filters = getValues();
     try {
-      const response = await axios.post("/Support/FinalApproveQ", {
-        approveStateId: 3,
-        fromDate:
-          filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
-        orderType: "asc",
+      const response = await axios.post(requestUrl, {
         userId: user?.id ?? getUserIdFromStorage(),
         pageIndex: 1,
         pageCount: 200,
-        orderBy: "CreateDate",
-
+        orderType: "desc",
+        orderBy: "requestCaseCreateDate",
+        fromDate:
+          filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
         toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
-        finalApproveStateId:
-          filters && filters.finalApproveStateId != ""
-            ? filters.finalApproveStateId
-            : 3,
-
-        //         approveStateId: 3,fromDate: "2021-07-27",orderBy: "CreateDate",
-        // orderType: "asc",
-        // pageCount: 10,pageIndex: 1,
-        // toDate: "2024-07-27",
-        // userId: "1",finalApproveStateId:2
       });
       setData(response.data.model);
     } catch (error) {
@@ -420,7 +242,7 @@ const FinalApproveRequestList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست تایید پشتیبانی"
+          title="لیست تحویل دریافت"
           titleTypographyProps={{ variant: "h6" }}
         />
 
@@ -478,7 +300,6 @@ const FinalApproveRequestList = () => {
         </Box>
 
         <Grid
-          onDoubleClick={(e) => handleEditClick(e.row)}
           rowIdFields={["approveStateId", "commodityName"]}
           columns={columns}
           rows={data.map((row, index) => ({ id: index, ...row }))}
@@ -489,4 +310,4 @@ const FinalApproveRequestList = () => {
     </CardGrid>
   );
 };
-export default FinalApproveRequestList;
+export default RequesterUser;

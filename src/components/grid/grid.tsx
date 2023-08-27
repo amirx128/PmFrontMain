@@ -27,7 +27,6 @@ interface Iprops {
 }
 const Grid: React.FC<Iprops> = (props: Iprops) => {
   const theme = useTheme();
-  console.log(props);
   return (
     <GridWrapper theme={theme}>
       <Box sx={{ height: "unset", width: "100%" }}>

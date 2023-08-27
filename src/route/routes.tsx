@@ -11,7 +11,8 @@ import FinalApproveDetail from "../pages/support/finalApprove/final-approve-deta
 import Roles from "../pages/roles/roles.tsx";
 import Commodities from "../pages/commodities/commodities.tsx";
 import ProductDetails from "../pages/product-details/product-details.tsx";
-import RequesterUser from "../pages/requester/RequesterUser.tsx";
+import RequesterUser from "../pages/product/RequesterUser.tsx";
+import RequestCase from "../pages/product/RequestCase.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -114,5 +115,12 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "تحویل دریافت",
+  },
+  {
+    path: "/requestcase-sentitem",
+    component: <RequestCase />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "درخواست های ارسال شده",
   },
 ];
