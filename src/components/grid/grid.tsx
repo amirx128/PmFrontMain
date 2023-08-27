@@ -26,14 +26,14 @@ interface Iprops {
   onDoubleClick?: (...args: any) => void;
 }
 const Grid: React.FC<Iprops> = (props: Iprops) => {
-  console.log(props);
   const theme = useTheme();
+  console.log(props);
   return (
     <GridWrapper theme={theme}>
       <Box sx={{ height: "unset", width: "100%" }}>
         <DataGrid
           sx={{ ml: "auto", direction: "ltr" }}
-          rows={props.rows.map((row, index) => ({ ...row}))}
+          rows={props.rows.map((row, index) => ({ ...row }))}
           columns={props.columns}
           initialState={{
             pagination: {
@@ -49,6 +49,7 @@ const Grid: React.FC<Iprops> = (props: Iprops) => {
           loading={!props.rows.length || props.loading}
           onSortModelChange={props.onSortModelChange}
           onFilterModelChange={props.onFilterCahnge}
+          getRowId={(row) => row.id}
         />
       </Box>
     </GridWrapper>

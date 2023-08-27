@@ -196,12 +196,10 @@ const SupportList: React.FC<any> = (props) => {
     },
   ];
   useEffect(() => {
-    // setValue("approveStateId",3)
     getList();
     getApproveStates();
   }, []);
   useEffect(() => {
-    console.log(watch);
     getList();
   }, [watch]);
   const { user } = useSelector((state: any) => state?.user);
@@ -216,13 +214,11 @@ const SupportList: React.FC<any> = (props) => {
     }
   };
   const handleEditClick = (entity) => {
-    console.log(entity);
     navigate("/supportApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = () => {};
   const getList = async () => {
     const filters = getValues();
-    console.log(filters);
     try {
       const response = await axios.post("/Support/ApproveQ", {
         userId: user?.id ?? getUserIdFromStorage(),
@@ -254,10 +250,7 @@ const SupportList: React.FC<any> = (props) => {
     setValue("toDate", date);
   };
   const onSubmit = (data) => {};
-  const stateChanged = (e) => {
-    console.log("aaa", e);
-    // getList();
-  };
+
   return (
     <CardGrid
       item
@@ -294,21 +287,6 @@ const SupportList: React.FC<any> = (props) => {
                     />
                   )}
                 />
-                {/* <Controller
-                  control={control}
-                  name="approveStateId"
-                  render={({ field }) => (
-                    <Select
-                      idFieldName="id"
-                      labelFieldName="state"
-                      data={approveStates}
-                      name="approveStateId"
-                      label="وضعیت تایید"
-                      register={register}
-                      errors={errors}
-                    />
-                  )}
-                /> */}
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <JalaliDatePicker
@@ -346,7 +324,7 @@ const SupportList: React.FC<any> = (props) => {
           onDoubleClick={(e) => handleEditClick(e.row)}
           rowIdFields={["approveStateId", "commodityName", "approverId"]}
           columns={columns}
-          rows={data}
+          rows={data.map((row, index) => ({ id: index, ...row }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
         ></Grid>

@@ -346,7 +346,7 @@ const FinalApproveRequestList = () => {
           onDoubleClick={(e) => handleEditClick(e.row)}
           rowIdFields={["approveStateId", "commodityName"]}
           columns={columns}
-          rows={data}
+          rows={data.map((row, index) => ({ id: index, ...row }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
         ></Grid>
