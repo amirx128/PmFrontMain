@@ -265,7 +265,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/logistics/queue",
           role: UserRole["Purchase.Logistics"],
         },
         {
@@ -279,7 +279,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/logistics/send-items",
           role: UserRole["Purchase.Logistics"],
         },
         {
@@ -293,7 +293,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/financials/queue",
           role: UserRole["Purchase.Financial"],
         },
         {
@@ -307,7 +307,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/financials/send-items",
           role: UserRole["Purchase.Financial"],
         },
         {
@@ -321,7 +321,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/approve/queue",
           role: UserRole["Purchase.Approver"],
         },
         {
@@ -335,7 +335,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/approve/send-items",
           role: UserRole["Purchase.Financial"],
         },
       ],

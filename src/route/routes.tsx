@@ -13,6 +13,12 @@ import Commodities from "../pages/commodities/commodities.tsx";
 import ProductDetails from "../pages/product-details/product-details.tsx";
 import RequesterUser from "../pages/product/RequesterUser.tsx";
 import RequestCase from "../pages/product/RequestCase.tsx";
+import LogisticsQueue from "../pages/purchase/LogisticsQueue.tsx";
+import LogisticsSendItems from "../pages/purchase/LogisticsSendItems.tsx";
+import FinancialQueue from "../pages/purchase/FinancialQueue.tsx";
+import FinancialsSendItems from "../pages/purchase/FinancialsSendItems.tsx";
+import ApproveQueue from "../pages/purchase/ApproveQueue.tsx";
+import ApproveSendItems from "../pages/purchase/ApproveSendItems.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -122,5 +128,48 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "درخواست های ارسال شده",
+  },
+  {
+    path: "/logistics/queue",
+    component: <LogisticsQueue />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تدارکات - در انتظار بررسی",
+  },
+  {
+    path: "/logistics/send-items",
+    component: <LogisticsSendItems />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تدارکات - بررسی شده",
+  },
+  {
+    path: "/financials/queue",
+    component: <FinancialQueue />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "مالی - بررسی شده",
+  },
+  {
+    path: "/financials/send-items",
+    component: <FinancialsSendItems />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "مالی - بررسی شده",
+  },
+  {
+    path: "/approve/queue",
+    component: <ApproveQueue />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تایید خرید",
+  },
+
+  {
+    path: "/approve/send-items",
+    component: <ApproveSendItems />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تایید شده ها",
   },
 ];

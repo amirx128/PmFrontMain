@@ -6,11 +6,13 @@ import { combineReducers } from "redux";
 import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import administrationSlicer from "./features/administrationSlicer.ts";
+import {purchaseSlicer} from "./features/purchaseSlicer.ts";
 
 const reducers = combineReducers({
   user: userReducer,
   definition: definitionReducer,
   administrations: administrationSlicer,
+  purchase: purchaseSlicer
 });
 
 const persistConfig = {
