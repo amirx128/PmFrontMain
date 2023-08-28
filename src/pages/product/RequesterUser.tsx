@@ -25,7 +25,7 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { Link } from "react-router-dom";
-
+import gridDict from "../../dictionary/gridDict.ts";
 const requestUrl = "warehouse/RequesterUser.Q";
 const RequesterUser = () => {
   const [data, setData] = useState<any[]>([]);
@@ -53,7 +53,7 @@ const RequesterUser = () => {
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
-      headerName: "درخواست دهنده",
+      headerName: gridDict.requesterUser,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -61,7 +61,7 @@ const RequesterUser = () => {
     },
     {
       field: "commodityName",
-      headerName: "نام کالا",
+      headerName: gridDict.commodityName,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -69,7 +69,7 @@ const RequesterUser = () => {
     },
     {
       field: "requiredDate",
-      headerName: "تاریخ نیاز",
+      headerName: gridDict.requiredDate,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -84,7 +84,7 @@ const RequesterUser = () => {
     },
     {
       field: "purchaseOrderId",
-      headerName: "شناسه خرید کالا",
+      headerName: gridDict.purchaseOrderId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -92,7 +92,7 @@ const RequesterUser = () => {
     },
     {
       field: "purchaseOrderTrackingCode",
-      headerName: "شماره تراکنش خرید کالا ",
+      headerName: gridDict.purchaseOrderTrackingCode,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -100,7 +100,7 @@ const RequesterUser = () => {
     },
     {
       field: "requestCaseId",
-      headerName: "شناسه درخواست",
+      headerName: gridDict.requestCaseId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -108,7 +108,7 @@ const RequesterUser = () => {
     },
     {
       field: "requestCaseTrackingCode",
-      headerName: " شماره تراکنش درخواست ",
+      headerName: gridDict.requestCaseTrackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -116,7 +116,7 @@ const RequesterUser = () => {
     },
     {
       field: "requestCaseCreateDate",
-      headerName: "تاریخ ایجاد درخواست",
+      headerName: gridDict.requestCaseCreateDate,
       minWidth: 150,
       sortable: false,
       filterable: false,
@@ -131,7 +131,7 @@ const RequesterUser = () => {
     },
     {
       field: "commodityId",
-      headerName: "شناسه کالا",
+      headerName: gridDict.commodityId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -147,7 +147,7 @@ const RequesterUser = () => {
     },
     {
       field: "requestCaseCommodityId",
-      headerName: "شناسه کالای درخواستی",
+      headerName: gridDict.requestCaseCommodityId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -155,7 +155,7 @@ const RequesterUser = () => {
     },
     {
       field: "countOfDone",
-      headerName: "تعداد مورد تایید",
+      headerName: gridDict.countOfDone,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -163,7 +163,7 @@ const RequesterUser = () => {
     },
     {
       field: "warehouseTrackingCode",
-      headerName: "شماره تراکنش انبار",
+      headerName: gridDict.warehouseTrackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -171,7 +171,7 @@ const RequesterUser = () => {
     },
     {
       field: "warehouseOrderId",
-      headerName: "شناسه سفارش از انبار",
+      headerName: gridDict.warehouseOrderId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -211,6 +211,8 @@ const RequesterUser = () => {
         fromDate:
           filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
         toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
+        approveStateId: 3,
+        finalApproveStateId: 3,
       });
       setData(response.data.model);
     } catch (error) {
@@ -248,23 +250,6 @@ const RequesterUser = () => {
         <Box>
           <form onSubmit={onSubmit}>
             <Row>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
-                <Controller
-                  control={control}
-                  rules={{ required: " approve state is required" }}
-                  name="approveStateId"
-                  defaultValue={3}
-                  render={({ field }) => (
-                    <SelectComponent
-                      label="وضعیت"
-                      valuefieldName="id"
-                      labelFieldName="state"
-                      options={approveStates}
-                      field={field}
-                    />
-                  )}
-                />
-              </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <JalaliDatePicker
                   defaultValue={fromDate}

@@ -209,7 +209,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/support/Approved-list",
           role: UserRole.Approver,
         },
         {
@@ -228,7 +228,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 3,
-          name: "تایید شده ها",
+          name: "تایید نهایی شده ها",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -237,7 +237,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/support/final-Approved-list",
           role: UserRole.FinalApprove,
         },
       ],

@@ -15,24 +15,24 @@ import {
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
-import Grid from "../../components/grid/grid.tsx";
-import SelectComponent from "../../components/select/selects.tsx";
-import axios from "../../utils/axios.config.ts";
-import { Row } from "./style.tsx";
+import JalaliDatePicker from "../../../components/date-picker/date-picker";
+import Grid from "../../../components/grid/grid";
+import SelectComponent from "../../../components/select/selects";
+import axios from "../../../utils/axios.config";
+import { Row } from "../style";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
 import { Link } from "react-router-dom";
-
-const requestUrl = "requestCase/SentItem";
-const RequestCase = () => {
+import gridDict from "../../../dictionary/gridDict.ts";
+const FinalApprovedList = () => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState(
     new Date().toLocaleDateString("fa-IR")
   );
   const [toDate, setToDate] = useState(new Date().toLocaleDateString("fa-IR"));
+
   const [approveStates, setApproveStates] = useState<any[]>([]);
   const {
     register,
@@ -53,7 +53,15 @@ const RequestCase = () => {
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
-      headerName: "درخواست دهنده",
+      headerName: gridDict.requesterUser,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "requestCaseId",
+      headerName: gridDict.requestCaseId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -61,7 +69,15 @@ const RequestCase = () => {
     },
     {
       field: "commodityName",
-      headerName: "نام کالا",
+      headerName: gridDict.commodityName,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "requesterUserId",
+      headerName: gridDict.requesterUserId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -69,7 +85,7 @@ const RequestCase = () => {
     },
     {
       field: "requiredDate",
-      headerName: "تاریخ نیاز",
+      headerName: gridDict.requiredDate,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -84,7 +100,7 @@ const RequestCase = () => {
     },
     {
       field: "count",
-      headerName: "تعداد مورد نیاز",
+      headerName: gridDict.count,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -92,44 +108,53 @@ const RequestCase = () => {
     },
     {
       field: "newcount",
-      headerName: "تعداد تایید شده ",
+      headerName: gridDict.newcount,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
-    {
-      field: "purchaseCount",
-      headerName: "تعداد خریداری شده ",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-
     {
       field: "trackingCode",
-      headerName: "شماره تراکنش ",
+      headerName: gridDict.trackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => (
-        <Typography
-          variant="body1"
-          color="secondary"
-          sx={{ cursor: "pointer" }}
-        >
-          <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-        </Typography>
-      ),
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
-    // when type of column is number align should be left, because of rtl direction
-
+    {
+      field: "isEditable",
+      headerName: gridDict.isEditable,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            {value ? "بله" : "خیر"}
+          </Typography>
+        );
+      },
+    },
     {
       field: "createDate",
-      headerName: " تاریخ ایجاد",
-      //   description: "This column has a value getter and is not sortable.",
+      headerName: gridDict.createDate,
       minWidth: 150,
       sortable: false,
       filterable: false,
@@ -142,20 +167,34 @@ const RequestCase = () => {
             .toString()}
         </span>
       ),
-      //   valueGetter: (params: GridValueGetterParams) =>
-      //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
       field: "placeOfUseName",
-      headerName: "محل مصرف ",
+      headerName: gridDict.placeOfUseName,
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
     },
     {
+      field: "requestCommodityId",
+      headerName: gridDict.requestCommodityId,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
       field: "approvestate",
-      headerName: " وضعیت تایید ",
+      headerName: gridDict.approveDate,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "approverId",
+      headerName: gridDict.approverId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -163,7 +202,7 @@ const RequestCase = () => {
     },
     {
       field: "approverName",
-      headerName: "نام تایید کننده ",
+      headerName: gridDict.approverName,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -171,7 +210,7 @@ const RequestCase = () => {
     },
     {
       field: "approveDate",
-      headerName: "تاریخ تایید ",
+      headerName: gridDict.approveDate,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -184,7 +223,101 @@ const RequestCase = () => {
         </span>
       ),
     },
-
+    {
+      field: "finalApprovestate",
+      headerName: gridDict.finalApprovestate,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "finalApproverId",
+      headerName: gridDict.finalApproverId,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "finalApproverName",
+      headerName: gridDict.finalApproverName,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "finalApproveDate",
+      headerName: gridDict.finalApproveDate,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+      renderCell: (params) => (
+        <span>
+          {new Date(params.row.approveDate)
+            .toLocaleDateString("fa-IR")
+            .toString()}
+        </span>
+      ),
+    },
+    {
+      field: "scheduleActivityId",
+      headerName: gridDict.scheduleActivityId,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseOrderId",
+      headerName: gridDict.purchaseOrderId,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseOrderTrackingCode",
+      headerName: gridDict.purchaseOrderTrackingCode,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitFromWarehouseId",
+      headerName: gridDict.exitFromWarehouseId,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitFromWarehouseTrackingCode",
+      headerName: gridDict.exitFromWarehouseTrackingCode,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitFromWarehouseCount",
+      headerName: gridDict.exitFromWarehouseCount,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseCount",
+      headerName: gridDict.purchaseCount,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
     {
       field: "actions",
       headerName: "Actions",
@@ -234,17 +367,19 @@ const RequestCase = () => {
   const getList = async () => {
     const filters = getValues();
     try {
-      const response = await axios.post(requestUrl, {
+      const response = await axios.post("/Support/FinalApproveQ", {
+        approveStateId: 3,
+        fromDate:
+          filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
+        orderType: "asc",
         userId: user?.id ?? getUserIdFromStorage(),
         pageIndex: 1,
         pageCount: 200,
-        orderType: "desc",
         orderBy: "CreateDate",
-        fromDate:
-          filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
+
         toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
+        finalApproveStateId: 1,
       });
-      console.log(response);
       setData(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -261,7 +396,6 @@ const RequestCase = () => {
     setValue("toDate", date);
   };
   const onSubmit = (data) => {};
-  console.log(data);
   return (
     <CardGrid
       item
@@ -275,7 +409,7 @@ const RequestCase = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست درخواست های ارسال شده"
+          title="لیست تایید پشتیبانی"
           titleTypographyProps={{ variant: "h6" }}
         />
 
@@ -336,7 +470,7 @@ const RequestCase = () => {
           onDoubleClick={(e) => handleEditClick(e.row)}
           rowIdFields={["approveStateId", "commodityName"]}
           columns={columns}
-          rows={data}
+          rows={data.map((row, index) => ({ id: index, ...row }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
         ></Grid>
@@ -344,4 +478,4 @@ const RequestCase = () => {
     </CardGrid>
   );
 };
-export default RequestCase;
+export default FinalApprovedList;

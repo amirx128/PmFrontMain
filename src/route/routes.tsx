@@ -19,6 +19,8 @@ import FinancialQueue from "../pages/purchase/FinancialQueue.tsx";
 import FinancialsSendItems from "../pages/purchase/FinancialsSendItems.tsx";
 import ApproveQueue from "../pages/purchase/ApproveQueue.tsx";
 import ApproveSendItems from "../pages/purchase/ApproveSendItems.tsx";
+import ApprovedList from "../pages/support/approved/ApprovedList.tsx";
+import FinalApprovedList from "../pages/support/finalApproved/FinalApprovedList.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -171,5 +173,19 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "تایید شده ها",
+  },
+  {
+    path: "/support/Approved-list",
+    component: <ApprovedList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تایید شده ها",
+  },
+  {
+    path: "/support/final-Approved-list",
+    component: <FinalApprovedList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تایید نهایی شده ها",
   },
 ];

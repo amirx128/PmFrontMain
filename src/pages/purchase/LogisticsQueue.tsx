@@ -13,28 +13,21 @@ import {
   GridRenderCellParams,
 } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import JalaliDatePicker, {JalaliDatePickerNew} from "../../components/date-picker/date-picker.tsx";
+import { JalaliDatePickerNew } from "../../components/date-picker/date-picker.tsx";
 import Grid from "../../components/grid/grid.tsx";
-import SelectComponent from "../../components/select/selects.tsx";
-import axios from "../../utils/axios.config.ts";
-import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
-import {useDispatch, useSelector} from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
-import { Link } from "react-router-dom";
-import {GetLogisticsQAction} from "../../redux/features/purchaseSlicer.ts";
+import { useDispatch, useSelector } from "react-redux";
+import gridDict from "../../dictionary/gridDict.ts";
+import { Row } from "./style.tsx";
+import { GetLogisticsQAction } from "../../redux/features/purchaseSlicer.ts";
 
-const requestUrl = "requestCase/SentItem";
 const LogisticsQueue = () => {
   const dispatch = useDispatch();
-  const queue = useSelector((state: any) => state.purchase?.logistics?.queue);
-
-  const [fromDate, setFromDate] = useState(
-    new Date().toLocaleDateString()
-  );
+  const { queue } = useSelector((state: any) => state.purchase.logistics);
+  const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
   const [toDate, setToDate] = useState(new Date().toLocaleDateString());
   const {
     register,
@@ -54,7 +47,7 @@ const LogisticsQueue = () => {
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
-      headerName: "درخواست دهنده",
+      headerName: gridDict.requesterUser,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -62,7 +55,15 @@ const LogisticsQueue = () => {
     },
     {
       field: "purchaseOrderCount",
-      headerName: "تعداد مورد نیاز",
+      headerName: gridDict.purchaseOrderCount,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseOrderId",
+      headerName: gridDict.purchaseOrderId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -70,7 +71,7 @@ const LogisticsQueue = () => {
     },
     {
       field: "purchaseOrderTrackingCode",
-      headerName: "کد پیگیری سفارش",
+      headerName: gridDict.purchaseOrderTrackingCode,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -78,7 +79,15 @@ const LogisticsQueue = () => {
     },
     {
       field: "requestCaseTrackingCode",
-      headerName: "کد پیگیری درخواست",
+      headerName: gridDict.requestCaseTrackingCode,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "requestCaseId",
+      headerName: gridDict.requestCaseId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -86,22 +95,38 @@ const LogisticsQueue = () => {
     },
     {
       field: "requestCaseCreateDate",
-      headerName: "تاریخ ایجاد درخواست ",
+      headerName: gridDict.requestCaseCreateDate,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
       renderCell: (params) => (
-          <span>
+        <span>
           {new Date(params.row.requestCaseCreateDate)
-              .toLocaleDateString("fa-IR")
-              .toString()}
+            .toLocaleDateString("fa-IR")
+            .toString()}
         </span>
       ),
     },
     {
       field: "countOfDone",
-      headerName: "تعداد پایان یافته ",
+      headerName: gridDict.countOfDone,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "commodityName",
+      headerName: gridDict.commodityName,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "commodityId",
+      headerName: gridDict.commodityId,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -110,7 +135,23 @@ const LogisticsQueue = () => {
 
     {
       field: "purchaseTrackingCode",
-      headerName: "کد پیگیری خرید ",
+      headerName: gridDict.purchaseTrackingCode,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "requestCaseCommodityId",
+      headerName: gridDict.requestCaseCommodityId,
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "purchaseOrderDetailsId",
+      headerName: gridDict.purchaseOrderDetailsId,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -118,59 +159,44 @@ const LogisticsQueue = () => {
     },
     {
       field: "requiredDate",
-      headerName: "تاریخ نیاز",
+      headerName: gridDict.requiredDate,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
       renderCell: (params) => (
-          <span>
+        <span>
           {new Date(params.row.approveDate)
-              .toLocaleDateString("fa-IR")
-              .toString()}
+            .toLocaleDateString("fa-IR")
+            .toString()}
         </span>
       ),
     },
     {
       field: "warehouseTrackingCode",
-      headerName: "کد پیگیری انبار ",
+      headerName: gridDict.warehouseTrackingCode,
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
     },
-
-   /* {
-      field: "actions",
-      headerName: "Actions",
-      description: "ActionColumn",
-      sortable: false,
+    {
+      field: "warehouseOrderId",
+      headerName: gridDict.warehouseOrderId,
       minWidth: 150,
       flex: 1,
+      editable: false,
       filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => handleEditClick(params.row)}
-            color="inherit"
-          />
-        </>
-      ),
-    },*/
+    },
   ];
   useEffect(() => {
     //@ts-ignore
-    dispatch(GetLogisticsQAction({
-      fromDate: "2021-07-27",
-      toDate: "2024-07-27"
-    }));
+    dispatch(
+      GetLogisticsQAction({
+        fromDate: "2021-07-27",
+        toDate: "2024-07-27",
+      })
+    );
   }, [dispatch]);
   const { user } = useSelector((state: any) => state?.user);
 
@@ -180,20 +206,20 @@ const LogisticsQueue = () => {
   const handleSortModelChange = () => {};
   const getList = async () => {
     const filters = getValues();
-      const body = {
-        fromDate:
-            filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
-        toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
-      };
-      dispatch(GetLogisticsQAction(body))
+    const body = {
+      fromDate:
+        filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
+      toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
+    };
+    dispatch(GetLogisticsQAction(body));
   };
   const setSelectedFromDate = (e) => {
-    const date = new Date(e).toJSON().split('T')[0];
+    const date = new Date(e).toJSON().split("T")[0];
     setFromDate(date);
     setValue("fromDate", date);
   };
   const setSelectedToDate = (e) => {
-    const date = new Date(e).toJSON().split('T')[0];
+    const date = new Date(e).toJSON().split("T")[0];
     setToDate(date);
     setValue("toDate", date);
   };
@@ -253,9 +279,17 @@ const LogisticsQueue = () => {
 
         <Grid
           onDoubleClick={(e) => handleEditClick(e.row)}
-          rowIdFields={["purchaseOrderId", "requesterUser","requestCaseId","commodityId","requestCaseCommodityId","purchaseOrderDetailsId","warehouseOrderId"]}
+          rowIdFields={[
+            "purchaseOrderId",
+            "requesterUser",
+            "requestCaseId",
+            "commodityId",
+            "requestCaseCommodityId",
+            "purchaseOrderDetailsId",
+            "warehouseOrderId",
+          ]}
           columns={columns}
-          rows={queue?.data ?? []}
+          rows={queue?.data.map((row, index) => ({ id: index, ...row })) ?? []}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
         ></Grid>

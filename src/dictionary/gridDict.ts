@@ -24,9 +24,20 @@ const gridDict = {
   purchaseOrderTrackingCode: "شماره تراکنش خرید کالا",
   exitFromWarehouseId: "شناسه خروج از انبار",
   exitFromWarehouseTrackingCode: "شماره تراکنش خروج از انبار",
-  exitFromWarehouseCount: "تعداد خروج از انبار",
+  exitFromWarehouseCopurchaseOrderTrackingCodeunt: "تعداد خروج از انبار",
   purchaseCount: "تعداد خرید",
   actions: "عملیات",
+  requestCaseTrackingCode: "شماره تراکنش درخواست",
+  requestCaseCreateDate: "تاریخ ایجاد درخواست",
+  commodityId: "شناسه کالا",
+  warehouseOrderCount: "تعداد سفارش از انبار",
+  requestCaseCommodityId: "شناسه کالای درخواستی",
+  countOfDone: "تعداد پایان یافته",
+  warehouseTrackingCode: "شماره تراکنش انبار",
+  warehouseOrderId: "شناسه سفارش از انبار",
+  purchaseOrderCount: "تعداد مورد نیاز",
+  purchaseTrackingCode: "کد پیگیری خرید",
+  purchaseOrderDetailsId: "شناسه جزییات خرید",
 };
 
 export default gridDict;
