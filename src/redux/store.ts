@@ -7,12 +7,13 @@ import { persistReducer } from "redux-persist";
 import thunk from "redux-thunk";
 import administrationSlicer from "./features/administrationSlicer.ts";
 import purchaseSlicer from "./features/purchaseSlicer.ts";
-
+import supplierSlicer from "./features/supplierSlicer.ts";
 const reducers = combineReducers({
   user: userReducer,
   definition: definitionReducer,
   administrations: administrationSlicer,
   purchase: purchaseSlicer,
+  supplier: supplierSlicer,
 });
 
 const persistConfig = {

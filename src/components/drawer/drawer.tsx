@@ -363,7 +363,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/supplier/supplier-queue",
           role: UserRole.Supplier,
         },
         {
@@ -377,7 +377,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/supplier/supplier-sentitem",
           role: UserRole.Supplier,
         },
       ],

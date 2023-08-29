@@ -1,41 +1,26 @@
-import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Card,
-  Grid as CardGrid,
   CardHeader,
+  Grid as CardGrid,
   IconButton,
-  Typography,
 } from "@mui/material";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import JalaliDatePicker, {
-  JalaliDatePickerNew,
-} from "../../components/date-picker/date-picker.tsx";
+import { JalaliDatePickerNew } from "../../components/date-picker/date-picker.tsx";
 import Grid from "../../components/grid/grid.tsx";
-import SelectComponent from "../../components/select/selects.tsx";
-import axios from "../../utils/axios.config.ts";
 import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
-import { Link } from "react-router-dom";
-import {
-  FinancialSendItemsActions,
-  LogisticsSendItemsAction,
-} from "../../redux/features/purchaseSlicer.ts";
+import { SuppLierSentItemAction } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-const FinancialsSendItems = () => {
+const SupplierSentItemList = () => {
   const dispatch = useDispatch<any>();
-  const sendItems = useSelector(
-    (state: any) => state.purchase?.financials?.sendItems
+  const { supplierSentItem } = useSelector(
+    (state: any) => state.supplier?.supplier
   );
 
   const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
@@ -59,14 +44,6 @@ const FinancialsSendItems = () => {
     {
       field: "requesterUser",
       headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderCount",
-      headerName: gridDict.purchaseOrderCount,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -143,15 +120,6 @@ const FinancialsSendItems = () => {
       editable: false,
       filterable: false,
     },
-
-    {
-      field: "purchaseTrackingCode",
-      headerName: gridDict.purchaseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
     {
       field: "requestCaseCommodityId",
       headerName: gridDict.requestCaseCommodityId,
@@ -161,8 +129,8 @@ const FinancialsSendItems = () => {
       filterable: false,
     },
     {
-      field: "purchaseOrderDetailsId",
-      headerName: gridDict.purchaseOrderDetailsId,
+      field: "warehouseOrderCount",
+      headerName: gridDict.warehouseOrderCount,
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -202,13 +170,12 @@ const FinancialsSendItems = () => {
   ];
   useEffect(() => {
     dispatch(
-      FinancialSendItemsActions({
+      SuppLierSentItemAction({
         fromDate: "2021-07-27",
         toDate: "2024-07-27",
       })
     );
   }, [dispatch]);
-  const { user } = useSelector((state: any) => state?.user);
 
   const handleEditClick = (entity) => {
     navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
@@ -221,7 +188,7 @@ const FinancialsSendItems = () => {
         filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
       toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
     };
-    dispatch(FinancialSendItemsActions(body));
+    dispatch(SuppLierSentItemAction(body));
   };
   const setSelectedFromDate = (e) => {
     const date = new Date(e).toJSON().split("T")[0];
@@ -247,7 +214,7 @@ const FinancialsSendItems = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="مالی -بررسی شده"
+          title="در صف بررسی"
           titleTypographyProps={{ variant: "h6" }}
         />
 
@@ -300,7 +267,10 @@ const FinancialsSendItems = () => {
           ]}
           columns={columns}
           rows={
-            sendItems?.data?.map((row, index) => ({ id: index, ...row })) ?? []
+            supplierSentItem?.data.map((row, index) => ({
+              id: index,
+              ...row,
+            })) ?? []
           }
           pagination={{}}
           onSortModelChange={handleSortModelChange}
@@ -309,4 +279,4 @@ const FinancialsSendItems = () => {
     </CardGrid>
   );
 };
-export default FinancialsSendItems;
+export default SupplierSentItemList;

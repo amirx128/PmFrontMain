@@ -21,6 +21,8 @@ import ApproveQueue from "../pages/purchase/ApproveQueue.tsx";
 import ApproveSendItems from "../pages/purchase/ApproveSendItems.tsx";
 import ApprovedList from "../pages/support/approved/ApprovedList.tsx";
 import FinalApprovedList from "../pages/support/finalApproved/FinalApprovedList.tsx";
+import SupplierQList from "../pages/supplier/SupplierQList.tsx";
+import SupplierSentItemList from "../pages/supplier/SupplierSentItemList.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -187,5 +189,19 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "تایید نهایی شده ها",
+  },
+  {
+    path: "/supplier/supplier-queue",
+    component: <SupplierQList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف بررسی",
+  },
+  {
+    path: "/supplier/supplier-sentitem",
+    component: <SupplierSentItemList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف بررسی",
   },
 ];
