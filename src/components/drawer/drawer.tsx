@@ -405,7 +405,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/warehosue/warehouse-queue",
           role: UserRole["Warehouse.Warehouser"],
         },
         {
@@ -419,7 +419,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/warehosue/warehouse-sentitems",
           role: UserRole["Warehouse.Warehouser"],
         },
         {
@@ -433,7 +433,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/warehosue/exitwarehouse-queue",
           role: UserRole["Warehouse.Exit"],
         },
         {
@@ -447,7 +447,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "",
+          route: "/warehosue/exitwarehouse-sentitems",
           role: UserRole["Warehouse.Exit"],
         },
       ],

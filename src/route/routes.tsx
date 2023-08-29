@@ -23,6 +23,10 @@ import ApprovedList from "../pages/support/approved/ApprovedList.tsx";
 import FinalApprovedList from "../pages/support/finalApproved/FinalApprovedList.tsx";
 import SupplierQList from "../pages/supplier/SupplierQList.tsx";
 import SupplierSentItemList from "../pages/supplier/SupplierSentItemList.tsx";
+import WarehouseQList from "../pages/warehouse/WarehouseQList.tsx";
+import WarehouseSentItemList from "../pages/warehouse/WarehouseSentItemList.tsx";
+import ExitWarehouseQList from "../pages/warehouse/ExitWarehouseQList.tsx";
+import ExitWarehouseSentItemList from "../pages/warehouse/ExitWarehouseSentItemList.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -203,5 +207,33 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "در صف بررسی",
+  },
+  {
+    path: "/warehosue/warehouse-queue",
+    component: <WarehouseQList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف تحویل",
+  },
+  {
+    path: "/warehosue/warehouse-sentitems",
+    component: <WarehouseSentItemList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "تحویل گرفته شده",
+  },
+  {
+    path: "/warehosue/exitwarehouse-queue",
+    component: <ExitWarehouseQList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف خروج",
+  },
+  {
+    path: "/warehosue/exitwarehouse-sentitems",
+    component: <ExitWarehouseSentItemList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "خارج شده",
   },
 ];
