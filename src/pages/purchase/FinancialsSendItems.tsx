@@ -33,7 +33,7 @@ import {
 } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 const FinancialsSendItems = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const sendItems = useSelector(
     (state: any) => state.purchase?.financials?.sendItems
   );
@@ -201,7 +201,6 @@ const FinancialsSendItems = () => {
     },
   ];
   useEffect(() => {
-    //@ts-ignore
     dispatch(
       FinancialSendItemsActions({
         fromDate: "2021-07-27",

@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { ApproveSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 const ApproveSendItems = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const sendItems = useSelector(
     (state: any) => state.purchase?.approve?.sendItems
   );
@@ -186,7 +186,6 @@ const ApproveSendItems = () => {
     },
   ];
   useEffect(() => {
-    //@ts-ignore
     dispatch(
       ApproveSendItemsAction({
         fromDate: "2021-07-27",

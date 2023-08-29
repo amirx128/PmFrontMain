@@ -25,7 +25,7 @@ import { Row } from "./style.tsx";
 import { GetLogisticsQAction } from "../../redux/features/purchaseSlicer.ts";
 
 const LogisticsQueue = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const { queue } = useSelector((state: any) => state.purchase.logistics);
   const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
   const [toDate, setToDate] = useState(new Date().toLocaleDateString());

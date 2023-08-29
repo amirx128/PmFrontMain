@@ -30,7 +30,7 @@ import { Link } from "react-router-dom";
 import { GetFinancialQAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 const FinancialQueue = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const queue = useSelector((state: any) => state.purchase?.financials?.queue);
 
   const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
@@ -196,7 +196,6 @@ const FinancialQueue = () => {
     },
   ];
   useEffect(() => {
-    //@ts-ignore
     dispatch(
       GetFinancialQAction({
         fromDate: "2021-07-27",

@@ -38,6 +38,7 @@ const gridDict = {
   purchaseOrderCount: "تعداد مورد نیاز",
   purchaseTrackingCode: "کد پیگیری خرید",
   purchaseOrderDetailsId: "شناسه جزییات خرید",
+  exitFromWarehouseCount: "تعداد خروجی از انبار",
 };
 
 export default gridDict;

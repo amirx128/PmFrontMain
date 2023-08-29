@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetApproveQAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 const ApproveQueue = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const queue = useSelector((state: any) => state.purchase?.approve?.queue);
 
   const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
@@ -184,7 +184,6 @@ const ApproveQueue = () => {
     },
   ];
   useEffect(() => {
-    //@ts-ignore
     dispatch(
       GetApproveQAction({
         fromDate: "2021-07-27",

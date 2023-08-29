@@ -31,7 +31,7 @@ import { LogisticsSendItemsAction } from "../../redux/features/purchaseSlicer.ts
 import gridDict from "../../dictionary/gridDict.ts";
 const requestUrl = "requestCase/SentItem";
 const LogisticsSendItems = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<any>();
   const sendItems = useSelector(
     (state: any) => state.purchase?.logistics?.sendItems
   );

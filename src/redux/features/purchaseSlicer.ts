@@ -1,10 +1,10 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import {
-  I_FINANCIAL_Q,
-  I_LOGISTIC_Q,
-  I_PURCHASE_ORDER_DATA,
-  I_PURCHASE_ORDER_DETAIL_DATA,
-} from "../../core/administrations/purchase.model.ts";
+// import {
+//   I_FINANCIAL_Q,
+//   I_LOGISTIC_Q,
+//   I_PURCHASE_ORDER_DATA,
+//   I_PURCHASE_ORDER_DETAIL_DATA,
+// } from "./../../core/administrations/administrations.model.ts";
 import { AdministrationState, GetAllRoles } from "./administrationSlicer.ts";
 import {
   AddDetailsToPurchaseOrder,
@@ -29,33 +29,33 @@ const getUserId = (state) => {
 export interface PurchaseState {
   logistics: {
     queue: {
-      data: I_LOGISTIC_Q[];
+      data: any;
       pending: boolean;
     };
     sendItems: {
-      data: I_LOGISTIC_Q[];
+      data: any;
       pending: boolean;
     };
   };
-  orderData: I_PURCHASE_ORDER_DATA | null;
-  orderDetailData: I_PURCHASE_ORDER_DETAIL_DATA | null;
+  orderData: any;
+  orderDetailData: any;
   financials: {
     queue: {
-      data: I_FINANCIAL_Q[];
+      data: any;
       pending: boolean;
     };
     sendItems: {
-      data: I_FINANCIAL_Q[];
+      data: any;
       pending: boolean;
     };
   };
   approve: {
     queue: {
-      data: I_FINANCIAL_Q[];
+      data: any;
       pending: boolean;
     };
     sendItems: {
-      data: I_FINANCIAL_Q[];
+      data: any;
       pending: boolean;
     };
   };
@@ -253,12 +253,12 @@ export const FinancialSendItemsActions = createAsyncThunk(
 export const GetApproveQAction = createAsyncThunk(
   "purchase/GetApproveQAction",
   async (
-    body: { fromDate: any; toDate: any },
-    { rejectWithValue, fulfillWithValue, dispatch, getState }
+    body: { fromDate?: any; toDate?: any },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }: any
   ) => {
     try {
       const state: any = getState();
-      const userId = getUserId(state);
+      const userId: any = getUserId(state);
       const { data } = await GetApproveQ(userId, 1, body.fromDate, body.toDate);
       return fulfillWithValue(data);
     } catch (err) {
