@@ -3,15 +3,17 @@ import axiosInstance from "../../utils/axios.config.ts";
 export const GetLogisticsQ = async (
   userId,
   pageIndex = 1,
-  fromDate = "",
-  toDate = ""
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
 ) =>
   await axiosInstance.post(`/Purchase/Logistics.Q`, {
     userId: userId,
     pageIndex,
     pageCount: 20,
-    orderType: "desc",
-    orderBy: "requestCaseCreateDate",
+    orderType,
+    orderBy,
     fromDate,
     toDate,
   });
@@ -36,15 +38,17 @@ export const AddDetailsToPurchaseOrder = async (userId, body) =>
 export const LogisticsSendItems = async (
   userId,
   pageIndex = 1,
-  fromDate = "",
-  toDate = ""
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
 ) =>
   await axiosInstance.post(`/Purchase/Logistics.SendItems`, {
     userId: userId,
     pageIndex,
     pageCount: 20,
-    orderType: "desc",
-    orderBy: "requestCaseCreateDate",
+    orderType,
+    orderBy,
     fromDate,
     toDate,
   });
@@ -52,15 +56,17 @@ export const LogisticsSendItems = async (
 export const GetFinancialQ = async (
   userId,
   pageIndex = 1,
-  fromDate = "",
-  toDate = ""
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
 ) =>
   await axiosInstance.post(`/Purchase/Financial.Q`, {
     userId: userId,
     pageIndex,
     pageCount: 20,
-    orderType: "desc",
-    orderBy: "requestCaseCreateDate",
+    orderType,
+    orderBy,
     fromDate,
     toDate,
   });
@@ -79,15 +85,17 @@ export const FinancialUpdateDetails = async (
 export const FinancialSendItems = async (
   userId,
   pageIndex = 1,
-  fromDate = "",
-  toDate = ""
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
 ) =>
   await axiosInstance.post(`/Purchase/Financial.SendItems`, {
     userId: userId,
     pageIndex,
     pageCount: 20,
-    orderType: "desc",
-    orderBy: "requestCaseCreateDate",
+    orderType,
+    orderBy,
     fromDate,
     toDate,
   });
@@ -95,15 +103,17 @@ export const FinancialSendItems = async (
 export const GetApproveQ = async (
   userId,
   pageIndex = 1,
-  fromDate = "",
-  toDate = ""
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
 ) =>
   await axiosInstance.post(`/Purchase/Approve.Q`, {
     userId: userId,
     pageIndex,
     pageCount: 20,
-    orderType: "desc",
-    orderBy: "requestCaseCreateDate",
+    orderType,
+    orderBy,
     fromDate,
     toDate,
   });
@@ -124,15 +134,17 @@ export const ApproveUpdateDetails = async (
 export const ApproveSendItems = async (
   userId,
   pageIndex = 1,
-  fromDate = "",
-  toDate = ""
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
 ) =>
   await axiosInstance.post(`/Purchase/Approve.SendItems`, {
     userId: userId,
     pageIndex,
     pageCount: 20,
-    orderType: "desc",
-    orderBy: "requestCaseCreateDate",
+    orderType,
+    orderBy,
     fromDate,
     toDate,
   });

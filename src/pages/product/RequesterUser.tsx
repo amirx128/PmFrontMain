@@ -1,4 +1,3 @@
-import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Card,
@@ -7,49 +6,29 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { GridColDef } from "@mui/x-data-grid";
+import { useEffect, useRef, useState } from "react";
 import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
 import Grid from "../../components/grid/grid.tsx";
-import SelectComponent from "../../components/select/selects.tsx";
-import axios from "../../utils/axios.config.ts";
 import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
-import { useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import gridDict from "../../dictionary/gridDict.ts";
-const requestUrl = "warehouse/RequesterUser.Q";
+import { GetRequesterUserQAction } from "../../redux/features/productSlicer.ts";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+
 const RequesterUser = () => {
-  const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState(
-    new Date().toLocaleDateString("fa-IR")
+    new Date().setMonth(new Date().getMonth() - 1)
   );
-  const [toDate, setToDate] = useState(new Date().toLocaleDateString("fa-IR"));
-  const [approveStates, setApproveStates] = useState<any[]>([]);
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<any>({
-    defaultValues: {
-      fromDate: "",
-      toDate: "",
-      finalApproveStateId: "",
-    },
+  const [toDate, setToDate] = useState(new Date());
+  const initialFilter = useRef({
+    fromDate: new Date().setMonth(new Date().getMonth() - 1),
+    toDate: new Date(),
   });
-  const navigate = useNavigate();
+
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
@@ -113,6 +92,17 @@ const RequesterUser = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseCreateDate",
@@ -180,56 +170,73 @@ const RequesterUser = () => {
   ];
   useEffect(() => {
     getList();
-    getApproveStates();
   }, []);
-  const { user } = useSelector((state: any) => state?.user);
 
-  const getApproveStates = async () => {
-    try {
-      const response = await axios.post("/Support/GetApproveStates", {
-        userId: user?.id ?? getUserIdFromStorage(),
-      });
+  const { requesterUserQ } = useSelector(
+    (state: any) => state?.product?.requesterUser
+  );
+  const dispatch = useDispatch<any>();
 
-      setApproveStates(response.data.model);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+  const handleSortModelChange = async (sortArr) => {
+    if (!sortArr.at(0)) {
+      await dispatch(
+        GetRequesterUserQAction({
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+        })
+      );
+      return;
     }
+    const sortField = sortArr?.at(0).field;
+    const sortType = sortArr?.at(0).sort;
+    await dispatch(
+      GetRequesterUserQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        orderBy: sortField,
+        orderType: sortType,
+      })
+    );
   };
-  const handleEditClick = (entity) => {
-    navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
-  };
-  const handleSortModelChange = () => {};
   const getList = async () => {
-    const filters = getValues();
     try {
-      const response = await axios.post(requestUrl, {
-        userId: user?.id ?? getUserIdFromStorage(),
-        pageIndex: 1,
-        pageCount: 200,
-        orderType: "desc",
-        orderBy: "requestCaseCreateDate",
-        fromDate:
-          filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
-        toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
-        approveStateId: 3,
-        finalApproveStateId: 3,
-      });
-      setData(response.data.model);
+      await dispatch(
+        GetRequesterUserQAction({
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+        })
+      );
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
   const setSelectedFromDate = (e) => {
-    const date = new Date(e).toISOString();
+    const date = new Date(e);
     setFromDate(date);
-    setValue("fromDate", date);
   };
   const setSelectedToDate = (e) => {
-    const date = new Date(e).toISOString();
-    setToDate(date);
-    setValue("toDate", date);
+    const date = new Date(e);
+    setToDate(+date);
   };
-  const onSubmit = (data) => {};
+  const handleAddFilter = async () => {
+    await dispatch(
+      GetRequesterUserQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
+  };
+  const handleRmoveFilter = async () => {
+    await dispatch(
+      GetRequesterUserQAction({
+        fromDate: new Date(initialFilter.current.fromDate),
+        toDate: new Date(initialFilter.current.toDate),
+      })
+    );
+  };
+  const handleDownloadExcel = async () => {
+    dispatch(GetRequesterUserQAction({ exportExcell: true }));
+  };
   return (
     <CardGrid
       item
@@ -248,7 +255,7 @@ const RequesterUser = () => {
         />
 
         <Box>
-          <form onSubmit={onSubmit}>
+          <form>
             <Row>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <JalaliDatePicker
@@ -256,7 +263,7 @@ const RequesterUser = () => {
                   onChange={setSelectedFromDate}
                   name="requiredDate"
                   label="از تاریخ"
-                  register={register}
+                  value={fromDate}
                 ></JalaliDatePicker>
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
@@ -265,19 +272,23 @@ const RequesterUser = () => {
                   onChange={setSelectedToDate}
                   name="requiredDate"
                   label="تا تاریخ "
-                  register={register}
+                  value={toDate}
                 ></JalaliDatePicker>
               </Box>
               <IconButton
                 aria-label="اعمال فیلتر"
-                onClick={getList}
+                onClick={handleAddFilter}
                 color="info"
               >
                 <Filter />
               </IconButton>
-              <IconButton onClick={getList} color="info">
+              <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
+              <IconButton onClick={handleDownloadExcel} color="success">
+                <SimCardDownloadIcon />
+              </IconButton>
+
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
@@ -286,7 +297,10 @@ const RequesterUser = () => {
         <Grid
           rowIdFields={["approveStateId", "commodityName"]}
           columns={columns}
-          rows={data.map((row, index) => ({ id: index, ...row }))}
+          rows={requesterUserQ?.data?.map((row, index) => ({
+            id: index,
+            ...row,
+          }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
         ></Grid>

@@ -61,17 +61,26 @@ const initialState: WarehouseState = {
 export const GetWarehouseQAction = createAsyncThunk(
   "warehouse/GetWarehouseQAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetWarehouseQ(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -82,17 +91,26 @@ export const GetWarehouseQAction = createAsyncThunk(
 export const GetExitWarehouseQAction = createAsyncThunk(
   "warehouse/GetExitWarehouseQAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetExitWareHouseQ(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -104,17 +122,26 @@ export const GetExitWarehouseQAction = createAsyncThunk(
 export const WarehouseSentItemAction = createAsyncThunk(
   "warehosue/WarehouseSentItemAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await WarehouseSentItem(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -125,17 +152,26 @@ export const WarehouseSentItemAction = createAsyncThunk(
 export const ExitWarehouseSentItemAction = createAsyncThunk(
   "warehosue/ExitWarehouseSentItemAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await ExitWarehouseSentItem(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {

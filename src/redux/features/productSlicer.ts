@@ -1,0 +1,146 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  GetRequesterUserQ,
+  RequesterUserSentItem,
+} from "../../core/product/Product.service";
+
+const getUserId = (state) => {
+  return state?.user?.user?.id ?? localStorage.getItem("user")
+    ? JSON.parse(localStorage.getItem("user"))?.id
+    : "1";
+};
+
+export interface ProductState {
+  requesterUser: {
+    requesterUserQ: {
+      data: any;
+      pending: boolean;
+    };
+    requestUserSentItem: {
+      data: any;
+      pending: boolean;
+    };
+  };
+}
+
+const initialState: ProductState = {
+  requesterUser: {
+    requesterUserQ: {
+      data: [],
+      pending: false,
+    },
+    requestUserSentItem: {
+      data: [],
+      pending: false,
+    },
+  },
+};
+
+export const GetRequesterUserQAction = createAsyncThunk(
+  "product/GetRequesterUserQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      exportExcell?: boolean;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fromDate, toDate, orderType, orderBy, exportExcell } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetRequesterUserQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        exportExcell
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const RequesterUserSentItemAction = createAsyncThunk(
+  "product/RequesterUserSentItemAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fromDate, toDate, orderType, orderBy } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await RequesterUserSentItem(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+
+export const productSlicer = createSlice({
+  name: "product",
+  initialState,
+  reducers: undefined,
+  extraReducers: (builder) => {
+    //#region GetRequesterUserQAction-----
+    builder
+      .addCase(GetRequesterUserQAction.pending, (state: ProductState) => {
+        state.requesterUser.requesterUserQ.pending = true;
+      })
+      .addCase(
+        GetRequesterUserQAction.fulfilled,
+        (state: ProductState, { payload }) => {
+          state.requesterUser.requesterUserQ.pending = false;
+          state.requesterUser.requesterUserQ.data = [...payload?.model];
+        }
+      )
+      .addCase(
+        GetRequesterUserQAction.rejected,
+        (state: ProductState, { error }) => {
+          state.requesterUser.requesterUserQ.pending = false;
+        }
+      );
+    //#endregion
+    //#region RequesterUserSentItemAction-----
+    builder
+      .addCase(RequesterUserSentItemAction.pending, (state: ProductState) => {
+        state.requesterUser.requestUserSentItem.pending = true;
+      })
+      .addCase(
+        RequesterUserSentItemAction.fulfilled,
+        (state: ProductState, { payload }) => {
+          state.requesterUser.requestUserSentItem.pending = false;
+          state.requesterUser.requestUserSentItem.data = [...payload?.model];
+        }
+      )
+      .addCase(
+        RequesterUserSentItemAction.rejected,
+        (state: ProductState, { error }) => {
+          state.requesterUser.requestUserSentItem.pending = false;
+        }
+      );
+    //#endregion
+  },
+});
+
+export default productSlicer.reducer;

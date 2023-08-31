@@ -1,14 +1,14 @@
 import {
   Box,
   Card,
-  CardHeader,
   Grid as CardGrid,
+  CardHeader,
   IconButton,
+  Typography,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { GridColDef } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState, useRef } from "react";
 import { JalaliDatePickerNew } from "../../components/date-picker/date-picker.tsx";
 import Grid from "../../components/grid/grid.tsx";
 import { Row } from "./style.tsx";
@@ -22,24 +22,14 @@ const ExitWarehouseSentItemList = () => {
   const { exitWarehouseSentItem } = useSelector(
     (state: any) => state.warehouse?.exitWarehouse
   );
-
-  const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
-  const [toDate, setToDate] = useState(new Date().toLocaleDateString());
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<any>({
-    defaultValues: {
-      fromDate: "",
-      toDate: "",
-    },
+  const [fromDate, setFromDate] = useState(
+    new Date().setMonth(new Date().getMonth() - 1)
+  );
+  const [toDate, setToDate] = useState(new Date());
+  const initialFilter = useRef({
+    fromDate: new Date().setMonth(new Date().getMonth() - 1),
+    toDate: new Date(),
   });
-  const navigate = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
@@ -68,10 +58,21 @@ const ExitWarehouseSentItemList = () => {
     {
       field: "requestCaseTrackingCode",
       headerName: gridDict.requestCaseTrackingCode,
-      flex: 1,
       minWidth: 150,
+      flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseId",
@@ -169,38 +170,64 @@ const ExitWarehouseSentItemList = () => {
     },
   ];
   useEffect(() => {
-    dispatch(
+    getList();
+  }, []);
+
+  const handleSortModelChange = async (sortArr) => {
+    if (!sortArr.at(0)) {
+      await dispatch(
+        ExitWarehouseSentItemAction({
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+        })
+      );
+      return;
+    }
+    const sortField = sortArr?.at(0).field;
+    const sortType = sortArr?.at(0).sort;
+    await dispatch(
       ExitWarehouseSentItemAction({
-        fromDate: "2021-07-27",
-        toDate: "2024-07-27",
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        orderBy: sortField,
+        orderType: sortType,
       })
     );
-  }, [dispatch]);
-
-  const handleEditClick = (entity) => {
-    navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
   };
-  const handleSortModelChange = () => {};
   const getList = async () => {
-    const filters = getValues();
     const body = {
-      fromDate:
-        filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
-      toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
+      fromDate: new Date(fromDate),
+      toDate: new Date(toDate),
     };
     dispatch(ExitWarehouseSentItemAction(body));
   };
   const setSelectedFromDate = (e) => {
-    const date = new Date(e).toJSON().split("T")[0];
-    setFromDate(date);
-    setValue("fromDate", date);
+    const date = new Date(e);
+    setFromDate(+date);
   };
+
   const setSelectedToDate = (e) => {
-    const date = new Date(e).toJSON().split("T")[0];
+    const date = new Date(e);
     setToDate(date);
-    setValue("toDate", date);
   };
-  const onSubmit = (data) => {};
+
+  const handleAddFilter = async () => {
+    await dispatch(
+      ExitWarehouseSentItemAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
+  };
+
+  const handleRmoveFilter = async () => {
+    await dispatch(
+      ExitWarehouseSentItemAction({
+        fromDate: new Date(initialFilter.current.fromDate),
+        toDate: new Date(initialFilter.current.toDate),
+      })
+    );
+  };
   return (
     <CardGrid
       item
@@ -214,12 +241,12 @@ const ExitWarehouseSentItemList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="در صف بررسی"
+          title="خارج شده"
           titleTypographyProps={{ variant: "h6" }}
         />
 
         <Box>
-          <form onSubmit={onSubmit}>
+          <form>
             <Row>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <JalaliDatePickerNew
@@ -227,7 +254,7 @@ const ExitWarehouseSentItemList = () => {
                   onChange={setSelectedFromDate}
                   name="requiredDate"
                   label="از تاریخ"
-                  register={register}
+                  value={fromDate}
                 ></JalaliDatePickerNew>
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
@@ -236,17 +263,17 @@ const ExitWarehouseSentItemList = () => {
                   onChange={setSelectedToDate}
                   name="requiredDate"
                   label="تا تاریخ "
-                  register={register}
+                  value={toDate}
                 ></JalaliDatePickerNew>
               </Box>
               <IconButton
                 aria-label="اعمال فیلتر"
-                onClick={getList}
+                onClick={handleAddFilter}
                 color="info"
               >
                 <Filter />
               </IconButton>
-              <IconButton onClick={getList} color="info">
+              <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
@@ -255,7 +282,6 @@ const ExitWarehouseSentItemList = () => {
         </Box>
 
         <Grid
-          onDoubleClick={(e) => handleEditClick(e.row)}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

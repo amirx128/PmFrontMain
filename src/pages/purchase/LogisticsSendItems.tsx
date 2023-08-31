@@ -1,4 +1,3 @@
-import EditIcon from "@mui/icons-material/Edit";
 import {
   Box,
   Card,
@@ -7,50 +6,31 @@ import {
   IconButton,
   Typography,
 } from "@mui/material";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { GridColDef } from "@mui/x-data-grid";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import JalaliDatePicker, {
-  JalaliDatePickerNew,
-} from "../../components/date-picker/date-picker.tsx";
+import { JalaliDatePickerNew } from "../../components/date-picker/date-picker.tsx";
 import Grid from "../../components/grid/grid.tsx";
-import SelectComponent from "../../components/select/selects.tsx";
-import axios from "../../utils/axios.config.ts";
 import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
-import { Link } from "react-router-dom";
 import { LogisticsSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-const requestUrl = "requestCase/SentItem";
+import { Link } from "react-router-dom";
+
 const LogisticsSendItems = () => {
   const dispatch = useDispatch<any>();
   const sendItems = useSelector(
     (state: any) => state.purchase?.logistics?.sendItems
   );
-
-  const [fromDate, setFromDate] = useState(new Date().toLocaleDateString());
-  const [toDate, setToDate] = useState(new Date().toLocaleDateString());
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<any>({
-    defaultValues: {
-      fromDate: "",
-      toDate: "",
-    },
+  const [fromDate, setFromDate] = useState(
+    new Date().setMonth(new Date().getMonth() - 1)
+  );
+  const [toDate, setToDate] = useState(new Date());
+  const initialFilter = useRef({
+    fromDate: new Date().setMonth(new Date().getMonth() - 1),
+    toDate: new Date(),
   });
   const navigate = useNavigate();
   const columns: GridColDef[] = [
@@ -89,10 +69,21 @@ const LogisticsSendItems = () => {
     {
       field: "requestCaseTrackingCode",
       headerName: gridDict.requestCaseTrackingCode,
-      flex: 1,
       minWidth: 150,
+      flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseId",
@@ -199,40 +190,61 @@ const LogisticsSendItems = () => {
     },
   ];
   useEffect(() => {
-    //@ts-ignore
-    dispatch(
+    getList();
+  }, []);
+
+  const handleSortModelChange = async (sortArr) => {
+    if (!sortArr.at(0)) {
+      await dispatch(
+        LogisticsSendItemsAction({
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+        })
+      );
+      return;
+    }
+    const sortField = sortArr?.at(0).field;
+    const sortType = sortArr?.at(0).sort;
+    await dispatch(
       LogisticsSendItemsAction({
-        fromDate: "2021-07-27",
-        toDate: "2024-07-27",
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        orderBy: sortField,
+        orderType: sortType,
       })
     );
-  }, [dispatch]);
-  const { user } = useSelector((state: any) => state?.user);
-
-  const handleEditClick = (entity) => {
-    navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
   };
-  const handleSortModelChange = () => {};
   const getList = async () => {
-    const filters = getValues();
     const body = {
-      fromDate:
-        filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
-      toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
+      fromDate: new Date(fromDate),
+      toDate: new Date(toDate),
     };
     dispatch(LogisticsSendItemsAction(body));
   };
   const setSelectedFromDate = (e) => {
-    const date = new Date(e).toJSON().split("T")[0];
-    setFromDate(date);
-    setValue("fromDate", date);
+    const date = new Date(e);
+    setFromDate(+date);
   };
   const setSelectedToDate = (e) => {
-    const date = new Date(e).toJSON().split("T")[0];
+    const date = new Date(e);
     setToDate(date);
-    setValue("toDate", date);
   };
-  const onSubmit = (data) => {};
+  const handleAddFilter = async () => {
+    await dispatch(
+      LogisticsSendItemsAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
+  };
+  const handleRmoveFilter = async () => {
+    await dispatch(
+      LogisticsSendItemsAction({
+        fromDate: new Date(initialFilter.current.fromDate),
+        toDate: new Date(initialFilter.current.toDate),
+      })
+    );
+  };
   return (
     <CardGrid
       item
@@ -251,7 +263,7 @@ const LogisticsSendItems = () => {
         />
 
         <Box>
-          <form onSubmit={onSubmit}>
+          <form>
             <Row>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <JalaliDatePickerNew
@@ -259,7 +271,7 @@ const LogisticsSendItems = () => {
                   onChange={setSelectedFromDate}
                   name="requiredDate"
                   label="از تاریخ"
-                  register={register}
+                  value={fromDate}
                 ></JalaliDatePickerNew>
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
@@ -268,17 +280,17 @@ const LogisticsSendItems = () => {
                   onChange={setSelectedToDate}
                   name="requiredDate"
                   label="تا تاریخ "
-                  register={register}
+                  value={toDate}
                 ></JalaliDatePickerNew>
               </Box>
               <IconButton
                 aria-label="اعمال فیلتر"
-                onClick={getList}
+                onClick={handleAddFilter}
                 color="info"
               >
                 <Filter />
               </IconButton>
-              <IconButton onClick={getList} color="info">
+              <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
@@ -287,7 +299,6 @@ const LogisticsSendItems = () => {
         </Box>
 
         <Grid
-          onDoubleClick={(e) => handleEditClick(e.row)}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

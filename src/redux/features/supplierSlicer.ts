@@ -39,17 +39,26 @@ const initialState: SupplierState = {
 export const GetSupplierQAction = createAsyncThunk(
   "supplier/GetSupplierQAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetSupplierQ(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -61,17 +70,26 @@ export const GetSupplierQAction = createAsyncThunk(
 export const SuppLierSentItemAction = createAsyncThunk(
   "supplier/SupplierSentItem",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await SupplierSentItem(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {

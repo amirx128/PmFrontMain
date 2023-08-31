@@ -99,17 +99,26 @@ const initialState: PurchaseState = {
 export const GetLogisticsQAction = createAsyncThunk(
   "purchase/GetLogisticsQAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetLogisticsQ(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -166,17 +175,26 @@ export const AddDetailsToPurchaseOrderAction = createAsyncThunk(
 export const LogisticsSendItemsAction = createAsyncThunk(
   "purchase/LogisticsSendItemsAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await LogisticsSendItems(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -188,17 +206,26 @@ export const LogisticsSendItemsAction = createAsyncThunk(
 export const GetFinancialQAction = createAsyncThunk(
   "purchase/GetFinancialQAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetFinancialQ(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -231,17 +258,26 @@ export const FinancialUpdateDetailsActions = createAsyncThunk(
 export const FinancialSendItemsActions = createAsyncThunk(
   "purchase/FinancialSendItemsActions",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await FinancialSendItems(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -253,13 +289,27 @@ export const FinancialSendItemsActions = createAsyncThunk(
 export const GetApproveQAction = createAsyncThunk(
   "purchase/GetApproveQAction",
   async (
-    body: { fromDate?: any; toDate?: any },
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }: any
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId: any = getUserId(state);
-      const { data } = await GetApproveQ(userId, 1, body.fromDate, body.toDate);
+      const { data } = await GetApproveQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -270,17 +320,26 @@ export const GetApproveQAction = createAsyncThunk(
 export const ApproveSendItemsAction = createAsyncThunk(
   "purchase/ApproveSendItemsAction",
   async (
-    body: { fromDate: any; toDate: any },
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await ApproveSendItems(
         userId,
         1,
-        body.fromDate,
-        body.toDate
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {

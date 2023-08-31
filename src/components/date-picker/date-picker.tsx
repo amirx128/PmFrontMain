@@ -2,7 +2,7 @@ import { DatePicker } from "@mui/x-date-pickers";
 import { AdapterDateFnsJalali } from "@mui/x-date-pickers/AdapterDateFnsJalali";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Container } from "./style";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import {
   DeepMap,
   FieldError,
@@ -13,7 +13,6 @@ import { useTheme } from "@mui/material";
 interface IProps {
   name: string;
   label: string;
-  register: UseFormRegister<any>;
   className?: string;
   rules?: RegisterOptions;
   required?: boolean;
@@ -22,6 +21,7 @@ interface IProps {
   defaultValue?: any;
   onChange?: (newType: string) => void;
   errors?: Partial<DeepMap<any, FieldError>>;
+  value?: any;
 }
 const JalaliDatePicker: React.FC<IProps> = (props) => {
   const theme = useTheme();
@@ -29,11 +29,11 @@ const JalaliDatePicker: React.FC<IProps> = (props) => {
     <Container sx={{ width: "100%" }} theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
         <DatePicker
-          defaultValue={props.defaultValue}
+          defaultValue={new Date(+props.defaultValue)}
           onChange={(e) => props.onChange(e)}
           label={props.label}
           minDate={new Date(2010, 1, 1)}
-          value={new Date()}
+          value={new Date(+props.value)}
         />
       </LocalizationProvider>
     </Container>
@@ -43,17 +43,17 @@ const JalaliDatePicker: React.FC<IProps> = (props) => {
 export const JalaliDatePickerNew: React.FC<IProps> = (props) => {
   const theme = useTheme();
   return (
-      <Container sx={{ width: "100%" }} theme={theme}>
-        <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
-          <DatePicker
-              defaultValue={props.defaultValue}
-              onChange={(e) => props.onChange(e)}
-              label={props.label}
-              minDate={new Date(2010, 1, 1)}
-              value={new Date(props.defaultValue ?? '')}
-          />
-        </LocalizationProvider>
-      </Container>
+    <Container sx={{ width: "100%" }} theme={theme}>
+      <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
+        <DatePicker
+          defaultValue={props.defaultValue}
+          onChange={(e) => props.onChange(e)}
+          label={props.label}
+          minDate={new Date(2010, 1, 1)}
+          value={new Date(props.defaultValue ?? "")}
+        />
+      </LocalizationProvider>
+    </Container>
   );
 };
 export default JalaliDatePicker;

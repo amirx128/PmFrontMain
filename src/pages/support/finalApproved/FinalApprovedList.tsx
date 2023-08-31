@@ -1,4 +1,7 @@
 import EditIcon from "@mui/icons-material/Edit";
+import Filter from "@mui/icons-material/FilterAlt";
+import FilterOff from "@mui/icons-material/FilterAltOff";
+import axios from "../../../utils/axios.config";
 import {
   Box,
   Card,
@@ -12,28 +15,31 @@ import {
   GridColDef,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import JalaliDatePicker from "../../../components/date-picker/date-picker";
-import Grid from "../../../components/grid/grid";
+import { Link, useNavigate } from "react-router-dom";
 import SelectComponent from "../../../components/select/selects";
-import axios from "../../../utils/axios.config";
+import JalaliDatePicker from "../../../components/date-picker/date-picker";
 import { Row } from "../style";
-import Filter from "@mui/icons-material/FilterAlt";
-import FilterOff from "@mui/icons-material/FilterAltOff";
-import { useSelector } from "react-redux";
+import Grid from "../../../components/grid/grid";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../utils/functions.ts";
-import { Link } from "react-router-dom";
 import gridDict from "../../../dictionary/gridDict.ts";
-const FinalApprovedList = () => {
-  const [data, setData] = useState<any[]>([]);
+import {
+  GetFinalApproveQAction,
+  GetApproveStatesAction,
+} from "../../../redux/features/supportSlicer.ts";
+const FinalApprovedList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
-    new Date().toLocaleDateString("fa-IR")
+    new Date().setMonth(new Date().getMonth() - 1)
   );
-  const [toDate, setToDate] = useState(new Date().toLocaleDateString("fa-IR"));
-
-  const [approveStates, setApproveStates] = useState<any[]>([]);
+  const [toDate, setToDate] = useState(new Date());
+  const initialFilter = useRef({
+    fromDate: new Date().setMonth(new Date().getMonth() - 1),
+    toDate: new Date(),
+    approveStateId: 1,
+  });
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -43,13 +49,8 @@ const FinalApprovedList = () => {
     watch,
     formState: { errors, isValid, isDirty },
   } = useForm<any>({
-    defaultValues: {
-      fromDate: "",
-      toDate: "",
-      finalApproveStateId: "",
-    },
+    defaultValues: { approveStateId: 1, fromDate: "", toDate: "" },
   });
-  const navigate = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "requesterUser",
@@ -320,7 +321,7 @@ const FinalApprovedList = () => {
     },
     {
       field: "actions",
-      headerName: "Actions",
+      headerName: gridDict.actions,
       description: "ActionColumn",
       sortable: false,
       minWidth: 150,
@@ -345,57 +346,83 @@ const FinalApprovedList = () => {
   ];
   useEffect(() => {
     getList();
-    getApproveStates();
   }, []);
-  const { user } = useSelector((state: any) => state?.user);
+  const dispatch = useDispatch<any>();
+  const { finalApproveQ, states } = useSelector(
+    (state: any) => state?.support?.approve
+  );
 
-  const getApproveStates = async () => {
-    try {
-      const response = await axios.post("/Support/GetApproveStates", {
-        userId: user?.id ?? getUserIdFromStorage(),
-      });
-
-      setApproveStates(response.data.model);
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
-  };
   const handleEditClick = (entity) => {
     navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
   };
-  const handleSortModelChange = () => {};
+  const handleSortModelChange = async (sortArr) => {
+    const { approveStateId } = getValues();
+    if (!sortArr.at(0)) {
+      await dispatch(
+        GetFinalApproveQAction({
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+          approveStateId,
+        })
+      );
+      return;
+    }
+    const sortField = sortArr?.at(0).field;
+    const sortType = sortArr?.at(0).sort;
+    await dispatch(
+      GetFinalApproveQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        approveStateId,
+        orderBy: sortField,
+        orderType: sortType,
+      })
+    );
+  };
   const getList = async () => {
-    const filters = getValues();
     try {
-      const response = await axios.post("/Support/FinalApproveQ", {
-        approveStateId: 3,
-        fromDate:
-          filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
-        orderType: "asc",
-        userId: user?.id ?? getUserIdFromStorage(),
-        pageIndex: 1,
-        pageCount: 200,
-        orderBy: "CreateDate",
-
-        toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
-        finalApproveStateId: 1,
-      });
-      setData(response.data.model);
+      await dispatch(
+        GetFinalApproveQAction({
+          fromDate: new Date(fromDate),
+          toDate: new Date(toDate),
+          approveStateId: 0,
+        })
+      );
+      await dispatch(GetApproveStatesAction());
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
   const setSelectedFromDate = (e) => {
-    const date = new Date(e).toISOString();
+    const date = new Date(e).toLocaleDateString("en-US");
     setFromDate(date);
     setValue("fromDate", date);
   };
   const setSelectedToDate = (e) => {
-    const date = new Date(e).toISOString();
+    const date = new Date(e).toLocaleDateString("en-US");
     setToDate(date);
     setValue("toDate", date);
   };
-  const onSubmit = (data) => {};
+
+  const handleAddFilter = async () => {
+    const { approveStateId } = getValues();
+    await dispatch(
+      GetFinalApproveQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        approveStateId,
+      })
+    );
+  };
+  const handleRmoveFilter = async () => {
+    await dispatch(
+      GetFinalApproveQAction({
+        fromDate: new Date(initialFilter.current.fromDate),
+        toDate: new Date(initialFilter.current.toDate),
+        approveStateId: initialFilter.current.approveStateId,
+      })
+    );
+  };
   return (
     <CardGrid
       item
@@ -414,20 +441,20 @@ const FinalApprovedList = () => {
         />
 
         <Box>
-          <form onSubmit={onSubmit}>
+          <form>
             <Row>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <Controller
                   control={control}
                   rules={{ required: " approve state is required" }}
                   name="approveStateId"
-                  defaultValue={3}
+                  defaultValue={1}
                   render={({ field }) => (
                     <SelectComponent
                       label="وضعیت"
                       valuefieldName="id"
                       labelFieldName="state"
-                      options={approveStates}
+                      options={states?.data}
                       field={field}
                     />
                   )}
@@ -437,40 +464,42 @@ const FinalApprovedList = () => {
                 <JalaliDatePicker
                   defaultValue={fromDate}
                   onChange={setSelectedFromDate}
-                  name="requiredDate"
+                  name="fromDate"
                   label="از تاریخ"
-                  register={register}
+                  value={fromDate}
                 ></JalaliDatePicker>
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
                 <JalaliDatePicker
                   defaultValue={toDate}
                   onChange={setSelectedToDate}
-                  name="requiredDate"
+                  name="toDate"
                   label="تا تاریخ "
-                  register={register}
+                  value={toDate}
                 ></JalaliDatePicker>
               </Box>
               <IconButton
                 aria-label="اعمال فیلتر"
-                onClick={getList}
+                onClick={handleAddFilter}
                 color="info"
               >
                 <Filter />
               </IconButton>
-              <IconButton onClick={getList} color="info">
+              <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
-
         <Grid
           onDoubleClick={(e) => handleEditClick(e.row)}
-          rowIdFields={["approveStateId", "commodityName"]}
+          rowIdFields={["approveStateId", "commodityName", "approverId"]}
           columns={columns}
-          rows={data.map((row, index) => ({ id: index, ...row }))}
+          rows={finalApproveQ?.data.map((row, index) => ({
+            id: index,
+            ...row,
+          }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
         ></Grid>
