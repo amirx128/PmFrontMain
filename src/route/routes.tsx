@@ -27,6 +27,7 @@ import WarehouseQList from "../pages/warehouse/WarehouseQList.tsx";
 import WarehouseSentItemList from "../pages/warehouse/WarehouseSentItemList.tsx";
 import ExitWarehouseQList from "../pages/warehouse/ExitWarehouseQList.tsx";
 import ExitWarehouseSentItemList from "../pages/warehouse/ExitWarehouseSentItemList.tsx";
+import SupplierList from "../pages/users/SupplierList.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -232,6 +233,13 @@ export const routes: IRoute[] = [
   {
     path: "/warehosue/exitwarehouse-sentitems",
     component: <ExitWarehouseSentItemList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "خارج شده",
+  },
+  {
+    path: "/supplier-list",
+    component: <SupplierList />,
     layout: Layouts.MAIN,
     protected: true,
     title: "خارج شده",
