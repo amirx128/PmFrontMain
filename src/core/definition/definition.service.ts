@@ -223,24 +223,28 @@ export const GetScheduleActivitiesReq = async (userId) =>
         }
     );
 
-export const AddNewActivityScheduleReq = async (userId,activityName,decriptions) =>
+export const AddNewActivityScheduleReq = async (userId,activityName,decriptions, fromDate,toDate) =>
     await axiosInstance.post(
         `/Definition/AddNewActivitySchedule`,
         {
             userId,
             name: activityName,
-            decriptions
+            decriptions,
+            fromDate, 
+            toDate
         }
     );
 
-export const UpdateNewActivityScheduleReq = async (userId,id,activityName,decriptions) =>
+export const UpdateNewActivityScheduleReq = async (userId,id,activityName,decriptions, fromDate,toDate) =>
     await axiosInstance.post(
         `/Definition/UpdateNewActivitySchedule`,
         {
             userId,
             id,
             name: activityName,
-            decriptions
+            decriptions,
+            fromDate, 
+            toDate
         }
     );
 

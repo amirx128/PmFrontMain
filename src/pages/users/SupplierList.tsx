@@ -17,11 +17,9 @@ import {useDispatch, useSelector} from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { AddUser } from "../../components/administrations/addUser.tsx";
 import {GetUserInfo} from "../../redux/features/administrationSlicer.ts";
-import { useNavigate } from "react-router-dom";
 
-const Users = () => {
+const SupplierList = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate();
   const columns: GridColDef[] = [
     {
       field: "firstName",
@@ -122,9 +120,10 @@ const Users = () => {
   }, []);
   const getUsers = async () => {
     try {
-      const response: any = await axios.post("/Administration/GetAllUsers", {
+      const response: any = await axios.post("/Administration/GetSupplierList", {
         userId: user?.id ?? getUserIdFromStorage(),
       });
+      console.log(response);
       setData(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -171,16 +170,6 @@ const Users = () => {
             <AddIcon />
             افزودن
           </Button>
-          <Button
-            sx={{ justifySelf: "flex-start", marginRight: "20px" }}
-            color="info"
-            variant="outlined"
-            onClick={() => {
-              navigate('/supplier-list')
-            }}
-          >
-            تامین کنندگان
-          </Button>
         </ActionRow>
 
         <Grid
@@ -198,4 +187,4 @@ const Users = () => {
     </CardGrid>
   );
 };
-export default Users;
+export default SupplierList;

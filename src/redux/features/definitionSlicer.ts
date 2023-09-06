@@ -611,13 +611,13 @@ export const GetScheduleActivities = createAsyncThunk(
 export const AddNewActivitySchedule = createAsyncThunk(
     "definition/AddNewActivitySchedule",
     async (
-        body: { name: string,desc: string},
+        body: { name: string,desc: string,fromDate:any , toDate:any},
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
       try {
         const state:any = getState();
         const userId = getUserId(state);
-        const {data} = await AddNewActivityScheduleReq(userId,body.name,body.desc);
+        const {data} = await AddNewActivityScheduleReq(userId,body.name,body.desc,body.fromDate , body.toDate);
         if(data?.isSuccess){
           dispatch(GetScheduleActivities());
         }
@@ -671,13 +671,13 @@ export const UpdateProducerInfo = createAsyncThunk(
 export const UpdateNewActivitySchedule = createAsyncThunk(
     "definition/UpdateNewActivitySchedule",
     async (
-        body: { id:any,name: string,desc: string},
+        body: { id:any,name: string,desc: string,fromDate:any,toDate:any},
         {rejectWithValue, fulfillWithValue, dispatch, getState}
     ) => {
       try {
         const state:any = getState();
         const userId = getUserId(state);
-        const {data} = await UpdateNewActivityScheduleReq(userId,body.id,body.name,body.desc);
+        const {data} = await UpdateNewActivityScheduleReq(userId,body.id,body.name,body.desc,body.fromDate,body.toDate);
         if(data?.isSuccess){
           dispatch(GetScheduleActivities());
         }
