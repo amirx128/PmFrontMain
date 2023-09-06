@@ -58,6 +58,10 @@ export interface PurchaseState {
       data: any;
       pending: boolean;
     };
+    updatePurchaseRes: {
+      pending: boolean;
+      data: any;
+    };
   };
   approve: {
     queue: {
@@ -108,6 +112,10 @@ const initialState: PurchaseState = {
     sendItems: {
       data: [],
       pending: false,
+    },
+    updatePurchaseRes: {
+      pending: false,
+      data: [],
     },
   },
   approve: {
@@ -638,7 +646,30 @@ export const purchaseSlicer = createSlice({
         UpdateDetailsToPurchaseOrderAction.rejected,
         (state: PurchaseState, { error, payload }) => {
           state.logistics.updatePurchaseRes.pending = false;
-          state.logistics.addPurchaseRes.data = payload;
+          state.logistics.updatePurchaseRes.data = payload;
+        }
+      );
+    //#endregion
+    //#region FinancialUpdateDetailsActions-----
+    builder
+      .addCase(
+        FinancialUpdateDetailsActions.pending,
+        (state: PurchaseState) => {
+          state.financials.updatePurchaseRes.pending = true;
+        }
+      )
+      .addCase(
+        FinancialUpdateDetailsActions.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.financials.updatePurchaseRes.pending = false;
+          state.financials.updatePurchaseRes.data = payload;
+        }
+      )
+      .addCase(
+        FinancialUpdateDetailsActions.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.financials.updatePurchaseRes.pending = false;
+          state.financials.updatePurchaseRes.data = payload;
         }
       );
     //#endregion

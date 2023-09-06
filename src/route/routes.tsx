@@ -29,6 +29,7 @@ import ExitWarehouseQList from "../pages/warehouse/ExitWarehouseQList.tsx";
 import ExitWarehouseSentItemList from "../pages/warehouse/ExitWarehouseSentItemList.tsx";
 import LogisticsDetails from "../pages/purchase/LogisticsDetails.tsx";
 import SupplierList from "../pages/users/SupplierList.tsx";
+import FinancialDetails from "../pages/purchase/FinancialDetails.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -156,6 +157,13 @@ export const routes: IRoute[] = [
   {
     path: "/logistics/details/:id",
     component: <LogisticsDetails />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "جزییات محصول",
+  },
+  {
+    path: "/financial/details/:id",
+    component: <FinancialDetails />,
     layout: Layouts.MAIN,
     protected: true,
     title: "جزییات محصول",
