@@ -27,6 +27,7 @@ import WarehouseQList from "../pages/warehouse/WarehouseQList.tsx";
 import WarehouseSentItemList from "../pages/warehouse/WarehouseSentItemList.tsx";
 import ExitWarehouseQList from "../pages/warehouse/ExitWarehouseQList.tsx";
 import ExitWarehouseSentItemList from "../pages/warehouse/ExitWarehouseSentItemList.tsx";
+import LogisticsDetails from "../pages/purchase/LogisticsDetails.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -150,6 +151,13 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "تدارکات - بررسی شده",
+  },
+  {
+    path: "/logistics/details/:id",
+    component: <LogisticsDetails />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "جزییات محصول",
   },
   {
     path: "/financials/queue",
