@@ -33,7 +33,7 @@ const FinalApprovedList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
-  const [toDate, setToDate] = useState(new Date());
+  const [toDate, setToDate] = useState<any>(new Date());
   const initialFilter = useRef({
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
@@ -395,7 +395,7 @@ const FinalApprovedList: React.FC<any> = (props) => {
   };
   const setSelectedFromDate = (e) => {
     const date = new Date(e).toLocaleDateString("en-US");
-    setFromDate(date);
+    setFromDate(+date);
     setValue("fromDate", date);
   };
   const setSelectedToDate = (e) => {

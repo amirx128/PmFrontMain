@@ -3,26 +3,27 @@ import React from "react";
 import { InputContainer } from "./style";
 
 interface Iprops {
-  // data: any[];
-  // name: string;
-  // label: string;
-  // // defaultValue?: string;
-  // register: UseFormRegister<any>;
-  // className?: string;
-  // rules?: RegisterOptions;
-  // errors?: Partial<DeepMap<any, FieldError>>;
   options: any[];
   valuefieldName?: string;
   labelFieldName?: string;
   field: any;
-  label:string;
-  disabled?:boolean;
+  label: string;
+  disabled?: boolean;
+  defaultValue?: string;
 }
 const SelectComponent: React.FC<Iprops> = (props: Iprops) => {
   const theme = useTheme();
   return (
     <InputContainer>
-        <TextField disabled={props.disabled} sx={{textAlign:'left'}} select label={props.label} fullWidth {...props.field}>
+      <TextField
+        disabled={props.disabled}
+        sx={{ textAlign: "left" }}
+        select
+        label={props.label}
+        fullWidth
+        {...props.field}
+        defaultValue={props.defaultValue}
+      >
         {props.options.map((item, index) => {
           return (
             <MenuItem
@@ -33,29 +34,7 @@ const SelectComponent: React.FC<Iprops> = (props: Iprops) => {
             </MenuItem>
           );
         })}
-       </TextField>
-      {/* <Selector
-              defaultValue={UserStatus.DISABLED}
-                select
-                theme={theme}
-                {...props.register(props.name)}
-                variant="outlined"
-                label={props.label}
-                >
-                {props.data.map((item, index) => (
-                    <MenuItem key={index + 'status'} value={item}>{item}</MenuItem>
-                ))}
-                
-            </Selector>
-            <p
-                className={
-                    "font-serif text-sm text-left block text-red-600 " + props.className
-                }
-            >
-                {props.errors && props.errors[props.name]
-                    ? props.errors[props.name].message
-                    : ""}
-            </p> */}
+      </TextField>
     </InputContainer>
   );
 };

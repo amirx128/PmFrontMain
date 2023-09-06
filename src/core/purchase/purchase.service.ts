@@ -19,7 +19,7 @@ export const GetLogisticsQ = async (
   });
 export const GetPurchaseOrderData = async (userId, purchaseOrderId) =>
   await axiosInstance.post(`/Purchase/GetPurchaseOrderData`, {
-    userId: userId,
+    userId,
     purchaseOrderId,
   });
 
@@ -29,8 +29,29 @@ export const GetPurchaseOrderDetailsData = async (userId, purchaseOrderId) =>
     purchaseOrderId,
   });
 
-export const AddDetailsToPurchaseOrder = async (userId, body) =>
+export const AddDetailsToPurchaseOrder = async (
+  userId,
+  body: {
+    supporterId: string;
+    purchaseOrderId: number;
+    BaravordFeeKala: number;
+    BaravordkolMandeh: number;
+  }
+) =>
   await axiosInstance.post(`/Purchase/Logistics.AddDetailsToPurchaseOrder`, {
+    userId: userId,
+    ...body,
+  });
+export const UpdateDetailsToPurchaseOrder = async (
+  userId,
+  body: {
+    supporterId: string;
+    PurchaseOrderDetailsId: number;
+    BaravordFeeKala: number;
+    BaravordkolMandeh: number;
+  }
+) =>
+  await axiosInstance.post(`Purchase/Logistics.UpdateDetails`, {
     userId: userId,
     ...body,
   });
@@ -121,13 +142,13 @@ export const GetApproveQ = async (
 export const ApproveUpdateDetails = async (
   userId,
   count,
-  approveStateId,
+  ApproveStateId,
   purchaseOrderDetailsId
 ) =>
   await axiosInstance.post(`/Purchase/Approve.UpdateDetails`, {
     userId: userId,
     count,
-    approveStateId,
+    ApproveStateId,
     purchaseOrderDetailsId,
   });
 

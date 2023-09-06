@@ -305,7 +305,6 @@ const SupportList: React.FC<any> = (props) => {
                   onChange={setSelectedFromDate}
                   name="fromDate"
                   label="از تاریخ"
-                  register={register}
                 ></JalaliDatePicker>
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
@@ -314,7 +313,6 @@ const SupportList: React.FC<any> = (props) => {
                   onChange={setSelectedToDate}
                   name="toDate"
                   label="تا تاریخ "
-                  register={register}
                 ></JalaliDatePicker>
               </Box>
               <IconButton

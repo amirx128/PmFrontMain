@@ -1,8 +1,8 @@
 import { Grid, Box, Typography, useTheme } from "@mui/material";
-import { StyledBox } from "./approve/style";
+import { StyledBox } from "./style";
 import { Link } from "react-router-dom";
 
-const RequestDetail = ({ detail }) => {
+const PurchaseDetail = ({ detail }) => {
   const theme = useTheme();
   return (
     <Grid container spacing={5} p={2}>
@@ -19,9 +19,9 @@ const RequestDetail = ({ detail }) => {
                     marginRight: "20px",
                   }}
                 >
-                  نقش کاربری:
+                  شرح کالا:
                 </Typography>
-                <Typography variant="body2">{detail?.businessRoles}</Typography>
+                <Typography variant="body2">{detail?.commodity}</Typography>
               </Box>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
@@ -33,10 +33,35 @@ const RequestDetail = ({ detail }) => {
                   }}
                 >
                   {" "}
-                  محل مصرف:
+                  تعداد کل:
                 </Typography>
 
-                <Typography variant="body2">{detail?.placeOfUse} </Typography>
+                <Typography variant="body2">
+                  {detail?.requestCasePurchaseHavingCount}{" "}
+                </Typography>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginTop: "3rem",
+                }}
+              >
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
+                  {" "}
+                  تعداد موجود:
+                </Typography>
+
+                <Typography variant="body2">
+                  {detail?.requestCasePurchaseRemainingCount}{" "}
+                </Typography>
               </Box>
             </StyledBox>
           </Grid>
@@ -53,7 +78,9 @@ const RequestDetail = ({ detail }) => {
                 درخواست دهنده :
               </Typography>
 
-              <Typography variant="body2">{detail?.requesterUser} </Typography>
+              <Typography variant="body2">
+                {detail?.requestCaseUser}{" "}
+              </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
               <Typography
@@ -68,18 +95,8 @@ const RequestDetail = ({ detail }) => {
                 شماره تراکنش:
               </Typography>
 
-              <Typography
-                variant="body2"
-                color="secondary"
-                sx={{ cursor: "pointer" }}
-              >
-                <Link
-                  to={`/product-details/${
-                    detail?.commodities?.at(0)?.requestCaseId
-                  }`}
-                >
-                  {detail?.trackingCode}
-                </Link>
+              <Typography variant="body2" color="secondary">
+                {detail?.purchaseTrackingCode}
               </Typography>
             </Box>
           </Grid>
@@ -88,4 +105,4 @@ const RequestDetail = ({ detail }) => {
     </Grid>
   );
 };
-export default RequestDetail;
+export default PurchaseDetail;
