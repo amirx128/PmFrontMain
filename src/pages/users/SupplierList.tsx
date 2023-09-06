@@ -120,7 +120,7 @@ const SupplierList = () => {
   }, []);
   const getUsers = async () => {
     try {
-      const response: any = await axios.post("/Administration/GetSupplierList", {
+      const response: any = await axios.post("/Definition/GetAllSuppliers", {
         userId: user?.id ?? getUserIdFromStorage(),
       });
       console.log(response);
@@ -155,7 +155,7 @@ const SupplierList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست کاربران"
+          title="لیست تامین کننده گان"
           titleTypographyProps={{ variant: "h6" }}
         />
         <ActionRow>
