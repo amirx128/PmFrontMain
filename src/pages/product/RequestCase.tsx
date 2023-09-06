@@ -338,12 +338,10 @@ const RequestCase = () => {
   const setSelectedFromDate = (e) => {
     const date = new Date(e);
     setFromDate(+date);
-    setValue("fromDate", date);
   };
   const setSelectedToDate = (e) => {
     const date = new Date(e);
     setToDate(date);
-    setValue("toDate", date);
   };
   const handleAddFilter = async () => {
     await dispatch(

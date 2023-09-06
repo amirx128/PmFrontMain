@@ -168,7 +168,6 @@ const ComodiryForm: React.FC<Iprops> = ({
             onChange={setSelectedDate}
             name="requiredDate"
             label="تاریخ نیاز"
-            register={register}
           ></JalaliDatePicker>
         </Box>
         <IconButton

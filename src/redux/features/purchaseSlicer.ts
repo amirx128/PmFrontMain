@@ -438,7 +438,7 @@ export const ApproveUpdateDetailsAction = createAsyncThunk(
       const { data } = await ApproveUpdateDetails(
         userId,
         body.count,
-        body.approveStateId,
+        body.ApproveStateId,
         body.purchaseOrderDetailsId
       );
       return fulfillWithValue(data);

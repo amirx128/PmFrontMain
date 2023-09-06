@@ -30,7 +30,7 @@ const JalaliDatePicker: React.FC<IProps> = (props) => {
       <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
         <DatePicker
           defaultValue={new Date(+props.defaultValue)}
-          onChange={(e) => props.onChange(e)}
+          onChange={(e: any) => props.onChange(e)}
           label={props.label}
           minDate={new Date(2010, 1, 1)}
           value={new Date(+props.value)}

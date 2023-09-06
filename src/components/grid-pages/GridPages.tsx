@@ -304,7 +304,6 @@ const GridPages = ({ requestUrl }) => {
                   onChange={setSelectedFromDate}
                   name="requiredDate"
                   label="از تاریخ"
-                  register={register}
                 ></JalaliDatePicker>
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
@@ -313,7 +312,6 @@ const GridPages = ({ requestUrl }) => {
                   onChange={setSelectedToDate}
                   name="requiredDate"
                   label="تا تاریخ "
-                  register={register}
                 ></JalaliDatePicker>
               </Box>
               <IconButton
