@@ -30,6 +30,7 @@ import ExitWarehouseSentItemList from "../pages/warehouse/ExitWarehouseSentItemL
 import LogisticsDetails from "../pages/purchase/LogisticsDetails.tsx";
 import SupplierList from "../pages/users/SupplierList.tsx";
 import FinancialDetails from "../pages/purchase/FinancialDetails.tsx";
+import PurchaseApproveDetails from "../pages/purchase/ApproveDetials.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -164,6 +165,13 @@ export const routes: IRoute[] = [
   {
     path: "/financial/details/:id",
     component: <FinancialDetails />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "جزییات محصول",
+  },
+  {
+    path: "/approve/details/:id",
+    component: <PurchaseApproveDetails />,
     layout: Layouts.MAIN,
     protected: true,
     title: "جزییات محصول",

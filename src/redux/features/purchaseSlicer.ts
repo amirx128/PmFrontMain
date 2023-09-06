@@ -72,6 +72,10 @@ export interface PurchaseState {
       data: any;
       pending: boolean;
     };
+    updatePurchaseRes: {
+      pending: boolean;
+      data: any;
+    };
   };
   purchaseRowSelected: any;
 }
@@ -126,6 +130,10 @@ const initialState: PurchaseState = {
     sendItems: {
       data: [],
       pending: false,
+    },
+    updatePurchaseRes: {
+      pending: false,
+      data: [],
     },
   },
   purchaseRowSelected: undefined,
@@ -419,7 +427,7 @@ export const ApproveUpdateDetailsAction = createAsyncThunk(
   async (
     body: {
       count: number;
-      approveStateId: number;
+      ApproveStateId: number;
       purchaseOrderDetailsId: number;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -670,6 +678,26 @@ export const purchaseSlicer = createSlice({
         (state: PurchaseState, { error, payload }) => {
           state.financials.updatePurchaseRes.pending = false;
           state.financials.updatePurchaseRes.data = payload;
+        }
+      );
+    //#endregion
+    //#region ApproveUpdateDetailsAction-----
+    builder
+      .addCase(ApproveUpdateDetailsAction.pending, (state: PurchaseState) => {
+        state.approve.updatePurchaseRes.pending = true;
+      })
+      .addCase(
+        ApproveUpdateDetailsAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.approve.updatePurchaseRes.pending = false;
+          state.approve.updatePurchaseRes.data = payload;
+        }
+      )
+      .addCase(
+        ApproveUpdateDetailsAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.approve.updatePurchaseRes.pending = false;
+          state.approve.updatePurchaseRes.data = payload;
         }
       );
     //#endregion

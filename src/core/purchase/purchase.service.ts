@@ -142,13 +142,13 @@ export const GetApproveQ = async (
 export const ApproveUpdateDetails = async (
   userId,
   count,
-  approveStateId,
+  ApproveStateId,
   purchaseOrderDetailsId
 ) =>
   await axiosInstance.post(`/Purchase/Approve.UpdateDetails`, {
     userId: userId,
     count,
-    approveStateId,
+    ApproveStateId,
     purchaseOrderDetailsId,
   });
 
