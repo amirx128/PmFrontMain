@@ -18,6 +18,30 @@ export const GetSupplierQ = async (
     toDate,
   });
 
+  export const GetTransactions = async (
+    SelectedItemId,
+    userId,
+    pageIndex = 1,
+    fromDate = new Date().setMonth(new Date().getMonth() - 1),
+    toDate = new Date(),
+    orderType = "desc",
+    orderBy = "activityDate"
+  ) =>
+    await axiosInstance.post(`/Warehouse/GetOneCommodityTransactions`, {
+      SelectedItemId,
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate,
+      toDate,
+    });
+  
+  
+  
+
+
 export const SupplierSentItem = async (
   userId,
   pageIndex = 1,

@@ -32,8 +32,11 @@ import {makeTree} from "../../utils/tree.ts";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
 import TreeView from "@mui/lab/TreeView";
+import { useNavigate } from "react-router-dom";
 
 const Commodities = () => {
+const navigate=useNavigate();
+
     const dispatch = useDispatch<any>();
     const {
         commodities,
@@ -145,6 +148,18 @@ const Commodities = () => {
                                     }}>
                                 افزودن
                             </Button>
+                            <Button size={"small"} startIcon={<Add/>} variant={"outlined"} color={"secondary"}
+                                    onClick={() => {
+                                        setParent(selectedNode);
+                                        setSelectedNode(null);
+                                        navigate('/CommodityTransactions/'+selectedNode);
+                                    }}>
+
+
+
+                                سابقه
+                            </Button>
+
                         </Box>
                     </Box>
                     <Box sx={{textAlign:"left"}}>

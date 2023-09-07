@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   GetSupplierQ,
   SupplierSentItem,
+  GetTransactions,
 } from "../../core/supplier/Supplier.service";
 
 const getUserId = (state) => {
@@ -36,6 +37,38 @@ const initialState: SupplierState = {
   },
 };
 
+export const GetOneCommodityTransactions = createAsyncThunk(
+  "supplier/GetOneCommodityTransactions",
+  async (
+    body: {
+      SelectedItemId:any;
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy,SelectedItemId } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await  GetTransactions(
+        SelectedItemId,
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const GetSupplierQAction = createAsyncThunk(
   "supplier/GetSupplierQAction",
   async (

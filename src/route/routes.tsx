@@ -31,6 +31,7 @@ import LogisticsDetails from "../pages/purchase/LogisticsDetails.tsx";
 import SupplierList from "../pages/users/SupplierList.tsx";
 import FinancialDetails from "../pages/purchase/FinancialDetails.tsx";
 import PurchaseApproveDetails from "../pages/purchase/ApproveDetials.tsx";
+import CommodityTransactions from "../pages/commodities/CommodityTransactions.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -264,6 +265,13 @@ export const routes: IRoute[] = [
   {
     path: "/supplier-list",
     component: <SupplierList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "خارج شده",
+  },
+  {
+    path: "/CommodityTransactions/:id",
+    component: <CommodityTransactions />,
     layout: Layouts.MAIN,
     protected: true,
     title: "خارج شده",
