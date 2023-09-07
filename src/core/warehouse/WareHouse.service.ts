@@ -14,8 +14,8 @@ export const GetWarehouseQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
 export const WarehouseSentItem = async (
@@ -32,8 +32,8 @@ export const WarehouseSentItem = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 export const GetExitWareHouseQ = async (
   userId,
@@ -49,8 +49,8 @@ export const GetExitWareHouseQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 export const ExitWarehouseSentItem = async (
   userId,
@@ -66,6 +66,6 @@ export const ExitWarehouseSentItem = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
