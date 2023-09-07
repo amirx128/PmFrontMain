@@ -14,33 +14,29 @@ export const GetSupplierQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
-  export const GetTransactions = async (
+export const GetTransactions = async (
+  SelectedItemId,
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "activityDate"
+) =>
+  await axiosInstance.post(`/Warehouse/GetOneCommodityTransactions`, {
     SelectedItemId,
-    userId,
-    pageIndex = 1,
-    fromDate = new Date().setMonth(new Date().getMonth() - 1),
-    toDate = new Date(),
-    orderType = "desc",
-    orderBy = "activityDate"
-  ) =>
-    await axiosInstance.post(`/Warehouse/GetOneCommodityTransactions`, {
-      SelectedItemId,
-      userId: userId,
-      pageIndex,
-      pageCount: 20,
-      orderType,
-      orderBy,
-      fromDate,
-      toDate,
-    });
-  
-  
-  
-
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+  });
 
 export const SupplierSentItem = async (
   userId,
@@ -59,7 +55,7 @@ export const SupplierSentItem = async (
       pageCount: 20,
       orderType,
       orderBy,
-      fromDate,
-      toDate,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
     }
   );
