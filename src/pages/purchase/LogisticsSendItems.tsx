@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LogisticsSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const LogisticsSendItems = () => {
   const dispatch = useDispatch<any>();
@@ -292,6 +293,9 @@ const LogisticsSendItems = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

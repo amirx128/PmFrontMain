@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetSupplierQAction } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const SupplierQList = () => {
   const dispatch = useDispatch<any>();
@@ -275,6 +276,9 @@ const SupplierQList = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

@@ -16,6 +16,7 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { GetExitWarehouseQAction } from "../../redux/features/warehouseSlicer.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 import gridDict from "../../dictionary/gridDict.ts";
 const ExitWarehouseQList = () => {
@@ -277,6 +278,9 @@ const ExitWarehouseQList = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

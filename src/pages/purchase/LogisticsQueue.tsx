@@ -18,6 +18,7 @@ import gridDict from "../../dictionary/gridDict.ts";
 import { Row } from "./style.tsx";
 import { GetLogisticsQAction } from "../../redux/features/purchaseSlicer.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const LogisticsQueue = () => {
   const dispatch = useDispatch<any>();
@@ -302,6 +303,9 @@ const LogisticsQueue = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

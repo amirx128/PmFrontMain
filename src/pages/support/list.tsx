@@ -23,6 +23,8 @@ import { Row } from "./style";
 import Grid from "../../components/grid/grid";
 import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+
 const SupportList: React.FC<any> = (props) => {
   const [data, setData] = useState<any[]>([]);
   const [fromDate, setFromDate] = useState<any>(new Date());
@@ -324,6 +326,9 @@ const SupportList: React.FC<any> = (props) => {
               </IconButton>
               <IconButton onClick={getList} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

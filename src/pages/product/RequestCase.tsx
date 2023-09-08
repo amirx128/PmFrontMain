@@ -17,6 +17,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import gridDict from "../../dictionary/gridDict.ts";
 import { RequesterUserSentItemAction } from "../../redux/features/productSlicer.ts";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const RequestCase = () => {
   const [fromDate, setFromDate] = useState(
@@ -407,6 +408,9 @@ const RequestCase = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

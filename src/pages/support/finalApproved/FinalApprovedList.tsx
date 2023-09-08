@@ -29,6 +29,8 @@ import {
   GetFinalApproveQAction,
   GetApproveStatesAction,
 } from "../../../redux/features/supportSlicer.ts";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+
 const FinalApprovedList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -487,6 +489,9 @@ const FinalApprovedList: React.FC<any> = (props) => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetApproveQAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const ApproveQueue = () => {
   const dispatch = useDispatch<any>();
@@ -299,6 +300,9 @@ const ApproveQueue = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
