@@ -56,7 +56,7 @@ const PurchaseDetail = ({ detail }) => {
                   }}
                 >
                   {" "}
-                  تعداد موجود:
+                  تعداد مانده:
                 </Typography>
 
                 <Typography variant="body2">

@@ -105,7 +105,7 @@ const FinancialDetails = () => {
                   variant="contained"
                   onClick={handleEdit}
                 >
-                  ویرایش
+                  ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />
                 </LoadingButton>
                 <Button

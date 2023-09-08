@@ -259,6 +259,17 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+        }
     },
     {
       field: "exitFromWarehouseId",
