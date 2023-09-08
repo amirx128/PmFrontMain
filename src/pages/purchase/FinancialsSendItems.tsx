@@ -16,10 +16,11 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { FinancialSendItemsActions } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const FinancialsSendItems = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const sendItems = useSelector(
     (state: any) => state.purchase?.financials?.sendItems
@@ -139,6 +140,19 @@ const FinancialsSendItems = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/financial/details/${row.purchaseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseCommodityId",
@@ -244,7 +258,9 @@ const FinancialsSendItems = () => {
       })
     );
   };
-  const onSubmit = (data) => {};
+  const handleDoubleClick = (e) => {
+    navigate(`/financial/details/${e.row.purchaseOrderId}`);
+  };
   return (
     <CardGrid
       item
@@ -302,6 +318,7 @@ const FinancialsSendItems = () => {
         </Box>
 
         <Grid
+          onDoubleClick={handleDoubleClick}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

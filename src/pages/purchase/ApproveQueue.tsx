@@ -16,10 +16,11 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { GetApproveQAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const ApproveQueue = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const queue = useSelector((state: any) => state.purchase?.approve?.queue);
   const [fromDate, setFromDate] = useState(
@@ -253,6 +254,9 @@ const ApproveQueue = () => {
       })
     );
   };
+  const handleDoubleClick = (e) => {
+    navigate(`/approve/details/${e.row.purchaseOrderId}`);
+  };
   return (
     <CardGrid
       item
@@ -310,6 +314,7 @@ const ApproveQueue = () => {
         </Box>
 
         <Grid
+          onDoubleClick={handleDoubleClick}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

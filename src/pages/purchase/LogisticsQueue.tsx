@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const LogisticsQueue = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { queue } = useSelector((state: any) => state.purchase.logistics);
   const [fromDate, setFromDate] = useState(
@@ -256,6 +257,9 @@ const LogisticsQueue = () => {
       })
     );
   };
+  const handleDoubleClick = (e) => {
+    navigate(`/logistics/details/${e.row.purchaseOrderId}`);
+  };
   return (
     <CardGrid
       item
@@ -313,6 +317,7 @@ const LogisticsQueue = () => {
         </Box>
 
         <Grid
+          onDoubleClick={handleDoubleClick}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

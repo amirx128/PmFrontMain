@@ -16,10 +16,11 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { ApproveSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const ApproveSendItems = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const sendItems = useSelector(
     (state: any) => state.purchase?.approve?.sendItems
@@ -140,6 +141,17 @@ const ApproveSendItems = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseCommodityId",
@@ -245,6 +257,9 @@ const ApproveSendItems = () => {
       })
     );
   };
+  const handleDoubleClick = (e) => {
+    navigate(`/approve/details/${e.row.purchaseOrderId}`);
+  };
   return (
     <CardGrid
       item
@@ -302,6 +317,7 @@ const ApproveSendItems = () => {
         </Box>
 
         <Grid
+          onDoubleClick={handleDoubleClick}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

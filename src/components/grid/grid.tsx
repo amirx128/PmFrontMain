@@ -70,7 +70,7 @@ const Grid: React.FC<Iprops> = ({
             } else if (selectMode === "multiple") {
               setSelectionMode(selectionModel);
             }
-            onRowSelected(selectionModel);
+            onRowSelected?.(selectionModel);
           }}
           rowSelectionModel={seletedRow || selectionMode}
         />
