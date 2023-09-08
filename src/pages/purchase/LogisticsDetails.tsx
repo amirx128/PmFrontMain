@@ -28,6 +28,8 @@ const LogisticsDetails = () => {
   } = useSelector((state: any) => state?.purchase);
   const { suppliers } = useSelector((state: any) => state?.definition);
   const [mode, setMode] = useState<"edit" | "add">("add");
+
+  const isEditable = purchaseRowSelected?.logisticEditable;
   const {
     register,
     handleSubmit,
@@ -113,6 +115,7 @@ const LogisticsDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
+                    disabled={mode === "edit" && !isEditable}
                   />
                 )}
               />
@@ -135,6 +138,7 @@ const LogisticsDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
+                    disabled={mode === "edit" && !isEditable}
                   />
                 )}
               />
@@ -159,6 +163,7 @@ const LogisticsDetails = () => {
                     labelFieldName="supplierName"
                     options={suppliers?.data}
                     field={field}
+                    disabled={mode === "edit" && !isEditable}
                   />
                 )}
               />
@@ -195,6 +200,7 @@ const LogisticsDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
+                  disabled={mode === "edit" && !isEditable}
                 >
                   ویرایش
                   <EditIcon sx={{ marginLeft: "10px" }} />

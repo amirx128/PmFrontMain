@@ -26,6 +26,8 @@ const FinancialDetails = () => {
     purchaseRowSelected,
     financials: { updatePurchaseRes },
   } = useSelector((state: any) => state?.purchase);
+  const isEditable = purchaseRowSelected?.financialEditable;
+
   const {
     register,
     handleSubmit,
@@ -59,7 +61,6 @@ const FinancialDetails = () => {
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
   };
-  console.log(purchaseRowSelected);
   return (
     <div>
       <PurchaseForm />
@@ -85,6 +86,7 @@ const FinancialDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
+                    disabled={purchaseRowSelected && !isEditable}
                   />
                 )}
               />
@@ -104,6 +106,7 @@ const FinancialDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
+                  disabled={purchaseRowSelected && !isEditable}
                 >
                   ویرایش
                   <EditIcon sx={{ marginLeft: "10px" }} />
