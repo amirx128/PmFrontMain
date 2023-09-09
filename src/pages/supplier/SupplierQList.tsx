@@ -21,7 +21,7 @@ import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const SupplierQList = () => {
   const dispatch = useDispatch<any>();
-  const { supplizerQ } = useSelector((state: any) => state.supplier?.supplier);
+  const { supplierQ } = useSelector((state: any) => state.supplier?.supplier);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );

@@ -70,7 +70,7 @@ export const AddActivity = ({addActivitiesDialog,selectedActivity,onClose}) => {
     }
     const setSelectedFromDate = (e) => {
         const date = new Date(e);
-        setFromDate(+date);
+        setFromDate(date);
       };
       const setSelectedToDate = (e) => {
         const date = new Date(e);
