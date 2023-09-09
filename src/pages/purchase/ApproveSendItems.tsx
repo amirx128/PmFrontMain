@@ -162,11 +162,7 @@ const ApproveSendItems = () => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-<<<<<<< HEAD
-        }
-=======
       },
->>>>>>> e8d340b30e70820990b4e1b6e05c164149746564
     },
     {
       field: "requestCaseCommodityId",

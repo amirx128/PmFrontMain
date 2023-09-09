@@ -159,19 +159,12 @@ const LogisticsSendItems = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-<<<<<<< HEAD
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-        }
-=======
             <Link to={`/logistics/details/${row.purchaseOrderId}`}>
               {value}
             </Link>
           </Typography>
         );
       },
->>>>>>> e8d340b30e70820990b4e1b6e05c164149746564
     },
     {
       field: "requestCaseCommodityId",
