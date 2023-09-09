@@ -25,6 +25,8 @@ import Grid from "../../../components/grid/grid";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../utils/functions.ts";
 import gridDict from "../../../dictionary/gridDict.ts";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+
 import {
   GetFinalApproveQAction,
   GetApproveStatesAction,
@@ -498,6 +500,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

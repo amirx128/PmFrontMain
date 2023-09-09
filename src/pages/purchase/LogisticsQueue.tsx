@@ -18,8 +18,10 @@ import gridDict from "../../dictionary/gridDict.ts";
 import { Row } from "./style.tsx";
 import { GetLogisticsQAction } from "../../redux/features/purchaseSlicer.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const LogisticsQueue = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { queue } = useSelector((state: any) => state.purchase.logistics);
   const [fromDate, setFromDate] = useState(
@@ -266,6 +268,9 @@ const LogisticsQueue = () => {
       })
     );
   };
+  const handleDoubleClick = (e) => {
+    navigate(`/logistics/details/${e.row.purchaseOrderId}`);
+  };
   return (
     <CardGrid
       item
@@ -314,12 +319,16 @@ const LogisticsQueue = () => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
 
         <Grid
+          onDoubleClick={handleDoubleClick}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

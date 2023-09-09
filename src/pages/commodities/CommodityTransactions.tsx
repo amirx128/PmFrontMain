@@ -20,7 +20,9 @@ import { Link } from "react-router-dom";
 
 const CommodityTransactions = () => {
   const dispatch = useDispatch<any>();
-  const { GetTransactions } = useSelector((state: any) => state.supplier?.supplier);
+  const { GetTransactions } = useSelector(
+    (state: any) => state.supplier?.supplier
+  );
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
@@ -29,7 +31,7 @@ const CommodityTransactions = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
-  const   SelectedItemId = 18;
+  const SelectedItemId = 18;
   const columns: GridColDef[] = [
     {
       field: "Id",
@@ -174,8 +176,8 @@ const CommodityTransactions = () => {
   const handleAddFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-      SelectedItemId,
-      fromDate: new Date(fromDate),
+        SelectedItemId,
+        fromDate: new Date(fromDate),
         toDate: new Date(toDate),
       })
     );
@@ -237,6 +239,9 @@ const CommodityTransactions = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+                <IconButton color="success">
+                  <SimCardDownloadIcon />
+                </IconButton>
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
@@ -256,7 +261,10 @@ const CommodityTransactions = () => {
           ]}
           columns={columns}
           rows={
-            GetTransactions?.data.map((row, index) => ({ id: index, ...row })) ?? []
+            GetTransactions?.data.map((row, index) => ({
+              id: index,
+              ...row,
+            })) ?? []
           }
           pagination={{}}
           onSortModelChange={handleSortModelChange}

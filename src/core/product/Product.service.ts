@@ -15,8 +15,8 @@ export const GetRequesterUserQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
     exportExcell,
   });
 export const RequesterUserSentItem = async (
@@ -33,6 +33,6 @@ export const RequesterUserSentItem = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });

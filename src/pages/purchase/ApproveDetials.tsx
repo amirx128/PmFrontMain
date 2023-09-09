@@ -29,6 +29,7 @@ const PurchaseApproveDetails = () => {
     approve: { updatePurchaseRes },
   } = useSelector((state: any) => state?.purchase);
   const { states } = useSelector((state: any) => state?.support?.approve);
+  const isEditable = purchaseRowSelected?.approveEditable;
 
   const {
     register,
@@ -72,7 +73,6 @@ const PurchaseApproveDetails = () => {
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
   };
-  console.log(purchaseRowSelected);
   return (
     <div>
       <PurchaseForm />
@@ -98,6 +98,7 @@ const PurchaseApproveDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
+                    disabled={purchaseRowSelected && !isEditable}
                   />
                 )}
               />
@@ -122,6 +123,7 @@ const PurchaseApproveDetails = () => {
                     labelFieldName="state"
                     options={states?.data}
                     field={field}
+                    disabled={purchaseRowSelected && !isEditable}
                   />
                 )}
               />
@@ -141,6 +143,7 @@ const PurchaseApproveDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
+                  disabled={purchaseRowSelected && !isEditable}
                 >
                   ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />

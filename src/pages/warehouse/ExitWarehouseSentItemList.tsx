@@ -17,6 +17,8 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { ExitWarehouseSentItemAction } from "../../redux/features/warehouseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+
 const ExitWarehouseSentItemList = () => {
   const dispatch = useDispatch<any>();
   const { exitWarehouseSentItem } = useSelector(
@@ -286,6 +288,9 @@ const ExitWarehouseSentItemList = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

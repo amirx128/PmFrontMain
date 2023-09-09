@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetWarehouseQAction } from "../../redux/features/warehouseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const WarehouseQList = () => {
   const dispatch = useDispatch<any>();
@@ -287,6 +288,9 @@ const WarehouseQList = () => {
               </IconButton>
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
+              </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>

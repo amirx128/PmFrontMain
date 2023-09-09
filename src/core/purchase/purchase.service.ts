@@ -14,8 +14,8 @@ export const GetLogisticsQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 export const GetPurchaseOrderData = async (userId, purchaseOrderId) =>
   await axiosInstance.post(`/Purchase/GetPurchaseOrderData`, {
@@ -70,8 +70,8 @@ export const LogisticsSendItems = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
 export const GetFinancialQ = async (
@@ -88,8 +88,8 @@ export const GetFinancialQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
 export const FinancialUpdateDetails = async (
@@ -117,8 +117,8 @@ export const FinancialSendItems = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
 export const GetApproveQ = async (
@@ -135,8 +135,8 @@ export const GetApproveQ = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
 export const ApproveUpdateDetails = async (
@@ -166,6 +166,6 @@ export const ApproveSendItems = async (
     pageCount: 20,
     orderType,
     orderBy,
-    fromDate,
-    toDate,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
   });

@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { LogisticsSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link } from "react-router-dom";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const LogisticsSendItems = () => {
   const dispatch = useDispatch<any>();
@@ -158,10 +159,19 @@ const LogisticsSendItems = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
+<<<<<<< HEAD
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
         }
+=======
+            <Link to={`/logistics/details/${row.purchaseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
+>>>>>>> e8d340b30e70820990b4e1b6e05c164149746564
     },
     {
       field: "requestCaseCommodityId",
@@ -267,6 +277,9 @@ const LogisticsSendItems = () => {
       })
     );
   };
+  const handleDoubleClick = (e) => {
+    navigate(`/logistics/details/${e.row.purchaseOrderId}`);
+  };
   return (
     <CardGrid
       item
@@ -315,12 +328,16 @@ const LogisticsSendItems = () => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
+              <IconButton color="success">
+                <SimCardDownloadIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
 
         <Grid
+          onDoubleClick={handleDoubleClick}
           rowIdFields={[
             "purchaseOrderId",
             "requesterUser",

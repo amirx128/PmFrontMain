@@ -28,6 +28,11 @@ const PurchaseForm = (props) => {
     if (!id) navigate("/");
     getPurchaseDetails();
   }, []);
+  useEffect(() => {
+    if (orderDetailData?.data?.purchaseDetails) {
+      handleSelectDefaultRow();
+    }
+  }, [orderDetailData]);
 
   const getPurchaseDetails = async () => {
     try {
@@ -159,7 +164,10 @@ const PurchaseForm = (props) => {
       filterable: false,
     },
   ];
-
+  const handleSelectDefaultRow = () => {
+    const selectedRow = orderDetailData?.data?.purchaseDetails.at(0);
+    dispatch(setPurchaseRowSelectedAction(selectedRow));
+  };
   const handleSelectedRow = (e) => {
     const selectedRow = orderDetailData?.data?.purchaseDetails?.find(
       (purchaseDetail) => +purchaseDetail.id === +e.at(-1)
