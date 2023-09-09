@@ -22,6 +22,7 @@ import {
 } from "../../redux/features/definitionSlicer.ts";
 import {Add, AddBox, BorderColor, Inventory, Search} from "@mui/icons-material";
 import {AddCommodity} from "../../components/definition/addCommodity.tsx";
+import {AddCategory} from "../../components/definition/AddCategory.tsx";
 import {CommodityCard} from "../../components/definition/commodity.tsx";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -46,6 +47,7 @@ const navigate=useNavigate();
     const [addCommodityDialog, setAddCommodityDialog] = useState<boolean>(false);
     const [selectedCommodity, setSelectedCommodity] = useState(null);
 
+    const [addCategoryDialog, setAddCategoryDialog] = useState<boolean>(false);
     useEffect(() => {
         // @ts-ignore
         dispatch(GetAllCommodities());
@@ -67,6 +69,9 @@ const navigate=useNavigate();
     const commodityOnClose = () => {
         setAddCommodityDialog(false);
     };
+    const CategoryOnClose = () => {
+        setAddCategoryDialog(false);
+    };
 
     useEffect(() => {
         if(selectedCommodity?.id) {
@@ -80,6 +85,13 @@ const navigate=useNavigate();
             dispatch(clearSelectedCommodity());
         }
     }, [addCommodityDialog]);
+
+    useEffect(() => {
+        if(!addCategoryDialog){
+            //@ts-ignore
+            dispatch(clearSelectedCommodity());
+        }
+    }, [addCategoryDialog]);
 
 
     const [term,setTerm] = useState('');
@@ -157,9 +169,18 @@ const navigate=useNavigate();
 
 
 
-                                سابقه
+                                سابقه انبار
                             </Button>
 
+                            <Button size={"small"} startIcon={<Add/>} variant={"outlined"} color={"secondary"}
+                                    onClick={() => {
+                                        setParent(selectedNode);
+                                        setSelectedNode(null);
+                                        setAddCategoryDialog(true);
+
+                                    }}>
+                                اضافه کردن کتگوری
+                            </Button>
                         </Box>
                     </Box>
                     <Box sx={{textAlign:"left"}}>
@@ -180,6 +201,7 @@ const navigate=useNavigate();
                 </Box>
             </Grid>
             <AddCommodity addCommodityDialog={addCommodityDialog} parent={parent} onClose={commodityOnClose}/>
+            <AddCategory addCategoryDialog={addCategoryDialog} parent={parent} onClose={CategoryOnClose}/>
         </Grid>
     );
 };
