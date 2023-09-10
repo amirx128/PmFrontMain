@@ -21,6 +21,10 @@ export interface SupplierState {
       data: any;
       pending: boolean;
     };
+    transaction: {
+      data: any;
+      pending: boolean;
+    };
   };
 }
 
@@ -34,6 +38,11 @@ const initialState: SupplierState = {
       data: [],
       pending: false,
     },
+    transaction: {
+      data: [],
+      pending: false,
+    },
+
   },
 };
 
@@ -171,6 +180,25 @@ export const supplierSlicer = createSlice({
         SuppLierSentItemAction.rejected,
         (state: SupplierState, { error }) => {
           state.supplier.supplierSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region GetOneCommodityTransactions-----
+    builder
+      .addCase(GetOneCommodityTransactions.pending, (state: SupplierState) => {
+        state.supplier.transaction.pending = true;
+      })
+      .addCase(
+        GetOneCommodityTransactions.fulfilled,
+        (state: SupplierState, { payload }) => {
+          state.supplier.transaction.pending = false;
+          state.supplier.transaction.data = [...payload?.model];
+        }
+      )
+      .addCase(
+        GetOneCommodityTransactions.rejected,
+        (state: SupplierState, { error }) => {
+          state.supplier.transaction.pending = false;
         }
       );
     //#endregion

@@ -16,12 +16,13 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { GetOneCommodityTransactions } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link } from "react-router-dom";
+import { Link, useParams, } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const CommodityTransactions = () => {
+  const{id}= useParams();
   const dispatch = useDispatch<any>();
-  const { GetTransactions } = useSelector(
+  const { transaction } = useSelector(
     (state: any) => state.supplier?.supplier
   );
   const [fromDate, setFromDate] = useState(
@@ -32,10 +33,10 @@ const CommodityTransactions = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
-  const SelectedItemId = 18;
+  // const SelectedItemId:id = 18;
   const columns: GridColDef[] = [
     {
-      field: "Id",
+      field: "id",
       headerName: gridDict.requesterUser,
       flex: 1,
       minWidth: 150,
@@ -43,7 +44,7 @@ const CommodityTransactions = () => {
       filterable: false,
     },
     {
-      field: "ExitWarehouseOrderId",
+      field: "exitWarehouseOrderId",
       headerName: gridDict.purchaseOrderId,
       flex: 1,
       minWidth: 150,
@@ -51,7 +52,7 @@ const CommodityTransactions = () => {
       filterable: false,
     },
     {
-      field: "ExitWarehouseOrderTrackingCode",
+      field: "exitWarehouseOrderTrackingCode",
       headerName: gridDict.purchaseOrderTrackingCode,
       flex: 1,
       minWidth: 150,
@@ -136,7 +137,7 @@ const CommodityTransactions = () => {
     if (!sortArr.at(0)) {
       await dispatch(
         GetOneCommodityTransactions({
-          SelectedItemId,
+          SelectedItemId:id,
           fromDate: new Date(fromDate),
           toDate: new Date(toDate),
         })
@@ -151,13 +152,13 @@ const CommodityTransactions = () => {
         toDate: new Date(toDate),
         orderBy: sortField,
         orderType: sortType,
-        SelectedItemId,
+        SelectedItemId:id,
       })
     );
   };
   const getList = async () => {
     const body = {
-      SelectedItemId,
+      SelectedItemId:id,
       fromDate: new Date(fromDate),
       toDate: new Date(toDate),
     };
@@ -177,7 +178,7 @@ const CommodityTransactions = () => {
   const handleAddFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-        SelectedItemId,
+        SelectedItemId:id,
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
       })
@@ -187,7 +188,7 @@ const CommodityTransactions = () => {
   const handleRmoveFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-        SelectedItemId,
+        SelectedItemId:id,
         fromDate: new Date(initialFilter.current.fromDate),
         toDate: new Date(initialFilter.current.toDate),
       })
@@ -262,7 +263,7 @@ const CommodityTransactions = () => {
           ]}
           columns={columns}
           rows={
-            GetTransactions?.data.map((row, index) => ({
+            transaction?.data.map((row, index) => ({
               id: index,
               ...row,
             })) ?? []
