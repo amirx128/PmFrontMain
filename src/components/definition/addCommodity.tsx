@@ -63,7 +63,7 @@ export const AddCommodity = ({addCommodityDialog,onClose,parent}) => {
       setInfo({
         ...selectedCommodity,
         producerId: selectedCommodity?.producerId ? selectedCommodity?.producerId : 0,
-        supplierId: selectedCommodity?.supplierId ? selectedCommodity?.supplierId : 0,
+        supplierId: selectedCommodity?.supplierId ? selectedCommodity?.supplierId : '',
         useInProjectsFloorIds:  selectedCommodity?.placeOfUseFloor?.map(item => item?.id),
         useInProjectsIds:  selectedCommodity?.placeOfUseProject?.map(item => item?.id),
         useInProjectsUnitsIds:  selectedCommodity?.placeOfUseUnit?.map(item => item?.id),
