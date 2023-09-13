@@ -220,5 +220,5 @@ export const administrationSlicer = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-
+export const { clearSelectedUser } = administrationSlicer.actions;
 export default administrationSlicer.reducer;

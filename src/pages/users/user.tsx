@@ -19,6 +19,7 @@ import { AddUser } from "../../components/administrations/addUser.tsx";
 import {
   GetUserInfo,
   GetUsersListAction,
+  clearSelectedUser,
 } from "../../redux/features/administrationSlicer.ts";
 import { useNavigate } from "react-router-dom";
 
@@ -119,6 +120,9 @@ const Users = () => {
   const userOnClose = () => {
     setSelectedUser(null);
     setUserDialog(false);
+
+    //@ts-ignore
+    dispatch(clearSelectedUser());
   };
 
   useEffect(() => {
@@ -192,11 +196,7 @@ const Users = () => {
           onSortModelChange={handleSortModelChange}
         ></Grid>
       </Card>
-      <AddUser
-        showUserDialog={showUserDialog}
-        onClose={userOnClose}
-        selectedUserState={selectedUser}
-      />
+      <AddUser showUserDialog={showUserDialog} onClose={userOnClose} />
     </CardGrid>
   );
 };

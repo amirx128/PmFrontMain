@@ -37,14 +37,9 @@ import {
 interface IAddUserProps {
   showUserDialog: boolean;
   onClose: () => void;
-  selectedUserState?: any;
 }
 
-export const AddUser = ({
-  showUserDialog,
-  onClose,
-  selectedUserState,
-}: IAddUserProps) => {
+export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
   const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
@@ -71,7 +66,7 @@ export const AddUser = ({
   }, []);
 
   useEffect(() => {
-    if (selectedUser && selectedUserState) {
+    if (selectedUser) {
       setInfo({
         firstName: selectedUser?.firstName,
         lastName: selectedUser?.lastName,
@@ -95,7 +90,7 @@ export const AddUser = ({
         bossId: "",
       });
     }
-  }, [selectedUser, selectedUserState]);
+  }, [selectedUser]);
   const { businessRoles } = useSelector((state: any) => state.definition);
 
   const handleChange = (e) => {
@@ -113,14 +108,13 @@ export const AddUser = ({
   };
 
   const onSubmit = () => {
-    if (selectedUser && selectedUserState) {
+    if (selectedUser) {
       dispatch(UpdateUser({ id: selectedUser?.id, ...info }));
     } else {
       dispatch(AddNewUser({ ...info }));
     }
     onClose();
   };
-  console.log(users.usersList);
   return (
     <Dialog
       open={showUserDialog}

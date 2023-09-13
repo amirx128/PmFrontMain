@@ -16,7 +16,10 @@ import axios from "../../utils/axios.config";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { AddUser } from "../../components/administrations/addUser.tsx";
-import { GetUserInfo } from "../../redux/features/administrationSlicer.ts";
+import {
+  GetUserInfo,
+  clearSelectedUser,
+} from "../../redux/features/administrationSlicer.ts";
 
 const SupplierList = () => {
   const dispatch = useDispatch();
@@ -113,6 +116,9 @@ const SupplierList = () => {
   const userOnClose = () => {
     setSelectedUser(null);
     setUserDialog(false);
+
+    //@ts-ignore
+    dispatch(clearSelectedUser());
   };
 
   useEffect(() => {
@@ -180,11 +186,7 @@ const SupplierList = () => {
           onSortModelChange={handleSortModelChange}
         ></Grid>
       </Card>
-      <AddUser
-        showUserDialog={showUserDialog}
-        onClose={userOnClose}
-        selectedUserState={selectedUser}
-      />
+      <AddUser showUserDialog={showUserDialog} onClose={userOnClose} />
     </CardGrid>
   );
 };
