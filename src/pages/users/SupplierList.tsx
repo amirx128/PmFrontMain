@@ -13,10 +13,10 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { AddUser } from "../../components/administrations/addUser.tsx";
-import {GetUserInfo} from "../../redux/features/administrationSlicer.ts";
+import { GetUserInfo } from "../../redux/features/administrationSlicer.ts";
 
 const SupplierList = () => {
   const dispatch = useDispatch();
@@ -137,7 +137,7 @@ const SupplierList = () => {
   };
 
   useEffect(() => {
-    if(selectedUser?.id){
+    if (selectedUser?.id) {
       //@ts-ignore
       dispatch(GetUserInfo(selectedUser?.id));
     }
@@ -183,6 +183,7 @@ const SupplierList = () => {
       <AddUser
         showUserDialog={showUserDialog}
         onClose={userOnClose}
+        selectedUserState={selectedUser}
       />
     </CardGrid>
   );

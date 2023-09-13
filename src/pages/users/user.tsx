@@ -13,15 +13,18 @@ import DeleteIcon from "@mui/icons-material/DeleteOutlined";
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { ActionRow } from "./style";
 import axios from "../../utils/axios.config";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import { AddUser } from "../../components/administrations/addUser.tsx";
-import {GetUserInfo} from "../../redux/features/administrationSlicer.ts";
+import {
+  GetUserInfo,
+  GetUsersListAction,
+} from "../../redux/features/administrationSlicer.ts";
 import { useNavigate } from "react-router-dom";
 
 const Users = () => {
-  const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const dispatch = useDispatch<any>();
+  const navigate = useNavigate();
   const columns: GridColDef[] = [
     {
       field: "firstName",
@@ -106,8 +109,9 @@ const Users = () => {
   const handleDeleteClick = (row) => {
     console.log("delete", row);
   };
-  const [data, setData] = useState<any[]>([]);
-  const { user } = useSelector((state: any) => state?.user);
+  const { usersList } = useSelector(
+    (state: any) => state?.administrations?.users
+  );
 
   const [showUserDialog, setUserDialog] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
@@ -122,10 +126,7 @@ const Users = () => {
   }, []);
   const getUsers = async () => {
     try {
-      const response: any = await axios.post("/Administration/GetAllUsers", {
-        userId: user?.id ?? getUserIdFromStorage(),
-      });
-      setData(response.data.model);
+      dispatch(GetUsersListAction());
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -138,7 +139,7 @@ const Users = () => {
   };
 
   useEffect(() => {
-    if(selectedUser?.id){
+    if (selectedUser?.id) {
       //@ts-ignore
       dispatch(GetUserInfo(selectedUser?.id));
     }
@@ -176,7 +177,7 @@ const Users = () => {
             color="info"
             variant="outlined"
             onClick={() => {
-              navigate('/supplier-list')
+              navigate("/supplier-list");
             }}
           >
             تامین کنندگان
@@ -185,7 +186,7 @@ const Users = () => {
 
         <Grid
           columns={columns}
-          rows={data}
+          rows={usersList || []}
           pagination={{}}
           onFilterCahnge={handleFilter}
           onSortModelChange={handleSortModelChange}
@@ -194,6 +195,7 @@ const Users = () => {
       <AddUser
         showUserDialog={showUserDialog}
         onClose={userOnClose}
+        selectedUserState={selectedUser}
       />
     </CardGrid>
   );
