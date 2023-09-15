@@ -5,6 +5,7 @@ import ListIcon from "@mui/icons-material/ListOutlined";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -23,12 +24,15 @@ import { Abc, ExpandMore, ExpandLess, Inventory } from "@mui/icons-material";
 import { Collapse } from "@mui/material";
 import { useState, Fragment, useRef, useEffect } from "react";
 import UserRole from "../../core/enums/userRoleEnum";
+import { useDispatch } from "react-redux";
+import { setLoggedOut } from "../../redux/features/userSlicer";
 const drawerWidth = 200;
 
 export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const theme = useTheme();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState(null);
   const [openCollapse, setOpenCollapse] = useState(false);
   const [userRoles, setUserRoles] = useState(
@@ -44,6 +48,18 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     setOpenCollapse(!!isActive);
   }, []);
 
+  const handleClickMenu = (id) => {
+    setActiveMenu(openCollapse ? null : id);
+    setOpenCollapse((prev) => !prev);
+  };
+  const handleClickSubMenu = (route) => {
+    navigate(route);
+  };
+  const exitHandler = () => {
+    dispatch(setLoggedOut(false));
+    localStorage.removeItem("user");
+    navigate(0);
+  };
   const MenuList = [
     {
       id: 2,
@@ -452,15 +468,35 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
       ],
     },
+    {
+      id: 8,
+      name: "حساب کاربری",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <AccountCircleIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "خروج",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          role: "public",
+          clickHandler: exitHandler,
+        },
+      ],
+    },
   ];
-  const handleClickMenu = (id) => {
-    setActiveMenu(openCollapse ? null : id);
-    setOpenCollapse((prev) => !prev);
-  };
-  const handleClickSubMenu = (route) => {
-    console.log(route);
-    navigate(route);
-  };
   return (
     <Drawer
       sx={{
@@ -494,8 +530,10 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           <Fragment key={index}>
             {item.subMenus
               ?.map((subMenu) => subMenu.role)
-              .some((subMneu) =>
-                userRoles.map((role) => role.id).includes(subMneu)
+              .some(
+                (subMneu) =>
+                  userRoles.map((role) => role.id).includes(subMneu) ||
+                  subMneu === "public"
               ) && (
               <>
                 <ListItem
@@ -540,11 +578,16 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                     <List>
                       {item?.subMenus?.map((sub) => (
                         <Fragment key={sub.id}>
-                          {userRoles
+                          {(userRoles
                             .map((role) => role.id)
-                            ?.includes(sub.role) && (
+                            ?.includes(sub.role) ||
+                            sub.role === "public") && (
                             <ListItemButton
-                              onClick={() => handleClickSubMenu(sub.route)}
+                              onClick={() =>
+                                sub?.clickHandler
+                                  ? sub.clickHandler()
+                                  : handleClickSubMenu(sub.route)
+                              }
                               sx={{
                                 "&:hover": {
                                   backgroundColor:

@@ -22,11 +22,11 @@ const LinkStyled = styled("a")(({ theme }) => ({
   textDecoration: "none",
   color: theme.palette.primary.main,
 }));
-interface Iprps{
+interface Iprps {
   onSubmit: (...args) => void;
-  loading:boolean
+  loading: boolean;
 }
-const LoginForm:React.FC<Iprps> = ({ onSubmit,loading }) => {
+const LoginForm: React.FC<Iprps> = ({ onSubmit, loading }) => {
   const theme = useTheme();
 
   const {

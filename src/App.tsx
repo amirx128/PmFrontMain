@@ -1,7 +1,13 @@
 import createCache from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
 import { ThemeProvider } from "@mui/material/styles";
-import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes,
+} from "react-router-dom";
 import { prefixer } from "stylis";
 import rtlPlugin from "stylis-plugin-rtl";
 import "./App.css";
@@ -12,26 +18,37 @@ import ProtectedRoute from "./route/protected-route";
 import { IRoute, Layouts, routes } from "./route/routes";
 import theme from "./utils/theme";
 import store from "./redux/store";
-import { Provider } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(() =>
+    JSON.parse(localStorage.getItem("user"))
+  );
   const cacheRtl = createCache({
     key: "muirtl",
     stylisPlugins: [prefixer, rtlPlugin],
   });
+  useEffect(() => {
+    setIsLoggedIn(JSON.parse(localStorage.getItem("user")));
+  }, []);
   let persistor = persistStore(store);
+  console.log(!isLoggedIn);
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <ToastContainer rtl />
           <div dir="rtl">
-            <Router>
+            <BrowserRouter>
               <Routes>
+                {!isLoggedIn && (
+                  <Route index element={<Navigate replace to="/login" />} />
+                )}
                 {routes.map((item: IRoute, index: number) => {
                   return (
                     <Route
@@ -51,7 +68,11 @@ function App() {
                             )}
                           </ProtectedRoute>
                         ) : item.layout === Layouts.AUTH ? (
-                          <AuthLayout>{item.component}</AuthLayout>
+                          !isLoggedIn ? (
+                            <AuthLayout>{item.component}</AuthLayout>
+                          ) : (
+                            <Navigate replace to="/" />
+                          )
                         ) : (
                           <MainLayout>{item.component}</MainLayout>
                         )
@@ -60,7 +81,7 @@ function App() {
                   );
                 })}
               </Routes>
-            </Router>
+            </BrowserRouter>
           </div>
         </Provider>
       </ThemeProvider>
