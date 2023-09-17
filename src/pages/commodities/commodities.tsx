@@ -70,7 +70,7 @@ const Commodities = () => {
   }, [dispatch]);
   useEffect(() => {
     getAllCommiditiesOnTree();
-  }, [commoditiesOnTree]);
+  }, []);
   const getAllCommiditiesOnTree = async () => {
     await dispatch(
       GetAllCommodityOnTree({

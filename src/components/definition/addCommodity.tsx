@@ -24,6 +24,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   AddNewCommodity,
   UpdateCommodityDetails,
+  GetAllCommodityOnTree,
 } from "../../redux/features/definitionSlicer.ts";
 import TreeView from "@mui/lab/TreeView";
 import { makeTree } from "../../utils/tree.ts";
@@ -111,12 +112,29 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
     }
   };
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     if (selectedCommodity) {
-      dispatch(UpdateCommodityDetails({ ...info, id: selectedCommodity?.id }));
+      await dispatch(
+        UpdateCommodityDetails({ ...info, id: selectedCommodity?.id })
+      );
+      await dispatch(
+        GetAllCommodityOnTree({
+          commodityName: "",
+          code: "",
+          projectId: undefined,
+        })
+      );
     } else {
-      dispatch(AddNewCommodity({ ...info }));
+      await dispatch(AddNewCommodity({ ...info }));
+      await dispatch(
+        GetAllCommodityOnTree({
+          commodityName: "",
+          code: "",
+          projectId: undefined,
+        })
+      );
     }
+
     onClose();
   };
 
