@@ -67,14 +67,19 @@ const Commodities = () => {
     dispatch(GetAllSuppliers());
     // @ts-ignore
     dispatch(GetAllPleaseOfUse());
-    dispatch(
+  }, [dispatch]);
+  useEffect(() => {
+    getAllCommiditiesOnTree();
+  }, [commoditiesOnTree]);
+  const getAllCommiditiesOnTree = async () => {
+    await dispatch(
       GetAllCommodityOnTree({
         commodityName: "",
         code: "",
         projectId: undefined,
       })
     );
-  }, [dispatch]);
+  };
 
   const commodityOnClose = () => {
     setAddCommodityDialog(false);
