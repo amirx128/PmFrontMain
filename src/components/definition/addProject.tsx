@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   AddNewProject,
   UpdateProject,
+  GetAllCommodities,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
 
@@ -33,6 +34,9 @@ export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
     commodities: selectedProject?.commodities,
   });
 
+  const { projects, commodities } = useSelector(
+    (state: any) => state.definition
+  );
   useEffect(() => {
     if (selectedProject) {
       setInfo({
@@ -46,8 +50,16 @@ export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
       });
     }
   }, [selectedProject]);
-  const { projects } = useSelector((state: any) => state.definition);
+  useEffect(() => {
+    getAllCommodities();
+  }, []);
+
+  const getAllCommodities = async () => {
+    await dispatch(GetAllCommodities());
+  };
+  console.log(commodities);
   const handleChange = (e) => {
+    console.log(e);
     setInfo({
       ...info,
       [e.target?.name]: e.target?.value,
@@ -56,9 +68,17 @@ export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
 
   const onSubmit = () => {
     if (selectedProject) {
-      dispatch(UpdateProject({ id: selectedProject?.id, name: info.name }));
+      dispatch(
+        UpdateProject({
+          id: selectedProject?.id,
+          name: info.name,
+          commodities: info.commodities,
+        })
+      );
     } else {
-      dispatch(AddNewProject(info.name));
+      dispatch(
+        AddNewProject({ newName: info.name, commodities: info.commodities })
+      );
     }
     onClose();
   };
@@ -96,18 +116,15 @@ export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
           <Select
             sx={{ mt: 2 }}
             value={info?.commodities}
-            labelId={"supplierId"}
+            labelId={"commodities"}
             fullWidth={true}
-            name={"supplierId"}
+            name={"commodities"}
             onChange={handleChange}
             placeholder="کالا ها"
             multiple
           >
-            {info?.commodities.map((item) => (
-              <MenuItem>
-                {/* {item?.supplierName} */}
-                sadegh
-              </MenuItem>
+            {commodities?.data?.map((item) => (
+              <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
             ))}
           </Select>
         </FormControl>

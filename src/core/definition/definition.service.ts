@@ -20,17 +20,19 @@ export const GetAllUnitReq = async (userId, projectId, floorId) =>
     floorId,
   });
 
-export const AddNewProjectReq = async (userId, projectName) =>
+export const AddNewProjectReq = async (userId, projectName, commodities) =>
   await axiosInstance.post(`/Definition/AddNewProject`, {
     userId,
     name: projectName,
+    commodities,
   });
 
-export const UpdateProjectReq = async (userId, id, projectName) =>
+export const UpdateProjectReq = async (userId, id, projectName, commodities) =>
   await axiosInstance.post(`/Definition/UpdateProject`, {
     userId,
     id,
     name: projectName,
+    commodities,
   });
 
 export const AddNewUnitReq = async (
