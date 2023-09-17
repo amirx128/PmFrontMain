@@ -389,7 +389,7 @@ export const UpdateUnit = createAsyncThunk(
 export const AddNewFloor = createAsyncThunk(
   "definition/AddNewFloor",
   async (
-    body: { projectId: any; floorName: any; code: any },
+    body: { projectId: any; floorName: any; code: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -399,7 +399,8 @@ export const AddNewFloor = createAsyncThunk(
         userId,
         body.projectId,
         body.floorName,
-        body.code
+        body.code,
+        body.commodities
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -411,7 +412,13 @@ export const AddNewFloor = createAsyncThunk(
 export const UpdateFloor = createAsyncThunk(
   "definition/UpdateFloor",
   async (
-    body: { projectId: any; id: any; floorName: any; code: any },
+    body: {
+      projectId: any;
+      id: any;
+      floorName: any;
+      code: any;
+      commodities?: any;
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -422,7 +429,8 @@ export const UpdateFloor = createAsyncThunk(
         body.id,
         body.projectId,
         body.floorName,
-        body.code
+        body.code,
+        body?.commodities
       );
       if (data?.isSuccess) {
         dispatch(getAllProjects());

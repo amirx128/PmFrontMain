@@ -25,7 +25,6 @@ import {
 import { toast } from "react-toastify";
 
 export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
-  console.log(selectedProject);
   const theme = useTheme();
   const dispatch = useDispatch<any>();
   const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
@@ -57,9 +56,7 @@ export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
   const getAllCommodities = async () => {
     await dispatch(GetAllCommodities());
   };
-  console.log(commodities);
   const handleChange = (e) => {
-    console.log(e);
     setInfo({
       ...info,
       [e.target?.name]: e.target?.value,

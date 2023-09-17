@@ -67,21 +67,36 @@ export const UpdateUnitReq = async (
     code,
   });
 
-export const AddNewFloorReq = async (userId, projectId, floorName, code) =>
+export const AddNewFloorReq = async (
+  userId,
+  projectId,
+  floorName,
+  code,
+  commodities
+) =>
   await axiosInstance.post(`/Definition/AddNewFloor`, {
     userId,
     projectId,
     name: floorName,
     code,
+    commodities,
   });
 
-export const UpdateFloorReq = async (userId, id, projectId, floorName, code) =>
+export const UpdateFloorReq = async (
+  userId,
+  id,
+  projectId,
+  floorName,
+  code,
+  commodities
+) =>
   await axiosInstance.post(`/Definition/UpdateFloor`, {
     userId,
     id,
     projectId,
     name: floorName,
     code,
+    commodities,
   });
 
 export const GetAllCommodityOnTreeReq = async (
