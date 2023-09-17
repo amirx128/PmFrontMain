@@ -330,6 +330,7 @@ export const AddNewUnit = createAsyncThunk(
       projectfloorId: any;
       unitName: string;
       code: string;
+      commodities?: any;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
@@ -341,7 +342,8 @@ export const AddNewUnit = createAsyncThunk(
         body.projectId,
         body.projectfloorId,
         body.unitName,
-        body.code
+        body.code,
+        body?.commodities
       );
       if (data?.isSuccess) {
         dispatch(getAllProjects());
@@ -362,6 +364,7 @@ export const UpdateUnit = createAsyncThunk(
       projectfloorId: any;
       unitName: string;
       code: string;
+      commodities?: any;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
@@ -374,7 +377,8 @@ export const UpdateUnit = createAsyncThunk(
         body.projectId,
         body.projectfloorId,
         body.unitName,
-        body.code
+        body.code,
+        body?.commodities
       );
       if (data?.isSuccess) {
         dispatch(getAllProjects());

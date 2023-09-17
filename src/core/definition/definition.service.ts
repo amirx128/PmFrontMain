@@ -40,7 +40,8 @@ export const AddNewUnitReq = async (
   projectId,
   projectfloorId,
   unitName,
-  code
+  code,
+  commodities
 ) =>
   await axiosInstance.post(`/Definition/AddNewUnit`, {
     userId,
@@ -48,6 +49,7 @@ export const AddNewUnitReq = async (
     projectfloorId,
     name: unitName,
     code,
+    commodities,
   });
 
 export const UpdateUnitReq = async (
@@ -56,7 +58,8 @@ export const UpdateUnitReq = async (
   projectId,
   projectfloorId,
   unitName,
-  code
+  code,
+  commodities
 ) =>
   await axiosInstance.post(`/Definition/UpdateUnit`, {
     userId,
@@ -65,6 +68,7 @@ export const UpdateUnitReq = async (
     projectfloorId,
     name: unitName,
     code,
+    commodities,
   });
 
 export const AddNewFloorReq = async (
