@@ -58,6 +58,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const exitHandler = () => {
     dispatch(setLoggedOut(false));
     localStorage.removeItem("user");
+    navigate('/login');
     navigate(0);
   };
   const MenuList = [
