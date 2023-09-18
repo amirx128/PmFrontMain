@@ -30,6 +30,7 @@ import {
   GetApproveStatesAction,
 } from "../../../redux/features/supportSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import axiosInstance from "../../../utils/axios.config";
 
 const SupportList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
@@ -298,7 +299,7 @@ const SupportList: React.FC<any> = (props) => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
       field: "exitFromWarehouseId",
@@ -436,6 +437,21 @@ const SupportList: React.FC<any> = (props) => {
       })
     );
   };
+  const handleDownloadExcel = async () => {
+    const { approveStateId } = getValues();
+    const res = await axiosInstance.post("/Support/ApproveQ", {
+      userId: "1",
+      fromDate: new Date(fromDate),
+      toDate: new Date(toDate),
+      approveStateId,
+      pageCount: 20,
+      pageIndex: 1,
+      orderBy: "CreateDate",
+      orderType: "desc",
+      exportExcell: true,
+    });
+    console.log(res);
+  };
   return (
     <CardGrid
       item
@@ -501,7 +517,7 @@ const SupportList: React.FC<any> = (props) => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
-              <IconButton color="success">
+              <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
@@ -515,7 +531,7 @@ const SupportList: React.FC<any> = (props) => {
           rows={approveQ?.data.map((row, index) => ({ id: index, ...row }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
-        ></Grid>
+        />
       </Card>
     </CardGrid>
   );
