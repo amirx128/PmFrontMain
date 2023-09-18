@@ -47,7 +47,6 @@ export const AddCategory = ({ addCategoryDialog, onClose, parent }) => {
     useInProjectsIds: [],
     useInProjectsFloorIds: [],
     businessRoleIds: [],
-    supplierId: "",
     producerId: 0,
     parentId: parent ? parseInt(parent) : null ?? 0,
   });
@@ -69,9 +68,9 @@ export const AddCategory = ({ addCategoryDialog, onClose, parent }) => {
         producerId: selectedCommodity?.producerId
           ? selectedCommodity?.producerId
           : 0,
-        supplierId: selectedCommodity?.supplierId
-          ? selectedCommodity?.supplierId
-          : 0,
+        // supplierId: selectedCommodity?.supplierId
+        //   ? selectedCommodity?.supplierId
+        //   : 0,
         useInProjectsFloorIds: selectedCommodity?.placeOfUseFloor?.map(
           (item) => item?.id
         ),
@@ -97,7 +96,6 @@ export const AddCategory = ({ addCategoryDialog, onClose, parent }) => {
         useInProjectsIds: [],
         useInProjectsFloorIds: [],
         businessRoleIds: [],
-        supplierId: "",
         producerId: 0,
         parentId: parent ? parseInt(parent) : null ?? 0,
       });
