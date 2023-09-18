@@ -188,11 +188,22 @@ const Commodities = () => {
                 color={"primary"}
                 onClick={() => {
                   setParent(null);
-                  let find = commodities?.data?.filter(
+                  const commidtyOnTree = commoditiesOnTree?.data?.find(
+                    (com) => +com.id === +selectedNode
+                  );
+
+                  const find = commodities?.data?.find(
                     (item) => item?.id == selectedNode
                   );
+                  console.log(typeof commidtyOnTree.isCategory);
+                  if (commidtyOnTree.isCategory) {
+                    setSelectedCommodity(commidtyOnTree);
+                    setSelectedNode(null);
+                    setAddCategoryDialog(true);
+                    return;
+                  }
                   if (find) {
-                    setSelectedCommodity(find[0]);
+                    setSelectedCommodity(find);
                     setSelectedNode(null);
                     setAddCommodityDialog(true);
                   }

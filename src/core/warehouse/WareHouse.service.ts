@@ -18,6 +18,12 @@ export const GetWarehouseQ = async (
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
+export const GetWarehouseOrderData = async (userId, warehouseOrderId) =>
+  await axiosInstance.post(`/Warehouse/GetWarehouseOrderData`, {
+    userId,
+    warehouseOrderId,
+  });
+
 export const WarehouseSentItem = async (
   userId,
   pageIndex = 1,

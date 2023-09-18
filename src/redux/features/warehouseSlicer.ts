@@ -4,6 +4,7 @@ import {
   WarehouseSentItem,
   GetExitWareHouseQ,
   ExitWarehouseSentItem,
+  GetWarehouseOrderData,
 } from "../../core/warehouse/WareHouse.service";
 
 const getUserId = (state) => {
@@ -33,6 +34,11 @@ export interface WarehouseState {
       pending: boolean;
     };
   };
+  warehouseRowSelected: any;
+  orderDetailData: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: WarehouseState = {
@@ -56,7 +62,29 @@ const initialState: WarehouseState = {
       pending: false,
     },
   },
+  warehouseRowSelected: undefined,
+  orderDetailData: {
+    pending: false,
+    data: undefined,
+  },
 };
+
+export const GetWarehouseOrderDataAction = createAsyncThunk(
+  "warehouse/GetWarehouseOrderDataAction",
+  async (
+    body: { id: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetWarehouseOrderData(userId, body.id);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const GetWarehouseQAction = createAsyncThunk(
   "warehouse/GetWarehouseQAction",
@@ -183,7 +211,11 @@ export const ExitWarehouseSentItemAction = createAsyncThunk(
 export const warehouseSlicer = createSlice({
   name: "warehouse",
   initialState,
-  reducers: undefined,
+  reducers: {
+    setWarhouseRowSelectedAction(state, action) {
+      state.warehouseRowSelected = action?.payload;
+    },
+  },
   extraReducers: (builder) => {
     //#region GetWarehouseQAction-----
     builder
@@ -261,7 +293,28 @@ export const warehouseSlicer = createSlice({
         }
       );
     //#endregion
+    //#region GetPurchaseOrderDataAction-----
+    builder
+      .addCase(GetWarehouseOrderDataAction.pending, (state: WarehouseState) => {
+        state.orderDetailData.pending = true;
+      })
+      .addCase(
+        GetWarehouseOrderDataAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.orderDetailData.pending = false;
+          state.orderDetailData.data = payload?.model;
+        }
+      )
+      .addCase(
+        GetWarehouseOrderDataAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.orderDetailData.pending = false;
+        }
+      );
+    //#endregion
   },
 });
+
+export const { setWarhouseRowSelectedAction } = warehouseSlicer.actions;
 
 export default warehouseSlicer.reducer;

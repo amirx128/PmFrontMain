@@ -9,29 +9,28 @@ import { ButtonContainer, StyledForm } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddDetailsToPurchaseOrderAction,
+  ApproveUpdateDetailsAction,
+  FinancialUpdateDetailsActions,
   setPurchaseRowSelectedAction,
   UpdateDetailsToPurchaseOrderAction,
-  GetPurchaseOrderDataAction,
 } from "../../redux/features/purchaseSlicer";
 import { GetAllSuppliers } from "../../redux/features/definitionSlicer";
 import SelectComponent from "../../components/select/selects";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { useEffect, useState } from "react";
+import { GetApproveStatesAction } from "../../redux/features/supportSlicer";
 
-const LogisticsDetails = () => {
+const ExitWarehouseDetails = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const dispatch = useDispatch<any>();
   const {
-    orderDetailData,
     purchaseRowSelected,
-    logistics: { addPurchaseRes, updatePurchaseRes },
+    approve: { updatePurchaseRes },
   } = useSelector((state: any) => state?.purchase);
-  const { suppliers } = useSelector((state: any) => state?.definition);
-  const [mode, setMode] = useState<"edit" | "add">("add");
+  const { states } = useSelector((state: any) => state?.support?.approve);
+  const isEditable = purchaseRowSelected?.approveEditable;
 
-  const isEditable = purchaseRowSelected?.logisticEditable;
   const {
     register,
     handleSubmit,
@@ -41,53 +40,35 @@ const LogisticsDetails = () => {
     formState: { errors, isDirty, isValid },
   } = useForm<any>({
     defaultValues: {
-      baravordFeeKala: 0,
-      baravordkolMandeh: 0,
-      supporterId: 0,
+      count: 0,
+      approveStateId: 0,
     },
   });
   useEffect(() => {
-    getAllSupplires();
+    getApproveStates();
   }, []);
   useEffect(() => {
     if (purchaseRowSelected) {
-      setMode("edit");
-      setValue("baravordFeeKala", purchaseRowSelected.baravordFeeKala);
-      setValue("baravordkolMandeh", purchaseRowSelected.baravordkolMandeh);
-      setValue("supporterId", purchaseRowSelected.supporterUserId);
+      setValue("count", purchaseRowSelected.count);
+      setValue("approveStateId", purchaseRowSelected.ApproveStateId);
     } else {
-      setMode("add");
-      setValue("baravordFeeKala", 0);
-      setValue("baravordkolMandeh", 0);
-      setValue("supporterId", 0);
+      setValue("count", 0);
+      setValue("approveStateId", 0);
     }
   }, [purchaseRowSelected]);
-  const getAllSupplires = async () => {
-    await dispatch(GetAllSuppliers());
-  };
-  const handleAdd = async () => {
-    const { baravordFeeKala, baravordkolMandeh, supporterId } = getValues();
-    await dispatch(
-      AddDetailsToPurchaseOrderAction({
-        supporterId: String(supporterId),
-        purchaseOrderId: +orderDetailData.data.purchaseId,
-        BaravordFeeKala: baravordFeeKala,
-        BaravordkolMandeh: baravordkolMandeh,
-      })
-    );
-    await dispatch(GetPurchaseOrderDataAction({ id: +id }));
+  const getApproveStates = async () => {
+    await dispatch(GetApproveStatesAction());
   };
   const handleEdit = async () => {
-    const { baravordFeeKala, baravordkolMandeh, supporterId } = getValues();
+    const { count, approveStateId } = getValues();
     await dispatch(
-      UpdateDetailsToPurchaseOrderAction({
-        supporterId: String(supporterId),
-        BaravordFeeKala: baravordFeeKala,
-        BaravordkolMandeh: baravordkolMandeh,
-        PurchaseOrderDetailsId: +purchaseRowSelected.id,
+      ApproveUpdateDetailsAction({
+        count,
+        ApproveStateId: approveStateId,
+        purchaseOrderDetailsId: +purchaseRowSelected.id,
       })
     );
-    await dispatch(GetPurchaseOrderDataAction({ id: +id }));
+    navigate(0);
   };
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
@@ -109,38 +90,15 @@ const LogisticsDetails = () => {
             >
               <Controller
                 control={control}
-                name="baravordFeeKala"
+                name="count"
                 render={() => (
                   <InputContent
-                    name="baravordFeeKala"
-                    label="براورد فی کالا"
+                    name="count"
+                    label="تعداد"
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={mode === "edit" && !isEditable}
-                  />
-                )}
-              />
-            </Box>
-            <Box
-              sx={{
-                mb: 6.75,
-                display: "flex",
-                alignItems: "center",
-                flex: "1",
-              }}
-            >
-              <Controller
-                control={control}
-                name="baravordkolMandeh"
-                render={() => (
-                  <InputContent
-                    name="baravordkolMandeh"
-                    label="براورد کل مانده"
-                    register={register}
-                    required={true}
-                    errors={errors}
-                    disabled={mode === "edit" && !isEditable}
+                    disabled={purchaseRowSelected && !isEditable}
                   />
                 )}
               />
@@ -156,40 +114,23 @@ const LogisticsDetails = () => {
               <Controller
                 control={control}
                 rules={{ required: " approve state is required" }}
-                name="supporterId"
+                name="approveStateId"
                 defaultValue={0}
                 render={({ field }) => (
                   <SelectComponent
-                    label="تامین کننده"
+                    label="وضعیت"
                     valuefieldName="id"
-                    labelFieldName="supplierName"
-                    options={suppliers?.data}
+                    labelFieldName="state"
+                    options={states?.data}
                     field={field}
-                    disabled={mode === "edit" && !isEditable}
+                    disabled={purchaseRowSelected && !isEditable}
                   />
                 )}
               />
             </Box>
           </Grid>
           <ButtonContainer>
-            {mode === "add" && (
-              <LoadingButton
-                loading={addPurchaseRes.pending}
-                type="submit"
-                sx={{
-                  justifySelf: "flex-start",
-                  marginRight: "20px",
-                  alignSelf: "end",
-                }}
-                color="info"
-                variant="contained"
-                onClick={handleAdd}
-              >
-                افزودن
-                <SaveIcon sx={{ marginLeft: "10px" }} />
-              </LoadingButton>
-            )}
-            {mode === "edit" && (
+            {purchaseRowSelected && (
               <>
                 <LoadingButton
                   loading={updatePurchaseRes.pending}
@@ -202,9 +143,9 @@ const LogisticsDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
-                  disabled={mode === "edit" && !isEditable}
+                  disabled={purchaseRowSelected && !isEditable}
                 >
-                  ویرایش
+                  ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />
                 </LoadingButton>
                 <Button
@@ -229,4 +170,4 @@ const LogisticsDetails = () => {
   );
 };
 
-export default LogisticsDetails;
+export default ExitWarehouseDetails;

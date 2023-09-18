@@ -12,15 +12,17 @@ import {
   FinancialUpdateDetailsActions,
   setPurchaseRowSelectedAction,
   UpdateDetailsToPurchaseOrderAction,
+  GetPurchaseOrderDataAction,
 } from "../../redux/features/purchaseSlicer";
 import { GetAllSuppliers } from "../../redux/features/definitionSlicer";
 import SelectComponent from "../../components/select/selects";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 
 const FinancialDetails = () => {
   const navigate = useNavigate();
+  const { id } = useParams();
   const dispatch = useDispatch<any>();
   const {
     purchaseRowSelected,
@@ -56,7 +58,7 @@ const FinancialDetails = () => {
         purchaseOrderDetailsId: +purchaseRowSelected.id,
       })
     );
-    navigate(0);
+    await dispatch(GetPurchaseOrderDataAction({ id: +id }));
   };
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
