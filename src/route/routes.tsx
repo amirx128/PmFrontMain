@@ -32,6 +32,7 @@ import SupplierList from "../pages/users/SupplierList.tsx";
 import FinancialDetails from "../pages/purchase/FinancialDetails.tsx";
 import PurchaseApproveDetails from "../pages/purchase/ApproveDetials.tsx";
 import CommodityTransactions from "../pages/commodities/CommodityTransactions.tsx";
+import SupplierDetails from "../pages/warehouse/supplierDetails.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -230,6 +231,13 @@ export const routes: IRoute[] = [
   {
     path: "/supplier/supplier-sentitem",
     component: <SupplierSentItemList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف بررسی",
+  },
+  {
+    path: "/supplier/details/:id",
+    component: <SupplierDetails />,
     layout: Layouts.MAIN,
     protected: true,
     title: "در صف بررسی",
