@@ -75,3 +75,25 @@ export const ExitWarehouseSentItem = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const SupplierAddDetailsToWarehouseOrder = async (
+  userId,
+  warehouseOrderId,
+  sentCount
+) =>
+  await axiosInstance.post(`/Warehouse/Supplier.AddDetailsToWarehoseOrder`, {
+    userId: userId,
+    warehouseOrderId,
+    sentCount,
+  });
+export const SupplierUpdateDetailsToWarehouseOrder = async (
+  userId,
+  warehouseOrderId,
+  commodityId,
+  sentCount
+) =>
+  await axiosInstance.post(`/Warehouse/Supplier.UpdateDetailsToWarehoseOrder`, {
+    userId: userId,
+    warehouseOrderId,
+    commodityId,
+    sentCount,
+  });

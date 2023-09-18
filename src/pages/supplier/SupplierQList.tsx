@@ -16,10 +16,11 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { GetSupplierQAction } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const SupplierQList = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { supplierQ } = useSelector((state: any) => state.supplier?.supplier);
   const [fromDate, setFromDate] = useState(
@@ -159,6 +160,19 @@ const SupplierQList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/supplier/details/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",
@@ -228,6 +242,9 @@ const SupplierQList = () => {
         toDate: new Date(initialFilter.current.toDate),
       })
     );
+  };
+  const handleDoubleClick = (e) => {
+    navigate(`/supplier/details/${e.row.warehouseOrderId}`);
   };
   return (
     <CardGrid
@@ -301,6 +318,7 @@ const SupplierQList = () => {
           }
           pagination={{}}
           onSortModelChange={handleSortModelChange}
+          onDoubleClick={handleDoubleClick}
         ></Grid>
       </Card>
     </CardGrid>

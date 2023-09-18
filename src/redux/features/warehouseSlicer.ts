@@ -5,6 +5,8 @@ import {
   GetExitWareHouseQ,
   ExitWarehouseSentItem,
   GetWarehouseOrderData,
+  SupplierAddDetailsToWarehouseOrder,
+  SupplierUpdateDetailsToWarehouseOrder,
 } from "../../core/warehouse/WareHouse.service";
 
 const getUserId = (state) => {
@@ -39,6 +41,16 @@ export interface WarehouseState {
     data: any;
     pending: boolean;
   };
+  supplier: {
+    addSupplierToWarehouse: {
+      pending: boolean;
+      data: any;
+    };
+    updateSupplierToWarehouse: {
+      pending: boolean;
+      data: any;
+    };
+  };
 }
 
 const initialState: WarehouseState = {
@@ -66,6 +78,16 @@ const initialState: WarehouseState = {
   orderDetailData: {
     pending: false,
     data: undefined,
+  },
+  supplier: {
+    addSupplierToWarehouse: {
+      pending: false,
+      data: [],
+    },
+    updateSupplierToWarehouse: {
+      pending: false,
+      data: [],
+    },
   },
 };
 
@@ -207,6 +229,58 @@ export const ExitWarehouseSentItemAction = createAsyncThunk(
     }
   }
 );
+export const SupplierAddDetailsToWarehouseOrderAction = createAsyncThunk(
+  "warehosue/SupplierAddDetailsToWarehouseOrderAction",
+  async (
+    body: {
+      warehouseOrderId: number;
+      sentCount: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { warehouseOrderId, sentCount } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SupplierAddDetailsToWarehouseOrder(
+        userId,
+        warehouseOrderId,
+        sentCount
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const SupplierUpdateDetailsToWarehouseOrderAction = createAsyncThunk(
+  "warehosue/SupplierUpdateDetailsToWarehouseOrderAction",
+  async (
+    body: {
+      warehouseOrderId: number;
+      sentCount: number;
+      commodityId: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { warehouseOrderId, sentCount, commodityId } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SupplierUpdateDetailsToWarehouseOrder(
+        userId,
+        warehouseOrderId,
+        commodityId,
+        sentCount
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const warehouseSlicer = createSlice({
   name: "warehouse",
@@ -309,6 +383,50 @@ export const warehouseSlicer = createSlice({
         GetWarehouseOrderDataAction.rejected,
         (state: WarehouseState, { error }) => {
           state.orderDetailData.pending = false;
+        }
+      );
+    //#endregion
+    //#region GetPurchaseOrderDataAction-----
+    builder
+      .addCase(
+        SupplierAddDetailsToWarehouseOrderAction.pending,
+        (state: WarehouseState) => {
+          state.supplier.addSupplierToWarehouse.pending = true;
+        }
+      )
+      .addCase(
+        SupplierAddDetailsToWarehouseOrderAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.supplier.addSupplierToWarehouse.pending = false;
+          state.supplier.addSupplierToWarehouse.data = payload;
+        }
+      )
+      .addCase(
+        SupplierAddDetailsToWarehouseOrderAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.supplier.addSupplierToWarehouse.pending = false;
+        }
+      );
+    //#endregion
+    //#region GetPurchaseOrderDataAction-----
+    builder
+      .addCase(
+        SupplierUpdateDetailsToWarehouseOrderAction.pending,
+        (state: WarehouseState) => {
+          state.supplier.updateSupplierToWarehouse.pending = true;
+        }
+      )
+      .addCase(
+        SupplierUpdateDetailsToWarehouseOrderAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.supplier.updateSupplierToWarehouse.pending = false;
+          state.supplier.updateSupplierToWarehouse.data = payload;
+        }
+      )
+      .addCase(
+        SupplierUpdateDetailsToWarehouseOrderAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.supplier.updateSupplierToWarehouse.pending = false;
         }
       );
     //#endregion
