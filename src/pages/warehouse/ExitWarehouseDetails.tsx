@@ -1,5 +1,5 @@
 import { Card, Divider, Grid, Box, Button } from "@mui/material";
-import PurchaseForm from "./PurchaseForm";
+import WarehouseForm from "./WarhouseForm";
 import { Controller, useForm } from "react-hook-form";
 import { InputContent } from "../../components/comodity-form/style";
 import { LoadingButton } from "@mui/lab";
@@ -75,7 +75,7 @@ const ExitWarehouseDetails = () => {
   };
   return (
     <div>
-      <PurchaseForm />
+      <WarehouseForm />
       <Card sx={{ padding: 5 }}>
         <StyledForm>
           <Grid container>

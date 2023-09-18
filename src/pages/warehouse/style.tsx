@@ -12,4 +12,13 @@ const StyledBox = styled(Box)(({ theme }) => ({
     //   borderRight: `1px solid ${theme.palette.divider}`
   },
 }));
-export { Row, StyledBox };
+const StyledForm = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+const ButtonContainer = styled.div`
+  display: flex;
+  gap: 1.6rem;
+  justify-content: end;
+`;
+export { Row, StyledBox, ButtonContainer, StyledForm };
