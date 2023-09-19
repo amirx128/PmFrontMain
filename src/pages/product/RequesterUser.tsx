@@ -16,7 +16,10 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import gridDict from "../../dictionary/gridDict.ts";
-import { GetRequesterUserQAction } from "../../redux/features/productSlicer.ts";
+import {
+  DownloadRequesterUserQAction,
+  GetRequesterUserQAction,
+} from "../../redux/features/productSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const RequesterUser = () => {
@@ -86,7 +89,7 @@ const RequesterUser = () => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
       field: "requestCaseId",
@@ -246,7 +249,12 @@ const RequesterUser = () => {
     );
   };
   const handleDownloadExcel = async () => {
-    dispatch(GetRequesterUserQAction({ exportExcell: true }));
+    dispatch(
+      DownloadRequesterUserQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
   };
   return (
     <CardGrid

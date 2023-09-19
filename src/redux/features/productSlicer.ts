@@ -2,7 +2,10 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   GetRequesterUserQ,
   RequesterUserSentItem,
+  DownloadRequesterUserQ,
+  DownloadRequesterUserSentItem,
 } from "../../core/product/Product.service";
+import downloadExcel from "../../utils/downloadExcell";
 
 const getUserId = (state) => {
   return state?.user?.user?.id ?? localStorage.getItem("user")
@@ -20,6 +23,9 @@ export interface ProductState {
       data: any;
       pending: boolean;
     };
+    downloadRequesterUserQ: {
+      pending: boolean;
+    };
   };
 }
 
@@ -33,6 +39,9 @@ const initialState: ProductState = {
       data: [],
       pending: false,
     },
+    downloadRequesterUserQ: {
+      pending: false,
+    },
   },
 };
 
@@ -44,11 +53,10 @@ export const GetRequesterUserQAction = createAsyncThunk(
       toDate?: any;
       orderType?: "desc" | "asc";
       orderBy?: string;
-      exportExcell?: boolean;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
-    const { fromDate, toDate, orderType, orderBy, exportExcell } = body;
+    const { fromDate, toDate, orderType, orderBy } = body;
     try {
       const state: any = getState();
       const userId = getUserId(state);
@@ -58,8 +66,65 @@ export const GetRequesterUserQAction = createAsyncThunk(
         fromDate,
         toDate,
         orderType,
-        orderBy,
-        exportExcell
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadRequesterUserQAction = createAsyncThunk(
+  "product/DownloadRequesterUserQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fromDate, toDate, orderType, orderBy } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadRequesterUserQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadRequesterUserSentItemAction = createAsyncThunk(
+  "product/DownloadRequesterUserSentItemAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fromDate, toDate, orderType, orderBy } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadRequesterUserSentItem(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -118,6 +183,47 @@ export const productSlicer = createSlice({
         GetRequesterUserQAction.rejected,
         (state: ProductState, { error }) => {
           state.requesterUser.requesterUserQ.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadRequesterUserQAction-----
+    builder
+      .addCase(DownloadRequesterUserQAction.pending, (state: ProductState) => {
+        state.requesterUser.downloadRequesterUserQ.pending = true;
+      })
+      .addCase(
+        DownloadRequesterUserQAction.fulfilled,
+        (state: ProductState, { payload }) => {
+          state.requesterUser.downloadRequesterUserQ.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadRequesterUserQAction.rejected,
+        (state: ProductState, { error }) => {
+          state.requesterUser.downloadRequesterUserQ.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadRequesterUserSentItemAction-----
+    builder
+      .addCase(
+        DownloadRequesterUserSentItemAction.pending,
+        (state: ProductState) => {
+          state.requesterUser.downloadRequesterUserQ.pending = true;
+        }
+      )
+      .addCase(
+        DownloadRequesterUserSentItemAction.fulfilled,
+        (state: ProductState, { payload }) => {
+          state.requesterUser.downloadRequesterUserQ.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadRequesterUserSentItemAction.rejected,
+        (state: ProductState, { error }) => {
+          state.requesterUser.downloadRequesterUserQ.pending = false;
         }
       );
     //#endregion

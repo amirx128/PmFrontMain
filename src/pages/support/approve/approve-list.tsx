@@ -450,7 +450,12 @@ const SupportList: React.FC<any> = (props) => {
       orderType: "desc",
       exportExcell: true,
     });
-    console.log(res);
+    const url = window.URL.createObjectURL(new Blob([res.data]));
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `${Date.now()}.xlsx`);
+    document.body.appendChild(link);
+    link.click();
   };
   return (
     <CardGrid

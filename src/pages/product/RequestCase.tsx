@@ -16,7 +16,10 @@ import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import gridDict from "../../dictionary/gridDict.ts";
-import { RequesterUserSentItemAction } from "../../redux/features/productSlicer.ts";
+import {
+  DownloadRequesterUserSentItemAction,
+  RequesterUserSentItemAction,
+} from "../../redux/features/productSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const RequestCase = () => {
@@ -270,7 +273,7 @@ const RequestCase = () => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
       field: "exitFromWarehouseId",
@@ -371,6 +374,14 @@ const RequestCase = () => {
       })
     );
   };
+  const handleDownloadExcel = async () => {
+    dispatch(
+      DownloadRequesterUserSentItemAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
+  };
 
   return (
     <CardGrid
@@ -420,7 +431,7 @@ const RequestCase = () => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
-              <IconButton color="success">
+              <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
