@@ -443,7 +443,7 @@ const SupportList: React.FC<any> = (props) => {
       userId: "1",
       fromDate: new Date(fromDate),
       toDate: new Date(toDate),
-      approveStateId,
+      approveStateId: 0,
       pageCount: 20,
       pageIndex: 1,
       orderBy: "CreateDate",
