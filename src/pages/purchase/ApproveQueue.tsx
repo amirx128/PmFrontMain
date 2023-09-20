@@ -15,7 +15,7 @@ import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  DownloadApproveQAction,
+  DownloadPurchaseApproveQAction,
   GetApproveQAction,
 } from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
@@ -273,7 +273,7 @@ const ApproveQueue = () => {
   };
   const handleDownloadExcell = async () => {
     await dispatch(
-      DownloadApproveQAction({
+      DownloadPurchaseApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
       })

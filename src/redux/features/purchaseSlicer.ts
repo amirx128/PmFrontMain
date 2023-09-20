@@ -553,8 +553,8 @@ export const GetApproveQAction = createAsyncThunk(
     }
   }
 );
-export const DownloadApproveQAction = createAsyncThunk(
-  "purchase/GetApproveQAction",
+export const DownloadPurchaseApproveQAction = createAsyncThunk(
+  "purchase/DownloadPurchaseApproveQAction",
   async (
     body: {
       fromDate: any;
@@ -1006,20 +1006,23 @@ export const purchaseSlicer = createSlice({
         }
       );
     //#endregion
-    //#region DownloadApproveQAction-----
+    //#region DownloadPurchaseApproveQAction-----
     builder
-      .addCase(DownloadApproveQAction.pending, (state: PurchaseState) => {
-        state.approve.downloadQueue.pending = true;
-      })
       .addCase(
-        DownloadApproveQAction.fulfilled,
+        DownloadPurchaseApproveQAction.pending,
+        (state: PurchaseState) => {
+          state.approve.downloadQueue.pending = true;
+        }
+      )
+      .addCase(
+        DownloadPurchaseApproveQAction.fulfilled,
         (state: PurchaseState, { payload }) => {
           state.approve.downloadQueue.pending = false;
           downloadExcel(payload);
         }
       )
       .addCase(
-        DownloadApproveQAction.rejected,
+        DownloadPurchaseApproveQAction.rejected,
         (state: PurchaseState, { error, payload }) => {
           state.approve.downloadQueue.pending = false;
         }
