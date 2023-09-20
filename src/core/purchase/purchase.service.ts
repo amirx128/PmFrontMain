@@ -17,6 +17,30 @@ export const GetLogisticsQ = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadLogisticsQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/Purchase/Logistics.Q`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 export const GetPurchaseOrderData = async (userId, purchaseOrderId) =>
   await axiosInstance.post(`/Purchase/GetPurchaseOrderData`, {
     userId,
@@ -73,6 +97,30 @@ export const LogisticsSendItems = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadLogisticsSendItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/Purchase/Logistics.SendItems`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
 export const GetFinancialQ = async (
   userId,
@@ -91,6 +139,30 @@ export const GetFinancialQ = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadFinancialQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/Purchase/Financial.Q`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
 export const FinancialUpdateDetails = async (
   userId,
@@ -120,6 +192,30 @@ export const FinancialSendItems = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadFinancialSendItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/Purchase/Financial.SendItems`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
 export const GetApproveQ = async (
   userId,
@@ -138,6 +234,30 @@ export const GetApproveQ = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadApproveQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/Purchase/Approve.Q`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
 export const ApproveUpdateDetails = async (
   userId,
@@ -169,3 +289,27 @@ export const ApproveSendItems = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadApproveSendItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/Purchase/Approve.SendItems`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );

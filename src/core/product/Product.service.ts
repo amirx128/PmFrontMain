@@ -25,16 +25,22 @@ export const DownloadRequesterUserQ = async (
   orderType = "desc",
   orderBy = "requestCaseCreateDate"
 ) =>
-  await axiosInstance.post(`/warehouse/RequesterUser.Q`, {
-    userId: userId,
-    pageIndex,
-    pageCount: 20,
-    orderType,
-    orderBy,
-    fromDate: new Date(fromDate).toISOString().slice(0, 10),
-    toDate: new Date(toDate).toISOString().slice(0, 10),
-    exportExcell: true,
-  });
+  await axiosInstance.post(
+    `/warehouse/RequesterUser.Q`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 export const RequesterUserSentItem = async (
   userId,
   pageIndex = 1,
@@ -60,13 +66,19 @@ export const DownloadRequesterUserSentItem = async (
   orderType = "desc",
   orderBy = "createDate"
 ) =>
-  await axiosInstance.post(`/requestCase/SentItem`, {
-    userId: userId,
-    pageIndex,
-    pageCount: 20,
-    orderType,
-    orderBy,
-    fromDate: new Date(fromDate).toISOString().slice(0, 10),
-    toDate: new Date(toDate).toISOString().slice(0, 10),
-    exportExcell: true,
-  });
+  await axiosInstance.post(
+    `/requestCase/SentItem`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );

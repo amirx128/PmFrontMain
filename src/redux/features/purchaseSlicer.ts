@@ -13,6 +13,12 @@ import {
   GetPurchaseOrderDetailsData,
   LogisticsSendItems,
   UpdateDetailsToPurchaseOrder,
+  DownloadApproveQ,
+  DownloadApproveSendItems,
+  DownloadFinancialQ,
+  DownloadFinancialSendItems,
+  DownloadLogisticsQ,
+  DownloadLogisticsSendItems,
 } from "../../core/purchase/purchase.service.ts";
 
 const getUserId = (state) => {
@@ -39,6 +45,12 @@ export interface PurchaseState {
       pending: boolean;
       data: any;
     };
+    downloadQueue: {
+      pending: boolean;
+    };
+    downloadSentItem: {
+      pending: boolean;
+    };
   };
   orderData: any;
   orderDetailData: {
@@ -62,6 +74,12 @@ export interface PurchaseState {
       pending: boolean;
       data: any;
     };
+    downloadQueue: {
+      pending: boolean;
+    };
+    downloadSentItem: {
+      pending: boolean;
+    };
   };
   approve: {
     queue: {
@@ -75,6 +93,12 @@ export interface PurchaseState {
     updatePurchaseRes: {
       pending: boolean;
       data: any;
+    };
+    downloadQueue: {
+      pending: boolean;
+    };
+    downloadSentItem: {
+      pending: boolean;
     };
   };
   purchaseRowSelected: any;
@@ -97,6 +121,12 @@ const initialState: PurchaseState = {
     updatePurchaseRes: {
       pending: false,
       data: [],
+    },
+    downloadQueue: {
+      pending: false,
+    },
+    downloadSentItem: {
+      pending: false,
     },
   },
   orderData: null,
@@ -121,6 +151,12 @@ const initialState: PurchaseState = {
       pending: false,
       data: [],
     },
+    downloadQueue: {
+      pending: false,
+    },
+    downloadSentItem: {
+      pending: false,
+    },
   },
   approve: {
     queue: {
@@ -134,6 +170,12 @@ const initialState: PurchaseState = {
     updatePurchaseRes: {
       pending: false,
       data: [],
+    },
+    downloadQueue: {
+      pending: false,
+    },
+    downloadSentItem: {
+      pending: false,
     },
   },
   purchaseRowSelected: undefined,
@@ -155,6 +197,36 @@ export const GetLogisticsQAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetLogisticsQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadLogisticsQAction = createAsyncThunk(
+  "purchase/DownloadLogisticsQAction",
+  async (
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadLogisticsQ(
         userId,
         1,
         fromDate,
@@ -276,6 +348,36 @@ export const LogisticsSendItemsAction = createAsyncThunk(
     }
   }
 );
+export const DownloadLogisticsSendItemsAction = createAsyncThunk(
+  "purchase/DownloadLogisticsSendItemsAction",
+  async (
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadLogisticsSendItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const GetFinancialQAction = createAsyncThunk(
   "purchase/GetFinancialQAction",
@@ -294,6 +396,36 @@ export const GetFinancialQAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetFinancialQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadFinancialQAction = createAsyncThunk(
+  "purchase/DownloadFinancialQAction",
+  async (
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadFinancialQ(
         userId,
         1,
         fromDate,
@@ -359,6 +491,36 @@ export const FinancialSendItemsActions = createAsyncThunk(
     }
   }
 );
+export const DownloadFinancialSendItemsActions = createAsyncThunk(
+  "purchase/DownloadFinancialSendItemsActions",
+  async (
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadFinancialSendItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const GetApproveQAction = createAsyncThunk(
   "purchase/GetApproveQAction",
@@ -390,6 +552,36 @@ export const GetApproveQAction = createAsyncThunk(
     }
   }
 );
+export const DownloadApproveQAction = createAsyncThunk(
+  "purchase/GetApproveQAction",
+  async (
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }: any
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId: any = getUserId(state);
+      const { data } = await DownloadApproveQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const ApproveSendItemsAction = createAsyncThunk(
   "purchase/ApproveSendItemsAction",
@@ -408,6 +600,36 @@ export const ApproveSendItemsAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await ApproveSendItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadApproveSendItemsAction = createAsyncThunk(
+  "purchase/DownloadApproveSendItemsAction",
+  async (
+    body: {
+      fromDate: any;
+      toDate: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadApproveSendItems(
         userId,
         1,
         fromDate,
