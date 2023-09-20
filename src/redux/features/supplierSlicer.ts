@@ -3,7 +3,10 @@ import {
   GetSupplierQ,
   SupplierSentItem,
   GetTransactions,
+  DownloadSupplierQ,
+  DownloadSupplierSentItem,
 } from "../../core/supplier/Supplier.service";
+import downloadExcel from "../../utils/downloadExcell";
 
 const getUserId = (state) => {
   return state?.user?.user?.id ?? localStorage.getItem("user")
@@ -25,6 +28,12 @@ export interface SupplierState {
       data: any;
       pending: boolean;
     };
+    downloadQueue: {
+      pending: boolean;
+    };
+    downloadSentItem: {
+      pending: boolean;
+    };
   };
 }
 
@@ -42,7 +51,12 @@ const initialState: SupplierState = {
       data: [],
       pending: false,
     },
-
+    downloadQueue: {
+      pending: false,
+    },
+    downloadSentItem: {
+      pending: false,
+    },
   },
 };
 
@@ -50,7 +64,7 @@ export const GetOneCommodityTransactions = createAsyncThunk(
   "supplier/GetOneCommodityTransactions",
   async (
     body: {
-      SelectedItemId:any;
+      SelectedItemId: any;
       fromDate?: any;
       toDate?: any;
       orderType?: "desc" | "asc";
@@ -59,11 +73,11 @@ export const GetOneCommodityTransactions = createAsyncThunk(
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const { fromDate, toDate, orderType, orderBy,SelectedItemId } = body;
+      const { fromDate, toDate, orderType, orderBy, SelectedItemId } = body;
 
       const state: any = getState();
       const userId = getUserId(state);
-      const { data } = await  GetTransactions(
+      const { data } = await GetTransactions(
         SelectedItemId,
         userId,
         1,
@@ -108,6 +122,36 @@ export const GetSupplierQAction = createAsyncThunk(
     }
   }
 );
+export const DownloadSupplierQAction = createAsyncThunk(
+  "supplier/DownloadSupplierQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadSupplierQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const SuppLierSentItemAction = createAsyncThunk(
   "supplier/SupplierSentItem",
@@ -126,6 +170,36 @@ export const SuppLierSentItemAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await SupplierSentItem(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadSuppLierSentItemAction = createAsyncThunk(
+  "supplier/DownloadSuppLierSentItemAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadSupplierSentItem(
         userId,
         1,
         fromDate,
@@ -199,6 +273,47 @@ export const supplierSlicer = createSlice({
         GetOneCommodityTransactions.rejected,
         (state: SupplierState, { error }) => {
           state.supplier.transaction.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadSupplierQAction-----
+    builder
+      .addCase(DownloadSupplierQAction.pending, (state: SupplierState) => {
+        state.supplier.downloadQueue.pending = true;
+      })
+      .addCase(
+        DownloadSupplierQAction.fulfilled,
+        (state: SupplierState, { payload }) => {
+          state.supplier.downloadQueue.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadSupplierQAction.rejected,
+        (state: SupplierState, { error }) => {
+          state.supplier.downloadQueue.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadSuppLierSentItemAction-----
+    builder
+      .addCase(
+        DownloadSuppLierSentItemAction.pending,
+        (state: SupplierState) => {
+          state.supplier.downloadSentItem.pending = true;
+        }
+      )
+      .addCase(
+        DownloadSuppLierSentItemAction.fulfilled,
+        (state: SupplierState, { payload }) => {
+          state.supplier.downloadSentItem.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadSuppLierSentItemAction.rejected,
+        (state: SupplierState, { error }) => {
+          state.supplier.downloadSentItem.pending = false;
         }
       );
     //#endregion

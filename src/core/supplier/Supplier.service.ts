@@ -17,6 +17,30 @@ export const GetSupplierQ = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const DownloadSupplierQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/warehouse/Supplier.GetSupplierQ`,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
 export const GetTransactions = async (
   SelectedItemId,
@@ -57,5 +81,30 @@ export const SupplierSentItem = async (
       orderBy,
       fromDate: new Date(fromDate).toISOString().slice(0, 10),
       toDate: new Date(toDate).toISOString().slice(0, 10),
+    }
+  );
+export const DownloadSupplierSentItem = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "requestCaseCreateDate"
+) =>
+  await axiosInstance.post(
+    `/warehouse/Supplier.SentItems
+  `,
+    {
+      userId: userId,
+      pageIndex,
+      pageCount: 20,
+      orderType,
+      orderBy,
+      fromDate: new Date(fromDate).toISOString().slice(0, 10),
+      toDate: new Date(toDate).toISOString().slice(0, 10),
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
     }
   );
