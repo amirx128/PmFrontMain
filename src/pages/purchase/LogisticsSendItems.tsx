@@ -15,7 +15,10 @@ import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { LogisticsSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
+import {
+  DownloadLogisticsSendItemsAction,
+  LogisticsSendItemsAction,
+} from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
@@ -262,6 +265,14 @@ const LogisticsSendItems = () => {
   const handleDoubleClick = (e) => {
     navigate(`/logistics/details/${e.row.purchaseOrderId}`);
   };
+  const handleDownloadExcell = async () => {
+    await dispatch(
+      DownloadLogisticsSendItemsAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
+  };
   return (
     <CardGrid
       item
@@ -310,7 +321,7 @@ const LogisticsSendItems = () => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
-              <IconButton color="success">
+              <IconButton color="success" onClick={handleDownloadExcell}>
                 <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>

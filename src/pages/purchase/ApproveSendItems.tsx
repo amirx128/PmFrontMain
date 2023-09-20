@@ -14,7 +14,10 @@ import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { ApproveSendItemsAction } from "../../redux/features/purchaseSlicer.ts";
+import {
+  ApproveSendItemsAction,
+  DownloadApproveSendItemsAction,
+} from "../../redux/features/purchaseSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
@@ -76,7 +79,7 @@ const ApproveSendItems = () => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -270,6 +273,14 @@ const ApproveSendItems = () => {
   };
   const handleDoubleClick = (e) => {
     navigate(`/approve/details/${e.row.purchaseOrderId}`);
+  };
+  const handleDownloadExcell = async () => {
+    await dispatch(
+      DownloadApproveSendItemsAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
   };
   return (
     <CardGrid

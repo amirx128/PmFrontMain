@@ -20,6 +20,7 @@ import {
   DownloadLogisticsQ,
   DownloadLogisticsSendItems,
 } from "../../core/purchase/purchase.service.ts";
+import downloadExcel from "../../utils/downloadExcell.ts";
 
 const getUserId = (state) => {
   return state?.user?.user?.id ?? localStorage.getItem("user")
@@ -920,6 +921,129 @@ export const purchaseSlicer = createSlice({
         (state: PurchaseState, { error, payload }) => {
           state.approve.updatePurchaseRes.pending = false;
           state.approve.updatePurchaseRes.data = payload;
+        }
+      );
+    //#endregion
+    //#region DownloadLogisticsQAction-----
+    builder
+      .addCase(DownloadLogisticsQAction.pending, (state: PurchaseState) => {
+        state.logistics.downloadQueue.pending = true;
+      })
+      .addCase(
+        DownloadLogisticsQAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.logistics.downloadQueue.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadLogisticsQAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.logistics.downloadQueue.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadLogisticsSendItemsAction-----
+    builder
+      .addCase(
+        DownloadLogisticsSendItemsAction.pending,
+        (state: PurchaseState) => {
+          state.logistics.downloadSentItem.pending = true;
+        }
+      )
+      .addCase(
+        DownloadLogisticsSendItemsAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.logistics.downloadSentItem.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadLogisticsSendItemsAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.logistics.downloadSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadFinancialQAction-----
+    builder
+      .addCase(DownloadFinancialQAction.pending, (state: PurchaseState) => {
+        state.financials.downloadQueue.pending = true;
+      })
+      .addCase(
+        DownloadFinancialQAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.financials.downloadQueue.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadFinancialQAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.financials.downloadQueue.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadFinancialSendItemsActions-----
+    builder
+      .addCase(
+        DownloadFinancialSendItemsActions.pending,
+        (state: PurchaseState) => {
+          state.financials.downloadSentItem.pending = true;
+        }
+      )
+      .addCase(
+        DownloadFinancialSendItemsActions.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.financials.downloadSentItem.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadFinancialSendItemsActions.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.financials.downloadSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadApproveQAction-----
+    builder
+      .addCase(DownloadApproveQAction.pending, (state: PurchaseState) => {
+        state.approve.downloadQueue.pending = true;
+      })
+      .addCase(
+        DownloadApproveQAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.approve.downloadQueue.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadApproveQAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.approve.downloadQueue.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadApproveSendItemsAction-----
+    builder
+      .addCase(
+        DownloadApproveSendItemsAction.pending,
+        (state: PurchaseState) => {
+          state.approve.downloadSentItem.pending = true;
+        }
+      )
+      .addCase(
+        DownloadApproveSendItemsAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.approve.downloadSentItem.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadApproveSendItemsAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.approve.downloadSentItem.pending = false;
         }
       );
     //#endregion
