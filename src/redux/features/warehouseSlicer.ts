@@ -7,7 +7,12 @@ import {
   GetWarehouseOrderData,
   SupplierAddDetailsToWarehouseOrder,
   SupplierUpdateDetailsToWarehouseOrder,
+  DownloadExitWareHouseQ,
+  DownloadExitWarehouseSentItem,
+  DownloadWarehouseQ,
+  DownloadWarehouseSentItem,
 } from "../../core/warehouse/WareHouse.service";
+import downloadExcel from "../../utils/downloadExcell";
 
 const getUserId = (state) => {
   return state?.user?.user?.id ?? localStorage.getItem("user")
@@ -25,6 +30,12 @@ export interface WarehouseState {
       data: any;
       pending: boolean;
     };
+    downloadQueue: {
+      pending: boolean;
+    };
+    downloadSentItem: {
+      pending: boolean;
+    };
   };
   exitWarehouse: {
     exitWarehouseQ: {
@@ -33,6 +44,12 @@ export interface WarehouseState {
     };
     exitWarehouseSentItem: {
       data: any;
+      pending: boolean;
+    };
+    downloadQueue: {
+      pending: boolean;
+    };
+    downloadSentItem: {
       pending: boolean;
     };
   };
@@ -63,6 +80,12 @@ const initialState: WarehouseState = {
       data: [],
       pending: false,
     },
+    downloadQueue: {
+      pending: false,
+    },
+    downloadSentItem: {
+      pending: false,
+    },
   },
   exitWarehouse: {
     exitWarehouseQ: {
@@ -71,6 +94,12 @@ const initialState: WarehouseState = {
     },
     exitWarehouseSentItem: {
       data: [],
+      pending: false,
+    },
+    downloadQueue: {
+      pending: false,
+    },
+    downloadSentItem: {
       pending: false,
     },
   },
@@ -138,6 +167,36 @@ export const GetWarehouseQAction = createAsyncThunk(
     }
   }
 );
+export const DownloadWarehouseQAction = createAsyncThunk(
+  "warehouse/DownloadWarehouseQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadWarehouseQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const GetExitWarehouseQAction = createAsyncThunk(
   "warehouse/GetExitWarehouseQAction",
   async (
@@ -155,6 +214,36 @@ export const GetExitWarehouseQAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetExitWareHouseQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadExitWarehouseQAction = createAsyncThunk(
+  "warehouse/DownloadExitWarehouseQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadExitWareHouseQ(
         userId,
         1,
         fromDate,
@@ -199,6 +288,36 @@ export const WarehouseSentItemAction = createAsyncThunk(
     }
   }
 );
+export const DownloadWarehouseSentItemAction = createAsyncThunk(
+  "warehosue/DownloadWarehouseSentItemAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadWarehouseSentItem(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const ExitWarehouseSentItemAction = createAsyncThunk(
   "warehosue/ExitWarehouseSentItemAction",
   async (
@@ -216,6 +335,36 @@ export const ExitWarehouseSentItemAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await ExitWarehouseSentItem(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadExitWarehouseSentItemAction = createAsyncThunk(
+  "warehosue/DownloadExitWarehouseSentItemAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadExitWarehouseSentItem(
         userId,
         1,
         fromDate,
@@ -427,6 +576,91 @@ export const warehouseSlicer = createSlice({
         SupplierUpdateDetailsToWarehouseOrderAction.rejected,
         (state: WarehouseState, { error }) => {
           state.supplier.updateSupplierToWarehouse.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadWarehouseQAction-----
+    builder
+      .addCase(DownloadWarehouseQAction.pending, (state: WarehouseState) => {
+        state.warehouse.downloadQueue.pending = true;
+      })
+      .addCase(
+        DownloadWarehouseQAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.warehouse.downloadQueue.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadWarehouseQAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.warehouse.downloadQueue.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadWarehouseSentItemAction-----
+    builder
+      .addCase(
+        DownloadWarehouseSentItemAction.pending,
+        (state: WarehouseState) => {
+          state.warehouse.downloadSentItem.pending = true;
+        }
+      )
+      .addCase(
+        DownloadWarehouseSentItemAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.warehouse.downloadSentItem.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadWarehouseSentItemAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.warehouse.downloadSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadExitWarehouseQAction-----
+    builder
+      .addCase(
+        DownloadExitWarehouseQAction.pending,
+        (state: WarehouseState) => {
+          state.exitWarehouse.downloadQueue.pending = true;
+        }
+      )
+      .addCase(
+        DownloadExitWarehouseQAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.exitWarehouse.downloadQueue.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadExitWarehouseQAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.exitWarehouse.downloadQueue.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadExitWarehouseSentItemAction-----
+    builder
+      .addCase(
+        DownloadExitWarehouseSentItemAction.pending,
+        (state: WarehouseState) => {
+          state.exitWarehouse.downloadSentItem.pending = true;
+        }
+      )
+      .addCase(
+        DownloadExitWarehouseSentItemAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.exitWarehouse.downloadSentItem.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadExitWarehouseSentItemAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.exitWarehouse.downloadSentItem.pending = false;
         }
       );
     //#endregion

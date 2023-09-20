@@ -14,7 +14,10 @@ import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { GetExitWarehouseQAction } from "../../redux/features/warehouseSlicer.ts";
+import {
+  DownloadExitWarehouseQAction,
+  GetExitWarehouseQAction,
+} from "../../redux/features/warehouseSlicer.ts";
 import { Link } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
@@ -67,7 +70,7 @@ const ExitWarehouseQList = () => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -242,6 +245,14 @@ const ExitWarehouseQList = () => {
       })
     );
   };
+  const handleDownloadExcell = async () => {
+    await dispatch(
+      DownloadExitWarehouseQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+      })
+    );
+  };
   return (
     <CardGrid
       item
@@ -290,7 +301,7 @@ const ExitWarehouseQList = () => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
-              <IconButton color="success">
+              <IconButton color="success" onClick={handleDownloadExcell}>
                 <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
