@@ -1,4 +1,10 @@
-import { Card, Divider, CardHeader, Typography } from "@mui/material";
+import {
+  Card,
+  Divider,
+  CardHeader,
+  Typography,
+  IconButton,
+} from "@mui/material";
 import axios from "../../utils/axios.config.ts";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
@@ -13,10 +19,13 @@ import {
   GridRenderCellParams,
 } from "@mui/x-data-grid";
 import {
+  DownloadPurchaseOrderDataAction,
   GetPurchaseOrderDataAction,
   setPurchaseRowSelectedAction,
 } from "../../redux/features/purchaseSlicer.ts";
 import PurchaseDetail from "./PurchaseDetail.tsx";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+
 const PurchaseForm = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -174,16 +183,34 @@ const PurchaseForm = (props) => {
     );
     dispatch(setPurchaseRowSelectedAction(selectedRow));
   };
+  const handleDownloadExcell = async () => {
+    await dispatch(DownloadPurchaseOrderDataAction({ id: +id }));
+  };
   return (
     <Card>
       <PurchaseDetail detail={orderDetailData?.data} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
-
-      <CardHeader
-        style={{ textAlign: "right" }}
-        title="لیست کالا ها"
-        titleTypographyProps={{ variant: "h6" }}
-      />
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <CardHeader
+          style={{ textAlign: "right" }}
+          title="لیست کالا ها"
+          titleTypographyProps={{ variant: "h6" }}
+        />
+        <IconButton
+          color="success"
+          onClick={handleDownloadExcell}
+          sx={{
+            mr: 10,
+          }}
+        >
+          <SimCardDownloadIcon />
+        </IconButton>
+      </div>
 
       {orderDetailData?.data?.purchaseDetails && (
         <Grid

@@ -1,4 +1,4 @@
-import { Card, Divider, CardHeader } from "@mui/material";
+import { Card, Divider, CardHeader, IconButton } from "@mui/material";
 import axios from "../../utils/axios.config.ts";
 import { useEffect, useState } from "react";
 import RequestDetail from "../support/request-detail.tsx";
@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../utils/functions.ts";
 import EditIcon from "@mui/icons-material/Edit";
 import Grid from "../../components/grid/grid";
+import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 import {
   GridActionsCellItem,
@@ -128,17 +129,38 @@ const ProductDetails = (props) => {
       ),
     },
   ];
+  const handleDownloadExcell = async () => {
+    const response = await axios.post("/Support/GetRequestDetails", {
+      userId: user?.id ?? getUserIdFromStorage(),
+      requestId: id,
+      exportExcell: true,
+    });
+  };
   return (
     <Card>
       <RequestDetail detail={detail} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
-
-      <CardHeader
-        style={{ textAlign: "right" }}
-        title="لیست کالا ها"
-        titleTypographyProps={{ variant: "h6" }}
-      />
-
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <CardHeader
+          style={{ textAlign: "right" }}
+          title="لیست کالا ها"
+          titleTypographyProps={{ variant: "h6" }}
+        />
+        <IconButton
+          color="success"
+          onClick={handleDownloadExcell}
+          sx={{
+            mr: 10,
+          }}
+        >
+          <SimCardDownloadIcon />
+        </IconButton>
+      </div>
       {commodities && (
         <Grid
           onDoubleClick={(e) => {

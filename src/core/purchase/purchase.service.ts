@@ -46,6 +46,18 @@ export const GetPurchaseOrderData = async (userId, purchaseOrderId) =>
     userId,
     purchaseOrderId,
   });
+export const DownloadPurchaseOrderData = async (userId, purchaseOrderId) =>
+  await axiosInstance.post(
+    `/Purchase/GetPurchaseOrderData`,
+    {
+      userId,
+      purchaseOrderId,
+      exportExcell: true,
+    },
+    {
+      responseType: "arraybuffer",
+    }
+  );
 
 export const GetPurchaseOrderDetailsData = async (userId, purchaseOrderId) =>
   await axiosInstance.post(`/Purchase/GetPurchaseOrderDetailsData`, {

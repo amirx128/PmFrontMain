@@ -19,6 +19,7 @@ import {
   DownloadFinancialSendItems,
   DownloadLogisticsQ,
   DownloadLogisticsSendItems,
+  DownloadPurchaseOrderData,
 } from "../../core/purchase/purchase.service.ts";
 import downloadExcel from "../../utils/downloadExcell.ts";
 
@@ -56,6 +57,9 @@ export interface PurchaseState {
   orderData: any;
   orderDetailData: {
     data: any;
+    pending: boolean;
+  };
+  downloadOrderDetailData: {
     pending: boolean;
   };
   purchaseOrderDetailsData: {
@@ -134,6 +138,9 @@ const initialState: PurchaseState = {
   orderDetailData: {
     pending: false,
     data: undefined,
+  },
+  downloadOrderDetailData: {
+    pending: false,
   },
   purchaseOrderDetailsData: {
     pending: false,
@@ -252,6 +259,22 @@ export const GetPurchaseOrderDataAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetPurchaseOrderData(userId, body.id);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadPurchaseOrderDataAction = createAsyncThunk(
+  "purchase/DownloadPurchaseOrderDataAction",
+  async (
+    body: { id: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadPurchaseOrderData(userId, body.id);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -1047,6 +1070,28 @@ export const purchaseSlicer = createSlice({
         DownloadApproveSendItemsAction.rejected,
         (state: PurchaseState, { error, payload }) => {
           state.approve.downloadSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadPurchaseOrderDataAction-----
+    builder
+      .addCase(
+        DownloadPurchaseOrderDataAction.pending,
+        (state: PurchaseState) => {
+          state.downloadOrderDetailData.pending = true;
+        }
+      )
+      .addCase(
+        DownloadPurchaseOrderDataAction.fulfilled,
+        (state: PurchaseState, { payload }) => {
+          state.downloadOrderDetailData.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadPurchaseOrderDataAction.rejected,
+        (state: PurchaseState, { error, payload }) => {
+          state.downloadOrderDetailData.pending = false;
         }
       );
     //#endregion
