@@ -26,6 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../utils/functions.ts";
 import gridDict from "../../../dictionary/gridDict.ts";
 import {
+  DownloadApproveQAction,
   GetApproveQAction,
   GetApproveStatesAction,
 } from "../../../redux/features/supportSlicer.ts";
@@ -439,23 +440,13 @@ const SupportList: React.FC<any> = (props) => {
   };
   const handleDownloadExcel = async () => {
     const { approveStateId } = getValues();
-    const res = await axiosInstance.post("/Support/ApproveQ", {
-      userId: "1",
-      fromDate: new Date(fromDate),
-      toDate: new Date(toDate),
-      approveStateId: 0,
-      pageCount: 20,
-      pageIndex: 1,
-      orderBy: "CreateDate",
-      orderType: "desc",
-      exportExcell: true,
-    });
-    const url = window.URL.createObjectURL(new Blob([res.data]));
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `${Date.now()}.xlsx`);
-    document.body.appendChild(link);
-    link.click();
+    await dispatch(
+      DownloadApproveQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        approveStateId,
+      })
+    );
   };
   return (
     <CardGrid

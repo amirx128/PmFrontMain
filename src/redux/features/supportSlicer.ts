@@ -3,7 +3,10 @@ import {
   GetApproveQ,
   GetApproveStates,
   GetFinalApproveQ,
+  DownloadApproveQ,
+  DownloadFinalApproveQ,
 } from "../../core/support/Support.service";
+import downloadExcel from "../../utils/downloadExcell";
 
 const getUserId = (state) => {
   return state?.user?.user?.id ?? localStorage.getItem("user")
@@ -25,6 +28,12 @@ export interface supportState {
       data: any;
       pending: boolean;
     };
+    downloadApproveQ: {
+      pending: boolean;
+    };
+    downloadFinalApproveQ: {
+      pending: boolean;
+    };
   };
 }
 
@@ -40,6 +49,12 @@ const initialState: supportState = {
     },
     finalApproveQ: {
       data: [],
+      pending: false,
+    },
+    downloadApproveQ: {
+      pending: false,
+    },
+    downloadFinalApproveQ: {
       pending: false,
     },
   },
@@ -121,6 +136,69 @@ export const GetApproveStatesAction = createAsyncThunk(
   }
 );
 
+export const DownloadApproveQAction = createAsyncThunk(
+  "support/DownloadApproveQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      approveStateId: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fromDate, toDate, orderType, orderBy, approveStateId } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadApproveQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        approveStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DownloadFinalApproveQAction = createAsyncThunk(
+  "support/DownloadFinalApproveQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      approveStateId: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fromDate, toDate, orderType, orderBy, approveStateId } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DownloadFinalApproveQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        approveStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+
 export const supportSlicer = createSlice({
   name: "support",
   initialState,
@@ -141,6 +219,44 @@ export const supportSlicer = createSlice({
       .addCase(GetApproveQAction.rejected, (state: supportState, { error }) => {
         state.approve.approveQ.pending = false;
       });
+    //#endregion
+    //#region DownloadApproveQAction-----
+    builder
+      .addCase(DownloadApproveQAction.pending, (state: supportState) => {
+        state.approve.downloadApproveQ.pending = true;
+      })
+      .addCase(
+        DownloadApproveQAction.fulfilled,
+        (state: supportState, { payload }) => {
+          state.approve.downloadApproveQ.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadApproveQAction.rejected,
+        (state: supportState, { error }) => {
+          state.approve.downloadApproveQ.pending = false;
+        }
+      );
+    //#endregion
+    //#region DownloadFinalApproveQAction-----
+    builder
+      .addCase(DownloadFinalApproveQAction.pending, (state: supportState) => {
+        state.approve.downloadFinalApproveQ.pending = true;
+      })
+      .addCase(
+        DownloadFinalApproveQAction.fulfilled,
+        (state: supportState, { payload }) => {
+          state.approve.downloadFinalApproveQ.pending = false;
+          downloadExcel(payload);
+        }
+      )
+      .addCase(
+        DownloadFinalApproveQAction.rejected,
+        (state: supportState, { error }) => {
+          state.approve.downloadFinalApproveQ.pending = false;
+        }
+      );
     //#endregion
     //#region GetApproveSatesQAction-----
     builder

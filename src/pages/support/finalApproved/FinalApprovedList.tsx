@@ -28,6 +28,7 @@ import gridDict from "../../../dictionary/gridDict.ts";
 import {
   GetFinalApproveQAction,
   GetApproveStatesAction,
+  DownloadFinalApproveQAction,
 } from "../../../redux/features/supportSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
@@ -298,7 +299,7 @@ const FinalApprovedList: React.FC<any> = (props) => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
       field: "exitFromWarehouseId",
@@ -436,6 +437,16 @@ const FinalApprovedList: React.FC<any> = (props) => {
       })
     );
   };
+  const handleDownloadExcel = async () => {
+    const { approveStateId } = getValues();
+    await dispatch(
+      DownloadFinalApproveQAction({
+        fromDate: new Date(fromDate),
+        toDate: new Date(toDate),
+        approveStateId,
+      })
+    );
+  };
   return (
     <CardGrid
       item
@@ -501,7 +512,7 @@ const FinalApprovedList: React.FC<any> = (props) => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
-              <IconButton color="success">
+              <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
