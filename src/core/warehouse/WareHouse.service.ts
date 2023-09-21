@@ -193,3 +193,21 @@ export const SupplierUpdateDetailsToWarehouseOrder = async (
     commodityId,
     sentCount,
   });
+export const WarehouseReceiveCommidity = async (
+  userId,
+  warehouseOrderId,
+  commodityId,
+  sentCount,
+  receiveCount,
+  senderId,
+  receiverId
+) =>
+  await axiosInstance.post(`/Warehouse/Warehose.ReceiveCommodity`, {
+    userId,
+    warehouseOrderId,
+    commodityId,
+    sentCount,
+    receiveCount,
+    senderId,
+    receiverId,
+  });

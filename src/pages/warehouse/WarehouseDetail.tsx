@@ -2,8 +2,9 @@ import { Grid, Box, Typography, useTheme } from "@mui/material";
 import { StyledBox } from "./style";
 import { Link } from "react-router-dom";
 
-const WarehouseDetail = ({ detail }) => {
+const WarehouseDetail = ({ detail }: any) => {
   const theme = useTheme();
+  const createDate = new Date(detail?.createDate).toLocaleDateString("fa-IR");
   return (
     <Grid container spacing={5} p={2}>
       {detail && (
@@ -19,49 +20,9 @@ const WarehouseDetail = ({ detail }) => {
                     marginRight: "20px",
                   }}
                 >
-                  شرح کالا:
+                  تاریخ ایجاد:
                 </Typography>
-                <Typography variant="body2">{detail?.commodity}</Typography>
-              </Box>
-              <Box sx={{ display: "flex", alignItems: "center" }}>
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    marginRight: "20px",
-                  }}
-                >
-                  {" "}
-                  تعداد کل:
-                </Typography>
-
-                <Typography variant="body2">
-                  {detail?.requestCasePurchaseHavingCount}{" "}
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginTop: "3rem",
-                }}
-              >
-                <Typography
-                  variant="body2"
-                  sx={{
-                    fontSize: "14px",
-                    fontWeight: "bold",
-                    marginRight: "20px",
-                  }}
-                >
-                  {" "}
-                  تعداد مانده:
-                </Typography>
-
-                <Typography variant="body2">
-                  {detail?.requestCasePurchaseRemainingCount}{" "}
-                </Typography>
+                <Typography variant="body2">{createDate.toString()}</Typography>
               </Box>
             </StyledBox>
           </Grid>
@@ -96,7 +57,7 @@ const WarehouseDetail = ({ detail }) => {
               </Typography>
 
               <Typography variant="body2" color="secondary">
-                {detail?.purchaseTrackingCode}
+                {detail?.warehouseTrackingCode}
               </Typography>
             </Box>
           </Grid>

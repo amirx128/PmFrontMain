@@ -11,6 +11,7 @@ import {
   DownloadExitWarehouseSentItem,
   DownloadWarehouseQ,
   DownloadWarehouseSentItem,
+  WarehouseReceiveCommidity,
 } from "../../core/warehouse/WareHouse.service";
 import downloadExcel from "../../utils/downloadExcell";
 
@@ -35,6 +36,10 @@ export interface WarehouseState {
     };
     downloadSentItem: {
       pending: boolean;
+    };
+    updateWarehouse: {
+      pending: boolean;
+      data: any;
     };
   };
   exitWarehouse: {
@@ -85,6 +90,10 @@ const initialState: WarehouseState = {
     },
     downloadSentItem: {
       pending: false,
+    },
+    updateWarehouse: {
+      pending: false,
+      data: [],
     },
   },
   exitWarehouse: {
@@ -430,6 +439,46 @@ export const SupplierUpdateDetailsToWarehouseOrderAction = createAsyncThunk(
     }
   }
 );
+export const WarehouseReceiveCommidityAction = createAsyncThunk(
+  "warehosue/WarehouseReceiveCommidityAction",
+  async (
+    body: {
+      warehouseOrderId: number;
+      sentCount: number;
+      commodityId: number;
+      receiveCount: number;
+      senderId: number;
+      receiverId: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const {
+        warehouseOrderId,
+        sentCount,
+        commodityId,
+        receiveCount,
+        senderId,
+        receiverId,
+      } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await WarehouseReceiveCommidity(
+        userId,
+        warehouseOrderId,
+        commodityId,
+        sentCount,
+        receiveCount,
+        senderId,
+        receiverId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const warehouseSlicer = createSlice({
   name: "warehouse",
@@ -576,6 +625,28 @@ export const warehouseSlicer = createSlice({
         SupplierUpdateDetailsToWarehouseOrderAction.rejected,
         (state: WarehouseState, { error }) => {
           state.supplier.updateSupplierToWarehouse.pending = false;
+        }
+      );
+    //#endregion
+    //#region WarehouseReceiveCommidityAction-----
+    builder
+      .addCase(
+        WarehouseReceiveCommidityAction.pending,
+        (state: WarehouseState) => {
+          state.warehouse.updateWarehouse.pending = true;
+        }
+      )
+      .addCase(
+        WarehouseReceiveCommidityAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.warehouse.updateWarehouse.pending = false;
+          state.warehouse.updateWarehouse.data = payload;
+        }
+      )
+      .addCase(
+        WarehouseReceiveCommidityAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.warehouse.updateWarehouse.pending = false;
         }
       );
     //#endregion

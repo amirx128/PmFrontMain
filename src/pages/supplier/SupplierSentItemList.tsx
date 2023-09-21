@@ -19,10 +19,11 @@ import {
   SuppLierSentItemAction,
 } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const SupplierSentItemList = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { supplierSentItem } = useSelector(
     (state: any) => state.supplier?.supplier
@@ -59,17 +60,6 @@ const SupplierSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -175,6 +165,19 @@ const SupplierSentItemList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/supplier/details/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",
@@ -243,6 +246,9 @@ const SupplierSentItemList = () => {
         toDate: new Date(initialFilter.current.toDate),
       })
     );
+  };
+  const handleDoubleClick = (e) => {
+    navigate(`/supplier/details/${e.row.warehouseOrderId}`);
   };
   const handleDownloadExcell = async () => {
     await dispatch(
@@ -327,7 +333,8 @@ const SupplierSentItemList = () => {
           }
           pagination={{}}
           onSortModelChange={handleSortModelChange}
-        ></Grid>
+          onDoubleClick={handleDoubleClick}
+        />
       </Card>
     </CardGrid>
   );

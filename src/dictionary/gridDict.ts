@@ -45,6 +45,13 @@ const gridDict = {
   baravordkolMandeh: "براورد کل مانده",
   etebar: "اعتبار",
   supporterUser: "تامین کننده",
+  receiveCount: "مقدار دریافتی",
+  receiverDate: "تاریخ دریافت",
+  receiverId: "شناسه دریافت",
+  receiverUser: "دریافت کننده",
+  sendDate: "تاریخ ارسال",
+  senderUser: "ارسال کننده",
+  sentCount: "مقدار ارسالی",
 };
 
 export default gridDict;

@@ -27,7 +27,7 @@ const SupplierDetails = () => {
   const {
     orderDetailData,
     warehouseRowSelected,
-    suppliers: { addSupplierToWarehouse, updateSupplierToWarehouse },
+    supplier: { addSupplierToWarehouse, updateSupplierToWarehouse },
   } = useSelector((state: any) => state?.warehouse);
   const [mode, setMode] = useState<"edit" | "add">("add");
 

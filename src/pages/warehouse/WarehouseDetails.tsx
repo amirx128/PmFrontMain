@@ -8,28 +8,29 @@ import EditIcon from "@mui/icons-material/Edit";
 import { ButtonContainer, StyledForm } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  AddDetailsToPurchaseOrderAction,
-  ApproveUpdateDetailsAction,
-  FinancialUpdateDetailsActions,
-  setPurchaseRowSelectedAction,
-  UpdateDetailsToPurchaseOrderAction,
-} from "../../redux/features/purchaseSlicer";
-import { GetAllSuppliers } from "../../redux/features/definitionSlicer";
+  GetWarehouseOrderDataAction,
+  setWarhouseRowSelectedAction,
+} from "../../redux/features/warehouseSlicer";
+import { GetUsersListAction } from "../../redux/features/administrationSlicer";
 import SelectComponent from "../../components/select/selects";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import { GetApproveStatesAction } from "../../redux/features/supportSlicer";
+import { WarehouseReceiveCommidityAction } from "../../redux/features/warehouseSlicer";
 
 const WarehouseDetails = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const {
-    purchaseRowSelected,
-    approve: { updatePurchaseRes },
-  } = useSelector((state: any) => state?.purchase);
-  const { states } = useSelector((state: any) => state?.support?.approve);
-  const isEditable = purchaseRowSelected?.approveEditable;
+    warehouseRowSelected,
+    warehouse: { updateWarehouse },
+  } = useSelector((state: any) => state?.warehouse);
+  const { usersList } = useSelector(
+    (state: any) => state?.administrations?.users
+  );
+  const isEditable = warehouseRowSelected?.approveEditable;
 
   const {
     register,
@@ -40,39 +41,48 @@ const WarehouseDetails = () => {
     formState: { errors, isDirty, isValid },
   } = useForm<any>({
     defaultValues: {
-      count: 0,
-      approveStateId: 0,
+      sentCount: 0,
+      senderId: 0,
+      receiverId: 0,
     },
   });
   useEffect(() => {
-    getApproveStates();
+    getAllUsers();
   }, []);
   useEffect(() => {
-    if (purchaseRowSelected) {
-      setValue("count", purchaseRowSelected.count);
-      setValue("approveStateId", purchaseRowSelected.ApproveStateId);
+    if (warehouseRowSelected) {
+      setValue("sentCount", warehouseRowSelected.sentCount);
+      setValue("receiveCount", warehouseRowSelected.receiveCount);
+      setValue("senderId", warehouseRowSelected.senderId);
+      setValue("receiverId", warehouseRowSelected.receiverId);
     } else {
-      setValue("count", 0);
-      setValue("approveStateId", 0);
+      setValue("sentCount", 0);
+      setValue("receiveCount", 0);
+      setValue("senderId", 0);
+      setValue("receiverId", 0);
     }
-  }, [purchaseRowSelected]);
-  const getApproveStates = async () => {
-    await dispatch(GetApproveStatesAction());
+  }, [warehouseRowSelected]);
+  const getAllUsers = async () => {
+    dispatch(GetUsersListAction());
   };
   const handleEdit = async () => {
-    const { count, approveStateId } = getValues();
+    const { sentCount, senderId, receiverId, receiveCount } = getValues();
     await dispatch(
-      ApproveUpdateDetailsAction({
-        count,
-        ApproveStateId: approveStateId,
-        purchaseOrderDetailsId: +purchaseRowSelected.id,
+      WarehouseReceiveCommidityAction({
+        sentCount,
+        senderId: +senderId,
+        receiverId: +receiverId,
+        warehouseOrderId: +id,
+        commodityId: +warehouseRowSelected.id,
+        receiveCount: +receiveCount,
       })
     );
-    navigate(0);
+    await dispatch(GetWarehouseOrderDataAction({ id: +id }));
   };
   const handleCancelEdit = () => {
-    dispatch(setPurchaseRowSelectedAction(undefined));
+    dispatch(setWarhouseRowSelectedAction(undefined));
   };
+  console.log(usersList);
   return (
     <div>
       <WarehouseForm />
@@ -85,20 +95,19 @@ const WarehouseDetails = () => {
                 display: "flex",
                 alignItems: "center",
                 flex: "1",
-                ml: 15,
               }}
             >
               <Controller
                 control={control}
-                name="count"
+                name="sentCount"
                 render={() => (
                   <InputContent
-                    name="count"
-                    label="تعداد"
+                    name="sentCount"
+                    label="مقدار ارسال"
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={purchaseRowSelected && !isEditable}
+                    disabled={!warehouseRowSelected}
                   />
                 )}
               />
@@ -113,27 +122,81 @@ const WarehouseDetails = () => {
             >
               <Controller
                 control={control}
+                name="receiveCount"
+                render={() => (
+                  <InputContent
+                    name="receiveCount"
+                    label="مقدار دریافتی"
+                    register={register}
+                    required={true}
+                    errors={errors}
+                    disabled={!warehouseRowSelected}
+                  />
+                )}
+              />
+            </Box>
+          </Grid>
+          <Grid container sx={{}}>
+            <Box
+              sx={{
+                mb: 6.75,
+                display: "flex",
+                alignItems: "center",
+                width: "50%",
+              }}
+            >
+              <Controller
+                control={control}
                 rules={{ required: " approve state is required" }}
-                name="approveStateId"
-                defaultValue={0}
+                name="senderId"
                 render={({ field }) => (
                   <SelectComponent
-                    label="وضعیت"
+                    label="ارسال کننده"
                     valuefieldName="id"
-                    labelFieldName="state"
-                    options={states?.data}
+                    labelFieldName={["firstName", "lastName"]}
+                    options={usersList && usersList}
                     field={field}
-                    disabled={purchaseRowSelected && !isEditable}
+                    disabled={!warehouseRowSelected}
+                    sx={{
+                      width: "49%",
+                    }}
+                  />
+                )}
+              />
+            </Box>
+            <Box
+              sx={{
+                mb: 6.75,
+                display: "flex",
+                alignItems: "center",
+                width: "50%",
+              }}
+            >
+              <Controller
+                control={control}
+                rules={{ required: " approve state is required" }}
+                name="receiverId"
+                render={({ field }) => (
+                  <SelectComponent
+                    label="دریافت کننده"
+                    valuefieldName="id"
+                    labelFieldName={["firstName", "lastName"]}
+                    options={usersList && usersList}
+                    field={field}
+                    disabled={!warehouseRowSelected}
+                    sx={{
+                      width: "49%",
+                    }}
                   />
                 )}
               />
             </Box>
           </Grid>
           <ButtonContainer>
-            {purchaseRowSelected && (
+            {warehouseRowSelected && (
               <>
                 <LoadingButton
-                  loading={updatePurchaseRes.pending}
+                  loading={updateWarehouse.pending}
                   type="submit"
                   sx={{
                     justifySelf: "flex-start",
@@ -143,7 +206,7 @@ const WarehouseDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
-                  disabled={purchaseRowSelected && !isEditable}
+                  disabled={!warehouseRowSelected}
                 >
                   ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />

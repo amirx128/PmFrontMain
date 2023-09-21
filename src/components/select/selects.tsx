@@ -5,11 +5,12 @@ import { InputContainer } from "./style";
 interface Iprops {
   options: any[];
   valuefieldName?: string;
-  labelFieldName?: string;
+  labelFieldName?: string | string[];
   field: any;
   label: string;
   disabled?: boolean;
   defaultValue?: string;
+  sx?: any;
 }
 const SelectComponent: React.FC<Iprops> = (props: Iprops) => {
   const theme = useTheme();
@@ -17,20 +18,24 @@ const SelectComponent: React.FC<Iprops> = (props: Iprops) => {
     <InputContainer>
       <TextField
         disabled={props.disabled}
-        sx={{ textAlign: "left" }}
+        sx={{ textAlign: "left", ...props.sx }}
         select
         label={props.label}
         fullWidth
         {...props.field}
         defaultValue={props.defaultValue}
       >
-        {props.options.map((item, index) => {
+        {props.options?.map((item, index) => {
           return (
             <MenuItem
               key={index}
               value={props.valuefieldName ? item[props.valuefieldName] : item}
             >
-              {props.labelFieldName ? item[props.labelFieldName] : item}
+              {props.labelFieldName
+                ? Array.isArray(props.labelFieldName)
+                  ? props.labelFieldName.map((field) => item[field]).join(" ")
+                  : item[props.labelFieldName]
+                : item}
             </MenuItem>
           );
         })}

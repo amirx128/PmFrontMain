@@ -51,8 +51,16 @@ const WarhouseForm = (props) => {
       filterable: false,
     },
     {
-      field: "approveDate",
-      headerName: gridDict.approveDate,
+      field: "receiveCount",
+      headerName: gridDict.receiveCount,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "receiverDate",
+      headerName: gridDict.receiverDate,
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -64,100 +72,45 @@ const WarhouseForm = (props) => {
       ),
     },
     {
-      field: "approveState",
-      headerName: gridDict.approvestate,
+      field: "receiverId",
+      headerName: gridDict.receiverId,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "approverUser",
-      headerName: gridDict.approverUser,
+      field: "receiverUser",
+      headerName: gridDict.receiverUser,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "supporterUser",
-      headerName: gridDict.supporterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "baravordFeeKala",
-      headerName: gridDict.baravordFeeKala,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "baravordkolMandeh",
-      headerName: gridDict.baravordkolMandeh,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "count",
-      headerName: gridDict.count,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "createDate",
-      headerName: gridDict.createDate,
+      field: "sendDate",
+      headerName: gridDict.sendDate,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
       renderCell: ({ value }) => (
         <span>
-          {value
-            ? new Date(value.slice(0, 10))
-                .toLocaleDateString("fa-IR")
-                .toString()
-            : "-"}
+          {value ? new Date(value).toLocaleDateString("fa-IR").toString() : "-"}
         </span>
       ),
     },
     {
-      field: "etebar",
-      headerName: gridDict.etebar,
+      field: "senderUser",
+      headerName: gridDict.senderUser,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "requestCaseTrackingCode",
-      headerName: gridDict.requestCaseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseId",
-      headerName: gridDict.requestCaseId,
+      field: "sentCount",
+      headerName: gridDict.sentCount,
       flex: 1,
       minWidth: 150,
       editable: false,
