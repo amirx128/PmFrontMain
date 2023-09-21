@@ -41,9 +41,7 @@ const WarehouseDetails = () => {
     formState: { errors, isDirty, isValid },
   } = useForm<any>({
     defaultValues: {
-      sentCount: 0,
-      senderId: 0,
-      receiverId: 0,
+      receiveCount: 0,
     },
   });
   useEffect(() => {
@@ -51,29 +49,20 @@ const WarehouseDetails = () => {
   }, []);
   useEffect(() => {
     if (warehouseRowSelected) {
-      setValue("sentCount", warehouseRowSelected.sentCount);
       setValue("receiveCount", warehouseRowSelected.receiveCount);
-      setValue("senderId", warehouseRowSelected.senderId);
-      setValue("receiverId", warehouseRowSelected.receiverId);
     } else {
-      setValue("sentCount", 0);
       setValue("receiveCount", 0);
-      setValue("senderId", 0);
-      setValue("receiverId", 0);
     }
   }, [warehouseRowSelected]);
   const getAllUsers = async () => {
     dispatch(GetUsersListAction());
   };
   const handleEdit = async () => {
-    const { sentCount, senderId, receiverId, receiveCount } = getValues();
+    const { receiveCount } = getValues();
     await dispatch(
       WarehouseReceiveCommidityAction({
-        sentCount,
-        senderId: +senderId,
-        receiverId: +receiverId,
         warehouseOrderId: +id,
-        commodityId: +warehouseRowSelected.id,
+        warehouseOrderDetailsId: +warehouseRowSelected.id,
         receiveCount: +receiveCount,
       })
     );
@@ -88,54 +77,6 @@ const WarehouseDetails = () => {
       <WarehouseForm />
       <Card sx={{ padding: 5 }}>
         <StyledForm>
-          <Grid container>
-            <Box
-              sx={{
-                mb: 6.75,
-                display: "flex",
-                alignItems: "center",
-                flex: "1",
-              }}
-            >
-              <Controller
-                control={control}
-                name="sentCount"
-                render={() => (
-                  <InputContent
-                    name="sentCount"
-                    label="مقدار ارسال"
-                    register={register}
-                    required={true}
-                    errors={errors}
-                    disabled={!warehouseRowSelected}
-                  />
-                )}
-              />
-            </Box>
-            <Box
-              sx={{
-                mb: 6.75,
-                display: "flex",
-                alignItems: "center",
-                flex: "1",
-              }}
-            >
-              <Controller
-                control={control}
-                name="receiveCount"
-                render={() => (
-                  <InputContent
-                    name="receiveCount"
-                    label="مقدار دریافتی"
-                    register={register}
-                    required={true}
-                    errors={errors}
-                    disabled={!warehouseRowSelected}
-                  />
-                )}
-              />
-            </Box>
-          </Grid>
           <Grid container sx={{}}>
             <Box
               sx={{
@@ -156,7 +97,7 @@ const WarehouseDetails = () => {
                     labelFieldName={["firstName", "lastName"]}
                     options={usersList && usersList}
                     field={field}
-                    disabled={!warehouseRowSelected}
+                    disabled={true}
                     sx={{
                       width: "49%",
                     }}
@@ -183,7 +124,7 @@ const WarehouseDetails = () => {
                     labelFieldName={["firstName", "lastName"]}
                     options={usersList && usersList}
                     field={field}
-                    disabled={!warehouseRowSelected}
+                    disabled={true}
                     sx={{
                       width: "49%",
                     }}
@@ -192,6 +133,32 @@ const WarehouseDetails = () => {
               />
             </Box>
           </Grid>
+          <Grid container>
+            <Box
+              sx={{
+                mb: 6.75,
+                display: "flex",
+                alignItems: "center",
+                flex: "1",
+              }}
+            >
+              <Controller
+                control={control}
+                name="receiveCount"
+                render={() => (
+                  <InputContent
+                    name="receiveCount"
+                    label="مقدار دریافتی"
+                    register={register}
+                    required={true}
+                    errors={errors}
+                    disabled={!warehouseRowSelected}
+                  />
+                )}
+              />
+            </Box>
+          </Grid>
+
           <ButtonContainer>
             {warehouseRowSelected && (
               <>

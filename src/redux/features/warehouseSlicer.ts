@@ -475,34 +475,21 @@ export const WarehouseReceiveCommidityAction = createAsyncThunk(
   async (
     body: {
       warehouseOrderId: number;
-      sentCount: number;
-      commodityId: number;
+      warehouseOrderDetailsId: number;
       receiveCount: number;
-      senderId: number;
-      receiverId: number;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const {
-        warehouseOrderId,
-        sentCount,
-        commodityId,
-        receiveCount,
-        senderId,
-        receiverId,
-      } = body;
+      const { warehouseOrderId, warehouseOrderDetailsId, receiveCount } = body;
 
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await WarehouseReceiveCommidity(
         userId,
         warehouseOrderId,
-        commodityId,
-        sentCount,
-        receiveCount,
-        senderId,
-        receiverId
+        warehouseOrderDetailsId,
+        receiveCount
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -543,20 +530,18 @@ export const WarehouseUpdateDetailsToExitFromWarehouseAction = createAsyncThunk(
     body: {
       exitWarehouseOrderId: number;
       count: number;
-      receiveIsOk: boolean;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const { exitWarehouseOrderId, count, receiveIsOk } = body;
+      const { exitWarehouseOrderId, count } = body;
 
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await WarehouseUpdateDetailsToExitFromWarehouse(
         userId,
         exitWarehouseOrderId,
-        count,
-        receiveIsOk
+        count
       );
       return fulfillWithValue(data);
     } catch (err) {

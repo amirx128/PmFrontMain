@@ -6,6 +6,7 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  Switch,
 } from "@mui/material";
 import WarehouseForm from "./WarhouseForm";
 import { Controller, useForm } from "react-hook-form";
@@ -85,7 +86,6 @@ const ExitWarehouseDetails = () => {
     await dispatch(
       WarehouseUpdateDetailsToExitFromWarehouseAction({
         count,
-        receiveIsOk,
         exitWarehouseOrderId: +id,
       })
     );
@@ -119,30 +119,6 @@ const ExitWarehouseDetails = () => {
                     required={true}
                     errors={errors}
                     disabled={mode === "edit" && !isEditable}
-                  />
-                )}
-              />
-            </Box>
-            <Box
-              sx={{
-                mb: 6.75,
-                display: "flex",
-                alignItems: "center",
-                flex: "1",
-              }}
-            >
-              <Controller
-                control={control}
-                name="receiveIsOk"
-                render={() => (
-                  <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={receiveIsOk}
-                        onChange={() => setReceiveIsOk((prev) => !prev)}
-                      />
-                    }
-                    label="تایید دریافت کننده"
                   />
                 )}
               />

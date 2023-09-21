@@ -6,6 +6,7 @@ import {
   Button,
   FormControlLabel,
   Checkbox,
+  Switch,
 } from "@mui/material";
 import WarehouseForm from "./WarhouseForm";
 import { Controller, useForm } from "react-hook-form";
@@ -55,22 +56,22 @@ const RequesterUserDetails = () => {
     formState: { errors, isDirty, isValid },
   } = useForm<any>({
     defaultValues: {
-      count: 0,
+      sentCount: 0,
     },
   });
   useEffect(() => {
     if (warehouseRowSelected) {
-      setValue("count", warehouseRowSelected.count);
+      setValue("sentCount", warehouseRowSelected.sentCount);
     } else {
-      setValue("count", 0);
+      setValue("sentCount", 0);
     }
   }, [warehouseRowSelected]);
 
   const handleEdit = async () => {
-    const { count } = getValues();
+    const { sentCount } = getValues();
     await dispatch(
       WarehouseRequesterUserApproveReceiveAction({
-        count,
+        count: sentCount,
         receiveIsOk,
         exitFromWarehouseDetailsId: +warehouseRowSelected.id,
       })
@@ -97,10 +98,10 @@ const RequesterUserDetails = () => {
             >
               <Controller
                 control={control}
-                name="count"
+                name="sentCount"
                 render={() => (
                   <InputContent
-                    name="count"
+                    name="sentCount"
                     label="مقدار"
                     register={register}
                     required={true}
@@ -124,9 +125,10 @@ const RequesterUserDetails = () => {
                 render={() => (
                   <FormControlLabel
                     control={
-                      <Checkbox
+                      <Switch
                         checked={receiveIsOk}
                         onChange={() => setReceiveIsOk((prev) => !prev)}
+                        color="info"
                       />
                     }
                     label="تایید دریافت کننده"
