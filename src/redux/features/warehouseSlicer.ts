@@ -12,6 +12,9 @@ import {
   DownloadWarehouseQ,
   DownloadWarehouseSentItem,
   WarehouseReceiveCommidity,
+  WarehouseAddDetailsToExitFromWarehouse,
+  WarehouseUpdateDetailsToExitFromWarehouse,
+  WarehouseRequesterUserApproveReceive,
 } from "../../core/warehouse/WareHouse.service";
 import downloadExcel from "../../utils/downloadExcell";
 
@@ -57,6 +60,14 @@ export interface WarehouseState {
     downloadSentItem: {
       pending: boolean;
     };
+    addExitWarhouse: {
+      pending: boolean;
+      data: any;
+    };
+    updateExitWarhouse: {
+      pending: boolean;
+      data: any;
+    };
   };
   warehouseRowSelected: any;
   orderDetailData: {
@@ -69,6 +80,12 @@ export interface WarehouseState {
       data: any;
     };
     updateSupplierToWarehouse: {
+      pending: boolean;
+      data: any;
+    };
+  };
+  requesterUser: {
+    updateApproveState: {
       pending: boolean;
       data: any;
     };
@@ -111,6 +128,14 @@ const initialState: WarehouseState = {
     downloadSentItem: {
       pending: false,
     },
+    addExitWarhouse: {
+      pending: false,
+      data: [],
+    },
+    updateExitWarhouse: {
+      pending: false,
+      data: [],
+    },
   },
   warehouseRowSelected: undefined,
   orderDetailData: {
@@ -125,6 +150,12 @@ const initialState: WarehouseState = {
     updateSupplierToWarehouse: {
       pending: false,
       data: [],
+    },
+  },
+  requesterUser: {
+    updateApproveState: {
+      data: [],
+      pending: false,
     },
   },
 };
@@ -479,6 +510,87 @@ export const WarehouseReceiveCommidityAction = createAsyncThunk(
     }
   }
 );
+export const WarehouseAddDetailsToExitFromWarehouseAction = createAsyncThunk(
+  "warehosue/WarehouseAddDetailsToExitFromWarehouseAction",
+  async (
+    body: {
+      exitWarehouseOrderId: number;
+      count: number;
+      receiveIsOk: boolean;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { exitWarehouseOrderId, count, receiveIsOk } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await WarehouseAddDetailsToExitFromWarehouse(
+        userId,
+        exitWarehouseOrderId,
+        count,
+        receiveIsOk
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const WarehouseUpdateDetailsToExitFromWarehouseAction = createAsyncThunk(
+  "warehosue/WarehouseUpdateDetailsToExitFromWarehouseAction",
+  async (
+    body: {
+      exitWarehouseOrderId: number;
+      count: number;
+      receiveIsOk: boolean;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { exitWarehouseOrderId, count, receiveIsOk } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await WarehouseUpdateDetailsToExitFromWarehouse(
+        userId,
+        exitWarehouseOrderId,
+        count,
+        receiveIsOk
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const WarehouseRequesterUserApproveReceiveAction = createAsyncThunk(
+  "warehosue/WarehouseRequesterUserApproveReceiveAction",
+  async (
+    body: {
+      exitFromWarehouseDetailsId: number;
+      count: number;
+      receiveIsOk: boolean;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { exitFromWarehouseDetailsId, count, receiveIsOk } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await WarehouseRequesterUserApproveReceive(
+        userId,
+        exitFromWarehouseDetailsId,
+        count,
+        receiveIsOk
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const warehouseSlicer = createSlice({
   name: "warehouse",
@@ -565,7 +677,7 @@ export const warehouseSlicer = createSlice({
         }
       );
     //#endregion
-    //#region GetPurchaseOrderDataAction-----
+    //#region GetWarehouseOrderDataAction-----
     builder
       .addCase(GetWarehouseOrderDataAction.pending, (state: WarehouseState) => {
         state.orderDetailData.pending = true;
@@ -584,7 +696,7 @@ export const warehouseSlicer = createSlice({
         }
       );
     //#endregion
-    //#region GetPurchaseOrderDataAction-----
+    //#region SupplierAddDetailsToWarehouseOrderAction-----
     builder
       .addCase(
         SupplierAddDetailsToWarehouseOrderAction.pending,
@@ -606,7 +718,7 @@ export const warehouseSlicer = createSlice({
         }
       );
     //#endregion
-    //#region GetPurchaseOrderDataAction-----
+    //#region SupplierUpdateDetailsToWarehouseOrderAction-----
     builder
       .addCase(
         SupplierUpdateDetailsToWarehouseOrderAction.pending,
@@ -732,6 +844,72 @@ export const warehouseSlicer = createSlice({
         DownloadExitWarehouseSentItemAction.rejected,
         (state: WarehouseState, { error }) => {
           state.exitWarehouse.downloadSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region WarehouseAddDetailsToExitFromWarehouseAction-----
+    builder
+      .addCase(
+        WarehouseAddDetailsToExitFromWarehouseAction.pending,
+        (state: WarehouseState) => {
+          state.exitWarehouse.addExitWarhouse.pending = true;
+        }
+      )
+      .addCase(
+        WarehouseAddDetailsToExitFromWarehouseAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.exitWarehouse.addExitWarhouse.pending = false;
+          state.exitWarehouse.addExitWarhouse.data = payload;
+        }
+      )
+      .addCase(
+        WarehouseAddDetailsToExitFromWarehouseAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.exitWarehouse.addExitWarhouse.pending = false;
+        }
+      );
+    //#endregion
+    //#region WarehouseRequesterUserApproveReceiveAction-----
+    builder
+      .addCase(
+        WarehouseRequesterUserApproveReceiveAction.pending,
+        (state: WarehouseState) => {
+          state.requesterUser.updateApproveState.pending = true;
+        }
+      )
+      .addCase(
+        WarehouseRequesterUserApproveReceiveAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.requesterUser.updateApproveState.pending = false;
+          state.requesterUser.updateApproveState.data = payload;
+        }
+      )
+      .addCase(
+        WarehouseRequesterUserApproveReceiveAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.requesterUser.updateApproveState.pending = false;
+        }
+      );
+    //#endregion
+    //#region WarehouseUpdateDetailsToExitFromWarehouseAction-----
+    builder
+      .addCase(
+        WarehouseUpdateDetailsToExitFromWarehouseAction.pending,
+        (state: WarehouseState) => {
+          state.exitWarehouse.updateExitWarhouse.pending = true;
+        }
+      )
+      .addCase(
+        WarehouseUpdateDetailsToExitFromWarehouseAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.exitWarehouse.updateExitWarhouse.pending = false;
+          state.exitWarehouse.updateExitWarhouse.data = payload;
+        }
+      )
+      .addCase(
+        WarehouseUpdateDetailsToExitFromWarehouseAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.exitWarehouse.updateExitWarhouse.pending = false;
         }
       );
     //#endregion

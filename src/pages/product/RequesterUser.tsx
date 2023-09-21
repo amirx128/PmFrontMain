@@ -14,7 +14,7 @@ import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import gridDict from "../../dictionary/gridDict.ts";
 import {
   DownloadRequesterUserQAction,
@@ -23,6 +23,7 @@ import {
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const RequesterUser = () => {
+  const navigate = useNavigate();
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
@@ -79,17 +80,6 @@ const RequesterUser = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
     },
     {
       field: "requestCaseId",
@@ -172,6 +162,19 @@ const RequesterUser = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/requesterUser/details/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",
@@ -248,6 +251,9 @@ const RequesterUser = () => {
       })
     );
   };
+  const handleDoubleClick = (e) => {
+    navigate(`/requesterUser/details/${e.row.warehouseOrderId}`);
+  };
   const handleDownloadExcel = async () => {
     dispatch(
       DownloadRequesterUserQAction({
@@ -322,6 +328,7 @@ const RequesterUser = () => {
           }))}
           pagination={{}}
           onSortModelChange={handleSortModelChange}
+          onDoubleClick={handleDoubleClick}
         ></Grid>
       </Card>
     </CardGrid>

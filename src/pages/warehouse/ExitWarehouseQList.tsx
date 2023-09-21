@@ -18,11 +18,12 @@ import {
   DownloadExitWarehouseQAction,
   GetExitWarehouseQAction,
 } from "../../redux/features/warehouseSlicer.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 import gridDict from "../../dictionary/gridDict.ts";
 const ExitWarehouseQList = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { exitWarehouseQ } = useSelector(
     (state: any) => state.warehouse?.exitWarehouse
@@ -60,17 +61,6 @@ const ExitWarehouseQList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -176,6 +166,19 @@ const ExitWarehouseQList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/exitwarehouse/details/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",
@@ -244,6 +247,9 @@ const ExitWarehouseQList = () => {
         toDate: new Date(initialFilter.current.toDate),
       })
     );
+  };
+  const handleDoubleClick = (e) => {
+    navigate(`/exitwarehouse/details/${e.row.warehouseOrderId}`);
   };
   const handleDownloadExcell = async () => {
     await dispatch(
@@ -326,7 +332,8 @@ const ExitWarehouseQList = () => {
           }
           pagination={{}}
           onSortModelChange={handleSortModelChange}
-        ></Grid>
+          onDoubleClick={handleDoubleClick}
+        />
       </Card>
     </CardGrid>
   );

@@ -211,3 +211,45 @@ export const WarehouseReceiveCommidity = async (
     senderId,
     receiverId,
   });
+export const WarehouseAddDetailsToExitFromWarehouse = async (
+  userId,
+  exitWarehouseOrderId,
+  count,
+  receiveIsOk
+) =>
+  await axiosInstance.post(
+    `/Warehouse/Warehouse.AddDetailsToExitFromWarehouse`,
+    {
+      userId,
+      exitWarehouseOrderId,
+      count,
+      receiveIsOk,
+    }
+  );
+export const WarehouseUpdateDetailsToExitFromWarehouse = async (
+  userId,
+  exitWarehouseOrderId,
+  count,
+  receiveIsOk
+) =>
+  await axiosInstance.post(
+    `/Warehouse/Warehouse.UpdateDetailsToExitFromWarehouse`,
+    {
+      userId,
+      exitWarehouseOrderId,
+      count,
+      receiveIsOk,
+    }
+  );
+export const WarehouseRequesterUserApproveReceive = async (
+  userId,
+  exitFromWarehouseDetailsId,
+  count,
+  receiveIsOk
+) =>
+  await axiosInstance.post(`/Warehouse/RequesterUser.ApproveReceive`, {
+    userId,
+    exitFromWarehouseDetailsId,
+    count,
+    receiveIsOk,
+  });

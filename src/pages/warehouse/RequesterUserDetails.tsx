@@ -4,8 +4,8 @@ import {
   Grid,
   Box,
   Button,
-  Checkbox,
   FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 import WarehouseForm from "./WarhouseForm";
 import { Controller, useForm } from "react-hook-form";
@@ -16,32 +16,36 @@ import EditIcon from "@mui/icons-material/Edit";
 import { ButtonContainer, StyledForm } from "./style";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  AddDetailsToPurchaseOrderAction,
-  UpdateDetailsToPurchaseOrderAction,
-} from "../../redux/features/purchaseSlicer";
-import {
-  setWarhouseRowSelectedAction,
   GetWarehouseOrderDataAction,
-  SupplierAddDetailsToWarehouseOrderAction,
-  SupplierUpdateDetailsToWarehouseOrderAction,
-  WarehouseAddDetailsToExitFromWarehouseAction,
-  WarehouseUpdateDetailsToExitFromWarehouseAction,
+  setWarhouseRowSelectedAction,
 } from "../../redux/features/warehouseSlicer";
+import { GetUsersListAction } from "../../redux/features/administrationSlicer";
+import SelectComponent from "../../components/select/selects";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
+import { GetApproveStatesAction } from "../../redux/features/supportSlicer";
+import {
+  WarehouseReceiveCommidityAction,
+  WarehouseRequesterUserApproveReceiveAction,
+} from "../../redux/features/warehouseSlicer";
 
-const ExitWarehouseDetails = () => {
+const RequesterUserDetails = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const dispatch = useDispatch<any>();
   const {
     warehouseRowSelected,
-    exitWarehouse: { addExitWarhouse, updateExitWarhouse },
+    requesterUser: { updateApproveState },
   } = useSelector((state: any) => state?.warehouse);
-  const [mode, setMode] = useState<"edit" | "add">("add");
   const [receiveIsOk, setReceiveIsOk] = useState<boolean>(true);
 
-  const isEditable = warehouseRowSelected?.logisticEditable;
+  const { usersList } = useSelector(
+    (state: any) => state?.administrations?.users
+  );
+  const isEditable = warehouseRowSelected?.approveEditable;
+
   const {
     register,
     handleSubmit,
@@ -54,43 +58,26 @@ const ExitWarehouseDetails = () => {
       count: 0,
     },
   });
-
   useEffect(() => {
     if (warehouseRowSelected) {
-      setMode("edit");
       setValue("count", warehouseRowSelected.count);
-      setValue("receiveIsOk", warehouseRowSelected.receiveIsOk);
     } else {
-      setMode("add");
       setValue("count", 0);
-      setValue("receiveIsOk", true);
     }
   }, [warehouseRowSelected]);
 
-  const handleAdd = async () => {
-    const { count } = getValues();
-    console.log(receiveIsOk);
-    await dispatch(
-      WarehouseAddDetailsToExitFromWarehouseAction({
-        count,
-        receiveIsOk,
-        exitWarehouseOrderId: +id,
-      })
-    );
-    await dispatch(GetWarehouseOrderDataAction({ id: +id }));
-  };
   const handleEdit = async () => {
     const { count } = getValues();
-
     await dispatch(
-      WarehouseUpdateDetailsToExitFromWarehouseAction({
+      WarehouseRequesterUserApproveReceiveAction({
         count,
         receiveIsOk,
-        exitWarehouseOrderId: +id,
+        exitFromWarehouseDetailsId: +warehouseRowSelected.id,
       })
     );
     await dispatch(GetWarehouseOrderDataAction({ id: +id }));
   };
+
   const handleCancelEdit = () => {
     dispatch(setWarhouseRowSelectedAction(undefined));
   };
@@ -118,7 +105,7 @@ const ExitWarehouseDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={mode === "edit" && !isEditable}
+                    disabled={!warehouseRowSelected}
                   />
                 )}
               />
@@ -149,27 +136,10 @@ const ExitWarehouseDetails = () => {
             </Box>
           </Grid>
           <ButtonContainer>
-            {mode === "add" && (
-              <LoadingButton
-                loading={addExitWarhouse.pending}
-                type="submit"
-                sx={{
-                  justifySelf: "flex-start",
-                  marginRight: "20px",
-                  alignSelf: "end",
-                }}
-                color="info"
-                variant="contained"
-                onClick={handleAdd}
-              >
-                افزودن
-                <SaveIcon sx={{ marginLeft: "10px" }} />
-              </LoadingButton>
-            )}
-            {mode === "edit" && (
+            {warehouseRowSelected && (
               <>
                 <LoadingButton
-                  loading={updateExitWarhouse.pending}
+                  loading={updateApproveState.pending}
                   type="submit"
                   sx={{
                     justifySelf: "flex-start",
@@ -179,9 +149,9 @@ const ExitWarehouseDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
-                  disabled={mode === "edit" && !isEditable}
+                  disabled={!warehouseRowSelected}
                 >
-                  ویرایش
+                  ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />
                 </LoadingButton>
                 <Button
@@ -206,4 +176,4 @@ const ExitWarehouseDetails = () => {
   );
 };
 
-export default ExitWarehouseDetails;
+export default RequesterUserDetails;

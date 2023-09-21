@@ -25,6 +25,7 @@ import { Link } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const WarehouseSentItemList = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { warehouseSentItem } = useSelector(
     (state: any) => state.warehouse?.warehouse
@@ -62,17 +63,6 @@ const WarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -178,6 +168,19 @@ const WarehouseSentItemList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/details/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",
@@ -246,6 +249,9 @@ const WarehouseSentItemList = () => {
         toDate: new Date(initialFilter.current.toDate),
       })
     );
+  };
+  const handleDoubleClick = (e) => {
+    navigate(`/warehouse/details/${e.row.warehouseOrderId}`);
   };
   const handleDownloadExcell = async () => {
     await dispatch(
@@ -330,6 +336,7 @@ const WarehouseSentItemList = () => {
           }
           pagination={{}}
           onSortModelChange={handleSortModelChange}
+          onDoubleClick={handleDoubleClick}
         ></Grid>
       </Card>
     </CardGrid>

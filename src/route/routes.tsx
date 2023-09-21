@@ -34,6 +34,8 @@ import PurchaseApproveDetails from "../pages/purchase/ApproveDetials.tsx";
 import CommodityTransactions from "../pages/commodities/CommodityTransactions.tsx";
 import SupplierDetails from "../pages/warehouse/supplierDetails.tsx";
 import WarehouseDetails from "../pages/warehouse/WarehouseDetails.tsx";
+import ExitWarehouseDetails from "../pages/warehouse/ExitWarehouseDetails.tsx";
+import RequesterUserDetails from "../pages/warehouse/RequesterUserDetails.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -253,6 +255,20 @@ export const routes: IRoute[] = [
   {
     path: "/warehouse/details/:id",
     component: <WarehouseDetails />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف تحویل",
+  },
+  {
+    path: "/exitwarehouse/details/:id",
+    component: <ExitWarehouseDetails />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف تحویل",
+  },
+  {
+    path: "/requesterUser/details/:id",
+    component: <RequesterUserDetails />,
     layout: Layouts.MAIN,
     protected: true,
     title: "در صف تحویل",
