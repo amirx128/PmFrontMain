@@ -26,6 +26,7 @@ import { useState, Fragment, useRef, useEffect } from "react";
 import UserRole from "../../core/enums/userRoleEnum";
 import { useDispatch } from "react-redux";
 import { setLoggedOut } from "../../redux/features/userSlicer";
+import LogoutIcon from "@mui/icons-material/Logout";
 const drawerWidth = 200;
 
 export default function PersistentDrawerLeft({ open, closeDrawer }) {
@@ -35,14 +36,11 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState(null);
   const [openCollapse, setOpenCollapse] = useState(false);
-  const [userRoles, setUserRoles] = useState(
-    () => JSON.parse(localStorage.getItem("user")).usersRoles
-  );
-
+  const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
   useEffect(() => {
     const { pathname } = location;
     const isActive = MenuList.find((menu) =>
-      menu.subMenus.some((sub) => sub.route === pathname)
+      menu?.subMenus?.some((sub) => sub.route === pathname)
     );
     setActiveMenu(isActive ? isActive.id : null);
     setOpenCollapse(!!isActive);
@@ -58,7 +56,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const exitHandler = () => {
     dispatch(setLoggedOut(false));
     localStorage.removeItem("user");
-    navigate('/login');
+    navigate("/login");
     navigate(0);
   };
   const MenuList = [
@@ -471,31 +469,17 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     },
     {
       id: 8,
-      name: "حساب کاربری",
+      name: "خروج",
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
           style={{ justifyContent: "center" }}
         >
-          <AccountCircleIcon fontSize="large" />
+          <LogoutIcon fontSize="large" />
         </ListItemIcon>
       ),
-      subMenus: [
-        {
-          id: 0,
-          name: "خروج",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          role: "public",
-          clickHandler: exitHandler,
-        },
-      ],
+      role: "public",
+      clickHandler: exitHandler,
     },
   ];
   return (
@@ -513,29 +497,45 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       anchor="left"
       open={open}
     >
-      <DrawerHeader theme={theme}>
-        <IconButton onClick={closeDrawer}>
-          {theme.direction === "ltr" ? (
-            <ChevronLeftIcon color="secondary" sx={{ color: "secondary" }} />
-          ) : (
-            <ChevronRightIcon
-              color="secondary"
-              sx={{ color: "secondary", colordisablePadding: "primary" }}
-            />
-          )}
-        </IconButton>
+      <DrawerHeader theme={theme} sx={{ mt: 3 }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "100%",
+          }}
+        >
+          <Typography
+            color="white"
+            fontSize={13}
+            sx={{ ml: 5, cursor: "pointer", "&:hover": { color: "GrayText" } }}
+            onClick={() => navigate("/profile")}
+          >
+            {user?.fullName}
+          </Typography>
+          <IconButton onClick={closeDrawer}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon color="secondary" sx={{ color: "secondary" }} />
+            ) : (
+              <ChevronRightIcon
+                color="secondary"
+                sx={{ color: "secondary", colordisablePadding: "primary" }}
+              />
+            )}
+          </IconButton>
+        </div>
       </DrawerHeader>
       <Divider />
       <List>
         {MenuList.map((item, index) => (
           <Fragment key={index}>
-            {item.subMenus
+            {(item.subMenus
               ?.map((subMenu) => subMenu.role)
-              .some(
-                (subMneu) =>
-                  userRoles.map((role) => role.id).includes(subMneu) ||
-                  subMneu === "public"
-              ) && (
+              .some((subMneu) =>
+                user.usersRoles.map((role) => role.id).includes(subMneu)
+              ) ||
+              item?.role === "public") && (
               <>
                 <ListItem
                   key={item.id}
@@ -545,7 +545,11 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                   }}
                 >
                   <ListItemButton
-                    onClick={() => handleClickMenu(item.id)}
+                    onClick={() =>
+                      item.clickHandler
+                        ? item.clickHandler()
+                        : handleClickMenu(item.id)
+                    }
                     style={{
                       display: "flex",
                       flexDirection: "column",
@@ -579,16 +583,11 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                     <List>
                       {item?.subMenus?.map((sub) => (
                         <Fragment key={sub.id}>
-                          {(userRoles
+                          {user.usersRoles
                             .map((role) => role.id)
-                            ?.includes(sub.role) ||
-                            sub.role === "public") && (
+                            ?.includes(sub.role) && (
                             <ListItemButton
-                              onClick={() =>
-                                sub?.clickHandler
-                                  ? sub.clickHandler()
-                                  : handleClickSubMenu(sub.route)
-                              }
+                              onClick={() => handleClickSubMenu(sub.route)}
                               sx={{
                                 "&:hover": {
                                   backgroundColor:
