@@ -45,7 +45,7 @@ const RequesterUserDetails = () => {
   const { usersList } = useSelector(
     (state: any) => state?.administrations?.users
   );
-  const isEditable = warehouseRowSelected?.approveEditable;
+  const isEditable = warehouseRowSelected?.receiverEditable;
 
   const {
     register,
@@ -84,7 +84,7 @@ const RequesterUserDetails = () => {
   };
   return (
     <div>
-      <WarehouseForm />
+      <WarehouseForm mode="exitWarehouse" />
       <Card sx={{ padding: 5 }}>
         <StyledForm>
           <Grid container>
@@ -106,7 +106,7 @@ const RequesterUserDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={!warehouseRowSelected}
+                    disabled={warehouseRowSelected && !isEditable}
                   />
                 )}
               />
@@ -129,6 +129,7 @@ const RequesterUserDetails = () => {
                         checked={receiveIsOk}
                         onChange={() => setReceiveIsOk((prev) => !prev)}
                         color="info"
+                        disabled={warehouseRowSelected && !isEditable}
                       />
                     }
                     label="تایید دریافت کننده"
@@ -151,7 +152,7 @@ const RequesterUserDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
-                  disabled={!warehouseRowSelected}
+                  disabled={warehouseRowSelected && !isEditable}
                 >
                   ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />

@@ -15,6 +15,7 @@ import {
   WarehouseAddDetailsToExitFromWarehouse,
   WarehouseUpdateDetailsToExitFromWarehouse,
   WarehouseRequesterUserApproveReceive,
+  GetExitWarehouseOrderData,
 } from "../../core/warehouse/WareHouse.service";
 import downloadExcel from "../../utils/downloadExcell";
 
@@ -71,6 +72,10 @@ export interface WarehouseState {
   };
   warehouseRowSelected: any;
   orderDetailData: {
+    data: any;
+    pending: boolean;
+  };
+  exitOrderDetailData: {
     data: any;
     pending: boolean;
   };
@@ -142,6 +147,10 @@ const initialState: WarehouseState = {
     pending: false,
     data: undefined,
   },
+  exitOrderDetailData: {
+    pending: false,
+    data: undefined,
+  },
   supplier: {
     addSupplierToWarehouse: {
       pending: false,
@@ -170,6 +179,22 @@ export const GetWarehouseOrderDataAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetWarehouseOrderData(userId, body.id);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetExitWarehouseOrderDataAction = createAsyncThunk(
+  "warehouse/GetExitWarehouseOrderDataAction",
+  async (
+    body: { id: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetExitWarehouseOrderData(userId, body.id);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -447,21 +472,19 @@ export const SupplierUpdateDetailsToWarehouseOrderAction = createAsyncThunk(
   "warehosue/SupplierUpdateDetailsToWarehouseOrderAction",
   async (
     body: {
-      warehouseOrderId: number;
+      id: number;
       sentCount: number;
-      commodityId: number;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const { warehouseOrderId, sentCount, commodityId } = body;
+      const { id, sentCount } = body;
 
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await SupplierUpdateDetailsToWarehouseOrder(
         userId,
-        warehouseOrderId,
-        commodityId,
+        id,
         sentCount
       );
       return fulfillWithValue(data);
@@ -528,19 +551,19 @@ export const WarehouseUpdateDetailsToExitFromWarehouseAction = createAsyncThunk(
   "warehosue/WarehouseUpdateDetailsToExitFromWarehouseAction",
   async (
     body: {
-      exitWarehouseOrderId: number;
+      id: number;
       count: number;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const { exitWarehouseOrderId, count } = body;
+      const { id, count } = body;
 
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await WarehouseUpdateDetailsToExitFromWarehouse(
         userId,
-        exitWarehouseOrderId,
+        id,
         count
       );
       return fulfillWithValue(data);
@@ -678,6 +701,28 @@ export const warehouseSlicer = createSlice({
         GetWarehouseOrderDataAction.rejected,
         (state: WarehouseState, { error }) => {
           state.orderDetailData.pending = false;
+        }
+      );
+    //#endregion
+    //#region GetExitWarehouseOrderDataAction-----
+    builder
+      .addCase(
+        GetExitWarehouseOrderDataAction.pending,
+        (state: WarehouseState) => {
+          state.exitOrderDetailData.pending = true;
+        }
+      )
+      .addCase(
+        GetExitWarehouseOrderDataAction.fulfilled,
+        (state: WarehouseState, { payload }) => {
+          state.exitOrderDetailData.pending = false;
+          state.exitOrderDetailData.data = payload?.model;
+        }
+      )
+      .addCase(
+        GetExitWarehouseOrderDataAction.rejected,
+        (state: WarehouseState, { error }) => {
+          state.exitOrderDetailData.pending = false;
         }
       );
     //#endregion

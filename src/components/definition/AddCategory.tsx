@@ -150,7 +150,7 @@ export const AddCategory = ({ addCategoryDialog, onClose, parent }) => {
         })
       );
     } else {
-      await dispatch(AddNewCommodity({ ...info }));
+      await dispatch(AddNewCommodity({ ...info, isCategory: true }));
       await dispatch(
         GetAllCommodityOnTree({
           commodityName: "",
@@ -160,44 +160,6 @@ export const AddCategory = ({ addCategoryDialog, onClose, parent }) => {
       );
     }
     onClose();
-  };
-
-  const [showAddProp, setShowAddProp] = useState(false);
-  const [propVal, setPropVal] = useState({
-    propName: "",
-    propType: "integer",
-    propValue: "",
-  });
-  const handleChangeProp = (e) => {
-    setPropVal({
-      ...propVal,
-      [e.target?.name]: e.target?.value,
-    });
-  };
-
-  const handleAddProp = () => {
-    setInfo({
-      ...info,
-      props: [
-        ...info?.props,
-        {
-          id: info?.props?.length + 1,
-          ...propVal,
-        },
-      ],
-    });
-    setPropVal({
-      propName: "",
-      propType: "integer",
-      propValue: "",
-    });
-  };
-
-  const handleDeleteProp = (prop) => {
-    setInfo({
-      ...info,
-      props: info?.props.filter((item) => item?.id !== prop?.id),
-    });
   };
 
   const generateTree = (item, isTree: boolean = true) => {
@@ -272,6 +234,26 @@ export const AddCategory = ({ addCategoryDialog, onClose, parent }) => {
                 fullWidth={true}
                 sx={{ mt: 2 }}
               />
+              <FormControl fullWidth={true}>
+                <Typography sx={{ mt: 2 }}>شاخه ی کالا</Typography>
+                <Button
+                  sx={{ mt: 2 }}
+                  fullWidth={true}
+                  color={"primary"}
+                  variant={"contained"}
+                  onClick={() => setShowTreeDialog(true)}
+                >
+                  {info?.parentId
+                    ? commoditiesOnTree?.data?.filter(
+                        (item) => item?.id === info?.parentId
+                      ).length
+                      ? commoditiesOnTree?.data?.filter(
+                          (item) => item?.id === info?.parentId
+                        )[0].serchableName
+                      : "انتخاب شاخه"
+                    : "انتخاب شاخه"}
+                </Button>
+              </FormControl>
             </Grid>
           </Grid>
         </DialogContent>

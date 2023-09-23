@@ -47,6 +47,11 @@ export const GetWarehouseOrderData = async (userId, warehouseOrderId) =>
     userId,
     warehouseOrderId,
   });
+export const GetExitWarehouseOrderData = async (userId, exitWarehouseOrderId) =>
+  await axiosInstance.post(`/Warehouse/GetExitWarehouseOrderData`, {
+    userId,
+    selectedItemId: exitWarehouseOrderId,
+  });
 
 export const WarehouseSentItem = async (
   userId,
@@ -183,14 +188,12 @@ export const SupplierAddDetailsToWarehouseOrder = async (
   });
 export const SupplierUpdateDetailsToWarehouseOrder = async (
   userId,
-  warehouseOrderId,
-  commodityId,
+  id,
   sentCount
 ) =>
-  await axiosInstance.post(`/Warehouse/Supplier.UpdateDetailsToWarehoseOrder`, {
+  await axiosInstance.post(`/Warehouse/Supplier.UpdateWarehoseOrderDetails`, {
     userId: userId,
-    warehouseOrderId,
-    commodityId,
+    id,
     sentCount,
   });
 export const WarehouseReceiveCommidity = async (
@@ -222,14 +225,14 @@ export const WarehouseAddDetailsToExitFromWarehouse = async (
   );
 export const WarehouseUpdateDetailsToExitFromWarehouse = async (
   userId,
-  exitWarehouseOrderId,
+  id,
   count
 ) =>
   await axiosInstance.post(
-    `/Warehouse/Warehouse.UpdateDetailsToExitFromWarehouse`,
+    `/Warehouse/Warehouse.UpdateExitFromWarehouseDetails`,
     {
       userId,
-      exitWarehouseOrderId,
+      id,
       count,
     }
   );

@@ -30,7 +30,7 @@ const WarehouseDetails = () => {
   const { usersList } = useSelector(
     (state: any) => state?.administrations?.users
   );
-  const isEditable = warehouseRowSelected?.approveEditable;
+  const isEditable = warehouseRowSelected?.warehouseEditable;
 
   const {
     register,
@@ -71,7 +71,6 @@ const WarehouseDetails = () => {
   const handleCancelEdit = () => {
     dispatch(setWarhouseRowSelectedAction(undefined));
   };
-  console.log(usersList);
   return (
     <div>
       <WarehouseForm />
@@ -152,7 +151,7 @@ const WarehouseDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={!warehouseRowSelected}
+                    disabled={warehouseRowSelected && !isEditable}
                   />
                 )}
               />
@@ -173,7 +172,7 @@ const WarehouseDetails = () => {
                   color="warning"
                   variant="contained"
                   onClick={handleEdit}
-                  disabled={!warehouseRowSelected}
+                  disabled={warehouseRowSelected && !isEditable}
                 >
                   ثبت
                   <EditIcon sx={{ marginLeft: "10px" }} />

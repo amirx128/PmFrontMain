@@ -31,7 +31,8 @@ const SupplierDetails = () => {
   } = useSelector((state: any) => state?.warehouse);
   const [mode, setMode] = useState<"edit" | "add">("add");
 
-  const isEditable = warehouseRowSelected?.logisticEditable;
+  const isEditable = warehouseRowSelected?.supportEditable;
+  const isAddEditable = orderDetailData?.data?.isEtitable;
   const {
     register,
     handleSubmit,
@@ -69,9 +70,8 @@ const SupplierDetails = () => {
     const { sentCount } = getValues();
     await dispatch(
       SupplierUpdateDetailsToWarehouseOrderAction({
-        commodityId: +warehouseRowSelected?.id,
+        id: +warehouseRowSelected?.id,
         sentCount,
-        warehouseOrderId: +id,
       })
     );
     await dispatch(GetWarehouseOrderDataAction({ id: +id }));
@@ -103,7 +103,10 @@ const SupplierDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={mode === "edit" && !isEditable}
+                    disabled={
+                      (mode === "edit" && !isEditable) ||
+                      (mode === "add" && !isAddEditable)
+                    }
                   />
                 )}
               />

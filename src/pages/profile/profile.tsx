@@ -21,6 +21,7 @@ import {
 import {
   GetAllRoles,
   UpdateUser,
+  GetUserInfo,
 } from "../../redux/features/administrationSlicer";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
@@ -29,15 +30,18 @@ const Profile = () => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
   const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
-  const { roles, users } = useSelector((state: any) => state.administrations);
+  const { roles, users, selectedUser } = useSelector(
+    (state: any) => state.administrations
+  );
   const [info, setInfo] = useState({
-    firstName: user?.firstName,
-    lastName: user?.lastName,
-    userName: user?.userName,
-    password: user?.password,
-    businessRoles: user?.businessRoles?.map((item) => item.id) ?? [],
-    usersRoles: user?.usersRoles?.map((item) => item.id) ?? [],
-    bossId: user?.bossId,
+    firstName: selectedUser?.firstName,
+    lastName: selectedUser?.lastName,
+    userName: selectedUser?.userName,
+    password: selectedUser?.password,
+    businessRoles: selectedUser?.businessRoles?.map((item) => item.id) ?? [],
+    usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
+    bossId: selectedUser?.bossId,
+    repeatPassword: "",
   });
   const [editable, setEditable] = useState(false);
 
@@ -46,18 +50,21 @@ const Profile = () => {
     dispatch(GetAllBusinessRoles());
     //@ts-ignore
     dispatch(GetAllRoles());
+    getUserInfo();
   }, []);
-
+  console.log(selectedUser);
   useEffect(() => {
-    if (user) {
+    if (selectedUser) {
       setInfo({
-        firstName: user?.firstName,
-        lastName: user?.lastName,
-        userName: user?.userName,
-        password: user?.password,
-        businessRoles: user?.businessRoles?.map((item) => item.id) ?? [],
-        usersRoles: user?.usersRoles?.map((item) => item.id) ?? [],
-        bossId: user?.bossId,
+        firstName: selectedUser?.firstName,
+        lastName: selectedUser?.lastName,
+        userName: selectedUser?.userName,
+        password: selectedUser?.password,
+        businessRoles:
+          selectedUser?.businessRoles?.map((item) => item.id) ?? [],
+        usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
+        bossId: selectedUser?.bossId,
+        repeatPassword: "",
       });
     } else {
       setInfo({
@@ -68,11 +75,15 @@ const Profile = () => {
         businessRoles: [],
         usersRoles: [],
         bossId: "",
+        repeatPassword: "",
       });
     }
-  }, [user]);
+  }, [selectedUser]);
   const { businessRoles } = useSelector((state: any) => state.definition);
-
+  const getUserInfo = async () => {
+    //@ts-ignore
+    await dispatch(GetUserInfo(user?.id));
+  };
   const handleChange = (e) => {
     if (e.target?.name === "isActive") {
       setInfo({
@@ -90,10 +101,29 @@ const Profile = () => {
     setEditable(true);
   };
   const handleSubmit = () => {
-    dispatch(UpdateUser({ id: user?.id, ...info }));
+    const model: any = { firstName: info.firstName, lastName: info.lastName };
+    if (info.password) {
+      model.password = info.password;
+    }
+    dispatch(
+      UpdateUser({
+        id: user?.id,
+        ...model,
+      })
+    );
   };
   const handleCancelEdit = () => {
     setEditable(false);
+    setInfo({
+      firstName: selectedUser?.firstName,
+      lastName: selectedUser?.lastName,
+      userName: selectedUser?.userName,
+      password: "",
+      businessRoles: selectedUser?.businessRoles?.map((item) => item.id) ?? [],
+      usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
+      bossId: selectedUser?.bossId,
+      repeatPassword: "",
+    });
   };
   return (
     <Card
@@ -103,97 +133,121 @@ const Profile = () => {
     >
       <Typography variant="h5">اطلاعات کاربر</Typography>
       <CardContent>
-        <TextField
-          value={info?.firstName}
-          name={"firstName"}
-          onChange={handleChange}
-          label={"نام"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-          disabled={!editable}
-        />
-        <TextField
-          value={info?.lastName}
-          name={"lastName"}
-          onChange={handleChange}
-          label={"نام خانوادگی"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-          disabled={!editable}
-        />
-        <TextField
-          value={info?.userName}
-          name={"userName"}
-          onChange={handleChange}
-          label={"نام کاربری"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-          disabled={!editable}
-        />
-        <TextField
-          value={info?.password}
-          name={"password"}
-          onChange={handleChange}
-          label={"رمزعبور"}
-          type={"password"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-          disabled={!editable}
-        />
+        {selectedUser && (
+          <>
+            <TextField
+              value={info?.firstName}
+              name={"firstName"}
+              onChange={handleChange}
+              label={"نام"}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+              disabled={!editable}
+            />
+            <TextField
+              value={info?.lastName}
+              name={"lastName"}
+              onChange={handleChange}
+              label={"نام خانوادگی"}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+              disabled={!editable}
+            />
+            <TextField
+              value={info?.userName}
+              name={"userName"}
+              onChange={handleChange}
+              label={"نام کاربری"}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+              disabled={true}
+            />
+            <TextField
+              error={editable && !info?.password}
+              helperText={
+                editable && !info?.password && "رمز عبور نباید خالی باشد"
+              }
+              value={info?.password}
+              name={"password"}
+              onChange={handleChange}
+              label={"رمزعبور"}
+              type={"password"}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+              disabled={!editable}
+            />
+            <TextField
+              value={info?.repeatPassword}
+              error={editable && info?.password !== info.repeatPassword}
+              helperText={
+                editable &&
+                info?.password !== info.repeatPassword &&
+                "رمز عبور و تکرار آن باید برابر باشد"
+              }
+              name={"repeatPassword"}
+              onChange={handleChange}
+              label={"تکرار رمز عبور"}
+              type={"password"}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+              disabled={!editable}
+            />
 
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>نقش کاربری</InputLabel>
-          <Select
-            multiple
-            value={info?.usersRoles}
-            fullWidth={true}
-            name={"usersRoles"}
-            label="نقش کاربری"
-            onChange={handleChange}
-            disabled={!editable}
-          >
-            {roles?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.roleTitle}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>نقش تجاری</InputLabel>
-          <Select
-            multiple
-            value={info?.businessRoles}
-            fullWidth={true}
-            name={"businessRoles"}
-            label="نقش تجاری"
-            onChange={handleChange}
-            disabled={!editable}
-          >
-            {businessRoles?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>مدیر</InputLabel>
-          <Select
-            value={info?.bossId}
-            fullWidth={true}
-            name={"bossId"}
-            label="مدیر"
-            onChange={handleChange}
-            disabled={!editable}
-          >
-            {users?.usersList?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.firstName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel>نقش کاربری</InputLabel>
+              <Select
+                multiple
+                value={info?.usersRoles}
+                fullWidth={true}
+                name={"usersRoles"}
+                label="نقش کاربری"
+                onChange={handleChange}
+                disabled={true}
+              >
+                {roles?.data?.map((item) => (
+                  <MenuItem value={item.id} key={item?.id}>
+                    {item?.roleTitle}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel>نقش تجاری</InputLabel>
+              <Select
+                multiple
+                value={info?.businessRoles}
+                fullWidth={true}
+                name={"businessRoles"}
+                label="نقش تجاری"
+                onChange={handleChange}
+                disabled={true}
+              >
+                {businessRoles?.data?.map((item) => (
+                  <MenuItem value={item.id} key={item?.id}>
+                    {item?.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth sx={{ mt: 2 }}>
+              <InputLabel>مدیر</InputLabel>
+              <Select
+                value={info?.bossId}
+                fullWidth={true}
+                name={"bossId"}
+                label="مدیر"
+                onChange={handleChange}
+                disabled={true}
+              >
+                {users?.usersList?.map((item) => (
+                  <MenuItem value={item.id} key={item?.id}>
+                    {item?.firstName}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </>
+        )}
       </CardContent>
       <CardActions>
         {!editable && (

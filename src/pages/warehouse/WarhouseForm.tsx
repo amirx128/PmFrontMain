@@ -15,15 +15,19 @@ import {
 import {
   setWarhouseRowSelectedAction,
   GetWarehouseOrderDataAction,
+  GetExitWarehouseOrderDataAction,
 } from "../../redux/features/warehouseSlicer.ts";
 import WarehouseDetail from "./WarehouseDetail.tsx";
-const WarhouseForm = (props) => {
+const WarhouseForm = ({
+  mode = "warehouse",
+}: {
+  mode: "warehouse" | "exitWarehouse";
+}) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { orderDetailData, warehouseRowSelected } = useSelector(
-    (state: any) => state?.warehouse
-  );
+  const { orderDetailData, warehouseRowSelected, exitOrderDetailData } =
+    useSelector((state: any) => state?.warehouse);
   useEffect(() => {
     if (!id) navigate("/");
     getWarehouseDetails();
@@ -36,7 +40,11 @@ const WarhouseForm = (props) => {
 
   const getWarehouseDetails = async () => {
     try {
-      await dispatch(GetWarehouseOrderDataAction({ id: +id }));
+      if (mode === "warehouse") {
+        await dispatch(GetWarehouseOrderDataAction({ id: +id }));
+      } else if (mode === "exitWarehouse") {
+        await dispatch(GetExitWarehouseOrderDataAction({ id: +id }));
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -131,7 +139,13 @@ const WarhouseForm = (props) => {
   };
   return (
     <Card>
-      <WarehouseDetail detail={orderDetailData?.data} />
+      <WarehouseDetail
+        detail={
+          mode === "warehouse"
+            ? orderDetailData?.data
+            : exitOrderDetailData?.data
+        }
+      />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
 
       <CardHeader
@@ -140,11 +154,16 @@ const WarhouseForm = (props) => {
         titleTypographyProps={{ variant: "h6" }}
       />
 
-      {orderDetailData?.data?.wareHouseDetailsModelResult && (
+      {(orderDetailData?.data?.wareHouseDetailsModelResult ||
+        exitOrderDetailData?.data?.exitFromWarehouseDetails) && (
         <Grid
           rowIdFields={["requestCaseRowCommodityId"]}
           columns={columns}
-          rows={orderDetailData?.data?.wareHouseDetailsModelResult}
+          rows={
+            mode === "warehouse"
+              ? orderDetailData?.data?.wareHouseDetailsModelResult
+              : exitOrderDetailData?.data?.exitFromWarehouseDetails
+          }
           pagination={{}}
           selectMode="single"
           onRowSelected={handleSelectedRow}

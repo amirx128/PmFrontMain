@@ -22,7 +22,7 @@ import {
 } from "../../redux/features/purchaseSlicer";
 import {
   setWarhouseRowSelectedAction,
-  GetWarehouseOrderDataAction,
+  GetExitWarehouseOrderDataAction,
   SupplierAddDetailsToWarehouseOrderAction,
   SupplierUpdateDetailsToWarehouseOrderAction,
   WarehouseAddDetailsToExitFromWarehouseAction,
@@ -36,13 +36,15 @@ const ExitWarehouseDetails = () => {
   const { id } = useParams();
   const dispatch = useDispatch<any>();
   const {
+    exitOrderDetailData,
     warehouseRowSelected,
     exitWarehouse: { addExitWarhouse, updateExitWarhouse },
   } = useSelector((state: any) => state?.warehouse);
   const [mode, setMode] = useState<"edit" | "add">("add");
   const [receiveIsOk, setReceiveIsOk] = useState<boolean>(true);
 
-  const isEditable = warehouseRowSelected?.logisticEditable;
+  const isEditable = warehouseRowSelected?.warehouseEditable;
+  const isAddEditable = exitOrderDetailData?.data?.isEtitable;
   const {
     register,
     handleSubmit,
@@ -78,7 +80,7 @@ const ExitWarehouseDetails = () => {
         exitWarehouseOrderId: +id,
       })
     );
-    await dispatch(GetWarehouseOrderDataAction({ id: +id }));
+    await dispatch(GetExitWarehouseOrderDataAction({ id: +id }));
   };
   const handleEdit = async () => {
     const { count } = getValues();
@@ -86,17 +88,17 @@ const ExitWarehouseDetails = () => {
     await dispatch(
       WarehouseUpdateDetailsToExitFromWarehouseAction({
         count,
-        exitWarehouseOrderId: +id,
+        id: +warehouseRowSelected.id,
       })
     );
-    await dispatch(GetWarehouseOrderDataAction({ id: +id }));
+    await dispatch(GetExitWarehouseOrderDataAction({ id: +id }));
   };
   const handleCancelEdit = () => {
     dispatch(setWarhouseRowSelectedAction(undefined));
   };
   return (
     <div>
-      <WarehouseForm />
+      <WarehouseForm mode="exitWarehouse" />
       <Card sx={{ padding: 5 }}>
         <StyledForm>
           <Grid container>
@@ -118,7 +120,10 @@ const ExitWarehouseDetails = () => {
                     register={register}
                     required={true}
                     errors={errors}
-                    disabled={mode === "edit" && !isEditable}
+                    disabled={
+                      (mode === "edit" && !isEditable) ||
+                      (mode === "add" && !isAddEditable)
+                    }
                   />
                 )}
               />
