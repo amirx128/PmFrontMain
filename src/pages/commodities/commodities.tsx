@@ -20,6 +20,7 @@ import {
   GetAllPleaseOfUse,
   GetAllProducers,
   GetAllSuppliers,
+  getAllWarehouses,
   GetOneCommodityDetails,
 } from "../../redux/features/definitionSlicer.ts";
 import {
@@ -67,6 +68,8 @@ const Commodities = () => {
     dispatch(GetAllSuppliers());
     // @ts-ignore
     dispatch(GetAllPleaseOfUse());
+    // @ts-ignore
+    dispatch(getAllWarehouses());
   }, [dispatch]);
   useEffect(() => {
     getAllCommiditiesOnTree();

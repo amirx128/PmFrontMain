@@ -44,9 +44,10 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
     garanti: "",
     props: [],
     businessRoleIds: [],
-    supplierId: "",
+    suppliersIds: [],
     producerId: 0,
     parentId: parent ? parseInt(parent) : null ?? 0,
+    warehouses: [],
   });
 
   const {
@@ -57,21 +58,27 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
     producers,
     commoditiesOnTree,
     selectedCommodity,
+    warehouses,
   } = useSelector((state: any) => state.definition);
 
   useEffect(() => {
     if (selectedCommodity) {
       setInfo({
-        ...selectedCommodity,
+        name: selectedCommodity?.name,
+        unit: selectedCommodity?.unit,
+        description: selectedCommodity?.description,
+        descriptions: selectedCommodity?.descriptions,
+        garanti: selectedCommodity?.garanti,
+        props: selectedCommodity?.props,
+        parentId: parent ? parseInt(parent) : null ?? 0,
         producerId: selectedCommodity?.producerId
           ? selectedCommodity?.producerId
           : 0,
-        supplierId: selectedCommodity?.supplierId
-          ? selectedCommodity?.supplierId
-          : "",
+        suppliersIds: selectedCommodity?.suppliers,
         businessRoleIds: selectedCommodity?.businessRoles?.map(
           (item) => item?.id
         ),
+        warehouses: selectedCommodity?.warehouse,
       });
     } else {
       setInfo({
@@ -82,9 +89,10 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
         garanti: "",
         props: [],
         businessRoleIds: [],
-        supplierId: "",
+        suppliersIds: [],
         producerId: 0,
         parentId: parent ? parseInt(parent) : null ?? 0,
+        warehouses: [],
       });
     }
   }, [selectedCommodity, parent]);
@@ -114,6 +122,7 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
 
   const onSubmit = async () => {
     if (selectedCommodity) {
+      console.log(info);
       await dispatch(
         UpdateCommodityDetails({ ...info, id: selectedCommodity?.id })
       );
@@ -215,7 +224,7 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
   }, [term, commoditiesOnTree]);
 
   const [showTreeDialog, setShowTreeDialog] = useState(false);
-
+  console.log(warehouses);
   return (
     <>
       <Dialog
@@ -281,14 +290,15 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth={true}>
-                <Typography sx={{ mt: 2 }}>تامین کننده</Typography>
+                <Typography sx={{ mt: 2 }}>تامین کننده ها</Typography>
                 <Select
                   sx={{ mt: 2 }}
-                  value={info?.supplierId}
-                  labelId={"supplierId"}
+                  value={info?.suppliersIds ?? []}
+                  labelId={"suppliersIds"}
                   fullWidth={true}
-                  name={"supplierId"}
+                  name={"suppliersIds"}
                   onChange={handleChange}
+                  multiple
                 >
                   {suppliers?.data?.map((item) => (
                     <MenuItem value={item.id} key={item?.id}>
@@ -318,6 +328,24 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
+              <FormControl fullWidth={true}>
+                <Typography sx={{ mt: 2 }}>انبار ها</Typography>
+                <Select
+                  sx={{ mt: 2 }}
+                  value={info?.warehouses}
+                  labelId={"warehouses"}
+                  fullWidth={true}
+                  name={"warehouses"}
+                  onChange={handleChange}
+                  multiple
+                >
+                  {warehouses?.data?.map((item) => (
+                    <MenuItem value={item.id} key={item?.id}>
+                      {item?.warehouseName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <FormControl fullWidth={true}>
                 <Typography sx={{ mt: 2 }}>شاخه ی کالا</Typography>
                 <Button
