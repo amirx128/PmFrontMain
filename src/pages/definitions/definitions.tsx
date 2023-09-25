@@ -6,6 +6,7 @@ import {
   GetAllPersons,
   GetAllProducers,
   getAllProjects,
+  getAllWarehouses,
   GetScheduleActivities,
 } from "../../redux/features/definitionSlicer.ts";
 import {
@@ -27,7 +28,9 @@ import { BusinessRole } from "../../components/definition/businessRole.tsx";
 import { Activity } from "../../components/definition/activity.tsx";
 import { AddActivity } from "../../components/definition/addActivity.tsx";
 import { Producer } from "../../components/definition/producer.tsx";
+import { Warehouse } from "../../components/definition/warehouse.tsx";
 import { AddProducer } from "../../components/definition/addProducer.tsx";
+import { AddWarehouse } from "../../components/definition/addWarehouse.tsx";
 
 const Definitions = () => {
   const dispatch = useDispatch<any>();
@@ -39,6 +42,7 @@ const Definitions = () => {
     businessRoles,
     scheduledActivities,
     producers,
+    warehouses,
   } = useSelector((state: any) => state.definition);
 
   const [addProjectDialog, setAddProjectDialog] = useState<boolean>(false);
@@ -62,7 +66,9 @@ const Definitions = () => {
     useState<boolean>(false);
   const [selectedActivity, setSelectedActivity] = useState<any>(null);
   const [addProducerDialog, setAddProducerDialog] = useState<boolean>(false);
+  const [addWarehouseDialog, setAddWarehouseDialog] = useState<boolean>(false);
   const [selectedProducer, setSelectedProducer] = useState<any>(null);
+  const [selectedWarehouse, setSelectedWarehouse] = useState<any>(null);
 
   const tabs = [
     {
@@ -105,6 +111,14 @@ const Definitions = () => {
         setAddProducerDialog(true);
       },
     },
+    {
+      title: "انبار",
+      value: "warehouses",
+      icon: <Factory sx={{ mr: 1 }} />,
+      onClick: () => {
+        setAddWarehouseDialog(true);
+      },
+    },
   ];
 
   const getTab = () => {
@@ -122,6 +136,8 @@ const Definitions = () => {
     dispatch(GetScheduleActivities());
     // @ts-ignore
     dispatch(GetAllProducers());
+    // @ts-ignore
+    dispatch(getAllWarehouses());
   }, []);
 
   const projectOnClose = () => {
@@ -157,6 +173,10 @@ const Definitions = () => {
   const producerOnClose = () => {
     setAddProducerDialog(false);
     setSelectedProducer(null);
+  };
+  const warehouseOnClose = () => {
+    setAddWarehouseDialog(false);
+    setSelectedWarehouse(null);
   };
   return (
     <Grid container>
@@ -270,6 +290,18 @@ const Definitions = () => {
               : selectedTab === "producers" && (
                   <Typography>اطلاعاتی برای نمایش وجود ندارد</Typography>
                 )}
+            {selectedTab === "warehouses" && warehouses?.data?.length > 0
+              ? warehouses?.data?.map((warehouse) => (
+                  <Warehouse
+                    warehouse={warehouse}
+                    setAddWarehouseDialog={setAddWarehouseDialog}
+                    setSelectedWarehouse={setSelectedWarehouse}
+                    key={warehouse?.id}
+                  />
+                ))
+              : selectedTab === "warehouses" && (
+                  <Typography>اطلاعاتی برای نمایش وجود ندارد</Typography>
+                )}
           </Grid>
         </Box>
       </Grid>
@@ -309,6 +341,11 @@ const Definitions = () => {
         addUnitDialog={addUnitDialog}
         selectedUnit={selectedUnit}
         onClose={unitOnClose}
+      />
+      <AddWarehouse
+        addWarehouseDialog={addWarehouseDialog}
+        selectedWarehouse={selectedWarehouse}
+        onClose={warehouseOnClose}
       />
     </Grid>
   );

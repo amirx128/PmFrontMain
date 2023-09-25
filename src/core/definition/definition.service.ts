@@ -224,6 +224,32 @@ export const UpdateNewActivityScheduleReq = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const UpdateWarehouse = async (
+  userId,
+  id,
+  warehouseName,
+  relatedCommodities,
+  projects
+) =>
+  await axiosInstance.post(`/Definition/UpdateWarehouse`, {
+    userId,
+    id,
+    name: warehouseName,
+    relatedCommodities,
+    projects,
+  });
+export const AddNewWarehouse = async (
+  userId,
+  warehouseName,
+  relatedCommodities,
+  projects
+) =>
+  await axiosInstance.post(`/Definition/AddNewWarehouse`, {
+    userId,
+    name: warehouseName,
+    relatedCommodities,
+    projects,
+  });
 
 export const GetActivityScheduleDetailsReq = async (userId, selectedItemId) =>
   await axiosInstance.post(`/Definition/GetActivityScheduleDetails`, {
@@ -238,6 +264,10 @@ export const GetAllSuppliersReq = async (userId) =>
 
 export const GetAllProducersReq = async (userId) =>
   await axiosInstance.post(`/Definition/GetAllProducers`, {
+    userId,
+  });
+export const GetAllWarehouseReq = async (userId) =>
+  await axiosInstance.post(`/Definition/GetAllWarehouse`, {
     userId,
   });
 

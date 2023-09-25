@@ -12,6 +12,7 @@ import {
   I_SCHEDULED_ACTIVITIES,
   I_SUPPLIER,
   I_UNIT,
+  I_Warehouses,
 } from "../../core/definition/definition.model.ts";
 import {
   AddNewActivityScheduleReq,
@@ -22,6 +23,7 @@ import {
   AddNewProducerReq,
   AddNewProjectReq,
   AddNewUnitReq,
+  AddNewWarehouse,
   GetActivityScheduleDetailsReq,
   GetAllBusinessRolesReq,
   GetAllCommoditiesReq,
@@ -45,6 +47,8 @@ import {
   UpdateProducerInfoReq,
   UpdateProjectReq,
   UpdateUnitReq,
+  UpdateWarehouse,
+  GetAllWarehouseReq,
 } from "../../core/definition/definition.service.ts";
 
 const getUserId = (state) => {
@@ -56,6 +60,11 @@ const getUserId = (state) => {
 export interface DefinitionState {
   projects: {
     data: I_Project[];
+    pending: boolean;
+    addState: boolean;
+  };
+  warehouses: {
+    data: I_Warehouses[];
     pending: boolean;
     addState: boolean;
   };
@@ -116,6 +125,11 @@ const initialState: DefinitionState = {
     pending: false,
     addState: false,
   },
+  warehouses: {
+    data: [],
+    pending: false,
+    addState: false,
+  },
   floors: {
     data: [],
     pending: false,
@@ -167,6 +181,22 @@ const initialState: DefinitionState = {
   selectedCommodity: null,
 };
 
+export const getAllWarehouses = createAsyncThunk(
+  "definition/getAllWarehouses",
+  async (
+    body = undefined,
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllWarehouseReq(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const getAllProjects = createAsyncThunk(
   "definition/getAllProjects",
   async (
@@ -745,6 +775,66 @@ export const AddNewProducer = createAsyncThunk(
     }
   }
 );
+export const AddWarehouse = createAsyncThunk(
+  "definition/AddWarehouse",
+  async (
+    body: {
+      name: string;
+      relatedCommodities: number[];
+      projects: number[];
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { name, relatedCommodities, projects } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await AddNewWarehouse(
+        userId,
+        name,
+        relatedCommodities,
+        projects
+      );
+      if (data?.isSuccess) {
+        dispatch(getAllWarehouses());
+      }
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const UpdateWarehouseInfo = createAsyncThunk(
+  "definition/UpdateWarehouseInfo",
+  async (
+    body: {
+      name: string;
+      id: number;
+      relatedCommodities: number[];
+      projects: number[];
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { name, relatedCommodities, projects, id } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await UpdateWarehouse(
+        userId,
+        id,
+        name,
+        relatedCommodities,
+        projects
+      );
+      if (data?.isSuccess) {
+        dispatch(getAllWarehouses());
+      }
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const UpdateProducerInfo = createAsyncThunk(
   "definition/UpdateProducerInfo",
@@ -855,6 +945,25 @@ export const definitionSlicer = createSlice({
         state.projects.pending = false;
       });
     //#endregion
+    //#region getAllWarehouses-----
+    builder
+      .addCase(getAllWarehouses.pending, (state: DefinitionState) => {
+        state.warehouses.pending = true;
+      })
+      .addCase(
+        getAllWarehouses.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.warehouses.pending = false;
+          state.warehouses.data = [...payload?.model];
+        }
+      )
+      .addCase(
+        getAllWarehouses.rejected,
+        (state: DefinitionState, { error }) => {
+          state.warehouses.pending = false;
+        }
+      );
+    //#endregion
     // #region getAllFloors-----
     builder
       .addCase(getAllFloors.pending, (state: DefinitionState) => {
@@ -925,6 +1034,39 @@ export const definitionSlicer = createSlice({
       .addCase(AddNewFloor.rejected, (state: DefinitionState, { error }) => {
         state.floors.addState = false;
       });
+    //#endregion
+    // #region AddWarehouse-----
+    builder
+      .addCase(AddWarehouse.pending, (state: DefinitionState) => {
+        state.warehouses.addState = true;
+      })
+      .addCase(
+        AddWarehouse.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.warehouses.addState = false;
+        }
+      )
+      .addCase(AddWarehouse.rejected, (state: DefinitionState, { error }) => {
+        state.warehouses.addState = false;
+      });
+    //#endregion
+    // #region UpdateWarehouseInfo-----
+    builder
+      .addCase(UpdateWarehouseInfo.pending, (state: DefinitionState) => {
+        state.warehouses.addState = true;
+      })
+      .addCase(
+        UpdateWarehouseInfo.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.warehouses.addState = false;
+        }
+      )
+      .addCase(
+        UpdateWarehouseInfo.rejected,
+        (state: DefinitionState, { error }) => {
+          state.warehouses.addState = false;
+        }
+      );
     //#endregion
     // #region UpdateFloor-----
     builder
