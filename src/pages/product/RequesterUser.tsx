@@ -3,14 +3,18 @@ import {
   Card,
   Grid as CardGrid,
   CardHeader,
+  Dialog,
+  DialogTitle,
+  FormControlLabel,
   IconButton,
+  Switch,
   Typography,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
 import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
 import Grid from "../../components/grid/grid.tsx";
-import { Row } from "./style.tsx";
+import { ColumnGrid, Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,6 +25,8 @@ import {
   GetRequesterUserQAction,
 } from "../../redux/features/productSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
+import { DialogContent } from "@material-ui/core";
 
 const RequesterUser = () => {
   const navigate = useNavigate();
@@ -262,6 +268,20 @@ const RequesterUser = () => {
       })
     );
   };
+  const handleOpenCustomizeColumns = () => {};
+  const allColumns = [
+    { id: 0, title: "تست", value: "test" },
+    { id: 1, title: "تست", value: "test" },
+    { id: 2, title: "تست", value: "test" },
+    { id: 3, title: "تست", value: "test" },
+    { id: 4, title: "تست", value: "test" },
+    { id: 5, title: "تست", value: "test" },
+    { id: 6, title: "تست", value: "test" },
+    { id: 7, title: "تست", value: "test" },
+    { id: 8, title: "تست", value: "test" },
+    { id: 9, title: "تست", value: "test" },
+    { id: 10, title: "تست", value: "test" },
+  ];
   return (
     <CardGrid
       item
@@ -278,6 +298,20 @@ const RequesterUser = () => {
           title="لیست تحویل دریافت"
           titleTypographyProps={{ variant: "h6" }}
         />
+        <Dialog open={true}>
+          <DialogTitle>شخصی سازی ستون ها</DialogTitle>
+          <DialogContent>
+            <ColumnGrid>
+              {allColumns.map((column) => (
+                <FormControlLabel
+                  dir="ltr"
+                  control={<Switch color="success" />}
+                  label={column.title}
+                />
+              ))}
+            </ColumnGrid>
+          </DialogContent>
+        </Dialog>
 
         <Box>
           <form>
@@ -313,6 +347,9 @@ const RequesterUser = () => {
               <IconButton onClick={handleDownloadExcel} color="success">
                 <SimCardDownloadIcon />
               </IconButton>
+              <IconButton onClick={handleOpenCustomizeColumns} color="success">
+                <DashboardCustomizeIcon />
+              </IconButton>
 
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
@@ -329,7 +366,7 @@ const RequesterUser = () => {
           pagination={{}}
           onSortModelChange={handleSortModelChange}
           onDoubleClick={handleDoubleClick}
-        ></Grid>
+        />
       </Card>
     </CardGrid>
   );
