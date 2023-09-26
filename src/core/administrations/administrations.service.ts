@@ -16,6 +16,11 @@ export const UpdateUserReq = async (userId, body) =>
     userId: userId,
     ...body,
   });
+export const UpdateUserProfileReq = async (userId, body) =>
+  await axiosInstance.post(`/Administration/UpdateUserProfile`, {
+    userId: userId,
+    ...body,
+  });
 
 export const GetUserInfoReq = async (userId, id) =>
   await axiosInstance.post(`/Administration/GetUserInfo`, {

@@ -13,6 +13,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   TextField,
   Typography,
   useMediaQuery,
@@ -22,12 +23,13 @@ import {
   GetAllRoles,
   UpdateUser,
   GetUserInfo,
+  UpdateUserProfile,
 } from "../../redux/features/administrationSlicer";
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { GetAllBusinessRoles } from "../../redux/features/definitionSlicer";
 const Profile = () => {
-  const theme = useTheme();
+  const [isShowPassword, setIsShowPassword] = useState(false);
   const dispatch = useDispatch<any>();
   const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
   const { roles, users, selectedUser } = useSelector(
@@ -37,7 +39,7 @@ const Profile = () => {
     firstName: selectedUser?.firstName,
     lastName: selectedUser?.lastName,
     userName: selectedUser?.userName,
-    password: selectedUser?.password,
+    password: "",
     businessRoles: selectedUser?.businessRoles?.map((item) => item.id) ?? [],
     usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
     bossId: selectedUser?.bossId,
@@ -59,7 +61,7 @@ const Profile = () => {
         firstName: selectedUser?.firstName,
         lastName: selectedUser?.lastName,
         userName: selectedUser?.userName,
-        password: selectedUser?.password,
+        password: "",
         businessRoles:
           selectedUser?.businessRoles?.map((item) => item.id) ?? [],
         usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
@@ -105,8 +107,9 @@ const Profile = () => {
     if (info.password) {
       model.password = info.password;
     }
+    if (info?.password && info?.password !== info?.repeatPassword) return;
     dispatch(
-      UpdateUser({
+      UpdateUserProfile({
         id: user?.id,
         ...model,
       })
@@ -162,36 +165,6 @@ const Profile = () => {
               sx={{ mt: 2 }}
               disabled={true}
             />
-            <TextField
-              error={editable && !info?.password}
-              helperText={
-                editable && !info?.password && "رمز عبور نباید خالی باشد"
-              }
-              value={info?.password}
-              name={"password"}
-              onChange={handleChange}
-              label={"رمزعبور"}
-              type={"password"}
-              fullWidth={true}
-              sx={{ mt: 2 }}
-              disabled={!editable}
-            />
-            <TextField
-              value={info?.repeatPassword}
-              error={editable && info?.password !== info.repeatPassword}
-              helperText={
-                editable &&
-                info?.password !== info.repeatPassword &&
-                "رمز عبور و تکرار آن باید برابر باشد"
-              }
-              name={"repeatPassword"}
-              onChange={handleChange}
-              label={"تکرار رمز عبور"}
-              type={"password"}
-              fullWidth={true}
-              sx={{ mt: 2 }}
-              disabled={!editable}
-            />
 
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel>نقش کاربری</InputLabel>
@@ -246,6 +219,57 @@ const Profile = () => {
                 ))}
               </Select>
             </FormControl>
+            <div
+              style={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-start",
+                marginTop: 10,
+              }}
+            >
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isShowPassword}
+                    onChange={() => setIsShowPassword((prev) => !prev)}
+                    color="info"
+                  />
+                }
+                label="تغییر رمز عبور"
+                dir="ltr"
+                sx={{ ml: 1 }}
+              />
+            </div>
+            <TextField
+              error={editable && !info?.password}
+              helperText={
+                editable && !info?.password && "رمز عبور نباید خالی باشد"
+              }
+              value={info?.password}
+              name={"password"}
+              onChange={handleChange}
+              label={"رمزعبور"}
+              type={"password"}
+              fullWidth={true}
+              sx={{ mt: 2, display: isShowPassword ? "block" : "none" }}
+              disabled={!editable}
+            />
+            <TextField
+              value={info?.repeatPassword}
+              error={editable && info?.password !== info.repeatPassword}
+              helperText={
+                editable &&
+                info?.password !== info.repeatPassword &&
+                "رمز عبور و تکرار آن باید برابر باشد"
+              }
+              name={"repeatPassword"}
+              onChange={handleChange}
+              label={"تکرار رمز عبور"}
+              type={"password"}
+              fullWidth={true}
+              sx={{ mt: 2, display: isShowPassword ? "block" : "none" }}
+              disabled={!editable}
+            />
           </>
         )}
       </CardContent>

@@ -5,6 +5,7 @@ import {
   GetUserInfoReq,
   UpdateUserReq,
   GetUsersList,
+  UpdateUserProfileReq,
 } from "../../core/administrations/administrations.service.ts";
 import { I_ROLE } from "../../core/administrations/administrations.model.ts";
 import { DefinitionState } from "./definitionSlicer.ts";
@@ -118,6 +119,22 @@ export const UpdateUser = createAsyncThunk(
     }
   }
 );
+export const UpdateUserProfile = createAsyncThunk(
+  "administrations/UpdateUserProfile",
+  async (
+    body: any,
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await UpdateUserProfileReq(userId, body);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const administrationSlicer = createSlice({
   name: "administrations",
@@ -215,6 +232,24 @@ export const administrationSlicer = createSlice({
       .addCase(UpdateUser.rejected, (state: AdministrationState, { error }) => {
         state.users.addState = false;
       });
+    //#endregion
+    // #region UpdateUserProfile-----
+    builder
+      .addCase(UpdateUserProfile.pending, (state: AdministrationState) => {
+        state.users.addState = true;
+      })
+      .addCase(
+        UpdateUserProfile.fulfilled,
+        (state: AdministrationState, { payload }) => {
+          state.users.addState = false;
+        }
+      )
+      .addCase(
+        UpdateUserProfile.rejected,
+        (state: AdministrationState, { error }) => {
+          state.users.addState = false;
+        }
+      );
     //#endregion
   },
 });
