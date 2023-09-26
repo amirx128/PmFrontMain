@@ -249,7 +249,7 @@ const ExitWarehouseQList = () => {
     );
   };
   const handleDoubleClick = (e) => {
-    navigate(`/exitwarehouse/details/${e.row.warehouseOrderId}`);
+    navigate(`/exitwarehouse/details/${e.row.exitWarehouseOrderId}`);
   };
   const handleDownloadExcell = async () => {
     await dispatch(
