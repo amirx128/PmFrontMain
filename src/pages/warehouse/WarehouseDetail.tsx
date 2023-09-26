@@ -2,7 +2,7 @@ import { Grid, Box, Typography, useTheme } from "@mui/material";
 import { StyledBox } from "./style";
 import { Link } from "react-router-dom";
 
-const WarehouseDetail = ({ detail }: any) => {
+const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
   const theme = useTheme();
   const createDate = new Date(detail?.createDate).toLocaleDateString("fa-IR");
   return (
@@ -36,11 +36,13 @@ const WarehouseDetail = ({ detail }: any) => {
                   marginRight: "20px",
                 }}
               >
-                درخواست دهنده :
+                {mode === "warehouse" ? "درخواست دهنده :" : "ایجاد کننده"}
               </Typography>
 
               <Typography variant="body2">
-                {detail?.requestCaseUser}{" "}
+                {mode === "warehouse"
+                  ? detail?.requestCaseUser
+                  : detail?.creatorUser}
               </Typography>
             </Box>
             <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -57,7 +59,9 @@ const WarehouseDetail = ({ detail }: any) => {
               </Typography>
 
               <Typography variant="body2" color="secondary">
-                {detail?.warehouseTrackingCode}
+                {mode === "warehouse"
+                  ? detail?.warehouseTrackingCode
+                  : detail?.trakingCode}
               </Typography>
             </Box>
           </Grid>

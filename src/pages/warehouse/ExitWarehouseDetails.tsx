@@ -44,7 +44,7 @@ const ExitWarehouseDetails = () => {
   const [receiveIsOk, setReceiveIsOk] = useState<boolean>(true);
 
   const isEditable = warehouseRowSelected?.warehouseEditable;
-  const isAddEditable = exitOrderDetailData?.data?.isEtitable;
+  const isAddEditable = exitOrderDetailData?.data?.isEditable;
   const {
     register,
     handleSubmit,
@@ -142,6 +142,7 @@ const ExitWarehouseDetails = () => {
                 color="info"
                 variant="contained"
                 onClick={handleAdd}
+                disabled={!isAddEditable}
               >
                 افزودن
                 <SaveIcon sx={{ marginLeft: "10px" }} />

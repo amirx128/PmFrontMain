@@ -1,6 +1,6 @@
 import { Card, Divider, CardHeader, Typography } from "@mui/material";
 import axios from "../../utils/axios.config.ts";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { withSnackbar } from "../../utils/snackbar-hook";
 import { useSelector, useDispatch } from "react-redux";
@@ -33,10 +33,15 @@ const WarhouseForm = ({
     getWarehouseDetails();
   }, []);
   useEffect(() => {
-    if (orderDetailData?.data?.wareHouseDetailsModelResult) {
+    if (
+      (mode === "warehouse" &&
+        orderDetailData?.data?.wareHouseDetailsModelResult) ||
+      (mode === "exitWarehouse" &&
+        exitOrderDetailData?.data?.exitFromWarehouseDetails)
+    ) {
       handleSelectDefaultRow();
     }
-  }, [orderDetailData]);
+  }, [orderDetailData, exitOrderDetailData]);
 
   const getWarehouseDetails = async () => {
     try {
@@ -49,7 +54,7 @@ const WarhouseForm = ({
       console.error("Error fetching data:", error);
     }
   };
-  const columns: GridColDef[] = [
+  const warehouseColumns: GridColDef[] = [
     {
       field: "id",
       headerName: gridDict.id,
@@ -125,9 +130,69 @@ const WarhouseForm = ({
       filterable: false,
     },
   ];
+  const exitWarehouseColumns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: gridDict.id,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "countOfSent",
+      headerName: gridDict.countOfSent,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "receiveDateTime",
+      headerName: gridDict.receiveDateTime,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value }) => (
+        <span>
+          {value ? new Date(value).toLocaleDateString("fa-IR").toString() : "-"}
+        </span>
+      ),
+    },
+    {
+      field: "senderUser",
+      headerName: gridDict.senderUser,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "sentDateTime",
+      headerName: gridDict.sentDateTime,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value }) => (
+        <span>
+          {value ? new Date(value).toLocaleDateString("fa-IR").toString() : "-"}
+        </span>
+      ),
+    },
+  ];
+  const columns: GridColDef[] =
+    mode === "warehouse" ? warehouseColumns : exitWarehouseColumns;
   const handleSelectDefaultRow = () => {
-    const selectedRow =
-      orderDetailData?.data?.wareHouseDetailsModelResult.at(0);
+    let selectedRow;
+    if (mode === "warehouse") {
+      selectedRow = orderDetailData?.data?.wareHouseDetailsModelResult.at(0);
+    }
+    if (mode === "exitWarehouse") {
+      selectedRow = exitOrderDetailData?.data?.exitFromWarehouseDetails.at(0);
+    }
+
     dispatch(setWarhouseRowSelectedAction(selectedRow));
   };
   const handleSelectedRow = (e) => {
@@ -145,6 +210,7 @@ const WarhouseForm = ({
             ? orderDetailData?.data
             : exitOrderDetailData?.data
         }
+        mode={mode}
       />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
 
@@ -154,8 +220,10 @@ const WarhouseForm = ({
         titleTypographyProps={{ variant: "h6" }}
       />
 
-      {(orderDetailData?.data?.wareHouseDetailsModelResult ||
-        exitOrderDetailData?.data?.exitFromWarehouseDetails) && (
+      {((mode === "warehouse" &&
+        orderDetailData?.data?.wareHouseDetailsModelResult) ||
+        (mode === "exitWarehouse" &&
+          exitOrderDetailData?.data?.exitFromWarehouseDetails)) && (
         <Grid
           rowIdFields={["requestCaseRowCommodityId"]}
           columns={columns}

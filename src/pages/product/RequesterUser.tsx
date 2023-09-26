@@ -298,7 +298,7 @@ const RequesterUser = () => {
           title="لیست تحویل دریافت"
           titleTypographyProps={{ variant: "h6" }}
         />
-        <Dialog open={true}>
+        <Dialog open={false}>
           <DialogTitle>شخصی سازی ستون ها</DialogTitle>
           <DialogContent>
             <ColumnGrid>
