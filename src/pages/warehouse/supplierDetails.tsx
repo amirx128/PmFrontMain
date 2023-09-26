@@ -32,7 +32,7 @@ const SupplierDetails = () => {
   const [mode, setMode] = useState<"edit" | "add">("add");
 
   const isEditable = warehouseRowSelected?.supportEditable;
-  const isAddEditable = orderDetailData?.data?.isEtitable;
+  const isAddEditable = orderDetailData?.data?.isEditable;
   const {
     register,
     handleSubmit,
