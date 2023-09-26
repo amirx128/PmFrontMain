@@ -175,7 +175,7 @@ const RequesterUser = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/requesterUser/details/${row.warehouseOrderId}`}>
+            <Link to={`/requesterUser/details/${row.exitWarehouseOrderId}`}>
               {value}
             </Link>
           </Typography>
@@ -258,7 +258,7 @@ const RequesterUser = () => {
     );
   };
   const handleDoubleClick = (e) => {
-    navigate(`/requesterUser/details/${e.row.warehouseOrderId}`);
+    navigate(`/requesterUser/details/${e.row.exitWarehouseOrderId}`);
   };
   const handleDownloadExcel = async () => {
     dispatch(
