@@ -89,7 +89,7 @@ export const AddProducer = ({ addProducerDialog, selectedProducer, onClose }) =>
           alignItems: "center",
         }}
       >
-        {selectedProducer ? "ویرایش تهیه کننده" : "افزودن تهیه کننده"}
+        {selectedProducer ? "ویرایش تولید کننده" : "افزودن تولید کننده"}
         <IconButton color={"error"} onClick={onClose}>
           <HighlightOff />
         </IconButton>

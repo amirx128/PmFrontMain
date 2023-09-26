@@ -310,7 +310,7 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth={true}>
-                <Typography sx={{ mt: 2 }}>تهیه کننده</Typography>
+                <Typography sx={{ mt: 2 }}>تولید کننده</Typography>
                 <Select
                   sx={{ mt: 2 }}
                   value={info?.producerId}
