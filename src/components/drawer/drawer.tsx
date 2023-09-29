@@ -6,6 +6,7 @@ import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
 
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -469,6 +470,90 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     },
     {
       id: 8,
+      name: "کنترل کیفیت",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "آیتم اصلی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/originalItem",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "آیتم فرعی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/subItem",
+          role: UserRole.Admin,
+        },
+        {
+          id: 2,
+          name: "تعریف کاربری",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/defineUsability",
+          role: UserRole.Admin,
+        },
+        {
+          id: 3,
+          name: "چک لیست ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/checkLists",
+          role: UserRole.Admin,
+        },
+        {
+          id: 4,
+          name: "شروع چک لیست ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/startCheckLists",
+          role: UserRole.Admin,
+        },
+      ],
+    },
+    {
+      id: 9,
       name: "خروج",
       icon: (
         <ListItemIcon
