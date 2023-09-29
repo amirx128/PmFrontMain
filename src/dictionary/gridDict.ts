@@ -57,6 +57,15 @@ const gridDict = {
   sentDateTime: "تاریخ ارسال",
   name: "نام",
   subItems: "آیتم های فرعی",
+  allCheckList: "چک لیست ها",
+  allFloor: "طبقه ها",
+  allProjects: "پروژه ها",
+  allUnit: "واحد ها",
+  originalItemName: "نام آیتم اصلی",
+  relatedCheckList: "چک لیست های مرتبط",
+  relatedFloor: "طبقه های مرتبط",
+  relatedProjects: "پروژه های مرتبط",
+  relatedUnit: "واحد های مرتبط",
 };
 
 export default gridDict;

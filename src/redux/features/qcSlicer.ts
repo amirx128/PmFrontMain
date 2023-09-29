@@ -5,6 +5,9 @@ import {
   AddNewOriginalItem,
   UpdateOriginalItem,
   GetAllSubItems,
+  GetSubItemsData,
+  AddNewSubItem,
+  UpdateSubItem,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -32,6 +35,16 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  subItemAddState: {
+    pending: boolean;
+  };
+  subItemsUpdateState: {
+    pending: boolean;
+  };
+  selectedSubItem: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -51,6 +64,16 @@ const initialState: QcState = {
   },
   subItems: {
     data: [],
+    pending: false,
+  },
+  subItemAddState: {
+    pending: false,
+  },
+  subItemsUpdateState: {
+    pending: false,
+  },
+  selectedSubItem: {
+    data: undefined,
     pending: false,
   },
 };
@@ -126,6 +149,55 @@ export const GetAllSubItemsAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetAllSubItems(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const AddNewSubItemAction = createAsyncThunk(
+  "qc/AddNewSubItemAction",
+  async (
+    body: any,
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await AddNewSubItem(userId, body);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetSubItemsDataAction = createAsyncThunk(
+  "qc/GetSubItemsDataAction",
+  async (
+    body: { selectedItemId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { selectedItemId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetSubItemsData(userId, selectedItemId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const UpdateSubItemAction = createAsyncThunk(
+  "qc/UpdateSubItemAction",
+  async (
+    body: { id: number; data: any },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await UpdateSubItem(userId, body.id, body.data);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -208,6 +280,46 @@ export const QcSlicer = createSlice({
       )
       .addCase(GetAllSubItemsAction.rejected, (state: QcState) => {
         state.subItems.pending = false;
+      });
+    //#endregion
+    //#region GetSubItemsDataAction-----
+    builder
+      .addCase(GetSubItemsDataAction.pending, (state: QcState) => {
+        state.selectedSubItem.pending = true;
+      })
+      .addCase(
+        GetSubItemsDataAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.selectedSubItem.pending = false;
+          state.selectedSubItem.data = payload?.model;
+        }
+      )
+      .addCase(GetSubItemsDataAction.rejected, (state: QcState) => {
+        state.selectedSubItem.pending = false;
+      });
+    //#endregion
+    //#region AddNewSubItemAction-----
+    builder
+      .addCase(AddNewSubItemAction.pending, (state: QcState) => {
+        state.subItemAddState.pending = true;
+      })
+      .addCase(AddNewSubItemAction.fulfilled, (state: QcState) => {
+        state.subItemAddState.pending = false;
+      })
+      .addCase(AddNewSubItemAction.rejected, (state: QcState) => {
+        state.subItemAddState.pending = false;
+      });
+    //#endregion
+    //#region UpdateSubItemAction-----
+    builder
+      .addCase(UpdateSubItemAction.pending, (state: QcState) => {
+        state.subItemsUpdateState.pending = true;
+      })
+      .addCase(UpdateSubItemAction.fulfilled, (state: QcState) => {
+        state.subItemsUpdateState.pending = false;
+      })
+      .addCase(UpdateSubItemAction.rejected, (state: QcState) => {
+        state.subItemsUpdateState.pending = false;
       });
     //#endregion
   },

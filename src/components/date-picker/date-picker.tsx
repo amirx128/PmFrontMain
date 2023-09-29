@@ -22,11 +22,12 @@ interface IProps {
   onChange?: (newType: string) => void;
   errors?: Partial<DeepMap<any, FieldError>>;
   value?: any;
+  sx?: any;
 }
 const JalaliDatePicker: React.FC<IProps> = (props) => {
   const theme = useTheme();
   return (
-    <Container sx={{ width: "100%" }} theme={theme}>
+    <Container sx={{ width: "100%", ...props.sx }} theme={theme}>
       <LocalizationProvider dateAdapter={AdapterDateFnsJalali}>
         <DatePicker
           defaultValue={new Date(+props.defaultValue)}

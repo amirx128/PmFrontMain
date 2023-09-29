@@ -40,6 +40,9 @@ import Profile from "../pages/profile/profile.tsx";
 import OriginalItemListQC from "../pages/QC/originalItem.tsx";
 import AddOriginalItem from "../pages/QC/addOriginalItem.tsx";
 import EditOriginalItem from "../pages/QC/editOriginalItem.tsx";
+import SubItemsQCList from "../pages/QC/subItem.tsx";
+import AddSubItem from "../pages/QC/addSubItem.tsx";
+import EditSubItem from "../pages/QC/editSubItem.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -337,6 +340,28 @@ export const routes: IRoute[] = [
   {
     path: "/qc/originalItems/edit/:id",
     component: <EditOriginalItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  ///////////////////
+  {
+    path: "/qc/subItems",
+    component: <SubItemsQCList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/subItems/add",
+    component: <AddSubItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/subItems/edit/:id",
+    component: <EditSubItem />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",
