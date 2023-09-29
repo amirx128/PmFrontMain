@@ -12,6 +12,7 @@ import warehouseSlicer from "./features/warehouseSlicer.ts";
 import productSlicer from "./features/productSlicer.ts";
 import supportSlicer from "./features/supportSlicer.ts";
 import accountSlicer from "./features/accountSlicer.ts";
+import qcSlicer from "./features/qcSlicer.ts";
 
 const reducers = combineReducers({
   user: userReducer,
@@ -23,6 +24,7 @@ const reducers = combineReducers({
   product: productSlicer,
   support: supportSlicer,
   account: accountSlicer,
+  qc: qcSlicer,
 });
 
 const persistConfig = {

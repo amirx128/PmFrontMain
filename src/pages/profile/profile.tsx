@@ -54,7 +54,6 @@ const Profile = () => {
     dispatch(GetAllRoles());
     getUserInfo();
   }, []);
-  console.log(selectedUser);
   useEffect(() => {
     if (selectedUser) {
       setInfo({

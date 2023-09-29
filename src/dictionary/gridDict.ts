@@ -55,6 +55,8 @@ const gridDict = {
   countOfSent: "تعداد ارسالی",
   receiveDateTime: "تاریخ دریافت",
   sentDateTime: "تاریخ ارسال",
+  name: "نام",
+  subItems: "آیتم های فرعی",
 };
 
 export default gridDict;

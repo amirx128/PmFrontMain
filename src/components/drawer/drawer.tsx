@@ -491,7 +491,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/originalItem",
+          route: "/qc/originalItems",
           role: UserRole.Admin,
         },
         {

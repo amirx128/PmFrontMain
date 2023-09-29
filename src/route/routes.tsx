@@ -37,6 +37,9 @@ import WarehouseDetails from "../pages/warehouse/WarehouseDetails.tsx";
 import ExitWarehouseDetails from "../pages/warehouse/ExitWarehouseDetails.tsx";
 import RequesterUserDetails from "../pages/warehouse/RequesterUserDetails.tsx";
 import Profile from "../pages/profile/profile.tsx";
+import OriginalItemListQC from "../pages/QC/originalItem.tsx";
+import AddOriginalItem from "../pages/QC/addOriginalItem.tsx";
+import EditOriginalItem from "../pages/QC/editOriginalItem.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -315,5 +318,27 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: "خارج شده",
+  },
+  //////////QC
+  {
+    path: "/qc/originalItems",
+    component: <OriginalItemListQC />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/originalItems/add",
+    component: <AddOriginalItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/originalItems/edit/:id",
+    component: <EditOriginalItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
   },
 ];
