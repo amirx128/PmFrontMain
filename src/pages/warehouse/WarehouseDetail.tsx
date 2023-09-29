@@ -24,6 +24,21 @@ const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
                 </Typography>
                 <Typography variant="body2">{createDate.toString()}</Typography>
               </Box>
+              {mode === "exitWarehouse" && (
+                <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      marginRight: "20px",
+                    }}
+                  >
+                    مقدار :
+                  </Typography>
+                  <Typography variant="body2">{detail?.count}</Typography>
+                </Box>
+              )}
             </StyledBox>
           </Grid>
           <Grid item xs={12} sm={7}>
