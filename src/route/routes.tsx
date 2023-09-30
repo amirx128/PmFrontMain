@@ -43,6 +43,8 @@ import EditOriginalItem from "../pages/QC/editOriginalItem.tsx";
 import SubItemsQCList from "../pages/QC/subItem.tsx";
 import AddSubItem from "../pages/QC/addSubItem.tsx";
 import EditSubItem from "../pages/QC/editSubItem.tsx";
+import UsabilitiesListQC from "../pages/QC/usabilities.tsx";
+import AddUsability from "../pages/QC/addUsability.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -362,6 +364,29 @@ export const routes: IRoute[] = [
   {
     path: "/qc/subItems/edit/:id",
     component: <EditSubItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+
+  /////////////////////
+  {
+    path: "/qc/defineUsability",
+    component: <UsabilitiesListQC />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/defineUsability/add",
+    component: <AddUsability />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/defineUsability/edit/:id",
+    component: <AddUsability />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",

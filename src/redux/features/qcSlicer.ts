@@ -8,6 +8,8 @@ import {
   GetSubItemsData,
   AddNewSubItem,
   UpdateSubItem,
+  GetAllUsability,
+  AddNewUsability,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -45,6 +47,13 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  usabilities: {
+    data: any;
+    pending: boolean;
+  };
+  usabilityAddState: {
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -74,6 +83,13 @@ const initialState: QcState = {
   },
   selectedSubItem: {
     data: undefined,
+    pending: false,
+  },
+  usabilities: {
+    data: [],
+    pending: false,
+  },
+  usabilityAddState: {
     pending: false,
   },
 };
@@ -204,7 +220,41 @@ export const UpdateSubItemAction = createAsyncThunk(
     }
   }
 );
-
+export const AddNewUsabilityAction = createAsyncThunk(
+  "qc/AddNewUsabilityAction",
+  async (
+    body: { unitId: number; usabilityName: string; code: string },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { unitId, usabilityName, code } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await AddNewUsability(
+        userId,
+        unitId,
+        usabilityName,
+        code
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetAllUsabilityAction = createAsyncThunk(
+  "qc/GetAllUsabilityAction",
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllUsability(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const QcSlicer = createSlice({
   name: "qc",
   initialState,
@@ -320,6 +370,34 @@ export const QcSlicer = createSlice({
       })
       .addCase(UpdateSubItemAction.rejected, (state: QcState) => {
         state.subItemsUpdateState.pending = false;
+      });
+    //#endregion
+    //#region GetAllUsabilityAction-----
+    builder
+      .addCase(GetAllUsabilityAction.pending, (state: QcState) => {
+        state.usabilities.pending = true;
+      })
+      .addCase(
+        GetAllUsabilityAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.usabilities.pending = false;
+          state.usabilities.data = payload?.model;
+        }
+      )
+      .addCase(GetAllUsabilityAction.rejected, (state: QcState) => {
+        state.usabilities.pending = false;
+      });
+    //#endregion
+    //#region AddNewUsabilityAction-----
+    builder
+      .addCase(AddNewUsabilityAction.pending, (state: QcState) => {
+        state.usabilityAddState.pending = true;
+      })
+      .addCase(AddNewUsabilityAction.fulfilled, (state: QcState) => {
+        state.usabilityAddState.pending = false;
+      })
+      .addCase(AddNewUsabilityAction.rejected, (state: QcState) => {
+        state.usabilityAddState.pending = false;
       });
     //#endregion
   },
