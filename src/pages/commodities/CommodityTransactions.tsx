@@ -37,15 +37,7 @@ const CommodityTransactions = () => {
   const columns: GridColDef[] = [
     {
       field: "id",
-      headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitWarehouseOrderId",
-      headerName: gridDict.purchaseOrderId,
+      headerName: "شناسه تراکنش",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -53,15 +45,15 @@ const CommodityTransactions = () => {
     },
     {
       field: "exitWarehouseOrderTrackingCode",
-      headerName: gridDict.purchaseOrderTrackingCode,
+      headerName: "کد رهگیری خروج",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "PurchaseOrderId",
-      headerName: gridDict.requestCaseTrackingCode,
+      field: "PurchaseOrderTrackingCode",
+      headerName: "کد رهگیری خرید",
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -79,8 +71,8 @@ const CommodityTransactions = () => {
       },
     },
     {
-      field: "PurchaseOrderTrackingCode",
-      headerName: gridDict.requestCaseId,
+      field: "type",
+      headerName:"نوع تراکنش",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -98,8 +90,8 @@ const CommodityTransactions = () => {
         }
     },
     {
-      field: "type",
-      headerName: gridDict.requestCaseCreateDate,
+      field: "ActivityDate",
+      headerName: "تاریخ",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -113,21 +105,13 @@ const CommodityTransactions = () => {
       ),
     },
     {
-      field: "ActivityDate",
-      headerName: gridDict.countOfDone,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
       field: "Count",
-      headerName: gridDict.commodityName,
+      headerName: "تعداد",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-    },
+    }
   ];
   useEffect(() => {
     getList();
