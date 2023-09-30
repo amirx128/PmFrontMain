@@ -13,29 +13,29 @@ import {
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  AddNewSubItemAction,
-  GetAllOriginalItemsAction,
+  AddNewUsabilityAction,
+  GetAllSubItemsAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
-const AddSubItem = () => {
+import { getAllUnits } from "../../redux/features/definitionSlicer";
+const AddUsability = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { AddNewSubItem, originalItems } = useSelector(
-    (state: any) => state?.qc
-  );
-
+  const { usabilityAddState } = useSelector((state: any) => state?.qc);
+  const { units } = useSelector((state: any) => state.definition);
   const [info, setInfo] = useState({
-    name: "",
-    originalItemId: undefined,
+    usablityName: "",
+    unitId: 0,
+    code: "",
   });
 
   useEffect(() => {
-    getAllOriginalItems();
+    getUnits();
   }, []);
 
-  const getAllOriginalItems = async () => {
-    await dispatch(GetAllOriginalItemsAction());
+  const getUnits = async () => {
+    dispatch(getAllUnits({ projectId: 0, floorId: 0 }));
   };
   const handleChange = (e) => {
     setInfo({
@@ -45,15 +45,16 @@ const AddSubItem = () => {
   };
   const hanldeSubmit = async () => {
     await dispatch(
-      AddNewSubItemAction({
-        name: info.name,
-        originalItemId: info.originalItemId,
+      AddNewUsabilityAction({
+        usabilityName: info.usablityName,
+        unitId: +info.unitId,
+        code: info.code,
       })
     );
   };
   return (
     <Card>
-      <CardHeader title="افزودن آیتم فرعی" sx={{ textAlign: "left" }} />
+      <CardHeader title="افزودن کاربری" sx={{ textAlign: "left" }} />
       <CardContent
         sx={{
           display: "flex",
@@ -62,43 +63,50 @@ const AddSubItem = () => {
         }}
       >
         <TextField
-          value={info?.name}
-          name={"name"}
+          value={info?.usablityName}
+          name={"usablityName"}
           onChange={handleChange}
           label={"نام"}
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم اصلی</InputLabel>
+          <InputLabel>واحد</InputLabel>
           <Select
-            value={info?.originalItemId}
+            value={info?.unitId}
             fullWidth={true}
-            name={"originalItemId"}
-            label="آیتم اصلی"
+            name={"unitId"}
+            label="واحد"
             onChange={handleChange}
           >
-            {originalItems?.data?.map((item) => (
+            {units?.data?.map((item) => (
               <MenuItem value={item.id} key={item?.id}>
                 {item?.name}
               </MenuItem>
             ))}
           </Select>
         </FormControl>
+        <TextField
+          value={info?.code}
+          name={"code"}
+          onChange={handleChange}
+          label={"کد"}
+          sx={{ mt: 2, width: "50%" }}
+        />
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
         <LoadingButton
           color="success"
           variant="contained"
           onClick={hanldeSubmit}
-          loading={AddNewSubItem?.pending}
+          loading={usabilityAddState?.pending}
         >
           ثبت
         </LoadingButton>
         <Button
           color="error"
           variant="contained"
-          onClick={() => navigate("/qc/subItems")}
-          disabled={AddNewSubItem?.pending && AddNewSubItem?.pending}
+          onClick={() => navigate("/qc/defineUsability")}
+          disabled={usabilityAddState.pending && usabilityAddState?.pending}
         >
           انصراف
         </Button>
@@ -107,4 +115,4 @@ const AddSubItem = () => {
   );
 };
 
-export default AddSubItem;
+export default AddUsability;

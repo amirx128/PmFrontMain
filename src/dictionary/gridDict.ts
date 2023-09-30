@@ -66,6 +66,9 @@ const gridDict = {
   relatedFloor: "طبقه های مرتبط",
   relatedProjects: "پروژه های مرتبط",
   relatedUnit: "واحد های مرتبط",
+  usablityName: "نام کاربری",
+  unitName: "نام واحد",
+  code: "کد",
 };
 
 export default gridDict;
