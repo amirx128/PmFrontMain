@@ -265,7 +265,7 @@ const ExitWarehouseSentItemList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="خارج شده"
+          title="لیست خروج از انبار"
           titleTypographyProps={{ variant: "h6" }}
         />
 

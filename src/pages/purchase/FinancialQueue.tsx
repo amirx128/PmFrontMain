@@ -284,7 +284,7 @@ const FinancialQueue = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="مالی - در انتظار بررسی"
+          title="لیست انتظار بررسی مالی خرید"
           titleTypographyProps={{ variant: "h6" }}
         />
 

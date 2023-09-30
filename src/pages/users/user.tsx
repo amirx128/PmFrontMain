@@ -161,7 +161,7 @@ const Users = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست کاربران"
+          title="مدیریت کاربران"
           titleTypographyProps={{ variant: "h6" }}
         />
         <ActionRow>

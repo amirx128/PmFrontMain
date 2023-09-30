@@ -274,7 +274,7 @@ const WarehouseSentItemList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="تحویل گرفته شده"
+          title="لیست تحویل انبار"
           titleTypographyProps={{ variant: "h6" }}
         />
 

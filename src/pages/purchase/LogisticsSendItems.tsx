@@ -286,7 +286,7 @@ const LogisticsSendItems = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="تدارکات -بررسی شده"
+          title="لیست درخواست خرید"
           titleTypographyProps={{ variant: "h6" }}
         />
 

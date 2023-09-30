@@ -198,7 +198,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
           variant="h5"
           component="h4"
         >
-          درخواست کالا
+          ثبت درخواست
         </Typography>
         <RequestDetail />
       </Box>

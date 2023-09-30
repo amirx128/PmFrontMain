@@ -272,7 +272,7 @@ const ExitWarehouseQList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="در صف خروج"
+          title="لیست انتظار خروج از انبار"
           titleTypographyProps={{ variant: "h6" }}
         />
 

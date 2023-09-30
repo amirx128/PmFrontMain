@@ -460,7 +460,7 @@ const FinalApprovedList: React.FC<any> = (props) => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست تایید پشتیبانی"
+          title="لیست تصویب درخواست"
           titleTypographyProps={{ variant: "h6" }}
         />
 

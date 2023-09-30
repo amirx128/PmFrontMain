@@ -295,7 +295,7 @@ const ApproveSendItems = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="تایید شده ها"
+          title="لیست دستور خرید"
           titleTypographyProps={{ variant: "h6" }}
         />
 

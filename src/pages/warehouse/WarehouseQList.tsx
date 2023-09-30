@@ -271,7 +271,7 @@ const WarehouseQList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="در صف تحویل"
+          title="لیست انتظار تحویل انبار "
           titleTypographyProps={{ variant: "h6" }}
         />
 

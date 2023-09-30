@@ -271,7 +271,7 @@ const SupplierSentItemList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="بررسی شده"
+          title="لیست انتظار بررسی تامین کننده"
           titleTypographyProps={{ variant: "h6" }}
         />
 

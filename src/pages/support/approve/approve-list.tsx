@@ -461,7 +461,7 @@ const SupportList: React.FC<any> = (props) => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست تایید پشتیبانی"
+          title="لیست انتظار تائید درخواست"
           titleTypographyProps={{ variant: "h6" }}
         />
 

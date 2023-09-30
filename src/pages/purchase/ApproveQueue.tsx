@@ -292,7 +292,7 @@ const ApproveQueue = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="تایید خرید"
+          title="لیست انتظار دستور خرید"
           titleTypographyProps={{ variant: "h6" }}
         />
 

@@ -284,7 +284,7 @@ const LogisticsQueue = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="تدارکات - در انتظار بررسی"
+          title="لیست انتظار درخواست خرید"
           titleTypographyProps={{ variant: "h6" }}
         />
 

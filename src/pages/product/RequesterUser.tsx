@@ -295,7 +295,7 @@ const RequesterUser = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="لیست تحویل دریافت"
+          title="لیست حواله های دریافتی"
           titleTypographyProps={{ variant: "h6" }}
         />
         <Dialog open={false}>

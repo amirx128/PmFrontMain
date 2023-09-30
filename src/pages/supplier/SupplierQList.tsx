@@ -270,7 +270,7 @@ const SupplierQList = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="در صف بررسی"
+          title="لیست انتظار بررسی تامین کننده"
           titleTypographyProps={{ variant: "h6" }}
         />
 

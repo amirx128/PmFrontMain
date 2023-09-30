@@ -63,7 +63,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const MenuList = [
     {
       id: 2,
-      name: " درخواست کالا ",
+      name: "مدیریت درخواست",
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
@@ -76,7 +76,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "ثبت درخواست جدید",
+          name: "ثبت درخواست ",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -88,121 +88,10 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           route: "/productRequest",
           role: UserRole.Requester,
         },
-        {
-          id: 1,
-          name: "تحویل دریافت",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/requesteruser",
-          role: UserRole.Requester,
-        },
-        {
-          id: 2,
-          name: "درخواست های ارسال شده",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/requestcase-sentitem",
-          role: UserRole.Requester,
-        },
-      ],
-    },
-    {
-      id: 3,
-      name: "مدیریت",
-      icon: (
-        <ListItemIcon
-          sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
-        >
-          <RoleIcon fontSize="large" />
-        </ListItemIcon>
-      ),
-      subMenus: [
+        
         {
           id: 0,
-          name: "کاربران",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/users",
-          role: UserRole.Admin,
-        },
-        {
-          id: 1,
-          name: "تعاریف",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/definitions",
-          role: UserRole.Admin,
-        },
-        {
-          id: 2,
-          name: "کالا ها",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <Inventory fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/commodities",
-          role: UserRole.Admin,
-        },
-        {
-          id: 3,
-          name: "نقش ها",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/roles",
-          role: UserRole.Admin,
-        },
-      ],
-    },
-    {
-      id: 4,
-      name: "پشتیبانی",
-      icon: (
-        <ListItemIcon
-          sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
-        >
-          <RoleIcon fontSize="large" />
-        </ListItemIcon>
-      ),
-      subMenus: [
-        {
-          id: 0,
-          name: "منتظر تایید",
+          name: "لیست انتظار تائید درخواست",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -216,7 +105,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 1,
-          name: "تایید شده ها",
+          name: "لیست تائید درخواست",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -230,7 +119,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 2,
-          name: "در صف تایید تهایی",
+          name: "لیست انتظار تصویب درخواست",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -244,7 +133,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 3,
-          name: "تایید نهایی شده ها",
+          name: "لیست تصویب درخواست",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -260,7 +149,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     },
     {
       id: 5,
-      name: "خرید",
+      name: "مدیریت خرید",
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
@@ -272,7 +161,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "تدارکات-منتظر بررسی",
+          name: "لیست انتظار درخواست خرید",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -286,7 +175,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 1,
-          name: "تدارکات-بررسی شده ها",
+          name: "لیست درخواست خرید",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -300,7 +189,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 2,
-          name: "مالی-منتظر بررسی",
+          name: "لیست انتظار بررسی مالی خرید",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -314,7 +203,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 3,
-          name: "مالی-بررسی شده ها",
+          name: "لیست بررسی مالی خرید",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -328,7 +217,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 4,
-          name: "تایید خرید",
+          name: "لیست انتظار دستور خرید",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -342,7 +231,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 5,
-          name: "تایید شده ها",
+          name: "لیست دستور خرید",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -357,50 +246,8 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
     {
-      id: 6,
-      name: "تامین کننده",
-      icon: (
-        <ListItemIcon
-          sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
-        >
-          <Support fontSize="large" />
-        </ListItemIcon>
-      ),
-      subMenus: [
-        {
-          id: 0,
-          name: "در صف بررسی",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/supplier/supplier-queue",
-          role: UserRole.Supplier,
-        },
-        {
-          id: 1,
-          name: "بررسی شده",
-          icon: (
-            <ListItemIcon
-              sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
-            >
-              <HomeIcon fontSize="large" />
-            </ListItemIcon>
-          ),
-          route: "/supplier/supplier-sentitem",
-          role: UserRole.Supplier,
-        },
-      ],
-    },
-    {
       id: 7,
-      name: "انبار",
+      name: "مدیریت انبار",
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
@@ -412,7 +259,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "در صف تحویل",
+          name: "لیست انتظار تحویل انبار",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -426,7 +273,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 1,
-          name: "تحویل گرفته شده",
+          name: "لیست تحویل انبار",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -440,7 +287,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 2,
-          name: "در صف خروج",
+          name: "لیست انتظار خروج از انبار",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -454,7 +301,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
         {
           id: 3,
-          name: "خارج شده",
+          name: "لیست خروج از انبار",
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
@@ -465,6 +312,92 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           ),
           route: "/warehosue/exitwarehouse-sentitems",
           role: UserRole["Warehouse.Exit"],
+        },
+      ],
+    },
+    ,
+    {
+      id: 4,
+      name: "مدیریت درخواست کنندگان",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <RoleIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        
+        {
+          id: 2,
+          name: "لیست درخواست های ارسال شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/requestcase-sentitem",
+          role: UserRole.Requester,
+        },
+        {
+          id: 1,
+          name: "لیست حواله های دریافتی",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/requesteruser",
+          role: UserRole.Requester,
+        },
+      ],
+    },
+    {
+      id: 6,
+      name: "مدیریت تامین کنندگان",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <Support fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "لیست انتظار بررسی تامین کننده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/supplier/supplier-queue",
+          role: UserRole.Supplier,
+        },
+        {
+          id: 1,
+          name: "لیست بررسی تامین کننده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/supplier/supplier-sentitem",
+          role: UserRole.Supplier,
         },
       ],
     },
@@ -550,6 +483,77 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           route: "/qc/startCheckLists",
           role: UserRole.Admin,
         },
+      ],
+    },
+    {
+      id: 3,
+      name: "مدیریت سیستم",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <RoleIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "مدیریت کاربران",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/users",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "تعاریف پایه",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/definitions",
+          role: UserRole.Admin,
+        },
+        {
+          id: 2,
+          name: "مدیریت کالاها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <Inventory fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/commodities",
+          role: UserRole.Admin,
+        }
+        // ,
+        // {
+        //   id: 3,
+        //   name: "نقش ها",
+        //   icon: (
+        //     <ListItemIcon
+        //       sx={{ color: theme.palette.secondary.light }}
+        //       style={{ justifyContent: "center" }}
+        //     >
+        //       <HomeIcon fontSize="large" />
+        //     </ListItemIcon>
+        //   ),
+        //   route: "/roles",
+        //   role: UserRole.Admin,
+        // },
       ],
     },
     {

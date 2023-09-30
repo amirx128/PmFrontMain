@@ -285,7 +285,7 @@ const FinancialsSendItems = () => {
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}
-          title="مالی -بررسی شده"
+          title="لیست بررسی مالی خرید"
           titleTypographyProps={{ variant: "h6" }}
         />
 
