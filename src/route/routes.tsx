@@ -45,6 +45,7 @@ import AddSubItem from "../pages/QC/addSubItem.tsx";
 import EditSubItem from "../pages/QC/editSubItem.tsx";
 import UsabilitiesListQC from "../pages/QC/usabilities.tsx";
 import AddUsability from "../pages/QC/addUsability.tsx";
+import EditUsability from "../pages/QC/editUsability.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -386,7 +387,7 @@ export const routes: IRoute[] = [
   },
   {
     path: "/qc/defineUsability/edit/:id",
-    component: <AddUsability />,
+    component: <EditUsability />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",
