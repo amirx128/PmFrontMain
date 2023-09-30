@@ -10,6 +10,10 @@ import {
   UpdateSubItem,
   GetAllUsability,
   AddNewUsability,
+  GetAllCheckLists,
+  GetCheckListsData,
+  AddNewCheckList,
+  UpdateCheckList,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -54,6 +58,20 @@ export interface QcState {
   usabilityAddState: {
     pending: boolean;
   };
+  checkLists: {
+    data: any;
+    pending: boolean;
+  };
+  selectedCheckList: {
+    data: any;
+    pending: boolean;
+  };
+  checkListAddState: {
+    pending: boolean;
+  };
+  checkListUpdateState: {
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -90,6 +108,20 @@ const initialState: QcState = {
     pending: false,
   },
   usabilityAddState: {
+    pending: false,
+  },
+  checkLists: {
+    data: [],
+    pending: false,
+  },
+  selectedCheckList: {
+    data: undefined,
+    pending: false,
+  },
+  checkListAddState: {
+    pending: false,
+  },
+  checkListUpdateState: {
     pending: false,
   },
 };
@@ -255,6 +287,82 @@ export const GetAllUsabilityAction = createAsyncThunk(
     }
   }
 );
+
+export const GetAllCheckListsAction = createAsyncThunk(
+  "qc/GetAllCheckListsAction",
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllCheckLists(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetCheckListsDataAction = createAsyncThunk(
+  "qc/GetCheckListsDataAction",
+  async (
+    body: { selectedItemId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { selectedItemId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetCheckListsData(userId, selectedItemId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const AddNewCheckListAction = createAsyncThunk(
+  "qc/AddNewCheckListAction",
+  async (
+    body: { name: string; subItemId: number; items: { itemName: string }[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { name, subItemId, items } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await AddNewCheckList(userId, name, subItemId, items);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const UpdateCheckListAction = createAsyncThunk(
+  "qc/UpdateCheckListAction",
+  async (
+    body: {
+      name: string;
+      subItemId: number;
+      items: { itemName: string; id: number; isDeleted: boolean }[];
+      id: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { name, subItemId, items, id } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await UpdateCheckList(
+        userId,
+        name,
+        subItemId,
+        items,
+        id
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const QcSlicer = createSlice({
   name: "qc",
   initialState,
@@ -398,6 +506,62 @@ export const QcSlicer = createSlice({
       })
       .addCase(AddNewUsabilityAction.rejected, (state: QcState) => {
         state.usabilityAddState.pending = false;
+      });
+    //#endregion
+    //#region GetAllCheckListsAction-----
+    builder
+      .addCase(GetAllCheckListsAction.pending, (state: QcState) => {
+        state.checkLists.pending = true;
+      })
+      .addCase(
+        GetAllCheckListsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.checkLists.pending = false;
+          state.checkLists.data = payload?.model;
+        }
+      )
+      .addCase(GetAllCheckListsAction.rejected, (state: QcState) => {
+        state.checkLists.pending = false;
+      });
+    //#endregion
+    //#region GetCheckListsDataAction-----
+    builder
+      .addCase(GetCheckListsDataAction.pending, (state: QcState) => {
+        state.selectedCheckList.pending = true;
+      })
+      .addCase(
+        GetCheckListsDataAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.selectedCheckList.pending = false;
+          state.selectedCheckList.data = payload?.model;
+        }
+      )
+      .addCase(GetCheckListsDataAction.rejected, (state: QcState) => {
+        state.selectedCheckList.pending = false;
+      });
+    //#endregion
+    //#region AddNewCheckListAction-----
+    builder
+      .addCase(AddNewCheckListAction.pending, (state: QcState) => {
+        state.checkListAddState.pending = true;
+      })
+      .addCase(AddNewCheckListAction.fulfilled, (state: QcState) => {
+        state.checkListAddState.pending = false;
+      })
+      .addCase(AddNewCheckListAction.rejected, (state: QcState) => {
+        state.checkListAddState.pending = false;
+      });
+    //#endregion
+    //#region UpdateCheckListAction-----
+    builder
+      .addCase(UpdateCheckListAction.pending, (state: QcState) => {
+        state.checkListUpdateState.pending = true;
+      })
+      .addCase(UpdateCheckListAction.fulfilled, (state: QcState) => {
+        state.checkListUpdateState.pending = false;
+      })
+      .addCase(UpdateCheckListAction.rejected, (state: QcState) => {
+        state.checkListUpdateState.pending = false;
       });
     //#endregion
   },

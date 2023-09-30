@@ -46,6 +46,9 @@ import EditSubItem from "../pages/QC/editSubItem.tsx";
 import UsabilitiesListQC from "../pages/QC/usabilities.tsx";
 import AddUsability from "../pages/QC/addUsability.tsx";
 import EditUsability from "../pages/QC/editUsability.tsx";
+import ChecklistsListQC from "../pages/QC/checkLists.tsx";
+import AddCheckListItem from "../pages/QC/addCheckList.tsx";
+import EditCheckListItem from "../pages/QC/editCheckList.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -388,6 +391,28 @@ export const routes: IRoute[] = [
   {
     path: "/qc/defineUsability/edit/:id",
     component: <EditUsability />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  ///////////////////////
+  {
+    path: "/qc/checkLists",
+    component: <ChecklistsListQC />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/checkLists/add",
+    component: <AddCheckListItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/checkLists/edit/:id",
+    component: <EditCheckListItem />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",
