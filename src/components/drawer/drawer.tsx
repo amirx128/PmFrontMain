@@ -72,7 +72,6 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           <ListIcon fontSize="large" />
         </ListItemIcon>
       ),
-
       subMenus: [
         {
           id: 0,
@@ -88,7 +87,6 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           route: "/productRequest",
           role: UserRole.Requester,
         },
-        
         {
           id: 0,
           name: "لیست انتظار تائید درخواست",
@@ -315,7 +313,6 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         },
       ],
     },
-    ,
     {
       id: 4,
       name: "مدیریت درخواست کنندگان",
@@ -328,7 +325,6 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
         </ListItemIcon>
       ),
       subMenus: [
-        
         {
           id: 2,
           name: "لیست درخواست های ارسال شده",
@@ -538,7 +534,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           ),
           route: "/commodities",
           role: UserRole.Admin,
-        }
+        },
         // ,
         // {
         //   id: 3,

@@ -69,6 +69,7 @@ const gridDict = {
   usablityName: "نام کاربری",
   unitName: "نام واحد",
   code: "کد",
+  creator: "سازنده",
 };
 
 export default gridDict;
