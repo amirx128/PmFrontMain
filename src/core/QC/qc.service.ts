@@ -48,20 +48,25 @@ export const GetAllUsability = async (userId) =>
   await axiosInstance.post(`/Definition/GetAllUsability`, {
     userId,
   });
-export const AddNewUsability = async (userId, unitId, usablityName, code) =>
+export const AddNewUsability = async (userId, units, usablityName, code) =>
   await axiosInstance.post(`/Definition/AddNewUsablity`, {
     userId,
-    unitId,
+    units,
     usablityName,
     code,
   });
-export const UpdateUsability = async (userId, id, unitId, usablityName, code) =>
+export const UpdateUsability = async (userId, id, units, usablityName, code) =>
   await axiosInstance.post(`/Definition/UpdateUsability`, {
     userId,
     id,
-    unitId,
+    units,
     usablityName,
     code,
+  });
+export const GetUsabilityData = async (userId, selectedItemId) =>
+  await axiosInstance.post(`/Definition/QcManager.GetUsabilityData`, {
+    userId,
+    selectedItemId,
   });
 
 export const GetAllCheckLists = async (userId) =>

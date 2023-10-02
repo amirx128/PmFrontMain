@@ -14,6 +14,8 @@ import {
   GetCheckListsData,
   AddNewCheckList,
   UpdateCheckList,
+  GetUsabilityData,
+  UpdateUsability,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -56,6 +58,13 @@ export interface QcState {
     pending: boolean;
   };
   usabilityAddState: {
+    pending: boolean;
+  };
+  usabilityUpdateState: {
+    pending: boolean;
+  };
+  selectedUsability: {
+    data: any;
     pending: boolean;
   };
   checkLists: {
@@ -108,6 +117,13 @@ const initialState: QcState = {
     pending: false,
   },
   usabilityAddState: {
+    pending: false,
+  },
+  usabilityUpdateState: {
+    pending: false,
+  },
+  selectedUsability: {
+    data: undefined,
     pending: false,
   },
   checkLists: {
@@ -255,16 +271,39 @@ export const UpdateSubItemAction = createAsyncThunk(
 export const AddNewUsabilityAction = createAsyncThunk(
   "qc/AddNewUsabilityAction",
   async (
-    body: { unitId: number; usabilityName: string; code: string },
+    body: { units: number[]; usabilityName: string; code: string },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const { unitId, usabilityName, code } = body;
+      const { units, usabilityName, code } = body;
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await AddNewUsability(
         userId,
-        unitId,
+        units,
+        usabilityName,
+        code
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const UpdateUsabilityAction = createAsyncThunk(
+  "qc/UpdateUsabilityAction",
+  async (
+    body: { id: number; units: number[]; usabilityName: string; code: string },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { units, usabilityName, code, id } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await UpdateUsability(
+        userId,
+        id,
+        units,
         usabilityName,
         code
       );
@@ -281,6 +320,23 @@ export const GetAllUsabilityAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetAllUsability(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetUsabilityDataAction = createAsyncThunk(
+  "qc/GetUsabilityDataAction",
+  async (
+    body: { selectedItemId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { selectedItemId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetUsabilityData(userId, selectedItemId);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -496,6 +552,22 @@ export const QcSlicer = createSlice({
         state.usabilities.pending = false;
       });
     //#endregion
+    //#region GetUsabilityDataAction-----
+    builder
+      .addCase(GetUsabilityDataAction.pending, (state: QcState) => {
+        state.selectedUsability.pending = true;
+      })
+      .addCase(
+        GetUsabilityDataAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.selectedUsability.pending = false;
+          state.selectedUsability.data = payload?.model;
+        }
+      )
+      .addCase(GetUsabilityDataAction.rejected, (state: QcState) => {
+        state.selectedUsability.pending = false;
+      });
+    //#endregion
     //#region AddNewUsabilityAction-----
     builder
       .addCase(AddNewUsabilityAction.pending, (state: QcState) => {
@@ -506,6 +578,18 @@ export const QcSlicer = createSlice({
       })
       .addCase(AddNewUsabilityAction.rejected, (state: QcState) => {
         state.usabilityAddState.pending = false;
+      });
+    //#endregion
+    //#region UpdateUsabilityAction-----
+    builder
+      .addCase(UpdateUsabilityAction.pending, (state: QcState) => {
+        state.usabilityUpdateState.pending = true;
+      })
+      .addCase(UpdateUsabilityAction.fulfilled, (state: QcState) => {
+        state.usabilityUpdateState.pending = false;
+      })
+      .addCase(UpdateUsabilityAction.rejected, (state: QcState) => {
+        state.usabilityUpdateState.pending = false;
       });
     //#endregion
     //#region GetAllCheckListsAction-----

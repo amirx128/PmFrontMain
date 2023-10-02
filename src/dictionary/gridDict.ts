@@ -70,6 +70,7 @@ const gridDict = {
   unitName: "نام واحد",
   code: "کد",
   creator: "سازنده",
+  units: "واحد ها",
 };
 
 export default gridDict;

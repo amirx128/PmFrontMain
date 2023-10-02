@@ -26,7 +26,7 @@ const AddUsability = () => {
   const { units } = useSelector((state: any) => state.definition);
   const [info, setInfo] = useState({
     usablityName: "",
-    unitId: 0,
+    units: [],
     code: "",
   });
 
@@ -47,7 +47,7 @@ const AddUsability = () => {
     await dispatch(
       AddNewUsabilityAction({
         usabilityName: info.usablityName,
-        unitId: +info.unitId,
+        units: info.units,
         code: info.code,
       })
     );
@@ -72,9 +72,10 @@ const AddUsability = () => {
         <FormControl sx={{ mt: 2, width: "50%" }}>
           <InputLabel>واحد</InputLabel>
           <Select
-            value={info?.unitId}
+            multiple
+            value={info?.units}
             fullWidth={true}
-            name={"unitId"}
+            name={"units"}
             label="واحد"
             onChange={handleChange}
           >

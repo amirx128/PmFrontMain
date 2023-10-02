@@ -54,12 +54,23 @@ const UsabilitiesListQC = () => {
       filterable: false,
     },
     {
-      field: "unitName",
-      headerName: gridDict.unitName,
+      field: "units",
+      headerName: gridDict.units,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return (
+          <Button
+            variant="contained"
+            color="inherit"
+            onClick={() => hanldeOpenSubItemModal(value)}
+          >
+            ...
+          </Button>
+        );
+      },
     },
     {
       field: "code",
@@ -164,7 +175,7 @@ const UsabilitiesListQC = () => {
           // onDoubleClick={handleDoubleClick}
         />
         <Dialog open={isOpenSubItemsModal} onClose={handleCloseSubItemModal}>
-          <DialogTitle>آیتم های فرعی</DialogTitle>
+          <DialogTitle>واحد ها</DialogTitle>
           <IconButton
             aria-label="close"
             onClick={handleCloseSubItemModal}
