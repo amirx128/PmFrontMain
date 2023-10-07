@@ -49,6 +49,8 @@ import EditUsability from "../pages/QC/editUsability.tsx";
 import ChecklistsListQC from "../pages/QC/checkLists.tsx";
 import AddCheckListItem from "../pages/QC/addCheckList.tsx";
 import EditCheckListItem from "../pages/QC/editCheckList.tsx";
+import PurchaseForm from "../pages/purchase/PurchaseForm.tsx";
+import WarhouseForm from "../pages/warehouse/WarhouseForm.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -294,6 +296,13 @@ export const routes: IRoute[] = [
     title: "در صف تحویل",
   },
   {
+    path: "/purchase/details/:id",
+    component: <PurchaseForm />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "در صف تحویل",
+  },
+  {
     path: "/warehosue/warehouse-sentitems",
     component: <WarehouseSentItemList />,
     layout: Layouts.MAIN,
@@ -310,6 +319,20 @@ export const routes: IRoute[] = [
   {
     path: "/warehosue/exitwarehouse-sentitems",
     component: <ExitWarehouseSentItemList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "خارج شده",
+  },
+  {
+    path: "/warehouse/detail/:id",
+    component: <WarhouseForm />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "خارج شده",
+  },
+  {
+    path: "/exitWarehosue/detail/:id",
+    component: <WarhouseForm mode="exitWarehouse" />,
     layout: Layouts.MAIN,
     protected: true,
     title: "خارج شده",

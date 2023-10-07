@@ -292,7 +292,7 @@ const FinalApprovedList: React.FC<any> = (props) => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
       },

@@ -68,6 +68,17 @@ const FinancialsSendItems = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -150,9 +161,7 @@ const FinancialsSendItems = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/financial/details/${row.purchaseOrderId}`}>
-              {value}
-            </Link>
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
       },
@@ -191,6 +200,19 @@ const FinancialsSendItems = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",

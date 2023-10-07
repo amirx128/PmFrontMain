@@ -26,7 +26,7 @@ import {
 import PurchaseDetail from "./PurchaseDetail.tsx";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
-const PurchaseForm = (props) => {
+const PurchaseForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();

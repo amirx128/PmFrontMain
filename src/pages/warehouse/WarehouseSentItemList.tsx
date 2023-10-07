@@ -63,6 +63,17 @@ const WarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -171,7 +182,7 @@ const WarehouseSentItemList = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/warehouse/details/${row.warehouseOrderId}`}>
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
               {value}
             </Link>
           </Typography>

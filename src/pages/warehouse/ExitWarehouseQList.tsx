@@ -61,6 +61,17 @@ const ExitWarehouseQList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -169,7 +180,7 @@ const ExitWarehouseQList = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/exitwarehouse/details/${row.warehouseOrderId}`}>
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
               {value}
             </Link>
           </Typography>

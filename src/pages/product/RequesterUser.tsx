@@ -82,6 +82,17 @@ const RequesterUser = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseId",
@@ -171,7 +182,7 @@ const RequesterUser = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/requesterUser/details/${row.exitWarehouseOrderId}`}>
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
               {value}
             </Link>
           </Typography>

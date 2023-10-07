@@ -162,7 +162,7 @@ const ApproveSendItems = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
       },
@@ -201,6 +201,19 @@ const ApproveSendItems = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "warehouseOrderId",

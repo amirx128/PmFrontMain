@@ -58,6 +58,17 @@ const SupplierQList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -166,7 +177,7 @@ const SupplierQList = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/supplier/details/${row.warehouseOrderId}`}>
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
               {value}
             </Link>
           </Typography>
