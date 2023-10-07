@@ -106,7 +106,12 @@ const Profile = () => {
     if (info.password) {
       model.password = info.password;
     }
-    if (info?.password && info?.password !== info?.repeatPassword) return;
+    console.log(info.password);
+    if (
+      (info?.password && info?.password !== info?.repeatPassword) ||
+      isShowPassword
+    )
+      return;
     dispatch(
       UpdateUserProfile({
         id: user?.id,
