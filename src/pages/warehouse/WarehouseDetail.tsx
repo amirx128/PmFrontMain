@@ -21,6 +21,34 @@ const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
                     marginRight: "20px",
                   }}
                 >
+                  شرح کالا:
+                </Typography>
+                <Typography variant="body2">{detail?.commodity}</Typography>
+              </Box>
+              <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
+                  نام کامل کالا:
+                </Typography>
+                <Typography variant="body2">
+                  {detail?.commodityFullName}
+                </Typography>
+              </Box>
+              <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
                   تاریخ ایجاد:
                 </Typography>
                 <Typography variant="body2">{createDate.toString()}</Typography>
