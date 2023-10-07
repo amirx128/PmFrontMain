@@ -85,14 +85,6 @@ const WarhouseForm = ({
       ),
     },
     {
-      field: "receiverId",
-      headerName: gridDict.receiverId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
       field: "receiverUser",
       headerName: gridDict.receiverUser,
       flex: 1,
@@ -124,6 +116,22 @@ const WarhouseForm = ({
     {
       field: "sentCount",
       headerName: gridDict.sentCount,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "senderId",
+      headerName: gridDict.senderId,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "receiverId",
+      headerName: gridDict.receiverId,
       flex: 1,
       minWidth: 150,
       editable: false,

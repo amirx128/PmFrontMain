@@ -47,7 +47,7 @@ const gridDict = {
   supporterUser: "تامین کننده",
   receiveCount: "مقدار دریافتی",
   receiverDate: "تاریخ دریافت",
-  receiverId: "شناسه دریافت",
+  receiverId: "شناسه دریافت کننده",
   receiverUser: "دریافت کننده",
   sendDate: "تاریخ ارسال",
   senderUser: "ارسال کننده",
@@ -71,6 +71,7 @@ const gridDict = {
   code: "کد",
   creator: "سازنده",
   units: "واحد ها",
+  senderId: "شناسه ارسال کننده",
 };
 
 export default gridDict;
