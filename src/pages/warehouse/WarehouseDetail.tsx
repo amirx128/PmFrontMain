@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
   const theme = useTheme();
   const createDate = new Date(detail?.createDate).toLocaleDateString("fa-IR");
+  console.log(detail);
   return (
     <Grid container spacing={5} p={2}>
       {detail && (
@@ -24,21 +25,24 @@ const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
                 </Typography>
                 <Typography variant="body2">{createDate.toString()}</Typography>
               </Box>
-              {mode === "exitWarehouse" && (
-                <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      fontSize: "14px",
-                      fontWeight: "bold",
-                      marginRight: "20px",
-                    }}
-                  >
-                    مقدار :
-                  </Typography>
-                  <Typography variant="body2">{detail?.count}</Typography>
-                </Box>
-              )}
+
+              <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
+                  مقدار :
+                </Typography>
+                <Typography variant="body2">
+                  {mode === "warehouse"
+                    ? detail?.warehouseOrderCount
+                    : detail?.count}
+                </Typography>
+              </Box>
             </StyledBox>
           </Grid>
           <Grid item xs={12} sm={7}>
