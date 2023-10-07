@@ -46,7 +46,7 @@ const EditUsability = () => {
       setInfo({
         usablityName: selectedUsability.data.usablityName,
         code: selectedUsability.data.code,
-        units: selectedUsability.data.units,
+        units: selectedUsability.data.units.map((unit) => unit.id),
       });
       console.log(selectedUsability.data);
     }

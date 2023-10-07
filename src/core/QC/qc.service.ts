@@ -56,7 +56,7 @@ export const AddNewUsability = async (userId, units, usablityName, code) =>
     code,
   });
 export const UpdateUsability = async (userId, id, units, usablityName, code) =>
-  await axiosInstance.post(`/Definition/UpdateUsability`, {
+  await axiosInstance.post(`/Definition/UpdateUsablity`, {
     userId,
     id,
     units,
