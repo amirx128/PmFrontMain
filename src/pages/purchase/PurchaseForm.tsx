@@ -26,7 +26,7 @@ import {
 import PurchaseDetail from "./PurchaseDetail.tsx";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
-const PurchaseForm = () => {
+const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -38,6 +38,7 @@ const PurchaseForm = () => {
     getPurchaseDetails();
   }, []);
   useEffect(() => {
+    if (!isRowSelectedDefault) return;
     if (orderDetailData?.data?.purchaseDetails) {
       handleSelectDefaultRow();
     }

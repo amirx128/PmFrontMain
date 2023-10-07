@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const PurchaseDetail = ({ detail }) => {
   const theme = useTheme();
-  console.log(detail);
   return (
     <Grid container spacing={5} p={2}>
       {detail && (

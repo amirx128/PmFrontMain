@@ -36,8 +36,6 @@ function App() {
   useEffect(() => {
     setIsLoggedIn(JSON.parse(localStorage.getItem("user")));
   }, []);
-  let persistor = persistStore(store);
-  console.log(!isLoggedIn);
   return (
     <CacheProvider value={cacheRtl}>
       <ThemeProvider theme={theme}>

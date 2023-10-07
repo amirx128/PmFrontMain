@@ -39,13 +39,27 @@ const LogisticsDetails = () => {
     setValue,
     getValues,
     formState: { errors, isDirty, isValid },
+    watch,
   } = useForm<any>({
+    values: {
+      baravordFeeKala: "",
+    },
     defaultValues: {
-      baravordFeeKala: 0,
+      baravordFeeKala: "",
       baravordkolMandeh: 0,
       supporterId: 0,
     },
   });
+  useEffect(() => {
+    const { baravordFeeKala } = getValues();
+    if (baravordFeeKala) {
+      setValue(
+        "baravordkolMandeh",
+        +baravordFeeKala *
+          +orderDetailData?.data?.requestCasePurchaseRemainingCount
+      );
+    }
+  }, [watch("baravordFeeKala")]);
   useEffect(() => {
     getAllSupplires();
   }, []);
@@ -94,7 +108,7 @@ const LogisticsDetails = () => {
   };
   return (
     <div>
-      <PurchaseForm />
+      <PurchaseForm isRowSelectedDefault={false} />
       <Card sx={{ padding: 5 }}>
         <StyledForm>
           <Grid container>
