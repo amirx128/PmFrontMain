@@ -51,6 +51,9 @@ const ExitWarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -97,6 +100,9 @@ const ExitWarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "requestCaseCreateDate",
@@ -120,6 +126,9 @@ const ExitWarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "commodityName",
@@ -136,6 +145,9 @@ const ExitWarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "requestCaseCommodityId",
@@ -144,6 +156,9 @@ const ExitWarehouseSentItemList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "warehouseOrderCount",
@@ -192,6 +207,9 @@ const ExitWarehouseSentItemList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
   ];
   useEffect(() => {

@@ -74,6 +74,9 @@ const RequesterUser = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -101,6 +104,9 @@ const RequesterUser = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "requestCaseTrackingCode",
@@ -143,6 +149,9 @@ const RequesterUser = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "warehouseOrderCount",
@@ -159,6 +168,9 @@ const RequesterUser = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "countOfDone",
@@ -167,6 +179,9 @@ const RequesterUser = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "warehouseTrackingCode",
@@ -196,6 +211,9 @@ const RequesterUser = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
   ];
   useEffect(() => {

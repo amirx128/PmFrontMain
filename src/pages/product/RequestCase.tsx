@@ -67,6 +67,9 @@ const RequestCase = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "newcount",
@@ -75,14 +78,9 @@ const RequestCase = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-    },
-    {
-      field: "purchaseCount",
-      headerName: gridDict.purchaseCount,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "trackingCode",
@@ -125,6 +123,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "approvestate",
@@ -164,6 +165,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "isEditable",
@@ -180,6 +184,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "approverId",
@@ -188,6 +195,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "finalApprovestate",
@@ -235,6 +245,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "commodityId",
@@ -243,6 +256,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderId",
@@ -251,6 +267,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -278,6 +297,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "exitFromWarehouseTrackingCode",
@@ -294,6 +316,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseCount",
@@ -302,6 +327,9 @@ const RequestCase = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
   ];
   useEffect(() => {

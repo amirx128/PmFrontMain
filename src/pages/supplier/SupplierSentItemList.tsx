@@ -52,6 +52,9 @@ const SupplierSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -98,6 +101,9 @@ const SupplierSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "requestCaseCreateDate",
@@ -121,6 +127,9 @@ const SupplierSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "commodityName",
@@ -137,6 +146,9 @@ const SupplierSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "requestCaseCommodityId",
@@ -145,6 +157,9 @@ const SupplierSentItemList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "warehouseOrderCount",
@@ -193,6 +208,9 @@ const SupplierSentItemList = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
   ];
   useEffect(() => {

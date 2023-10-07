@@ -70,6 +70,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "commodityName",
@@ -86,6 +89,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "requiredDate",
@@ -105,6 +111,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "newcount",
@@ -113,6 +122,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "trackingCode",
@@ -183,6 +195,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "approvestate",
@@ -199,6 +214,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "approverName",
@@ -269,6 +287,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderId",
@@ -277,6 +298,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -304,6 +328,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "exitFromWarehouseTrackingCode",
@@ -320,6 +347,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "purchaseCount",
@@ -328,6 +358,9 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "actions",

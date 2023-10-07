@@ -120,6 +120,9 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "createDate",
@@ -172,6 +175,9 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
   ];
   const handleSelectDefaultRow = () => {
