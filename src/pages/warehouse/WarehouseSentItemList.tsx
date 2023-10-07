@@ -153,12 +153,8 @@ const WarehouseSentItemList = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
+      renderCell: ({ value }) => (
+        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
       ),
     },
     {
