@@ -21,11 +21,9 @@ import { HighlightOff } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  AddNewPerson,
-  AddNewProject,
   GetAllBusinessRoles,
-  UpdatePerson,
-  UpdateProject,
+  GetAllPersons,
+  getAllProjects,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
 import {
@@ -46,16 +44,19 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
   const { roles, selectedUser, users } = useSelector(
     (state: any) => state.administrations
   );
+  const { persons, projects } = useSelector((state: any) => state.definition);
 
   const [info, setInfo] = useState({
-    firstName: selectedUser?.firstName,
-    lastName: selectedUser?.lastName,
+    // firstName: selectedUser?.firstName,
+    // lastName: selectedUser?.lastName,
     userName: selectedUser?.userName,
     password: selectedUser?.password,
     isActive: selectedUser?.isActive,
     businessRoles: selectedUser?.businessRoles?.map((item) => item.id) ?? [],
     usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
     bossId: selectedUser?.bossId,
+    projectId: selectedUser?.projectId,
+    personId: selectedUser?.personId,
   });
 
   useEffect(() => {
@@ -63,13 +64,17 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
     dispatch(GetAllBusinessRoles());
     //@ts-ignore
     dispatch(GetAllRoles());
+    //@ts-ignore
+    dispatch(getAllProjects());
+    //@ts-ignore
+    dispatch(GetAllPersons());
   }, []);
 
   useEffect(() => {
     if (selectedUser) {
       setInfo({
-        firstName: selectedUser?.firstName,
-        lastName: selectedUser?.lastName,
+        // firstName: selectedUser?.firstName,
+        // lastName: selectedUser?.lastName,
         userName: selectedUser?.userName,
         password: selectedUser?.password,
         isActive: selectedUser?.isActive,
@@ -77,17 +82,21 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
           selectedUser?.businessRoles?.map((item) => item.id) ?? [],
         usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
         bossId: selectedUser?.bossId,
+        projectId: selectedUser?.projectId,
+        personId: selectedUser?.personId,
       });
     } else {
       setInfo({
-        firstName: "",
-        lastName: "",
+        // firstName: "",
+        // lastName: "",
         userName: "",
         password: "",
         isActive: true,
         businessRoles: [],
         usersRoles: [],
         bossId: "",
+        projectId: "",
+        personId: "",
       });
     }
   }, [selectedUser]);
@@ -137,20 +146,29 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
       </DialogTitle>
       <DialogContent>
         <TextField
-          value={info?.firstName}
+          value={
+            persons?.data?.find((person) => person?.id == info?.personId)
+              ?.firstName
+          }
           name={"firstName"}
           onChange={handleChange}
           label={"نام"}
           fullWidth={true}
           sx={{ mt: 2 }}
+          disabled
         />
         <TextField
-          value={info?.lastName}
+          // value={info?.lastName}
+          value={
+            persons?.data?.find((person) => person?.id == info?.personId)
+              ?.lastName
+          }
           name={"lastName"}
           onChange={handleChange}
           label={"نام خانوادگی"}
           fullWidth={true}
           sx={{ mt: 2 }}
+          disabled
         />
         <TextField
           value={info?.userName}
@@ -229,6 +247,38 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             {users?.usersList?.map((item) => (
               <MenuItem value={item.id} key={item?.id}>
                 {item?.firstName}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <InputLabel>پروژه</InputLabel>
+          <Select
+            value={info?.projectId}
+            fullWidth={true}
+            name={"projectId"}
+            label="پروژه"
+            onChange={handleChange}
+          >
+            {projects?.data?.map((item) => (
+              <MenuItem value={item.id} key={item?.id}>
+                {item?.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <InputLabel>شخص</InputLabel>
+          <Select
+            value={info?.personId}
+            fullWidth={true}
+            name={"personId"}
+            label="شخص"
+            onChange={handleChange}
+          >
+            {persons?.data?.map((item) => (
+              <MenuItem value={item.id} key={item?.id}>
+                {item?.firstName} {item?.lastName}
               </MenuItem>
             ))}
           </Select>
