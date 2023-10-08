@@ -92,7 +92,7 @@ const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
                   : detail?.creatorUser}
               </Typography>
             </Box>
-            <Box sx={{ display: "flex", alignItems: "center" }}>
+            <Box sx={{ display: "flex", alignItems: "center", mb: 6.75 }}>
               <Typography
                 variant="body2"
                 sx={{
@@ -111,6 +111,63 @@ const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
                   : detail?.trakingCode}
               </Typography>
             </Box>
+            {mode === "exitWarehouse" && (
+              <Box sx={{ display: "flex", alignItems: "center", mb: 6.75 }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
+                  {" "}
+                  تعدا باقی مانده انبار:
+                </Typography>
+
+                <Typography variant="body2" color="secondary">
+                  {detail?.warehouseRemainingCount}
+                </Typography>
+              </Box>
+            )}
+            {mode === "warehouse" && (
+              <>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 6.75 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      marginRight: "20px",
+                    }}
+                  >
+                    {" "}
+                    تعداد باقی مانده دریافت:
+                  </Typography>
+
+                  <Typography variant="body2" color="secondary">
+                    {detail?.remainingCountOfReceive}
+                  </Typography>
+                </Box>
+                <Box sx={{ display: "flex", alignItems: "center", mb: 6.75 }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: "14px",
+                      fontWeight: "bold",
+                      marginRight: "20px",
+                    }}
+                  >
+                    {" "}
+                    تعدا باقی مانده ارسال:
+                  </Typography>
+
+                  <Typography variant="body2" color="secondary">
+                    {detail?.remainingCountOfSent}
+                  </Typography>
+                </Box>
+              </>
+            )}
           </Grid>
         </>
       )}
