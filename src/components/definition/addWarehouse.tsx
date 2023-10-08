@@ -39,7 +39,6 @@ export const AddWarehouse = ({
     relatedCommodities: selectedWarehouse?.relatedCommodities,
     projects: selectedWarehouse?.projects,
   });
-  console.log(selectedWarehouse);
   const { projects, commodities } = useSelector(
     (state: any) => state.definition
   );

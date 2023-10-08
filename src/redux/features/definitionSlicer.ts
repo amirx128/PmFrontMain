@@ -665,7 +665,7 @@ export const GetBusinessRoleDetailes = createAsyncThunk(
 export const AddNewBusinessRole = createAsyncThunk(
   "definition/AddNewBusinessRole",
   async (
-    body: { name: string; title: string },
+    body: { name: string; title: string; projectId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -674,7 +674,8 @@ export const AddNewBusinessRole = createAsyncThunk(
       const { data } = await AddNewBusinessRoleReq(
         userId,
         body.name,
-        body.title
+        body.title,
+        body.projectId
       );
       if (data?.isSuccess) {
         // @ts-ignore
@@ -690,7 +691,7 @@ export const AddNewBusinessRole = createAsyncThunk(
 export const UpdateBusinessRole = createAsyncThunk(
   "definition/UpdateBusinessRole",
   async (
-    body: { name: string; title: string; id: any },
+    body: { name: string; title: string; id: any; projectId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -700,7 +701,8 @@ export const UpdateBusinessRole = createAsyncThunk(
         userId,
         body.id,
         body.name,
-        body.title
+        body.title,
+        body.projectId
       );
       if (data?.isSuccess) {
         // @ts-ignore

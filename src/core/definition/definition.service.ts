@@ -173,19 +173,32 @@ export const GetBusinessRoleDetailesReq = async (userId, selectedItemId) =>
     selectedItemId,
   });
 
-export const AddNewBusinessRoleReq = async (userId, roleName, title) =>
+export const AddNewBusinessRoleReq = async (
+  userId,
+  roleName,
+  title,
+  projectId
+) =>
   await axiosInstance.post(`/Definition/AddNewBusinessRole`, {
     userId,
     name: roleName,
     title,
+    projectId,
   });
 
-export const UpdateBusinessRoleReq = async (userId, id, roleName, title) =>
+export const UpdateBusinessRoleReq = async (
+  userId,
+  id,
+  roleName,
+  title,
+  projectId
+) =>
   await axiosInstance.post(`/Definition/UpdateBusinessRole`, {
     userId,
     name: roleName,
     title,
     id,
+    projectId,
   });
 
 export const GetScheduleActivitiesReq = async (userId) =>
