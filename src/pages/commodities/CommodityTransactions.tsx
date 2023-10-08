@@ -15,6 +15,7 @@ import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
 import { GetOneCommodityTransactions } from "../../redux/features/supplierSlicer.ts";
+import { GetCountCommodityInWarehouse } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link, useParams, } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
@@ -45,30 +46,20 @@ const CommodityTransactions = () => {
     },
     {
       field: "exitWarehouseOrderTrackingCode",
-      headerName: "کد رهگیری خروج",
+      headerName: "تراکنش خروج از انبار",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "PurchaseOrderTrackingCode",
-      headerName: "کد رهگیری خرید",
+      field: "purchaseOrderTrackingCode",
+      headerName: " تراکنش خرید ",
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
+
     },
     {
       field: "type",
@@ -105,8 +96,16 @@ const CommodityTransactions = () => {
       ),
     },
     {
-      field: "Count",
+      field: "count",
       headerName: "تعداد",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "price",
+      headerName: "قیمت",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -115,6 +114,7 @@ const CommodityTransactions = () => {
   ];
   useEffect(() => {
     getList();
+    GetCount();
   }, []);
 
   const handleSortModelChange = async (sortArr) => {
@@ -146,7 +146,14 @@ const CommodityTransactions = () => {
       fromDate: new Date(fromDate),
       toDate: new Date(toDate),
     };
-    dispatch(GetOneCommodityTransactions(body));
+  await  dispatch(GetOneCommodityTransactions(body));
+  };
+  const GetCount = async () => {
+    const body = {
+      commodityId:id
+    };
+  await  dispatch(GetCountCommodityInWarehouse(body));
+    
   };
 
   const setSelectedFromDate = (e) => {
@@ -159,7 +166,14 @@ const CommodityTransactions = () => {
     setToDate(date);
   };
 
-  const handleAddFilter = async () => {
+  const HandleGetCount = async () => {
+    await dispatch(
+      GetCountCommodityInWarehouse({
+        SelectedItemId:id
+      })
+    );
+  };
+    const handleAddFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
         SelectedItemId:id,

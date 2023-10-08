@@ -62,6 +62,21 @@ export const GetTransactions = async (
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
 
+
+  
+export const GetCount = async (
+  commodityId,
+  userId,
+  
+) =>
+  await axiosInstance.post(`/support/GetCountCommodityInWarehouse`, {
+    commodityId,
+    userId: userId,
+   
+  });
+
+  
+
 export const SupplierSentItem = async (
   userId,
   pageIndex = 1,

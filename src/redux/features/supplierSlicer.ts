@@ -5,6 +5,7 @@ import {
   GetTransactions,
   DownloadSupplierQ,
   DownloadSupplierSentItem,
+  GetCount
 } from "../../core/supplier/Supplier.service";
 import downloadExcel from "../../utils/downloadExcell";
 
@@ -28,6 +29,10 @@ export interface SupplierState {
       data: any;
       pending: boolean;
     };
+    Counter: {
+      data: any;
+      pending: boolean;
+    };
     downloadQueue: {
       pending: boolean;
     };
@@ -48,6 +53,10 @@ const initialState: SupplierState = {
       pending: false,
     },
     transaction: {
+      data: [],
+      pending: false,
+    },
+    Counter: {
       data: [],
       pending: false,
     },
@@ -85,6 +94,33 @@ export const GetOneCommodityTransactions = createAsyncThunk(
         toDate,
         orderType,
         orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+
+
+export const GetCountCommodityInWarehouse = createAsyncThunk(
+  "Warehouse/GetCountCommodityInWarehouse",
+  async (
+    body: {
+      commodityId: any;
+     
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const {  commodityId } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetCount(
+        commodityId,
+        userId,
+        
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -276,6 +312,25 @@ export const supplierSlicer = createSlice({
         }
       );
     //#endregion
+     //#region GetCountCommodityInWarehouse-----
+     builder
+     .addCase(GetCountCommodityInWarehouse.pending, (state: SupplierState) => {
+       state.supplier.Counter.pending = true;
+     })
+     .addCase(
+      GetCountCommodityInWarehouse.fulfilled,
+       (state: SupplierState, { payload }) => {
+         state.supplier.Counter.pending = false;
+         state.supplier.Counter.data = [...payload?.model];
+       }
+     )
+     .addCase(
+      GetCountCommodityInWarehouse.rejected,
+       (state: SupplierState, { error }) => {
+         state.supplier.Counter.pending = false;
+       }
+     );
+   //#endregion
     //#region DownloadSupplierQAction-----
     builder
       .addCase(DownloadSupplierQAction.pending, (state: SupplierState) => {
