@@ -17,15 +17,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { GetOneCommodityTransactions } from "../../redux/features/supplierSlicer.ts";
 import { GetCountCommodityInWarehouse } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link, useParams, } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const CommodityTransactions = () => {
-  const{id}= useParams();
+  const { id } = useParams();
   const dispatch = useDispatch<any>();
-  const { transaction } = useSelector(
-    (state: any) => state.supplier?.supplier
-  );
+  const { transaction } = useSelector((state: any) => state.supplier?.supplier);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
@@ -59,11 +57,10 @@ const CommodityTransactions = () => {
       flex: 1,
       editable: false,
       filterable: false,
-
     },
     {
       field: "type",
-      headerName:"نوع تراکنش",
+      headerName: "نوع تراکنش",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -78,21 +75,17 @@ const CommodityTransactions = () => {
             <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
-        }
+      },
     },
     {
-      field: "ActivityDate",
+      field: "activityDate",
       headerName: "تاریخ",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.requestCaseCreateDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
+      renderCell: ({ value }) => (
+        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
       ),
     },
     {
@@ -110,7 +103,7 @@ const CommodityTransactions = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-    }
+    },
   ];
   useEffect(() => {
     getList();
@@ -121,7 +114,7 @@ const CommodityTransactions = () => {
     if (!sortArr.at(0)) {
       await dispatch(
         GetOneCommodityTransactions({
-          SelectedItemId:id,
+          SelectedItemId: id,
           fromDate: new Date(fromDate),
           toDate: new Date(toDate),
         })
@@ -136,24 +129,23 @@ const CommodityTransactions = () => {
         toDate: new Date(toDate),
         orderBy: sortField,
         orderType: sortType,
-        SelectedItemId:id,
+        SelectedItemId: id,
       })
     );
   };
   const getList = async () => {
     const body = {
-      SelectedItemId:id,
+      SelectedItemId: id,
       fromDate: new Date(fromDate),
       toDate: new Date(toDate),
     };
-  await  dispatch(GetOneCommodityTransactions(body));
+    await dispatch(GetOneCommodityTransactions(body));
   };
   const GetCount = async () => {
     const body = {
-      commodityId:id
+      commodityId: id,
     };
-  await  dispatch(GetCountCommodityInWarehouse(body));
-    
+    await dispatch(GetCountCommodityInWarehouse(body));
   };
 
   const setSelectedFromDate = (e) => {
@@ -169,14 +161,14 @@ const CommodityTransactions = () => {
   const HandleGetCount = async () => {
     await dispatch(
       GetCountCommodityInWarehouse({
-        SelectedItemId:id
+        SelectedItemId: id,
       })
     );
   };
-    const handleAddFilter = async () => {
+  const handleAddFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-        SelectedItemId:id,
+        SelectedItemId: id,
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
       })
@@ -186,7 +178,7 @@ const CommodityTransactions = () => {
   const handleRmoveFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-        SelectedItemId:id,
+        SelectedItemId: id,
         fromDate: new Date(initialFilter.current.fromDate),
         toDate: new Date(initialFilter.current.toDate),
       })
