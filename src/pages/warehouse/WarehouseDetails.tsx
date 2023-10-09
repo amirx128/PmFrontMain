@@ -71,7 +71,6 @@ const WarehouseDetails = () => {
   const handleCancelEdit = () => {
     dispatch(setWarhouseRowSelectedAction(undefined));
   };
-  console.log(usersList);
   return (
     <div>
       <WarehouseForm />
@@ -99,16 +98,7 @@ const WarehouseDetails = () => {
               </Typography>
 
               <Typography variant="body2">
-                {
-                  usersList?.find(
-                    (user) => +user.id === +warehouseRowSelected?.senderId
-                  )?.firstName
-                }
-                {
-                  usersList?.find(
-                    (user) => +user.id === +warehouseRowSelected?.senderId
-                  )?.lastName
-                }
+                {warehouseRowSelected?.senderUser}
               </Typography>
             </Box>
             <Box
@@ -132,16 +122,7 @@ const WarehouseDetails = () => {
               </Typography>
 
               <Typography variant="body2">
-                {
-                  usersList?.find(
-                    (user) => +user.id === +warehouseRowSelected?.receiverId
-                  )?.firstName
-                }
-                {
-                  usersList?.find(
-                    (user) => +user.id === +warehouseRowSelected?.receiverId
-                  )?.lastName
-                }
+                {warehouseRowSelected?.receiverUser}
               </Typography>
             </Box>
           </Grid>
