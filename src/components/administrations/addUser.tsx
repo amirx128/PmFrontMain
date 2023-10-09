@@ -15,6 +15,7 @@ import {
   FormGroup,
   InputLabel,
   FormControl,
+  Typography,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { HighlightOff } from "@mui/icons-material";
@@ -145,31 +146,35 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <TextField
-          value={
-            persons?.data?.find((person) => person?.id == info?.personId)
-              ?.firstName
-          }
-          name={"firstName"}
-          onChange={handleChange}
-          label={"نام"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-          disabled
-        />
-        <TextField
-          // value={info?.lastName}
-          value={
-            persons?.data?.find((person) => person?.id == info?.personId)
-              ?.lastName
-          }
-          name={"lastName"}
-          onChange={handleChange}
-          label={"نام خانوادگی"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-          disabled
-        />
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Typography sx={{ width: "20%" }}>نام</Typography>
+          <TextField
+            value={
+              persons?.data?.find((person) => person?.id == info?.personId)
+                ?.firstName
+            }
+            name={"firstName"}
+            onChange={handleChange}
+            fullWidth={true}
+            sx={{ mt: 2 }}
+            disabled
+          />
+        </div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <Typography sx={{ width: "20%" }}>نام خانوادگی</Typography>
+          <TextField
+            // value={info?.lastName}
+            value={
+              persons?.data?.find((person) => person?.id == info?.personId)
+                ?.lastName
+            }
+            name={"lastName"}
+            onChange={handleChange}
+            fullWidth={true}
+            sx={{ mt: 2 }}
+            disabled
+          />
+        </div>
         <TextField
           value={info?.userName}
           name={"userName"}
