@@ -300,3 +300,13 @@ export const UpdateProducerInfoReq = async (userId, body) =>
     userId,
     ...body,
   });
+export const GetManyFloorUnit = async (userId, ids) =>
+  await axiosInstance.post(`/Definition/GetManyFloorUnit`, {
+    userId,
+    ids,
+  });
+export const GetManyUnitUsability = async (userId, ids) =>
+  await axiosInstance.post(`/Definition/GetManyUnitUsability`, {
+    userId,
+    ids,
+  });

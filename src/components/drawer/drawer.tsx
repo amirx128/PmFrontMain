@@ -476,7 +476,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/startCheckLists",
+          route: "/qc/checkListInstances",
           role: UserRole.Admin,
         },
       ],

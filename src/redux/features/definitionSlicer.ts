@@ -49,6 +49,8 @@ import {
   UpdateUnitReq,
   UpdateWarehouse,
   GetAllWarehouseReq,
+  GetManyFloorUnit,
+  GetManyUnitUsability,
 } from "../../core/definition/definition.service.ts";
 
 const getUserId = (state) => {
@@ -116,6 +118,14 @@ export interface DefinitionState {
     data: I_COMMODITY_TREE[];
     pending: boolean;
   };
+  manyFloorUnit: {
+    data: any;
+    pending: boolean;
+  };
+  manyUnitUsability: {
+    data: any;
+    pending: boolean;
+  };
   selectedCommodity: any;
 }
 
@@ -175,6 +185,14 @@ const initialState: DefinitionState = {
     pending: false,
   },
   commoditiesOnTree: {
+    data: [],
+    pending: false,
+  },
+  manyFloorUnit: {
+    data: [],
+    pending: false,
+  },
+  manyUnitUsability: {
     data: [],
     pending: false,
   },
@@ -258,6 +276,38 @@ export const GetAllSuppliers = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetAllSuppliersReq(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetManyFloorUnitAction = createAsyncThunk(
+  "definition/GetManyFloorUnitAction",
+  async (
+    body: { ids: number[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetManyFloorUnit(userId, body.ids);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetManyUnitUsabilityAction = createAsyncThunk(
+  "definition/GetManyUnitUsabilityAction",
+  async (
+    body: { ids: number[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetManyUnitUsability(userId, body.ids);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -1036,6 +1086,44 @@ export const definitionSlicer = createSlice({
       .addCase(AddNewFloor.rejected, (state: DefinitionState, { error }) => {
         state.floors.addState = false;
       });
+    //#endregion
+    // #region GetManyFloorUnitAction-----
+    builder
+      .addCase(GetManyFloorUnitAction.pending, (state: DefinitionState) => {
+        state.manyFloorUnit.pending = true;
+      })
+      .addCase(
+        GetManyFloorUnitAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.manyFloorUnit.pending = false;
+          state.manyFloorUnit.data = payload.model;
+        }
+      )
+      .addCase(
+        GetManyFloorUnitAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.manyFloorUnit.pending = false;
+        }
+      );
+    //#endregion
+    // #region GetManyUnitUsabilityAction-----
+    builder
+      .addCase(GetManyUnitUsabilityAction.pending, (state: DefinitionState) => {
+        state.manyUnitUsability.pending = true;
+      })
+      .addCase(
+        GetManyUnitUsabilityAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.manyUnitUsability.pending = false;
+          state.manyUnitUsability.data = payload.model;
+        }
+      )
+      .addCase(
+        GetManyUnitUsabilityAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.manyUnitUsability.pending = false;
+        }
+      );
     //#endregion
     // #region AddWarehouse-----
     builder

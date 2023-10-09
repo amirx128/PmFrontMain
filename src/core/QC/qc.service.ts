@@ -93,3 +93,55 @@ export const AddNewCheckList = async (userId, name, subItemId, items) =>
     subItemId,
     items,
   });
+
+export const AllActiveCheckLists = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "checkListTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/QcManager.AllActiveCheckLists`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const CreateCheckListInstances = async (
+  userId,
+  contractorUserId,
+  relatedProject,
+  relatedFloor,
+  relatedUnits,
+  relatedUsability,
+  relatedOrginalItems,
+  relatedSubItems,
+  relatedCheckLists
+) =>
+  await axiosInstance.post(`/QC/QcManager.CreateCheckListInstances`, {
+    userId: userId,
+    contractorUserId,
+    relatedProject,
+    relatedFloor,
+    relatedUnits,
+    relatedUsability,
+    relatedOrginalItems,
+    relatedSubItems,
+    relatedCheckLists,
+  });
+
+export const GetManySubItemsCheckLists = async (userId, ids) =>
+  await axiosInstance.post(`/QC/GetManySubItemsCheckLists`, {
+    userId,
+    ids,
+  });
+export const GetAllContractor = async (userId) =>
+  await axiosInstance.post(`/QC/GetAllContractor`, {
+    userId,
+  });

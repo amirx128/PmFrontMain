@@ -51,6 +51,8 @@ import AddCheckListItem from "../pages/QC/addCheckList.tsx";
 import EditCheckListItem from "../pages/QC/editCheckList.tsx";
 import PurchaseForm from "../pages/purchase/PurchaseForm.tsx";
 import WarhouseForm from "../pages/warehouse/WarhouseForm.tsx";
+import CheckListInstancesList from "../pages/QC/checkListInstances.tsx";
+import AddCheckListInstance from "../pages/QC/addCheckListInstance.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -436,6 +438,20 @@ export const routes: IRoute[] = [
   {
     path: "/qc/checkLists/edit/:id",
     component: <EditCheckListItem />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/checkListInstances",
+    component: <CheckListInstancesList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/checkListInstances/add",
+    component: <AddCheckListInstance />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",
