@@ -141,6 +141,11 @@ export const GetManySubItemsCheckLists = async (userId, ids) =>
     userId,
     ids,
   });
+export const GetManyOrginalItemSubItems = async (userId, ids) =>
+  await axiosInstance.post(`/QC/GetManyOrginalItemSubItems`, {
+    userId,
+    ids,
+  });
 export const GetAllContractor = async (userId) =>
   await axiosInstance.post(`/QC/GetAllContractor`, {
     userId,

@@ -18,6 +18,7 @@ import {
   GetAllContractorAction,
   GetAllOriginalItemsAction,
   GetAllSubItemsAction,
+  GetManyOrginalItemSubItemsAction,
   GetManySubItemsCheckListsAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
@@ -35,6 +36,7 @@ const AddCheckListInstance = () => {
     checkListAddState,
     originalItems,
     manySubItemsCheckLists,
+    manyOriginalItemsSubItems,
     contractors,
   } = useSelector((state: any) => state?.qc);
   const { projects, manyFloorUnit, manyUnitUsability } = useSelector(
@@ -47,6 +49,7 @@ const AddCheckListInstance = () => {
     relatedUsability: [],
     relatedOrginalItems: [],
     relatedSubItems: [],
+    relatedCheckLists: [],
     contractorUserId: "",
   });
 
@@ -67,10 +70,15 @@ const AddCheckListInstance = () => {
   useEffect(() => {
     if (info.relatedOrginalItems.length) {
       dispatch(
-        GetManySubItemsCheckListsAction({ ids: info.relatedOrginalItems })
+        GetManyOrginalItemSubItemsAction({ ids: info.relatedOrginalItems })
       );
     }
   }, [info?.relatedOrginalItems]);
+  useEffect(() => {
+    if (info.relatedSubItems.length) {
+      dispatch(GetManySubItemsCheckListsAction({ ids: info.relatedSubItems }));
+    }
+  }, [info?.relatedSubItems]);
 
   const getAllDependency = async () => {
     await dispatch(getAllProjects());
@@ -196,6 +204,23 @@ const AddCheckListInstance = () => {
             fullWidth={true}
             name={"relatedSubItems"}
             label="آیتم فرعی"
+            onChange={handleChange}
+            multiple
+          >
+            {manyOriginalItemsSubItems?.data?.map((item) => (
+              <MenuItem value={item.id} key={item?.id}>
+                {item?.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+        <FormControl sx={{ mt: 2, width: "50%" }}>
+          <InputLabel>چک لیست</InputLabel>
+          <Select
+            value={info?.relatedCheckLists}
+            fullWidth={true}
+            name={"relatedCheckLists"}
+            label="چک لیست"
             onChange={handleChange}
             multiple
           >

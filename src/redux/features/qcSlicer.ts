@@ -20,6 +20,7 @@ import {
   CreateCheckListInstances,
   GetManySubItemsCheckLists,
   GetAllContractor,
+  GetManyOrginalItemSubItems,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -90,6 +91,10 @@ export interface QcState {
     pending: boolean;
   };
   checkListInstancAddState: {
+    pending: boolean;
+  };
+  manyOriginalItemsSubItems: {
+    data: any;
     pending: boolean;
   };
   manySubItemsCheckLists: {
@@ -167,6 +172,10 @@ const initialState: QcState = {
     pending: false,
   },
   manySubItemsCheckLists: {
+    data: [],
+    pending: false,
+  },
+  manyOriginalItemsSubItems: {
     data: [],
     pending: false,
   },
@@ -545,6 +554,22 @@ export const GetManySubItemsCheckListsAction = createAsyncThunk(
     }
   }
 );
+export const GetManyOrginalItemSubItemsAction = createAsyncThunk(
+  "qc/GetManyOrginalItemSubItemsAction",
+  async (
+    body: { ids: number[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetManyOrginalItemSubItems(userId, body.ids);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const GetAllContractorAction = createAsyncThunk(
   "qc/GetAllContractorAction",
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
@@ -829,6 +854,22 @@ export const QcSlicer = createSlice({
       )
       .addCase(GetManySubItemsCheckListsAction.rejected, (state: QcState) => {
         state.manySubItemsCheckLists.pending = false;
+      });
+    //#endregion
+    //#region GetManyOrginalItemSubItemsAction-----
+    builder
+      .addCase(GetManyOrginalItemSubItemsAction.pending, (state: QcState) => {
+        state.manyOriginalItemsSubItems.pending = true;
+      })
+      .addCase(
+        GetManyOrginalItemSubItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.manyOriginalItemsSubItems.pending = false;
+          state.manyOriginalItemsSubItems.data = payload.model;
+        }
+      )
+      .addCase(GetManyOrginalItemSubItemsAction.rejected, (state: QcState) => {
+        state.manyOriginalItemsSubItems.pending = false;
       });
     //#endregion
     //#region GetAllContractorAction-----
