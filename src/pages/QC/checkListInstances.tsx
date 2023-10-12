@@ -10,6 +10,9 @@ import {
   List,
   ListItem,
   ListItemText,
+  Dialog,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 import {
   GridActionsCellItem,
@@ -20,14 +23,14 @@ import { useEffect, useRef, useState } from "react";
 import Grid from "../../components/grid/grid.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import DeleteIcon from "@mui/icons-material/Delete";
 import {
   AllActiveCheckListsAction,
+  DeleteQcInstanceAction,
   GetCheckListStatesAction,
 } from "../../redux/features/qcSlicer.ts";
 import AddIcon from "@mui/icons-material/Add";
-import { Dialog, DialogTitle } from "@material-ui/core";
-import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 import { Row } from "./style.tsx";
 import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
@@ -35,35 +38,29 @@ import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { Controller, useForm } from "react-hook-form";
 import SelectComponent from "../../components/select/selects.tsx";
+import { LoadingButton } from "@mui/lab";
 const CheckListInstancesList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { checkLists, checkListStates } = useSelector((state: any) => state.qc);
-
-  const [selectedSubItems, setSelectedSubItems] = useState([]);
-  const [isOpenSubItemsModal, setIsOpenSubItemsModal] =
-    useState<boolean>(false);
+  const { checkListInstances, checkListStates, checkListInstancRemoveState } =
+    useSelector((state: any) => state.qc);
+  const [warningRemoveModal, setWarningREmoveModal] = useState(false);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
   const [toDate, setToDate] = useState(new Date());
+  const [idsDelete, setIdsDelete] = useState<number[]>([]);
   const initialFilter = useRef({
     checkListStateId: 1,
+    fromDate: new Date().setMonth(new Date().getMonth() - 1),
+    toDate: new Date(),
   });
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<any>({
-    defaultValues: { checkListStateId: 1, fromDate: "", toDate: "" },
+  const { control, getValues } = useForm<any>({
+    defaultValues: { checkListStateId: 1 },
   });
   const columns: GridColDef[] = [
     {
-      field: "id",
+      field: "checkListId",
       headerName: gridDict.id,
       flex: 1,
       minWidth: 150,
@@ -71,32 +68,54 @@ const CheckListInstancesList = () => {
       filterable: false,
     },
     {
-      field: "name",
-      headerName: gridDict.name,
+      field: "checkListInstanceId",
+      headerName: gridDict.checkListInstanceId,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "creator",
-      headerName: gridDict.creator,
+      field: "checkListState",
+      headerName: gridDict.checkListState,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
     },
     {
-      field: "createDate",
-      headerName: gridDict.createDate,
+      field: "checkListTitle",
+      headerName: gridDict.checkListTitle,
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => (
-        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
-      ),
     },
+    {
+      field: "checkListTrackingNumber",
+      headerName: gridDict.checkListTrackingNumber,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "placeTitle",
+      headerName: gridDict.placeTitle,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "subItemTitle",
+      headerName: gridDict.subItemTitle,
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+
     {
       field: "actions",
       headerName: gridDict.actions,
@@ -115,8 +134,18 @@ const CheckListInstancesList = () => {
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={() => navigate(`edit/${params.row.id}`)}
+            onClick={() => navigate(`edit/${params.row.checkListInstanceId}`)}
             color="inherit"
+          />
+          <GridActionsCellItem
+            icon={<DeleteIcon />}
+            label="Delete"
+            className="textPrimary"
+            onClick={() => {
+              setIdsDelete([params.row.checkListInstanceId]);
+              setWarningREmoveModal(true);
+            }}
+            color="error"
           />
         </>
       ),
@@ -125,7 +154,6 @@ const CheckListInstancesList = () => {
   useEffect(() => {
     getList();
   }, []);
-
   const getList = async () => {
     dispatch(AllActiveCheckListsAction({}));
     dispatch(GetCheckListStatesAction());
@@ -133,14 +161,6 @@ const CheckListInstancesList = () => {
 
   const handleDoubleClick = (e) => {
     navigate(`/warehouse/details/${e.row.warehouseOrderId}`);
-  };
-  const hanldeOpenSubItemModal = (subItems) => {
-    setSelectedSubItems(subItems ?? []);
-    setIsOpenSubItemsModal(true);
-  };
-  const handleCloseSubItemModal = () => {
-    setSelectedSubItems([]);
-    setIsOpenSubItemsModal(false);
   };
   const setSelectedFromDate = (e) => {
     const date = new Date(e);
@@ -151,20 +171,31 @@ const CheckListInstancesList = () => {
     setToDate(date);
   };
   const handleAddFilter = async () => {
+    const { checkListStateId } = getValues();
     await dispatch(
-      GetRequesterUserQAction({
+      AllActiveCheckListsAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
+        checkListStateId: +checkListStateId,
       })
     );
   };
   const handleRmoveFilter = async () => {
     await dispatch(
-      GetRequesterUserQAction({
+      AllActiveCheckListsAction({
         fromDate: new Date(initialFilter.current.fromDate),
         toDate: new Date(initialFilter.current.toDate),
+        checkListStateId: +initialFilter.current.checkListStateId,
       })
     );
+  };
+  const handleDeleteItems = async () => {
+    if (idsDelete.length) {
+      await dispatch(DeleteQcInstanceAction({ instanceIds: idsDelete }));
+      setWarningREmoveModal(false);
+      await dispatch(AllActiveCheckListsAction({ fromDate, toDate }));
+      setIdsDelete([]);
+    }
   };
   return (
     <CardGrid
@@ -238,60 +269,54 @@ const CheckListInstancesList = () => {
           </form>
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "end", pr: 10 }}>
+        <Box sx={{ display: "flex", justifyContent: "end", pr: 10, gap: 5 }}>
           <Button variant="outlined" onClick={() => navigate("add")}>
             <AddIcon />
             افزودن
           </Button>
-        </Box>
-
-        <Grid
-          rowIdFields={[
-            "purchaseOrderId",
-            "requesterUser",
-            "requestCaseId",
-            "commodityId",
-            "requestCaseCommodityId",
-            "purchaseOrderDetailsId",
-            "warehouseOrderId",
-          ]}
-          columns={columns}
-          rows={checkLists?.data ?? []}
-          pagination={{}}
-          // onDoubleClick={handleDoubleClick}
-        />
-        <Dialog open={isOpenSubItemsModal} onClose={handleCloseSubItemModal}>
-          <DialogTitle>آیتم های فرعی</DialogTitle>
-          <IconButton
-            aria-label="close"
-            onClick={handleCloseSubItemModal}
-            sx={{
-              position: "absolute",
-              right: 8,
-              top: 8,
-              color: (theme) => theme.palette.grey[500],
-            }}
+          <Button
+            variant="outlined"
+            onClick={() => setWarningREmoveModal(true)}
+            color="error"
           >
-            <CloseIcon />
-          </IconButton>
+            <DeleteIcon />
+            حذف موارد انتخابی
+          </Button>
+        </Box>
+        {checkListInstances?.pending || (
+          <Grid
+            columns={columns}
+            rows={
+              checkListInstances?.data.map((rows, index) => ({
+                ...rows,
+                id: rows.checkListInstanceId,
+              })) ?? []
+            }
+            pagination={{}}
+            onRowSelected={(e) => setIdsDelete(e)}
+            // onDoubleClick={handleDoubleClick}
+          />
+        )}
+
+        <Dialog
+          open={warningRemoveModal}
+          onClose={() => setWarningREmoveModal(false)}
+          aria-describedby="alert-dialog-slide-description"
+        >
           <DialogContent>
-            <div style={{ width: "30rem", padding: "1.6rem" }}>
-              {selectedSubItems.length > 0 && (
-                <List>
-                  {selectedSubItems.map((subItem) => (
-                    <ListItem key={subItem.id}>
-                      <ListItemText>{subItem?.name}</ListItemText>
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-              {selectedSubItems.length > 0 || (
-                <Typography>
-                  آیتم اصلی انتخاب شده فاقد آیتم فرعی میباشد
-                </Typography>
-              )}
-            </div>
+            <DialogContentText id="alert-dialog-slide-description">
+              آیا از حذف مورد انتخابی اطمینان دارید؟
+            </DialogContentText>
           </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setWarningREmoveModal(false)}>انصراف</Button>
+            <LoadingButton
+              onClick={handleDeleteItems}
+              loading={checkListInstancRemoveState.pending}
+            >
+              تایید
+            </LoadingButton>
+          </DialogActions>
         </Dialog>
       </Card>
     </CardGrid>

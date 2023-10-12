@@ -140,6 +140,30 @@ export const CreateCheckListInstances = async (
     relatedSubItems,
     relatedCheckLists,
   });
+export const UpdateQcInstance = async (
+  userId,
+  instanceId,
+  contractorUserId,
+  relatedProjects,
+  relatedFloor,
+  relatedUnits,
+  relatedUsability,
+  relatedOrginalItems,
+  relatedSubItems,
+  relatedCheckLists
+) =>
+  await axiosInstance.post(`/QC/QcManager.UpdateQcInstance`, {
+    userId: userId,
+    instanceId,
+    contractorUserId,
+    relatedProjects,
+    relatedFloor,
+    relatedUnits,
+    relatedUsability,
+    relatedOrginalItems,
+    relatedSubItems,
+    relatedCheckLists,
+  });
 
 export const GetManySubItemsCheckLists = async (userId, ids) =>
   await axiosInstance.post(`/QC/GetManySubItemsCheckLists`, {
@@ -158,4 +182,14 @@ export const GetAllContractor = async (userId) =>
 export const GetAllOrginal_SubItem_ChechLists = async (userId) =>
   await axiosInstance.post(`/QC/GetAllOrginal_SubItem_ChechLists`, {
     userId,
+  });
+export const GetOneInstanceData = async (userId, selectedItemId) =>
+  await axiosInstance.post(`/QC/QcManager.GetOneInstanceData`, {
+    userId,
+    selectedItemId,
+  });
+export const DeleteQcInstance = async (userId, instanceIds) =>
+  await axiosInstance.post(`/QC/QcManager.DeleteQcInstance`, {
+    userId,
+    instanceIds,
   });

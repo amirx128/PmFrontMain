@@ -72,6 +72,12 @@ const gridDict = {
   creator: "سازنده",
   units: "واحد ها",
   senderId: "شناسه ارسال کننده",
+  checkListInstanceId: "شناسه چک لیست",
+  checkListState: "وضعیت چک لیست",
+  checkListTitle: "عنوان چک لیست",
+  checkListTrackingNumber: "کد رهگیری چک لیست",
+  placeTitle: "نام مکان",
+  subItemTitle: "نام عنوان فرعی",
 };
 
 export default gridDict;
