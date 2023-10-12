@@ -1,7 +1,7 @@
 import axiosInstance from "../../utils/axios.config.ts";
 
 export const getAllProjectsReq = async (userId) =>
-  await axiosInstance.post(`/Definition/GetAllProject`, {
+  await axiosInstance.post(`/Definition/GetAllProjects_Commodities`, {
     userId: userId ?? "1",
   });
 
