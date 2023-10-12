@@ -52,6 +52,7 @@ import {
   GetManyFloorUnit,
   GetManyUnitUsability,
   GetAllProjects_Floor_Unit_Usability,
+  GetOneProjectFloor,
 } from "../../core/definition/definition.service.ts";
 
 const getUserId = (state) => {
@@ -128,7 +129,13 @@ export interface DefinitionState {
     pending: boolean;
   };
   selectedCommodity: any;
+  selectedProject: any;
   allProjectsFloorUnitUsability: {
+    data: any;
+    pending: boolean;
+  };
+
+  oneProjectFloor: {
     data: any;
     pending: boolean;
   };
@@ -202,7 +209,12 @@ const initialState: DefinitionState = {
     pending: false,
   },
   selectedCommodity: null,
+  selectedProject: null,
   allProjectsFloorUnitUsability: {
+    data: [],
+    pending: false,
+  },
+  oneProjectFloor: {
     data: [],
     pending: false,
   },
@@ -990,6 +1002,22 @@ export const GetActivityScheduleDetails = createAsyncThunk(
     }
   }
 );
+export const GetOneProjectFloorAction = createAsyncThunk(
+  "definition/GetOneProjectFloorAction",
+  async (
+    body: { selectedItemId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetOneProjectFloor(userId, body.selectedItemId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const definitionSlicer = createSlice({
   name: "definition",
@@ -1000,6 +1028,12 @@ export const definitionSlicer = createSlice({
       action: PayloadAction<any>
     ) => {
       state.selectedCommodity = action.payload;
+    },
+    setSelectedProjectAction: (
+      state: DefinitionState,
+      action: PayloadAction<any>
+    ) => {
+      state.selectedProject = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -1423,10 +1457,30 @@ export const definitionSlicer = createSlice({
         }
       );
     //#endregion
+    // #region GetOneProjectFloorAction-----
+    builder
+      .addCase(GetOneProjectFloorAction.pending, (state: DefinitionState) => {
+        state.oneProjectFloor.pending = true;
+      })
+      .addCase(
+        GetOneProjectFloorAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.oneProjectFloor.pending = false;
+          state.oneProjectFloor.data = payload.model;
+        }
+      )
+      .addCase(
+        GetOneProjectFloorAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.oneProjectFloor.pending = false;
+        }
+      );
+    //#endregion
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { clearSelectedCommodity } = definitionSlicer.actions;
+export const { clearSelectedCommodity, setSelectedProjectAction } =
+  definitionSlicer.actions;
 
 export default definitionSlicer.reducer;

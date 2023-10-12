@@ -22,6 +22,7 @@ import {
   getAllFloors,
   UpdateUnit,
   GetAllCommodities,
+  GetOneProjectFloorAction,
 } from "../../redux/features/definitionSlicer.ts";
 
 export const AddUnit = ({
@@ -40,14 +41,20 @@ export const AddUnit = ({
     code: selectedUnit?.code,
     commodities: selectedUnit?.commodities,
   });
-  console.log(selectedUnit);
-  const { projects, units, floors, commodities } = useSelector(
-    (state: any) => state.definition
-  );
+  const {
+    projects,
+    units,
+    floors,
+    commodities,
+    oneProjectFloor,
+    selectedProject,
+  } = useSelector((state: any) => state.definition);
 
   useEffect(() => {
-    if (currentProject) {
-      dispatch(getAllFloors(currentProject?.id));
+    if (selectedProject) {
+      dispatch(
+        GetOneProjectFloorAction({ selectedItemId: +selectedProject?.id })
+      );
       setInfo({ ...info });
     }
   }, [currentProject]);
@@ -106,7 +113,7 @@ export const AddUnit = ({
     }
     onClose();
   };
-  console.log(floors);
+
   return (
     <Dialog
       open={addUnitDialog}
@@ -153,7 +160,7 @@ export const AddUnit = ({
           onChange={handleChange}
           sx={{ mt: 2 }}
         >
-          {floors?.data?.map((item) => (
+          {oneProjectFloor?.data?.map((item) => (
             <MenuItem value={item.id} key={item?.id}>
               {item?.name}
             </MenuItem>

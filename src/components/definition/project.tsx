@@ -55,6 +55,7 @@ export const ProjectCard = ({
                   onClick={() => {
                     setSelectedFloor(floor);
                     setShowUnitsDialog(true);
+                    setCurrentProject(project);
                   }}
                   key={floor?.id}
                   size={"small"}

@@ -8,6 +8,7 @@ import {
   getAllProjects,
   getAllWarehouses,
   GetScheduleActivities,
+  setSelectedProjectAction,
 } from "../../redux/features/definitionSlicer.ts";
 import {
   Add,
@@ -142,6 +143,12 @@ const Definitions = () => {
     dispatch(getAllWarehouses());
   }, []);
 
+  useEffect(() => {
+    console.log(currentProject);
+    if (currentProject) {
+      dispatch(setSelectedProjectAction(currentProject));
+    }
+  }, [currentProject]);
   const projectOnClose = () => {
     setAddProjectDialog(false);
     setSelectedProject(null);

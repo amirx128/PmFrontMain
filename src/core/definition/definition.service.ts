@@ -310,3 +310,8 @@ export const GetManyUnitUsability = async (userId, ids) =>
     userId,
     ids,
   });
+export const GetOneProjectFloor = async (userId, selectedItemId) =>
+  await axiosInstance.post(`/Definition/GetOneProjectFloor`, {
+    userId,
+    selectedItemId,
+  });
