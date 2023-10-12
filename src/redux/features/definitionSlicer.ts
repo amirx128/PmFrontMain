@@ -443,7 +443,6 @@ export const AddNewUnit = createAsyncThunk(
       const userId = getUserId(state);
       const { data } = await AddNewUnitReq(
         userId,
-        body.projectId,
         body.projectfloorId,
         body.unitName,
         body.code,
