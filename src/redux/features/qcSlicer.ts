@@ -22,6 +22,7 @@ import {
   GetAllContractor,
   GetManyOrginalItemSubItems,
   GetAllOrginal_SubItem_ChechLists,
+  GetCheckListStates,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -110,6 +111,10 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  checkListStates: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -189,6 +194,10 @@ const initialState: QcState = {
     pending: false,
   },
   allOrginalSubItemChechLists: {
+    data: [],
+    pending: false,
+  },
+  checkListStates: {
     data: [],
     pending: false,
   },
@@ -605,6 +614,19 @@ export const GetAllOrginal_SubItem_ChechListsAction = createAsyncThunk(
     }
   }
 );
+export const GetCheckListStatesAction = createAsyncThunk(
+  "qc/GetCheckListStatesAction",
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetCheckListStates(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const QcSlicer = createSlice({
   name: "qc",
   initialState,
@@ -931,6 +953,22 @@ export const QcSlicer = createSlice({
           state.allOrginalSubItemChechLists.pending = false;
         }
       );
+    //#endregion
+    //#region GetCheckListStatesAction-----
+    builder
+      .addCase(GetCheckListStatesAction.pending, (state: QcState) => {
+        state.checkListStates.pending = true;
+      })
+      .addCase(
+        GetCheckListStatesAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.checkListStates.pending = false;
+          state.checkListStates.data = payload.model;
+        }
+      )
+      .addCase(GetCheckListStatesAction.rejected, (state: QcState) => {
+        state.checkListStates.pending = false;
+      });
     //#endregion
   },
 });

@@ -29,6 +29,7 @@ export const AddUnit = ({
   selectedUnit,
   onClose,
   currentProject,
+  selectedFloor,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
@@ -62,7 +63,7 @@ export const AddUnit = ({
     } else {
       setInfo({
         unitName: "",
-        projectfloorId: null,
+        projectfloorId: selectedFloor.id,
         code: "",
         commodities: [],
       });

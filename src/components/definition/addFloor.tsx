@@ -30,6 +30,7 @@ export const AddFloor = ({
   selectedFloor,
   onClose,
   setCurrentProject,
+  currentProject,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
@@ -55,7 +56,7 @@ export const AddFloor = ({
     } else {
       setInfo({
         floorName: "",
-        projectId: null,
+        projectId: currentProject.id,
         code: "",
         commodities: [],
       });

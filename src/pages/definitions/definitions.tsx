@@ -242,6 +242,7 @@ const Definitions = () => {
                     project={project}
                     setSelectedUnit={setSelectedUnit}
                     setAddUnitDialog={setAddUnitDialog}
+                    currentProject={currentProject}
                     key={project?.id}
                   />
                 ))
@@ -342,6 +343,7 @@ const Definitions = () => {
         addFloorDialog={addFloorDialog}
         selectedFloor={selectedFloor}
         onClose={floorOnClose}
+        currentProject={currentProject}
       />
       <ShowUnits
         showUnitsDialog={showUnitsDialog}
@@ -355,6 +357,7 @@ const Definitions = () => {
         currentProject={currentProject}
         addUnitDialog={addUnitDialog}
         selectedUnit={selectedUnit}
+        selectedFloor={selectedFloor}
         onClose={unitOnClose}
       />
       <AddWarehouse

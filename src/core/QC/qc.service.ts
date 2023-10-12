@@ -113,6 +113,11 @@ export const AllActiveCheckLists = async (
     toDate: new Date(toDate).toISOString().slice(0, 10),
     checkListStateId,
   });
+export const GetCheckListStates = async (userId) =>
+  await axiosInstance.post(`/QC/GetCheckListStates`, {
+    userId: userId,
+  });
+
 export const CreateCheckListInstances = async (
   userId,
   contractorUserId,

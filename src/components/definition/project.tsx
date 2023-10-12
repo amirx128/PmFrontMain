@@ -13,6 +13,7 @@ export const ProjectCard = ({
   setAddUnitDialog,
   setCurrentProject,
   setShowUnitsDialog,
+  currentProject,
 }) => {
   return (
     <Grid item md={4} sm={6} xs={12}>
