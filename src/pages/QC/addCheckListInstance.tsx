@@ -5,41 +5,26 @@ import {
   CardContent,
   CardHeader,
   FormControl,
-  IconButton,
   InputLabel,
   MenuItem,
   Select,
-  TextField,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  AddNewCheckListAction,
+  CreateCheckListInstancesAction,
   GetAllContractorAction,
-  GetAllOriginalItemsAction,
-  GetAllSubItemsAction,
-  GetManyOrginalItemSubItemsAction,
-  GetManySubItemsCheckListsAction,
+  GetAllOrginal_SubItem_ChechListsAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
-import ClearIcon from "@mui/icons-material/Clear";
-import {
-  GetManyFloorUnitAction,
-  GetManyUnitUsabilityAction,
-  getAllProjects,
-} from "../../redux/features/definitionSlicer";
+import { GetAllProjects_Floor_Unit_UsabilityAction } from "../../redux/features/definitionSlicer";
 const AddCheckListInstance = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const {
-    checkListAddState,
-    originalItems,
-    manySubItemsCheckLists,
-    manyOriginalItemsSubItems,
-    contractors,
-  } = useSelector((state: any) => state?.qc);
-  const { projects, manyFloorUnit, manyUnitUsability } = useSelector(
+  const { checkListAddState, contractors, allOrginalSubItemChechLists } =
+    useSelector((state: any) => state?.qc);
+  const { allProjectsFloorUnitUsability } = useSelector(
     (state: any) => state?.definition
   );
   const [info, setInfo] = useState({
@@ -56,33 +41,9 @@ const AddCheckListInstance = () => {
   useEffect(() => {
     getAllDependency();
   }, []);
-
-  useEffect(() => {
-    if (info.relatedFloor.length) {
-      dispatch(GetManyFloorUnitAction({ ids: info.relatedFloor }));
-    }
-  }, [info?.relatedFloor]);
-  useEffect(() => {
-    if (info.relatedUnits.length) {
-      dispatch(GetManyUnitUsabilityAction({ ids: info.relatedUnits }));
-    }
-  }, [info?.relatedUnits]);
-  useEffect(() => {
-    if (info.relatedOrginalItems.length) {
-      dispatch(
-        GetManyOrginalItemSubItemsAction({ ids: info.relatedOrginalItems })
-      );
-    }
-  }, [info?.relatedOrginalItems]);
-  useEffect(() => {
-    if (info.relatedSubItems.length) {
-      dispatch(GetManySubItemsCheckListsAction({ ids: info.relatedSubItems }));
-    }
-  }, [info?.relatedSubItems]);
-
   const getAllDependency = async () => {
-    await dispatch(getAllProjects());
-    await dispatch(GetAllOriginalItemsAction());
+    await dispatch(GetAllProjects_Floor_Unit_UsabilityAction());
+    await dispatch(GetAllOrginal_SubItem_ChechListsAction());
     await dispatch(GetAllContractorAction());
   };
   const handleChange = (e) => {
@@ -92,15 +53,20 @@ const AddCheckListInstance = () => {
     });
   };
   const hanldeSubmit = async () => {
-    // await dispatch(
-    //   AddNewCheckListAction({
-    //     name: info.name,
-    //     subItemId: +info.subItemId,
-    //     items: items.map((item) => ({ itemName: item.itemName })),
-    //   })
-    // );
+    await dispatch(
+      CreateCheckListInstancesAction({
+        contractorUserId: info.contractorUserId,
+        relatedProject: +info.relatedProject,
+        relatedFloor: info.relatedFloor,
+        relatedUnits: info.relatedUnits,
+        relatedUsability: info.relatedUsability,
+        relatedSubItems: info.relatedSubItems,
+        relatedCheckLists: info.relatedCheckLists,
+        relatedOrginalItems: info.relatedOrginalItems,
+      })
+    );
   };
-  console.log(originalItems);
+
   return (
     <Card>
       <CardHeader title="پر کردن چک لیست " sx={{ textAlign: "left" }} />
@@ -120,7 +86,7 @@ const AddCheckListInstance = () => {
             label="پروژه"
             onChange={handleChange}
           >
-            {projects?.data?.map((item) => (
+            {allProjectsFloorUnitUsability?.data?.map((item) => (
               <MenuItem value={item.id} key={item?.id}>
                 {item?.name}
               </MenuItem>
@@ -137,7 +103,7 @@ const AddCheckListInstance = () => {
             onChange={handleChange}
             multiple
           >
-            {projects?.data
+            {allProjectsFloorUnitUsability?.data
               ?.find((project) => +project.id === +info?.relatedProject)
               ?.projectfloor?.map((item) => (
                 <MenuItem value={item.id} key={item?.id}>
@@ -156,11 +122,17 @@ const AddCheckListInstance = () => {
             onChange={handleChange}
             multiple
           >
-            {manyFloorUnit?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
+            {allProjectsFloorUnitUsability?.data
+              ?.find((project) => +project.id === +info.relatedProject)
+              ?.projectfloor?.filter((floor) =>
+                info.relatedFloor.includes(floor.id)
+              )
+              .flatMap((floor) => floor?.projectUnit)
+              .map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
@@ -173,11 +145,19 @@ const AddCheckListInstance = () => {
             onChange={handleChange}
             multiple
           >
-            {manyUnitUsability?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
+            {allProjectsFloorUnitUsability?.data
+              ?.find((project) => +project.id === +info.relatedProject)
+              ?.projectfloor?.filter((floor) =>
+                info.relatedFloor.includes(floor.id)
+              )
+              .flatMap((floor) => floor?.projectUnit)
+              .filter((unit) => info.relatedUnits.includes(unit.id))
+              ?.flatMap((unit) => unit.unitsUsability)
+              .map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
@@ -190,7 +170,7 @@ const AddCheckListInstance = () => {
             onChange={handleChange}
             multiple
           >
-            {originalItems?.data?.map((item) => (
+            {allOrginalSubItemChechLists?.data?.map((item) => (
               <MenuItem value={item.id} key={item?.id}>
                 {item?.name}
               </MenuItem>
@@ -207,11 +187,16 @@ const AddCheckListInstance = () => {
             onChange={handleChange}
             multiple
           >
-            {manyOriginalItemsSubItems?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
+            {allOrginalSubItemChechLists?.data
+              ?.filter((original) =>
+                info.relatedOrginalItems.includes(original.id)
+              )
+              .flatMap((original) => original.subItems)
+              .map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
@@ -224,11 +209,18 @@ const AddCheckListInstance = () => {
             onChange={handleChange}
             multiple
           >
-            {manySubItemsCheckLists?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
+            {allOrginalSubItemChechLists?.data
+              ?.filter((original) =>
+                info.relatedOrginalItems.includes(original.id)
+              )
+              .flatMap((original) => original.subItems)
+              .filter((subItem) => info.relatedSubItems.includes(subItem.id))
+              .flatMap((subItem) => subItem.checkLists)
+              .map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              ))}
           </Select>
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>

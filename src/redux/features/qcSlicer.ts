@@ -21,6 +21,7 @@ import {
   GetManySubItemsCheckLists,
   GetAllContractor,
   GetManyOrginalItemSubItems,
+  GetAllOrginal_SubItem_ChechLists,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -105,6 +106,10 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  allOrginalSubItemChechLists: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -180,6 +185,10 @@ const initialState: QcState = {
     pending: false,
   },
   contractors: {
+    data: [],
+    pending: false,
+  },
+  allOrginalSubItemChechLists: {
     data: [],
     pending: false,
   },
@@ -583,6 +592,19 @@ export const GetAllContractorAction = createAsyncThunk(
     }
   }
 );
+export const GetAllOrginal_SubItem_ChechListsAction = createAsyncThunk(
+  "qc/GetAllOrginal_SubItem_ChechListsAction",
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllOrginal_SubItem_ChechLists(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const QcSlicer = createSlice({
   name: "qc",
   initialState,
@@ -887,6 +909,28 @@ export const QcSlicer = createSlice({
       .addCase(GetAllContractorAction.rejected, (state: QcState) => {
         state.contractors.pending = false;
       });
+    //#endregion
+    //#region GetAllOrginal_SubItem_ChechListsAction-----
+    builder
+      .addCase(
+        GetAllOrginal_SubItem_ChechListsAction.pending,
+        (state: QcState) => {
+          state.allOrginalSubItemChechLists.pending = true;
+        }
+      )
+      .addCase(
+        GetAllOrginal_SubItem_ChechListsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.allOrginalSubItemChechLists.pending = false;
+          state.allOrginalSubItemChechLists.data = payload.model;
+        }
+      )
+      .addCase(
+        GetAllOrginal_SubItem_ChechListsAction.rejected,
+        (state: QcState) => {
+          state.allOrginalSubItemChechLists.pending = false;
+        }
+      );
     //#endregion
   },
 });

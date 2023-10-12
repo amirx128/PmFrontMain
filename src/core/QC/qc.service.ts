@@ -150,3 +150,7 @@ export const GetAllContractor = async (userId) =>
   await axiosInstance.post(`/QC/GetAllContractor`, {
     userId,
   });
+export const GetAllOrginal_SubItem_ChechLists = async (userId) =>
+  await axiosInstance.post(`/QC/GetAllOrginal_SubItem_ChechLists`, {
+    userId,
+  });

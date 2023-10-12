@@ -4,6 +4,10 @@ export const getAllProjectsReq = async (userId) =>
   await axiosInstance.post(`/Definition/GetAllProjects_Commodities`, {
     userId: userId ?? "1",
   });
+export const GetAllProjects_Floor_Unit_Usability = async (userId) =>
+  await axiosInstance.post(`/Definition/GetAllProjects_Floor_Unit_Usability`, {
+    userId: userId,
+  });
 
 export const getAllFloorsReq = async (userId, projectId) =>
   await axiosInstance.post(`/Definition/GetAllFloor`, {

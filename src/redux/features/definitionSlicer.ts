@@ -51,6 +51,7 @@ import {
   GetAllWarehouseReq,
   GetManyFloorUnit,
   GetManyUnitUsability,
+  GetAllProjects_Floor_Unit_Usability,
 } from "../../core/definition/definition.service.ts";
 
 const getUserId = (state) => {
@@ -127,6 +128,10 @@ export interface DefinitionState {
     pending: boolean;
   };
   selectedCommodity: any;
+  allProjectsFloorUnitUsability: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: DefinitionState = {
@@ -197,6 +202,10 @@ const initialState: DefinitionState = {
     pending: false,
   },
   selectedCommodity: null,
+  allProjectsFloorUnitUsability: {
+    data: [],
+    pending: false,
+  },
 };
 
 export const getAllWarehouses = createAsyncThunk(
@@ -225,6 +234,22 @@ export const getAllProjects = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await getAllProjectsReq(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetAllProjects_Floor_Unit_UsabilityAction = createAsyncThunk(
+  "definition/GetAllProjects_Floor_Unit_UsabilityAction",
+  async (
+    body = undefined,
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllProjects_Floor_Unit_Usability(userId);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -996,6 +1021,28 @@ export const definitionSlicer = createSlice({
       .addCase(getAllProjects.rejected, (state: DefinitionState, { error }) => {
         state.projects.pending = false;
       });
+    //#endregion
+    //#region GetAllProjects_Floor_Unit_UsabilityAction-----
+    builder
+      .addCase(
+        GetAllProjects_Floor_Unit_UsabilityAction.pending,
+        (state: DefinitionState) => {
+          state.allProjectsFloorUnitUsability.pending = true;
+        }
+      )
+      .addCase(
+        GetAllProjects_Floor_Unit_UsabilityAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.allProjectsFloorUnitUsability.pending = false;
+          state.allProjectsFloorUnitUsability.data = payload?.model;
+        }
+      )
+      .addCase(
+        GetAllProjects_Floor_Unit_UsabilityAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.allProjectsFloorUnitUsability.pending = false;
+        }
+      );
     //#endregion
     //#region getAllWarehouses-----
     builder
