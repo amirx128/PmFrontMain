@@ -431,7 +431,6 @@ export const AddNewUnit = createAsyncThunk(
   "definition/AddNewUnit",
   async (
     body: {
-      projectId: any;
       projectfloorId: any;
       unitName: string;
       code: string;
@@ -464,7 +463,6 @@ export const UpdateUnit = createAsyncThunk(
   "definition/UpdateUnit",
   async (
     body: {
-      projectId: any;
       id: any;
       projectfloorId: any;
       unitName: string;

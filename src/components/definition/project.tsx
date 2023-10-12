@@ -12,6 +12,7 @@ export const ProjectCard = ({
   setSelectedUnit,
   setAddUnitDialog,
   setCurrentProject,
+  setShowUnitsDialog,
 }) => {
   return (
     <Grid item md={4} sm={6} xs={12}>
@@ -52,7 +53,7 @@ export const ProjectCard = ({
                 <Button
                   onClick={() => {
                     setSelectedFloor(floor);
-                    setAddFloorDialog(true);
+                    setShowUnitsDialog(true);
                   }}
                   key={floor?.id}
                   size={"small"}
@@ -133,13 +134,13 @@ export const ProjectCard = ({
             </Box>
           )}
         </Box>
-        <Box display={"flex"} gap={0.5} alignItems={"center"} mt={1}>
+        {/* <Box display={"flex"} gap={0.5} alignItems={"center"} mt={1}>
           <Numbers color={"secondary"} sx={{ fontSize: 20 }} />
           <Typography color={"secondary"} variant={"subtitle2"}>
             واحد ها
           </Typography>
-        </Box>
-        <Box my={1}>
+        </Box> */}
+        {/* <Box my={1}>
           {project?.projectfloor?.flatMap((pf) => pf?.projectUnit).length >
           0 ? (
             <Box
@@ -234,7 +235,7 @@ export const ProjectCard = ({
               </Button>
             </Box>
           )}
-        </Box>
+        </Box> */}
         <Divider sx={{ my: 1 }} />
         <Button
           color={"warning"}

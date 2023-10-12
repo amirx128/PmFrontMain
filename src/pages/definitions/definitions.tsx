@@ -31,6 +31,7 @@ import { Producer } from "../../components/definition/producer.tsx";
 import { Warehouse } from "../../components/definition/warehouse.tsx";
 import { AddProducer } from "../../components/definition/addProducer.tsx";
 import { AddWarehouse } from "../../components/definition/addWarehouse.tsx";
+import { ShowUnits } from "../../components/definition/showUnits.tsx";
 
 const Definitions = () => {
   const dispatch = useDispatch<any>();
@@ -48,6 +49,7 @@ const Definitions = () => {
   const [addProjectDialog, setAddProjectDialog] = useState<boolean>(false);
   const [selectedProject, setSelectedProject] = useState<any>(null);
 
+  const [showUnitsDialog, setShowUnitsDialog] = useState<boolean>(false);
   const [addFloorDialog, setAddFloorDialog] = useState<boolean>(false);
   const [selectedFloor, setSelectedFloor] = useState<any>(null);
 
@@ -159,6 +161,10 @@ const Definitions = () => {
     setAddFloorDialog(false);
     setSelectedFloor(null);
   };
+  const showUnitsOnClose = () => {
+    setShowUnitsDialog(false);
+    setSelectedFloor(null);
+  };
 
   const unitOnClose = () => {
     setAddUnitDialog(false);
@@ -232,6 +238,7 @@ const Definitions = () => {
                     setSelectedFloor={setSelectedFloor}
                     setSelectedProject={setSelectedProject}
                     setAddProjectDialog={setAddProjectDialog}
+                    setShowUnitsDialog={setShowUnitsDialog}
                     project={project}
                     setSelectedUnit={setSelectedUnit}
                     setAddUnitDialog={setAddUnitDialog}
@@ -335,6 +342,14 @@ const Definitions = () => {
         addFloorDialog={addFloorDialog}
         selectedFloor={selectedFloor}
         onClose={floorOnClose}
+      />
+      <ShowUnits
+        showUnitsDialog={showUnitsDialog}
+        selectedFloor={selectedFloor}
+        onClose={showUnitsOnClose}
+        setAddFloorDialog={setAddFloorDialog}
+        setSelectedUnit={setSelectedUnit}
+        setAddUnitDialog={setAddUnitDialog}
       />
       <AddUnit
         currentProject={currentProject}

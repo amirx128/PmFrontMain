@@ -35,11 +35,11 @@ export const AddUnit = ({
   const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
   const [info, setInfo] = useState({
     unitName: selectedUnit?.name,
-    projectId: currentProject?.id,
     projectfloorId: selectedUnit?.projectfloorId,
     code: selectedUnit?.code,
     commodities: selectedUnit?.commodities,
   });
+  console.log(selectedUnit);
   const { projects, units, floors, commodities } = useSelector(
     (state: any) => state.definition
   );
@@ -47,7 +47,7 @@ export const AddUnit = ({
   useEffect(() => {
     if (currentProject) {
       dispatch(getAllFloors(currentProject?.id));
-      setInfo({ ...info, projectId: currentProject?.id });
+      setInfo({ ...info });
     }
   }, [currentProject]);
 
@@ -55,7 +55,6 @@ export const AddUnit = ({
     if (selectedUnit) {
       setInfo({
         unitName: selectedUnit?.name,
-        projectId: currentProject?.id,
         projectfloorId: selectedUnit?.projectfloorId,
         code: selectedUnit?.code,
         commodities: selectedUnit?.commodities,
@@ -63,7 +62,6 @@ export const AddUnit = ({
     } else {
       setInfo({
         unitName: "",
-        projectId: currentProject?.id ?? null,
         projectfloorId: null,
         code: "",
         commodities: [],
@@ -92,7 +90,6 @@ export const AddUnit = ({
           unitName: info.unitName,
           projectfloorId: info.projectfloorId,
           code: info.code,
-          projectId: currentProject?.id,
           commodities: info.commodities,
         })
       );
@@ -102,13 +99,13 @@ export const AddUnit = ({
           unitName: info.unitName,
           projectfloorId: info.projectfloorId,
           code: info.code,
-          projectId: currentProject?.id,
           commodities: info.commodities,
         })
       );
     }
     onClose();
   };
+  console.log(floors);
   return (
     <Dialog
       open={addUnitDialog}
@@ -146,20 +143,7 @@ export const AddUnit = ({
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <Select
-          value={info?.projectId}
-          fullWidth={true}
-          name={"projectId"}
-          label={"پروژه"}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
-        >
-          {projects?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
+
         <Select
           value={info?.projectfloorId}
           fullWidth={true}
