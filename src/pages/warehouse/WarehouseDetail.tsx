@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
   const theme = useTheme();
   const createDate = new Date(detail?.createDate).toLocaleDateString("fa-IR");
-  console.log(detail);
   return (
     <Grid container spacing={5} p={2}>
       {detail && (

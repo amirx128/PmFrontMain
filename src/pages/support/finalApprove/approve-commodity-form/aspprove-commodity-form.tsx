@@ -19,7 +19,6 @@ const ApproveCommodityForm: React.FC<any> = ({
   defaults,
   isEditable,
 }) => {
-  console.log(commodity);
   const [states, setStates] = useState<any>([]);
   const [exitWarehouseCount, setExitWarehouseCount] = useState<number>(0);
   const [disabled, setDisabled] = useState<boolean>(true);
@@ -72,7 +71,6 @@ const ApproveCommodityForm: React.FC<any> = ({
           commodityId: commodity.requestCaseRowCommodityId,
         }
       );
-      console.log(response);
       setExitWarehouseCount(response.data.model);
       setValue("exitWarehouseCount", response.data.model);
     } catch (error) {

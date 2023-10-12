@@ -57,7 +57,7 @@ export const AddUnit = ({
       );
       setInfo({ ...info });
     }
-  }, [currentProject]);
+  }, [selectedProject]);
 
   useEffect(() => {
     if (selectedUnit) {
@@ -75,7 +75,7 @@ export const AddUnit = ({
         commodities: [],
       });
     }
-  }, [selectedUnit]);
+  }, [selectedUnit, selectedFloor]);
   useEffect(() => {
     getAllCommodities();
   }, []);

@@ -120,9 +120,6 @@ const ProductDetails = (props) => {
             icon={<EditIcon />}
             label="Edit"
             className="textPrimary"
-            onClick={() => {
-              console.log("hi");
-            }}
             color="inherit"
           />
         </>
@@ -163,16 +160,10 @@ const ProductDetails = (props) => {
       </div>
       {commodities && (
         <Grid
-          onDoubleClick={(e) => {
-            console.log("bye");
-          }}
           rowIdFields={["requestCaseRowCommodityId"]}
           columns={columns}
           rows={commodities.map((row, index) => ({ id: index, ...row }))}
           pagination={{}}
-          onSortModelChange={() => {
-            console.log("aa");
-          }}
         ></Grid>
       )}
     </Card>

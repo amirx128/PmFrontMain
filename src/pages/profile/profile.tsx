@@ -106,7 +106,6 @@ const Profile = () => {
     if (info.password) {
       model.password = info.password;
     }
-    console.log(info.password);
     if (
       (info?.password && info?.password !== info?.repeatPassword) ||
       isShowPassword

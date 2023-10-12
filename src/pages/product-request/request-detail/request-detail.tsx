@@ -1,8 +1,8 @@
 import { Box, Typography, useTheme } from "@mui/material";
 import axios from "../../../utils/axios.config";
 import { useEffect, useState } from "react";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../../utils/functions.ts";
 
 const RequestDetail = () => {
   const [mainData, setMainData] = useState("");
@@ -12,13 +12,12 @@ const RequestDetail = () => {
   useEffect(() => {
     getMainData();
   }, []);
-    const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
   const getMainData = async () => {
     try {
       const response: any = await axios.post("/RequestCase/GetMainData", {
         userId: user?.id ?? getUserIdFromStorage(),
       });
-      console.log(response.data.model);
       const trackingCode = response.data.model.trackingCode;
       setMainData(trackingCode);
       setTrackingCode(trackingCode);

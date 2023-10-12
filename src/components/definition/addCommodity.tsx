@@ -122,7 +122,6 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
 
   const onSubmit = async () => {
     if (selectedCommodity) {
-      console.log(info);
       await dispatch(
         UpdateCommodityDetails({ ...info, id: selectedCommodity?.id })
       );
@@ -224,7 +223,6 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
   }, [term, commoditiesOnTree]);
 
   const [showTreeDialog, setShowTreeDialog] = useState(false);
-  console.log(warehouses);
   return (
     <>
       <Dialog

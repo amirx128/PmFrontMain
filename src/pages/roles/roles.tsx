@@ -1,14 +1,12 @@
 import AddIcon from "@mui/icons-material/AddOutlined";
 import { Button, Card, Grid as CardGrid, CardHeader } from "@mui/material";
-import {
-  GridColDef
-} from "@mui/x-data-grid";
+import { GridColDef } from "@mui/x-data-grid";
 import axios from "../../utils/axios.config";
 import { useEffect, useState } from "react";
 import Grid from "../../components/grid/grid";
 import { ActionRow } from "./style";
-import {useSelector} from "react-redux";
-import {getUserIdFromStorage} from "../../utils/functions.ts";
+import { useSelector } from "react-redux";
+import { getUserIdFromStorage } from "../../utils/functions.ts";
 
 const Roles = () => {
   const columns: GridColDef[] = [
@@ -28,35 +26,23 @@ const Roles = () => {
     },
   ];
 
-  const handleEditClick = (row) => {
-    console.log("edit", row);
-  };
-  const handleDeleteClick = (row) => {
-    console.log("delete", row);
-  };
   const [data, setData] = useState<any[]>([]);
 
   useEffect(() => {
     getUsers();
   }, []);
-  const {user} = useSelector((state:any) => state?.user)
+  const { user } = useSelector((state: any) => state?.user);
   const getUsers = async () => {
     try {
       const response: any = await axios.post("/Administration/GetAllRoles", {
-          userId: user?.id ?? getUserIdFromStorage(),
-        });
-      console.log(response);
+        userId: user?.id ?? getUserIdFromStorage(),
+      });
       setData(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
-  const handleFilter = (entity) => {
-    console.log(entity);
-  };
-  const handleSortModelChange = (entity) => {
-    console.log(entity);
-  };
+
   return (
     <CardGrid
       item
@@ -84,13 +70,7 @@ const Roles = () => {
           </Button>
         </ActionRow>
 
-        <Grid
-          columns={columns}
-          rows={data}
-          pagination={{}}
-          onFilterCahnge={handleFilter}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        <Grid columns={columns} rows={data} pagination={{}}></Grid>
       </Card>
     </CardGrid>
   );

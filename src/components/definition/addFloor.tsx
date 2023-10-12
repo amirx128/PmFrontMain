@@ -41,7 +41,7 @@ export const AddFloor = ({
     code: selectedFloor?.code,
     commodities: selectedFloor?.commodities,
   });
-  const { projects, commodities } = useSelector(
+  const { projects, commodities, selectedProject } = useSelector(
     (state: any) => state.definition
   );
 
@@ -49,14 +49,14 @@ export const AddFloor = ({
     if (selectedFloor) {
       setInfo({
         floorName: selectedFloor?.name,
-        projectId: selectedFloor?.projectId,
+        projectId: selectedProject?.id,
         code: selectedFloor?.code,
         commodities: selectedFloor?.commodities,
       });
     } else {
       setInfo({
         floorName: "",
-        projectId: currentProject?.id,
+        projectId: selectedProject?.id,
         code: "",
         commodities: [],
       });

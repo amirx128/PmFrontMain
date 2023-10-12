@@ -144,7 +144,6 @@ const Definitions = () => {
   }, []);
 
   useEffect(() => {
-    console.log(currentProject);
     if (currentProject) {
       dispatch(setSelectedProjectAction(currentProject));
     }
@@ -166,7 +165,6 @@ const Definitions = () => {
 
   const floorOnClose = () => {
     setAddFloorDialog(false);
-    setSelectedFloor(null);
   };
   const showUnitsOnClose = () => {
     setShowUnitsDialog(false);

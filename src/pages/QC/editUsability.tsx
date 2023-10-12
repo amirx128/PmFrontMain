@@ -48,7 +48,7 @@ const EditUsability = () => {
         code: selectedUsability.data.code,
         units: selectedUsability.data.units.map((unit) => unit.id),
       });
-      console.log(selectedUsability.data);
+      selectedUsability.data;
     }
   }, [selectedUsability]);
   const getList = async () => {

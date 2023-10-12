@@ -135,12 +135,6 @@ const Users = () => {
       console.error("Error fetching data:", error);
     }
   };
-  const handleFilter = (entity) => {
-    console.log(entity);
-  };
-  const handleSortModelChange = (entity) => {
-    console.log(entity);
-  };
 
   useEffect(() => {
     if (selectedUser?.id) {
@@ -188,13 +182,7 @@ const Users = () => {
           </Button>
         </ActionRow>
 
-        <Grid
-          columns={columns}
-          rows={usersList || []}
-          pagination={{}}
-          onFilterCahnge={handleFilter}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        <Grid columns={columns} rows={usersList || []} pagination={{}}></Grid>
       </Card>
       <AddUser showUserDialog={showUserDialog} onClose={userOnClose} />
     </CardGrid>

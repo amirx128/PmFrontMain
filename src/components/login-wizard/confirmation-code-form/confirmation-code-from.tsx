@@ -16,8 +16,6 @@ const ConfirmationCodeForm = ({ onSubmit }) => {
   const submitForm = handleSubmit((data) => {
     localStorage.setItem("TOKEN", "token");
     // navigate("/");
-    console.log("submitting...", data);
-    console.log("errors...", errors);
     onSubmit(data);
   });
   return (

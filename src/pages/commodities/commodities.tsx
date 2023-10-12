@@ -198,7 +198,6 @@ const Commodities = () => {
                   const find = commodities?.data?.find(
                     (item) => item?.id == selectedNode
                   );
-                  console.log(typeof commidtyOnTree.isCategory);
                   if (commidtyOnTree.isCategory) {
                     setSelectedCommodity(commidtyOnTree);
                     setSelectedNode(null);

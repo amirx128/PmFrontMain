@@ -104,9 +104,7 @@ const SupplierList = () => {
     setUserDialog(true);
     setSelectedUser(row);
   };
-  const handleDeleteClick = (row) => {
-    console.log("delete", row);
-  };
+  const handleDeleteClick = (row) => {};
   const [data, setData] = useState<any[]>([]);
   const { user } = useSelector((state: any) => state?.user);
 
@@ -129,17 +127,10 @@ const SupplierList = () => {
       const response: any = await axios.post("/Definition/GetAllSuppliers", {
         userId: user?.id ?? getUserIdFromStorage(),
       });
-      console.log(response);
       setData(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-  };
-  const handleFilter = (entity) => {
-    console.log(entity);
-  };
-  const handleSortModelChange = (entity) => {
-    console.log(entity);
   };
 
   useEffect(() => {
@@ -178,13 +169,7 @@ const SupplierList = () => {
           </Button>
         </ActionRow>
 
-        <Grid
-          columns={columns}
-          rows={data}
-          pagination={{}}
-          onFilterCahnge={handleFilter}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        <Grid columns={columns} rows={data} pagination={{}}></Grid>
       </Card>
       <AddUser showUserDialog={showUserDialog} onClose={userOnClose} />
     </CardGrid>

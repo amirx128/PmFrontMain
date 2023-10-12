@@ -37,7 +37,6 @@ const ApproveDetail = (props) => {
     }
     getApproveStates();
     getRequestDetail();
-    console.log(getValues());
   }, []);
   const { user } = useSelector((state: any) => state?.user);
   const getApproveStates = async () => {
@@ -63,13 +62,11 @@ const ApproveDetail = (props) => {
       setValue("newCount", response.data.model.commodities[0].count);
 
       setDetail(response.data.model);
-      console.log(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
   const onSubmit = handleSubmit((entity: any) => {
-    console.log(entity);
     setApproveDate();
   });
   const countChange = () => {};

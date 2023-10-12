@@ -46,10 +46,7 @@ const ComodiryForm: React.FC<Iprops> = ({
   } = useForm<IComodityFields>();
   const [date, setDate] = useState(new Date().toLocaleDateString("fa-IR"));
   const [unit, setUnit] = useState("");
-  const onSubmit = handleSubmit((data) => {
-    console.log("submitting...", data);
-    console.log("errors...", errors);
-  });
+  const onSubmit = handleSubmit((data) => {});
   useEffect(() => {
     if (date) {
       setValue("requiredDate", date);

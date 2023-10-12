@@ -59,7 +59,6 @@ export const AddRole = ({ addRolesDialog, selectedRole, onClose }) => {
   };
 
   const onSubmit = () => {
-    console.log(info);
     if (selectedRole) {
       dispatch(UpdateBusinessRole({ id: selectedRole?.id, ...info }));
     } else {

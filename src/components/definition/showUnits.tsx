@@ -146,7 +146,7 @@ export const ShowUnits = ({
       {selectedFloor && (
         <DialogContent>
           <ListItem>
-            {selectedFloor.projectUnit.length || <p>واحدی وجود ندارد</p>}
+            {!!selectedFloor.projectUnit.length || <p>واحدی وجود ندارد</p>}
             {selectedFloor.projectUnit?.map((unit) => (
               <ListItemButton
                 sx={{
