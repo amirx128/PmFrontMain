@@ -57,7 +57,6 @@ export const AddNewUnitReq = async (
 export const UpdateUnitReq = async (
   userId,
   id,
-  projectId,
   projectfloorId,
   unitName,
   code,

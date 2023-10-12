@@ -56,7 +56,7 @@ export const AddFloor = ({
     } else {
       setInfo({
         floorName: "",
-        projectId: currentProject.id,
+        projectId: currentProject?.id,
         code: "",
         commodities: [],
       });

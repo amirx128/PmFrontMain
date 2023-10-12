@@ -63,7 +63,7 @@ export const AddUnit = ({
     } else {
       setInfo({
         unitName: "",
-        projectfloorId: selectedFloor.id,
+        projectfloorId: selectedFloor?.id,
         code: "",
         commodities: [],
       });
