@@ -27,6 +27,7 @@ import {
   UpdateQcInstance,
   DeleteQcInstance,
   ContractorAddDateQ,
+  ContractorAddDateSentItems,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -134,6 +135,10 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  contractorsAddDateSentItem: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -231,6 +236,10 @@ const initialState: QcState = {
     pending: false,
   },
   contractorsAddDateQ: {
+    data: [],
+    pending: false,
+  },
+  contractorsAddDateSentItem: {
     data: [],
     pending: false,
   },
@@ -743,6 +752,37 @@ export const DeleteQcInstanceAction = createAsyncThunk(
   }
 );
 ////////////////////////////////////////////
+export const ContractorAddDateSentItemsAction = createAsyncThunk(
+  "qc/ContractorAddDateSentItemsAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await ContractorAddDateSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const ContractorAddDateQAction = createAsyncThunk(
   "qc/ContractorAddDateQAction",
   async (
@@ -1175,6 +1215,22 @@ export const QcSlicer = createSlice({
       )
       .addCase(ContractorAddDateQAction.rejected, (state: QcState) => {
         state.contractorsAddDateQ.pending = false;
+      });
+    //#endregion
+    //#region ContractorAddDateSentItemsAction-----
+    builder
+      .addCase(ContractorAddDateSentItemsAction.pending, (state: QcState) => {
+        state.contractorsAddDateSentItem.pending = true;
+      })
+      .addCase(
+        ContractorAddDateSentItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.contractorsAddDateSentItem.pending = false;
+          state.contractorsAddDateSentItem.data = payload.model;
+        }
+      )
+      .addCase(ContractorAddDateSentItemsAction.rejected, (state: QcState) => {
+        state.contractorsAddDateSentItem.pending = false;
       });
     //#endregion
   },

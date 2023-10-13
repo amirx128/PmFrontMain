@@ -481,4 +481,18 @@ export const routes: IRoute[] = [
     protected: true,
     title: "کنترل کیفیت",
   },
+  {
+    path: "/qc/ContractorAddDateSentItem",
+    component: <QcGrid mode="contractor-add-date-sent-item" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/ContractorAddDateSentItem/edit/:id",
+    component: <QcDetails mode="contractor" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
 ];

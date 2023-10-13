@@ -507,6 +507,20 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
           route: "/qc/ContractorAddDate",
           role: UserRole.Admin,
         },
+        {
+          id: 1,
+          name: "اعلام زمان شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/ContractorAddDateSentItem",
+          role: UserRole.Admin,
+        },
       ],
     },
     {

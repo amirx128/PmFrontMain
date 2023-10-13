@@ -28,6 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   AllActiveCheckListsAction,
   ContractorAddDateQAction,
+  ContractorAddDateSentItemsAction,
   DeleteQcInstanceAction,
   GetCheckListStatesAction,
 } from "../../redux/features/qcSlicer.ts";
@@ -43,12 +44,12 @@ import { LoadingButton } from "@mui/lab";
 const QcGrid = ({ mode }) => {
   const modeDict = useRef({
     "contractor-add-date": "منتظر اعلام زمان",
+    "contractor-add-date-sent-item": "اعلام زمان شده ها",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { checkListStates, contractorsAddDateQ } = useSelector(
-    (state: any) => state.qc
-  );
+  const { checkListStates, contractorsAddDateQ, contractorsAddDateSentItem } =
+    useSelector((state: any) => state.qc);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
@@ -148,9 +149,13 @@ const QcGrid = ({ mode }) => {
   }, []);
   const getList = async () => {
     await dispatch(GetCheckListStatesAction());
+
     switch (mode) {
       case "contractor-add-date":
         await dispatch(ContractorAddDateQAction({}));
+        break;
+      case "contractor-add-date-sent-item":
+        await dispatch(ContractorAddDateSentItemsAction({}));
         break;
     }
   };
@@ -177,6 +182,9 @@ const QcGrid = ({ mode }) => {
       case "contractor-add-date":
         await dispatch(ContractorAddDateQAction(model));
         break;
+      case "contractor-add-date-sent-item":
+        await dispatch(contractorsAddDateSentItem(model));
+        break;
     }
   };
   const handleRmoveFilter = async () => {
@@ -188,6 +196,9 @@ const QcGrid = ({ mode }) => {
     switch (mode) {
       case "contractor-add-date":
         await dispatch(ContractorAddDateQAction(model));
+        break;
+      case "contractor-add-date-sent-item":
+        await dispatch(contractorsAddDateSentItem(model));
         break;
     }
   };
@@ -202,6 +213,23 @@ const QcGrid = ({ mode }) => {
                 columns={columns}
                 rows={
                   contractorsAddDateQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "contractor-add-date-sent-item":
+        return (
+          <>
+            {contractorsAddDateSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  contractorsAddDateSentItem?.data.map((rows, index) => ({
                     ...rows,
                     id: rows.checkListInstanceId,
                   })) ?? []
