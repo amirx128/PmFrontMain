@@ -35,6 +35,7 @@ const JalaliDatePicker: React.FC<IProps> = (props) => {
           label={props.label}
           minDate={new Date(2010, 1, 1)}
           value={new Date(+props.value)}
+          disabled={props.disabled}
         />
       </LocalizationProvider>
     </Container>

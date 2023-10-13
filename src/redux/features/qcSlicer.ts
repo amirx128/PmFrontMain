@@ -26,6 +26,7 @@ import {
   GetOneInstanceData,
   UpdateQcInstance,
   DeleteQcInstance,
+  ContractorAddDateQ,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -128,6 +129,11 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+
+  contractorsAddDateQ: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -222,6 +228,10 @@ const initialState: QcState = {
   },
   selectedCheckListInstance: {
     data: undefined,
+    pending: false,
+  },
+  contractorsAddDateQ: {
+    data: [],
     pending: false,
   },
 };
@@ -732,6 +742,39 @@ export const DeleteQcInstanceAction = createAsyncThunk(
     }
   }
 );
+////////////////////////////////////////////
+export const ContractorAddDateQAction = createAsyncThunk(
+  "qc/ContractorAddDateQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await ContractorAddDateQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+
 export const QcSlicer = createSlice({
   name: "qc",
   initialState,
@@ -1116,6 +1159,22 @@ export const QcSlicer = createSlice({
       )
       .addCase(DeleteQcInstanceAction.rejected, (state: QcState) => {
         state.checkListInstancRemoveState.pending = false;
+      });
+    //#endregion
+    //#region ContractorAddDateQAction-----
+    builder
+      .addCase(ContractorAddDateQAction.pending, (state: QcState) => {
+        state.contractorsAddDateQ.pending = true;
+      })
+      .addCase(
+        ContractorAddDateQAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.contractorsAddDateQ.pending = false;
+          state.contractorsAddDateQ.data = payload.model;
+        }
+      )
+      .addCase(ContractorAddDateQAction.rejected, (state: QcState) => {
+        state.contractorsAddDateQ.pending = false;
       });
     //#endregion
   },

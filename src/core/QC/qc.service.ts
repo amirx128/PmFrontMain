@@ -193,3 +193,23 @@ export const DeleteQcInstance = async (userId, instanceIds) =>
     userId,
     instanceIds,
   });
+/////////////////////////////////////////c/qc/ContractorAddDate
+export const ContractorAddDateQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Contractor.AddDate.Q`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });

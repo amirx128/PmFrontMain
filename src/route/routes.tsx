@@ -54,6 +54,8 @@ import WarhouseForm from "../pages/warehouse/WarhouseForm.tsx";
 import CheckListInstancesList from "../pages/QC/checkListInstances.tsx";
 import AddCheckListInstance from "../pages/QC/addCheckListInstance.tsx";
 import EditCheckListInstance from "../pages/QC/editCheckListInstanceItem.tsx";
+import QcGrid from "../components/qc-grid-pages/qcGrid.tsx";
+import QcDetails from "../components/qc-grid-pages/qcDetails.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -460,6 +462,21 @@ export const routes: IRoute[] = [
   {
     path: "/qc/checkListInstances/edit/:id",
     component: <EditCheckListInstance />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  //////////////////////////////
+  {
+    path: "/qc/ContractorAddDate",
+    component: <QcGrid mode="contractor-add-date" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/ContractorAddDate/edit/:id",
+    component: <QcDetails mode="contractor" />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",
