@@ -56,6 +56,7 @@ import AddCheckListInstance from "../pages/QC/addCheckListInstance.tsx";
 import EditCheckListInstance from "../pages/QC/editCheckListInstanceItem.tsx";
 import QcGrid from "../components/qc-grid-pages/qcGrid.tsx";
 import QcDetails from "../components/qc-grid-pages/qcDetails.tsx";
+import CheckListInstancesListDuplicate from "../pages/QC/checkListInstancesDuplicate.tsx";
 export enum Layouts {
   AUTH = "auth",
   MAIN = "main",
@@ -448,6 +449,13 @@ export const routes: IRoute[] = [
   {
     path: "/qc/checkListInstances",
     component: <CheckListInstancesList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/checkListInstancesDuplicate",
+    component: <CheckListInstancesListDuplicate />,
     layout: Layouts.MAIN,
     protected: true,
     title: "کنترل کیفیت",

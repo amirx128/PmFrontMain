@@ -140,6 +140,13 @@ export const CreateCheckListInstances = async (
     relatedSubItems,
     relatedCheckLists,
   });
+export const GetDuplicated = async (userId, body) => {
+  await axiosInstance.post(`/QC/QcManager.GetDuplicated`, {
+    userId: userId,
+    ...body,
+  });
+};
+
 export const UpdateQcInstance = async (
   userId,
   instanceId,
@@ -192,6 +199,11 @@ export const DeleteQcInstance = async (userId, instanceIds) =>
   await axiosInstance.post(`/QC/QcManager.DeleteQcInstance`, {
     userId,
     instanceIds,
+  });
+export const GetOneSubItemDetails = async (userId, selectedItemId) =>
+  await axiosInstance.post(`/QC/QcManager.GetOneSubItemDetails`, {
+    userId,
+    selectedItemId,
   });
 /////////////////////////////////////////c/qc/ContractorAddDate
 export const ContractorAddDateQ = async (

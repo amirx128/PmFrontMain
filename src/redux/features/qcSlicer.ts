@@ -30,6 +30,8 @@ import {
   ContractorAddDateSentItems,
   TechnicalApproveScheduleQ,
   TechnicalApproveScheduleSentItems,
+  GetOneSubItemDetails,
+  GetDuplicated,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -148,6 +150,14 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  subItemDetails: {
+    data: any;
+    pending: boolean;
+  };
+  duplicatedCheckLists: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -257,6 +267,14 @@ const initialState: QcState = {
     pending: false,
   },
   technicalApproveScheduleSentItem: {
+    data: [],
+    pending: false,
+  },
+  subItemDetails: {
+    data: undefined,
+    pending: false,
+  },
+  duplicatedCheckLists: {
     data: [],
     pending: false,
   },
@@ -580,7 +598,7 @@ export const CreateCheckListInstancesAction = createAsyncThunk(
       relatedFloor: number[];
       relatedUnits: number[];
       relatedUsability: number[];
-      relatedOrginalItems: number[];
+      relatedOriginalItems: number[];
       relatedSubItems: number[];
       relatedCheckLists: number[];
     },
@@ -593,7 +611,7 @@ export const CreateCheckListInstancesAction = createAsyncThunk(
         relatedFloor,
         relatedUnits,
         relatedUsability,
-        relatedOrginalItems,
+        relatedOriginalItems,
         relatedSubItems,
         relatedCheckLists,
       } = body;
@@ -606,7 +624,7 @@ export const CreateCheckListInstancesAction = createAsyncThunk(
         relatedFloor,
         relatedUnits,
         relatedUsability,
-        relatedOrginalItems,
+        relatedOriginalItems,
         relatedSubItems,
         relatedCheckLists
       );
@@ -626,9 +644,9 @@ export const UpdateQcInstanceAction = createAsyncThunk(
       relatedFloor: number;
       relatedUnits: number;
       relatedUsability: number;
-      relatedOrginalItems: number;
+      relatedOriginalItems: number;
       relatedSubItems: number;
-      relatedCheckLists: number;
+      relatedCheckLists: number[];
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
@@ -639,7 +657,7 @@ export const UpdateQcInstanceAction = createAsyncThunk(
         relatedFloor,
         relatedUnits,
         relatedUsability,
-        relatedOrginalItems,
+        relatedOriginalItems,
         relatedSubItems,
         relatedCheckLists,
         instanceId,
@@ -654,7 +672,7 @@ export const UpdateQcInstanceAction = createAsyncThunk(
         relatedFloor,
         relatedUnits,
         relatedUsability,
-        relatedOrginalItems,
+        relatedOriginalItems,
         relatedSubItems,
         relatedCheckLists
       );
@@ -895,6 +913,38 @@ export const TechnicalApproveScheduleSentItemAction = createAsyncThunk(
   }
 );
 ////////////////////////////////////////////
+export const GetOneSubItemDetailsAction = createAsyncThunk(
+  "qc/GetOneSubItemDetailsAction",
+  async (
+    body: {
+      selectedItemId: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { selectedItemId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetOneSubItemDetails(userId, selectedItemId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetDuplicatedAction = createAsyncThunk(
+  "qc/GetDuplicatedAction",
+  async (body:{data:any}, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetDuplicated(userId, body.data);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const QcSlicer = createSlice({
   name: "qc",
@@ -1351,6 +1401,35 @@ export const QcSlicer = createSlice({
           state.technicalApproveScheduleSentItem.pending = false;
         }
       );
+    //#endregion
+    //#region GetOneSubItemDetailsAction-----
+    builder
+      .addCase(GetOneSubItemDetailsAction.pending, (state: QcState) => {
+        state.subItemDetails.pending = true;
+      })
+      .addCase(
+        GetOneSubItemDetailsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.subItemDetails.pending = false;
+          state.subItemDetails.data = payload.model;
+        }
+      )
+      .addCase(GetOneSubItemDetailsAction.rejected, (state: QcState) => {
+        state.subItemDetails.pending = false;
+      });
+    //#endregion
+    //#region GetDuplicatedAction-----
+    builder
+      .addCase(GetDuplicatedAction.pending, (state: QcState) => {
+        state.duplicatedCheckLists.pending = true;
+      })
+      .addCase(GetDuplicatedAction.fulfilled, (state: QcState, { payload }) => {
+        state.duplicatedCheckLists.pending = false;
+        state.duplicatedCheckLists.data = payload.model;
+      })
+      .addCase(GetDuplicatedAction.rejected, (state: QcState) => {
+        state.duplicatedCheckLists.pending = false;
+      });
     //#endregion
   },
 });

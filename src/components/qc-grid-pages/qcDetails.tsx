@@ -24,16 +24,18 @@ import {
   GetAllContractorAction,
   GetAllSubItemsAction,
   GetAllUsabilityAction,
+  GetOneSubItemDetailsAction,
 } from "../../redux/features/qcSlicer";
 import { getAllProjects } from "../../redux/features/definitionSlicer";
 import JalaliDatePicker from "../date-picker/date-picker";
 import { LoadingButton } from "@mui/lab";
 import { GetUsersListAction } from "../../redux/features/administrationSlicer";
+import { useParams } from "react-router-dom";
 const QcDetails = ({ mode }) => {
+  const { id } = useParams();
   const dispatch = useDispatch<any>();
-  const { subItems, usabilities, checkLists, contractors } = useSelector(
-    (state: any) => state?.qc
-  );
+  const { subItems, usabilities, checkLists, contractors, subItemDetails } =
+    useSelector((state: any) => state?.qc);
   const { projects } = useSelector((state: any) => state?.definition);
   const { usersList } = useSelector(
     (state: any) => state?.administrations?.users
@@ -69,9 +71,12 @@ const QcDetails = ({ mode }) => {
   });
 
   useEffect(() => {
+    getItemData();
     getLists();
   }, []);
-
+  const getItemData = async () => {
+    await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
+  };
   const getLists = async () => {
     await dispatch(GetAllSubItemsAction());
     await dispatch(GetAllUsabilityAction());
@@ -80,6 +85,7 @@ const QcDetails = ({ mode }) => {
     await dispatch(GetAllContractorAction());
     await dispatch(GetUsersListAction());
   };
+  console.log(subItemDetails);
   const handleChange = (e) => {
     setInfo({
       ...info,

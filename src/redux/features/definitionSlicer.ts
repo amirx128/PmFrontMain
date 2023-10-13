@@ -488,7 +488,6 @@ export const UpdateUnit = createAsyncThunk(
       const { data } = await UpdateUnitReq(
         userId,
         body.id,
-        body.projectId,
         body.projectfloorId,
         body.unitName,
         body.code,

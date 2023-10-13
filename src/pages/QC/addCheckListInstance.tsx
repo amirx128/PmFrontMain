@@ -241,6 +241,25 @@ const AddCheckListInstance = () => {
         </FormControl>
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Button
+          color="warning"
+          variant="contained"
+          onClick={() => {
+            //@ts-ignore
+            window.infoData = info;
+            window.open("/qc/checkListInstancesDuplicate", "_blank").focus();
+
+            // navigate("/qc/checkListInstancesDuplicate", { state: info });
+          }}
+          disabled={
+            !info.contractorUserId ||
+            !info.relatedOrginalItems.length ||
+            !info.relatedProject ||
+            !info.relatedSubItems.length
+          }
+        >
+          مشاهده تکراری ها
+        </Button>
         <LoadingButton
           color="success"
           variant="contained"

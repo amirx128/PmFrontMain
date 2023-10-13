@@ -41,7 +41,7 @@ const EditCheckListInstance = () => {
     relatedUsability: "",
     relatedOrginalItems: "",
     relatedSubItems: "",
-    relatedCheckLists: "",
+    relatedCheckLists: [],
     contractorUserId: "",
   });
 
@@ -52,26 +52,25 @@ const EditCheckListInstance = () => {
     if (selectedCheckListInstance?.data) {
       const {
         instanceId,
+        relatedOriginalItems,
         contractorUserId,
         relatedSubItems,
         relatedUsability,
         relatedProjects,
         relatedFloor,
         relatedUnits,
-        relatedCheckLists,
+        relatedCheckListIds,
       } = selectedCheckListInstance.data;
       setInfo({
         relatedProject: relatedProjects,
         relatedFloor,
         relatedUnits,
         relatedUsability,
-        relatedOrginalItems: instanceId,
+        relatedOrginalItems: relatedOriginalItems,
         relatedSubItems,
-        relatedCheckLists,
+        relatedCheckLists: relatedCheckListIds,
         contractorUserId,
       });
-
-      console.log(selectedCheckListInstance);
     }
   }, [selectedCheckListInstance]);
   const getAllDependency = async () => {
@@ -96,8 +95,8 @@ const EditCheckListInstance = () => {
         relatedUnits: +info.relatedUnits,
         relatedUsability: +info.relatedUsability,
         relatedSubItems: +info.relatedSubItems,
-        relatedCheckLists: +info.relatedCheckLists,
-        relatedOrginalItems: +info.relatedOrginalItems,
+        relatedCheckLists: info.relatedCheckLists,
+        relatedOriginalItems: +info.relatedOrginalItems,
       })
     );
   };
@@ -227,6 +226,7 @@ const EditCheckListInstance = () => {
             name={"relatedCheckLists"}
             label="چک لیست"
             onChange={handleChange}
+            multiple
           >
             {allOrginalSubItemChechLists?.data
               ?.find((original) => +info.relatedOrginalItems === +original.id)

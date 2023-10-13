@@ -76,6 +76,7 @@ export const AddUnit = ({
       });
     }
   }, [selectedUnit, selectedFloor]);
+  console.log(info.projectfloorId);
   useEffect(() => {
     getAllCommodities();
   }, []);
@@ -151,21 +152,23 @@ export const AddUnit = ({
           fullWidth={true}
           sx={{ mt: 2 }}
         />
+        {info.projectfloorId && (
+          <Select
+            value={info?.projectfloorId}
+            fullWidth={true}
+            name={"projectfloorId"}
+            label={"طبقه"}
+            onChange={handleChange}
+            sx={{ mt: 2 }}
+          >
+            {oneProjectFloor?.data?.map((item) => (
+              <MenuItem value={item.id} key={item?.id}>
+                {item?.name}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
 
-        <Select
-          value={info?.projectfloorId}
-          fullWidth={true}
-          name={"projectfloorId"}
-          label={"طبقه"}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
-        >
-          {oneProjectFloor?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
         <FormControl fullWidth={true}>
           <Typography sx={{ mt: 2 }}>کالا ها</Typography>
           <Select
