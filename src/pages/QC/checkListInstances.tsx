@@ -278,6 +278,7 @@ const CheckListInstancesList = () => {
             variant="outlined"
             onClick={() => setWarningREmoveModal(true)}
             color="error"
+            disabled={!idsDelete.length}
           >
             <DeleteIcon />
             حذف موارد انتخابی
