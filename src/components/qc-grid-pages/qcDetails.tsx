@@ -28,15 +28,21 @@ import {
 import { getAllProjects } from "../../redux/features/definitionSlicer";
 import JalaliDatePicker from "../date-picker/date-picker";
 import { LoadingButton } from "@mui/lab";
+import { GetUsersListAction } from "../../redux/features/administrationSlicer";
 const QcDetails = ({ mode }) => {
   const dispatch = useDispatch<any>();
   const { subItems, usabilities, checkLists, contractors } = useSelector(
     (state: any) => state?.qc
   );
   const { projects } = useSelector((state: any) => state?.definition);
-
+  const { usersList } = useSelector(
+    (state: any) => state?.administrations?.users
+  );
   const [contractorAccrodion, setContractorAccrodion] = useState<boolean>(
     () => mode === "contractor"
+  );
+  const [technicalAccrodion, setTechnicalAccrodion] = useState<boolean>(
+    () => mode === "technical"
   );
   const [createDate, setCreateDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(new Date());
@@ -44,8 +50,12 @@ const QcDetails = ({ mode }) => {
   const [contractorActivityDate, setContractorActivityDate] = useState(
     new Date()
   );
+  const [technicalActivityDate, setTechnicalActivityDate] = useState(
+    new Date()
+  );
   const [hasUnHandleCheckList, setHasUnHandleCheckList] =
     useState<boolean>(false);
+  const [technicalApprove, setTechnicalApprove] = useState<boolean>(false);
   const [info, setInfo] = useState({
     trackingNumber: "",
     subItem: "",
@@ -55,6 +65,7 @@ const QcDetails = ({ mode }) => {
     unit: "",
     checkList: "",
     contractor: "",
+    technicalUser: "",
   });
 
   useEffect(() => {
@@ -67,6 +78,7 @@ const QcDetails = ({ mode }) => {
     await dispatch(getAllProjects());
     await dispatch(GetAllCheckListsAction());
     await dispatch(GetAllContractorAction());
+    await dispatch(GetUsersListAction());
   };
   const handleChange = (e) => {
     setInfo({
@@ -90,6 +102,10 @@ const QcDetails = ({ mode }) => {
   const setSelectedContractorActivityDate = (e) => {
     const date = new Date(e);
     setContractorActivityDate(date);
+  };
+  const setSelectedTechnicalActivityDate = (e) => {
+    const date = new Date(e);
+    setTechnicalActivityDate(date);
   };
   return (
     <Card
@@ -361,6 +377,78 @@ const QcDetails = ({ mode }) => {
               name="requiredDate"
               label="تاریخ فعالیت پیمانکار"
               value={contractorActivityDate}
+              sx={{ mt: 2, width: "50%" }}
+              disabled={true}
+            />
+          </AccordionDetails>
+        </Accordion>
+        <Accordion
+          expanded={technicalAccrodion}
+          onChange={() => setTechnicalAccrodion((prev) => !prev)}
+          sx={{ mt: 2 }}
+        >
+          <AccordionSummary
+            expandIcon={<ExpandMoreIcon />}
+            id="contractor"
+            sx={{
+              backgroundColor: "#e6fcf5",
+            }}
+          >
+            <Typography>دفتر فنی</Typography>
+          </AccordionSummary>
+          <AccordionDetails
+            sx={{
+              display: "flex",
+              justifyContent: "flex-start",
+              alignItems: "flex-start",
+              flexDirection: "column",
+            }}
+          >
+            <FormControlLabel
+              control={<Switch checked={false} color="info" disabled={true} />}
+              sx={{ mt: 2 }}
+              label="قابل ویرایش؟"
+              dir="ltr"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={technicalApprove}
+                  color="info"
+                  disabled={true}
+                  onChange={() => setTechnicalApprove((prev) => !prev)}
+                />
+              }
+              sx={{ mt: 2 }}
+              label="تایید فنی؟"
+              dir="ltr"
+            />
+            {!!usersList?.length && (
+              <FormControl sx={{ mt: 2, width: "50%" }}>
+                <InputLabel>کاربر فنی</InputLabel>
+                <Select
+                  defaultValue={info?.technicalUser}
+                  value={info?.technicalUser}
+                  fullWidth={true}
+                  name={"technicalUser"}
+                  label="کاربر فنی"
+                  onChange={handleChange}
+                  disabled={true}
+                >
+                  {usersList?.map((item) => (
+                    <MenuItem value={item.id} key={item?.id}>
+                      {item?.fullName}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+            <JalaliDatePicker
+              defaultValue={technicalActivityDate}
+              onChange={setSelectedTechnicalActivityDate}
+              name="requiredDate"
+              label="تاریخ فعالیت فنی"
+              value={toDate}
               sx={{ mt: 2, width: "50%" }}
               disabled={true}
             />

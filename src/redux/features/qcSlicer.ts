@@ -28,6 +28,8 @@ import {
   DeleteQcInstance,
   ContractorAddDateQ,
   ContractorAddDateSentItems,
+  TechnicalApproveScheduleQ,
+  TechnicalApproveScheduleSentItems,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -130,12 +132,19 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
-
   contractorsAddDateQ: {
     data: any;
     pending: boolean;
   };
   contractorsAddDateSentItem: {
+    data: any;
+    pending: boolean;
+  };
+  technicalApproveScheduleQ: {
+    data: any;
+    pending: boolean;
+  };
+  technicalApproveScheduleSentItem: {
     data: any;
     pending: boolean;
   };
@@ -240,6 +249,14 @@ const initialState: QcState = {
     pending: false,
   },
   contractorsAddDateSentItem: {
+    data: [],
+    pending: false,
+  },
+  technicalApproveScheduleQ: {
+    data: [],
+    pending: false,
+  },
+  technicalApproveScheduleSentItem: {
     data: [],
     pending: false,
   },
@@ -814,6 +831,70 @@ export const ContractorAddDateQAction = createAsyncThunk(
     }
   }
 );
+////////////////////////////////////////////
+export const TechnicalApproveScheduleQAction = createAsyncThunk(
+  "qc/TechnicalApproveScheduleQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await TechnicalApproveScheduleQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const TechnicalApproveScheduleSentItemAction = createAsyncThunk(
+  "qc/TechnicalApproveScheduleSentItemAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await TechnicalApproveScheduleSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+////////////////////////////////////////////
 
 export const QcSlicer = createSlice({
   name: "qc",
@@ -1232,6 +1313,44 @@ export const QcSlicer = createSlice({
       .addCase(ContractorAddDateSentItemsAction.rejected, (state: QcState) => {
         state.contractorsAddDateSentItem.pending = false;
       });
+    //#endregion
+    //#region TechnicalApproveScheduleQAction-----
+    builder
+      .addCase(TechnicalApproveScheduleQAction.pending, (state: QcState) => {
+        state.technicalApproveScheduleQ.pending = true;
+      })
+      .addCase(
+        TechnicalApproveScheduleQAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.technicalApproveScheduleQ.pending = false;
+          state.technicalApproveScheduleQ.data = payload.model;
+        }
+      )
+      .addCase(TechnicalApproveScheduleQAction.rejected, (state: QcState) => {
+        state.technicalApproveScheduleQ.pending = false;
+      });
+    //#endregion
+    //#region TechnicalApproveScheduleSentItemAction-----
+    builder
+      .addCase(
+        TechnicalApproveScheduleSentItemAction.pending,
+        (state: QcState) => {
+          state.technicalApproveScheduleSentItem.pending = true;
+        }
+      )
+      .addCase(
+        TechnicalApproveScheduleSentItemAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.technicalApproveScheduleSentItem.pending = false;
+          state.technicalApproveScheduleSentItem.data = payload.model;
+        }
+      )
+      .addCase(
+        TechnicalApproveScheduleSentItemAction.rejected,
+        (state: QcState) => {
+          state.technicalApproveScheduleSentItem.pending = false;
+        }
+      );
     //#endregion
   },
 });
