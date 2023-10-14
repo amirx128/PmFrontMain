@@ -26,6 +26,7 @@ import {
   GetAllSubItemsAction,
   GetAllUsabilityAction,
   GetOneSubItemDetailsAction,
+  technicalApproveScheduleAction,
 } from "../../redux/features/qcSlicer";
 import { getAllProjects } from "../../redux/features/definitionSlicer";
 import JalaliDatePicker from "../date-picker/date-picker";
@@ -42,6 +43,7 @@ const QcDetails = ({ mode }) => {
     contractors,
     subItemDetails,
     contractorAddDateState,
+    technicalApproveScheduleAddState,
   } = useSelector((state: any) => state?.qc);
   const { projects } = useSelector((state: any) => state?.definition);
   const { usersList } = useSelector(
@@ -55,9 +57,6 @@ const QcDetails = ({ mode }) => {
   );
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
-  const [technicalActivityDate, setTechnicalActivityDate] = useState(
-    new Date()
-  );
   const [technicalApprove, setTechnicalApprove] = useState<boolean>(false);
   const [info, setInfo] = useState({
     trackingNumber: "",
@@ -75,6 +74,11 @@ const QcDetails = ({ mode }) => {
     getItemData();
     getLists();
   }, []);
+  useEffect(() => {
+    if (!subItemDetails?.data) return;
+    setFromDate(new Date(subItemDetails.data.fromDate));
+    setToDate(new Date(subItemDetails.data.toDate));
+  }, [subItemDetails]);
   const getItemData = async () => {
     await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
   };
@@ -101,10 +105,6 @@ const QcDetails = ({ mode }) => {
     const date = new Date(e);
     setToDate(date);
   };
-  const setSelectedTechnicalActivityDate = (e) => {
-    const date = new Date(e);
-    setTechnicalActivityDate(date);
-  };
   const submitHandler = async () => {
     switch (mode) {
       case "contractor":
@@ -116,6 +116,16 @@ const QcDetails = ({ mode }) => {
           })
         );
         break;
+      case "technical":
+        await dispatch(
+          technicalApproveScheduleAction({
+            instanceId: +id,
+            fromDate,
+            toDate,
+            isApproved: !!technicalApprove,
+          })
+        );
+        break;
     }
     await getItemData();
   };
@@ -123,6 +133,8 @@ const QcDetails = ({ mode }) => {
     switch (mode) {
       case "contractor":
         return contractorAddDateState.pending;
+      case "technical":
+        return technicalApproveScheduleAddState.pending;
     }
   };
   return (
@@ -323,20 +335,37 @@ const QcDetails = ({ mode }) => {
                   flexDirection: "column",
                 }}
               >
-                <FormControlLabel
-                  control={
-                    <Switch checked={false} color="info" disabled={true} />
-                  }
-                  sx={{ mt: 2 }}
-                  label="قابل ویرایش؟"
-                  dir="ltr"
-                />
+                <div className="grid grid-cols-2 w-1/2">
+                  <div className="flex">
+                    <Typography className="w-1/5 text-right">
+                      کاربر فنی:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.technicalUser}
+                    </Typography>
+                  </div>
+                  <div className="flex">
+                    <Typography className="w-1/3 text-right">
+                      تاریخ فعالیت:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.technicalActivityDate &&
+                        new Date(
+                          subItemDetails?.data?.technicalActivityDate
+                        ).toLocaleDateString("fa-ir")}
+                    </Typography>
+                  </div>
+                </div>
                 <FormControlLabel
                   control={
                     <Switch
                       checked={technicalApprove}
                       color="info"
-                      disabled={true}
+                      disabled={
+                        mode === "technical"
+                          ? !subItemDetails?.data?.technicalEditable
+                          : true
+                      }
                       onChange={() => setTechnicalApprove((prev) => !prev)}
                     />
                   }
@@ -344,34 +373,31 @@ const QcDetails = ({ mode }) => {
                   label="تایید فنی؟"
                   dir="ltr"
                 />
-                {!!usersList?.length && (
-                  <FormControl sx={{ mt: 2, width: "50%" }}>
-                    <InputLabel>کاربر فنی</InputLabel>
-                    <Select
-                      defaultValue={info?.technicalUser}
-                      value={info?.technicalUser}
-                      fullWidth={true}
-                      name={"technicalUser"}
-                      label="کاربر فنی"
-                      onChange={handleChange}
-                      disabled={true}
-                    >
-                      {usersList?.map((item) => (
-                        <MenuItem value={item.id} key={item?.id}>
-                          {item?.fullName}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                )}
                 <JalaliDatePicker
-                  defaultValue={technicalActivityDate}
-                  onChange={setSelectedTechnicalActivityDate}
+                  defaultValue={fromDate}
+                  onChange={setSelectedFromDate}
                   name="requiredDate"
-                  label="تاریخ فعالیت فنی"
+                  label="از تاریخ"
+                  value={fromDate}
+                  sx={{ mt: 2, width: "50%" }}
+                  disabled={
+                    mode === "technical"
+                      ? !subItemDetails?.data?.technicalEditable
+                      : true
+                  }
+                />
+                <JalaliDatePicker
+                  defaultValue={toDate}
+                  onChange={setSelectedToDate}
+                  name="requiredDate"
+                  label="تا تاریخ"
                   value={toDate}
                   sx={{ mt: 2, width: "50%" }}
-                  disabled={true}
+                  disabled={
+                    mode === "technical"
+                      ? !subItemDetails?.data?.technicalEditable
+                      : true
+                  }
                 />
               </AccordionDetails>
             </Accordion>

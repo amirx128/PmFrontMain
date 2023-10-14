@@ -33,6 +33,7 @@ import {
   GetOneSubItemDetails,
   GetDuplicated,
   ContractorAddDate,
+  technicalApproveSchedule,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -152,6 +153,9 @@ export interface QcState {
   };
   technicalApproveScheduleSentItem: {
     data: any;
+    pending: boolean;
+  };
+  technicalApproveScheduleAddState: {
     pending: boolean;
   };
   subItemDetails: {
@@ -275,6 +279,9 @@ const initialState: QcState = {
   },
   technicalApproveScheduleSentItem: {
     data: [],
+    pending: false,
+  },
+  technicalApproveScheduleAddState: {
     pending: false,
   },
   subItemDetails: {
@@ -945,6 +952,34 @@ export const TechnicalApproveScheduleSentItemAction = createAsyncThunk(
     }
   }
 );
+export const technicalApproveScheduleAction = createAsyncThunk(
+  "qc/technicalApproveScheduleAction",
+  async (
+    body: {
+      instanceId: number;
+      fromDate: any;
+      toDate: any;
+      isApproved: boolean;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, instanceId, isApproved } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await technicalApproveSchedule(
+        userId,
+        instanceId,
+        fromDate,
+        toDate,
+        isApproved
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 ////////////////////////////////////////////
 export const GetOneSubItemDetailsAction = createAsyncThunk(
   "qc/GetOneSubItemDetailsAction",
@@ -1477,6 +1512,18 @@ export const QcSlicer = createSlice({
       })
       .addCase(ContractorAddDateAction.rejected, (state: QcState) => {
         state.contractorAddDateState.pending = false;
+      });
+    //#endregion
+    //#region technicalApproveScheduleAction-----
+    builder
+      .addCase(technicalApproveScheduleAction.pending, (state: QcState) => {
+        state.technicalApproveScheduleAddState.pending = true;
+      })
+      .addCase(technicalApproveScheduleAction.fulfilled, (state: QcState) => {
+        state.technicalApproveScheduleAddState.pending = false;
+      })
+      .addCase(technicalApproveScheduleAction.rejected, (state: QcState) => {
+        state.technicalApproveScheduleAddState.pending = false;
       });
     //#endregion
   },

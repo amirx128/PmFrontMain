@@ -294,3 +294,17 @@ export const TechnicalApproveScheduleSentItems = async (
     toDate: new Date(toDate).toISOString().slice(0, 10),
     checkListStateId,
   });
+export const technicalApproveSchedule = async (
+  userId,
+  instanceId,
+  fromDate,
+  toDate,
+  isApproved
+) =>
+  await axiosInstance.post(`/QC/Technical.ApproveSchedule`, {
+    userId,
+    instanceId,
+    fromDate,
+    toDate,
+    isApproved,
+  });
