@@ -532,4 +532,33 @@ export const routes: IRoute[] = [
     protected: true,
     title: "کنترل کیفیت",
   },
+  /////////////////////////////////
+  {
+    path: "/qc/qcDate",
+    component: <QcGrid mode="qc-date" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/qcDate/edit/:id",
+    component: <QcDetails mode="qc" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/qcDateSentItem",
+    component: <QcGrid mode="qc-date-sent-item" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/qcDateSentItem/edit/:id",
+    component: <QcDetails mode="qc" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
 ];

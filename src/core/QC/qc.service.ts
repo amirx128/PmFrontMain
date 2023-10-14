@@ -308,3 +308,56 @@ export const technicalApproveSchedule = async (
     toDate,
     isApproved,
   });
+///////////////////////////////////////////////
+export const SetQcDateQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Qc.SetQcDate.Q`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const SetQcDateSentItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Qc.SetQcDate.SentItems`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const SetQcDate = async (
+  userId,
+  instanceId,
+  qcVisitFromDate,
+  qcVisitToDate,
+  inspectDate
+) =>
+  await axiosInstance.post(`/QC/Qc.SetQcDate`, {
+    userId,
+    instanceId,
+    qcVisitFromDate,
+    qcVisitToDate,
+    inspectDate,
+  });

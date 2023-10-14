@@ -34,6 +34,9 @@ import {
   GetDuplicated,
   ContractorAddDate,
   technicalApproveSchedule,
+  SetQcDate,
+  SetQcDateQ,
+  SetQcDateSentItems,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -156,6 +159,17 @@ export interface QcState {
     pending: boolean;
   };
   technicalApproveScheduleAddState: {
+    pending: boolean;
+  };
+  qcDateQ: {
+    data: any;
+    pending: boolean;
+  };
+  qcDateSentItem: {
+    data: any;
+    pending: boolean;
+  };
+  qcDateAddState: {
     pending: boolean;
   };
   subItemDetails: {
@@ -282,6 +296,17 @@ const initialState: QcState = {
     pending: false,
   },
   technicalApproveScheduleAddState: {
+    pending: false,
+  },
+  qcDateQ: {
+    data: [],
+    pending: false,
+  },
+  qcDateSentItem: {
+    data: [],
+    pending: false,
+  },
+  qcDateAddState: {
     pending: false,
   },
   subItemDetails: {
@@ -981,6 +1006,98 @@ export const technicalApproveScheduleAction = createAsyncThunk(
   }
 );
 ////////////////////////////////////////////
+////////////////////////////////////////////
+export const SetQcDateQAction = createAsyncThunk(
+  "qc/SetQcDateQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SetQcDateQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const SetQcDateSentItemsAction = createAsyncThunk(
+  "qc/SetQcDateSentItemsAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SetQcDateSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const SetQcDateAction = createAsyncThunk(
+  "qc/SetQcDateAction",
+  async (
+    body: {
+      instanceId: number;
+      qcVisitFromDate: any;
+      qcVisitToDate: any;
+      inspectDate: any;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { qcVisitFromDate, qcVisitToDate, instanceId, inspectDate } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SetQcDate(
+        userId,
+        instanceId,
+        qcVisitFromDate,
+        qcVisitToDate,
+        inspectDate
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+////////////////////////////////////////////
 export const GetOneSubItemDetailsAction = createAsyncThunk(
   "qc/GetOneSubItemDetailsAction",
   async (
@@ -1473,6 +1590,18 @@ export const QcSlicer = createSlice({
         }
       );
     //#endregion
+    //#region technicalApproveScheduleAction-----
+    builder
+      .addCase(technicalApproveScheduleAction.pending, (state: QcState) => {
+        state.technicalApproveScheduleAddState.pending = true;
+      })
+      .addCase(technicalApproveScheduleAction.fulfilled, (state: QcState) => {
+        state.technicalApproveScheduleAddState.pending = false;
+      })
+      .addCase(technicalApproveScheduleAction.rejected, (state: QcState) => {
+        state.technicalApproveScheduleAddState.pending = false;
+      });
+    //#endregion
     //#region GetOneSubItemDetailsAction-----
     builder
       .addCase(GetOneSubItemDetailsAction.pending, (state: QcState) => {
@@ -1514,16 +1643,45 @@ export const QcSlicer = createSlice({
         state.contractorAddDateState.pending = false;
       });
     //#endregion
-    //#region technicalApproveScheduleAction-----
+    //#region SetQcDateQAction-----
     builder
-      .addCase(technicalApproveScheduleAction.pending, (state: QcState) => {
-        state.technicalApproveScheduleAddState.pending = true;
+      .addCase(SetQcDateQAction.pending, (state: QcState) => {
+        state.qcDateQ.pending = true;
       })
-      .addCase(technicalApproveScheduleAction.fulfilled, (state: QcState) => {
-        state.technicalApproveScheduleAddState.pending = false;
+      .addCase(SetQcDateQAction.fulfilled, (state: QcState, { payload }) => {
+        state.qcDateQ.pending = false;
+        state.qcDateQ.data = payload.model;
       })
-      .addCase(technicalApproveScheduleAction.rejected, (state: QcState) => {
-        state.technicalApproveScheduleAddState.pending = false;
+      .addCase(SetQcDateQAction.rejected, (state: QcState) => {
+        state.qcDateQ.pending = false;
+      });
+    //#endregion
+    //#region SetQcDateSentItemsAction-----
+    builder
+      .addCase(SetQcDateSentItemsAction.pending, (state: QcState) => {
+        state.qcDateSentItem.pending = true;
+      })
+      .addCase(
+        SetQcDateSentItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.qcDateSentItem.pending = false;
+          state.qcDateSentItem.data = payload.model;
+        }
+      )
+      .addCase(SetQcDateSentItemsAction.rejected, (state: QcState) => {
+        state.qcDateSentItem.pending = false;
+      });
+    //#endregion
+    //#region SetQcDateAction-----
+    builder
+      .addCase(SetQcDateAction.pending, (state: QcState) => {
+        state.qcDateAddState.pending = true;
+      })
+      .addCase(SetQcDateAction.fulfilled, (state: QcState) => {
+        state.qcDateAddState.pending = false;
+      })
+      .addCase(SetQcDateAction.rejected, (state: QcState) => {
+        state.qcDateAddState.pending = false;
       });
     //#endregion
   },

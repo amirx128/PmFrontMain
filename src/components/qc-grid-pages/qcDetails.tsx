@@ -26,6 +26,7 @@ import {
   GetAllSubItemsAction,
   GetAllUsabilityAction,
   GetOneSubItemDetailsAction,
+  SetQcDateAction,
   technicalApproveScheduleAction,
 } from "../../redux/features/qcSlicer";
 import { getAllProjects } from "../../redux/features/definitionSlicer";
@@ -44,6 +45,7 @@ const QcDetails = ({ mode }) => {
     subItemDetails,
     contractorAddDateState,
     technicalApproveScheduleAddState,
+    qcDateAddState,
   } = useSelector((state: any) => state?.qc);
   const { projects } = useSelector((state: any) => state?.definition);
   const { usersList } = useSelector(
@@ -55,8 +57,12 @@ const QcDetails = ({ mode }) => {
   const [technicalAccrodion, setTechnicalAccrodion] = useState<boolean>(
     () => mode === "technical"
   );
+  const [qcAccrodion, setQcAccrodion] = useState<boolean>(() => mode === "qc");
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
+  const [qcVisitFromDate, setQcVisitFromDate] = useState(new Date());
+  const [qcVisitToDate, setQcVisitToDate] = useState(new Date());
+  const [qcInspectDate, setQcInspectDate] = useState(new Date());
   const [technicalApprove, setTechnicalApprove] = useState<boolean>(false);
   const [info, setInfo] = useState({
     trackingNumber: "",
@@ -76,8 +82,32 @@ const QcDetails = ({ mode }) => {
   }, []);
   useEffect(() => {
     if (!subItemDetails?.data) return;
-    setFromDate(new Date(subItemDetails.data.fromDate));
-    setToDate(new Date(subItemDetails.data.toDate));
+    setFromDate(
+      subItemDetails.data.fromDate
+        ? new Date(subItemDetails.data.fromDate)
+        : new Date()
+    );
+    setToDate(
+      subItemDetails.data.toDate
+        ? new Date(subItemDetails.data.toDate)
+        : new Date()
+    );
+    setTechnicalApprove(subItemDetails.data.technicalApprove);
+    setQcVisitFromDate(
+      subItemDetails.data.qcVisitFromDate
+        ? new Date(subItemDetails.data.qcVisitFromDate)
+        : new Date()
+    );
+    setQcVisitToDate(
+      subItemDetails.data.qcVisitToDate
+        ? new Date(subItemDetails.data.qcVisitToDate)
+        : new Date()
+    );
+    setQcInspectDate(
+      subItemDetails.data.qcInspectDate
+        ? new Date(subItemDetails.data.qcInspectDate)
+        : new Date()
+    );
   }, [subItemDetails]);
   const getItemData = async () => {
     await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
@@ -105,6 +135,18 @@ const QcDetails = ({ mode }) => {
     const date = new Date(e);
     setToDate(date);
   };
+  const setSelectedQcVisitFromDate = (e) => {
+    const date = new Date(e);
+    setQcVisitFromDate(date);
+  };
+  const setSelectedQcVisitToDate = (e) => {
+    const date = new Date(e);
+    setQcVisitToDate(date);
+  };
+  const setSelectedQcInspectDate = (e) => {
+    const date = new Date(e);
+    setQcInspectDate(date);
+  };
   const submitHandler = async () => {
     switch (mode) {
       case "contractor":
@@ -126,6 +168,16 @@ const QcDetails = ({ mode }) => {
           })
         );
         break;
+      case "qc":
+        await dispatch(
+          SetQcDateAction({
+            instanceId: +id,
+            qcVisitFromDate,
+            qcVisitToDate,
+            inspectDate: qcInspectDate,
+          })
+        );
+        break;
     }
     await getItemData();
   };
@@ -135,6 +187,8 @@ const QcDetails = ({ mode }) => {
         return contractorAddDateState.pending;
       case "technical":
         return technicalApproveScheduleAddState.pending;
+      case "qc":
+        return qcDateAddState.pending;
     }
   };
   return (
@@ -397,6 +451,83 @@ const QcDetails = ({ mode }) => {
                     mode === "technical"
                       ? !subItemDetails?.data?.technicalEditable
                       : true
+                  }
+                />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={qcAccrodion}
+              onChange={() => setQcAccrodion((prev) => !prev)}
+              sx={{ mt: 2 }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="contractor"
+                sx={{
+                  backgroundColor: "#e6fcf5",
+                }}
+              >
+                <Typography>واحد کیفیت</Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <div className="grid grid-cols-2 w-1/2">
+                  <div className="flex">
+                    <Typography className="w-1/2 text-right">
+                      کاربر کنترل کیفیت:{" "}
+                    </Typography>
+                    <Typography>{subItemDetails?.data?.qcUser}</Typography>
+                  </div>
+                  <div className="flex">
+                    <Typography className="w-1/3 text-right">
+                      تاریخ فعالیت:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.qcActivityDate &&
+                        new Date(
+                          subItemDetails?.data?.qcActivityDate
+                        ).toLocaleDateString("fa-ir")}
+                    </Typography>
+                  </div>
+                </div>
+
+                <JalaliDatePicker
+                  defaultValue={qcVisitFromDate}
+                  onChange={setSelectedQcVisitFromDate}
+                  name="requiredDate"
+                  label="از تاریخ"
+                  value={qcVisitFromDate}
+                  sx={{ mt: 2, width: "50%" }}
+                  disabled={
+                    mode === "qc" ? !subItemDetails?.data?.qcEditable : true
+                  }
+                />
+                <JalaliDatePicker
+                  defaultValue={qcVisitToDate}
+                  onChange={setSelectedQcVisitToDate}
+                  name="requiredDate"
+                  label="تا تاریخ"
+                  value={qcVisitToDate}
+                  sx={{ mt: 2, width: "50%" }}
+                  disabled={
+                    mode === "qc" ? !subItemDetails?.data?.qcEditable : true
+                  }
+                />
+                <JalaliDatePicker
+                  defaultValue={qcInspectDate}
+                  onChange={setSelectedQcInspectDate}
+                  name="requiredDate"
+                  label="تاریخ بازرسی"
+                  value={qcInspectDate}
+                  sx={{ mt: 2, width: "50%" }}
+                  disabled={
+                    mode === "qc" ? !subItemDetails?.data?.qcEditable : true
                   }
                 />
               </AccordionDetails>

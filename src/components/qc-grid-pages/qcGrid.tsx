@@ -31,6 +31,8 @@ import {
   ContractorAddDateSentItemsAction,
   DeleteQcInstanceAction,
   GetCheckListStatesAction,
+  SetQcDateQAction,
+  SetQcDateSentItemsAction,
   TechnicalApproveScheduleQAction,
   TechnicalApproveScheduleSentItemAction,
 } from "../../redux/features/qcSlicer.ts";
@@ -49,6 +51,8 @@ const QcGrid = ({ mode }) => {
     "contractor-add-date-sent-item": "اعلام زمان شده ها",
     "technical-approve": "دفتر فنی - منتظر تایید",
     "technical-sent-item": "دفتر فنی - تایید شده ها",
+    "qc-date": "منتظر اعلام برنامه بازدید",
+    "qc-date-sent-item": "اعلام شده",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -58,6 +62,8 @@ const QcGrid = ({ mode }) => {
     contractorsAddDateSentItem,
     technicalApproveScheduleQ,
     technicalApproveScheduleSentItem,
+    qcDateQ,
+    qcDateSentItem,
   } = useSelector((state: any) => state.qc);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -172,6 +178,12 @@ const QcGrid = ({ mode }) => {
       case "technical-sent-item":
         await dispatch(TechnicalApproveScheduleSentItemAction({}));
         break;
+      case "qc-date":
+        await dispatch(SetQcDateQAction({}));
+        break;
+      case "qc-date-sent-item":
+        await dispatch(SetQcDateSentItemsAction({}));
+        break;
     }
   };
 
@@ -206,6 +218,12 @@ const QcGrid = ({ mode }) => {
       case "technical-sent-item":
         await dispatch(TechnicalApproveScheduleSentItemAction(model));
         break;
+      case "qc-date":
+        await dispatch(SetQcDateQAction(model));
+        break;
+      case "qc-date-sent-item":
+        await dispatch(SetQcDateSentItemsAction(model));
+        break;
     }
   };
   const handleRmoveFilter = async () => {
@@ -226,6 +244,12 @@ const QcGrid = ({ mode }) => {
         break;
       case "technical-sent-item":
         await dispatch(TechnicalApproveScheduleSentItemAction(model));
+        break;
+      case "qc-date":
+        await dispatch(SetQcDateQAction(model));
+        break;
+      case "qc-date-sent-item":
+        await dispatch(SetQcDateSentItemsAction(model));
         break;
     }
   };
@@ -291,6 +315,40 @@ const QcGrid = ({ mode }) => {
                 columns={columns}
                 rows={
                   technicalApproveScheduleSentItem?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "qc-date":
+        return (
+          <>
+            {qcDateQ?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  qcDateQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "qc-date-sent-item":
+        return (
+          <>
+            {qcDateSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  qcDateSentItem?.data.map((rows, index) => ({
                     ...rows,
                     id: rows.checkListInstanceId,
                   })) ?? []
