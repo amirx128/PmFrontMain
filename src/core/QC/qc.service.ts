@@ -243,6 +243,18 @@ export const ContractorAddDateSentItems = async (
     toDate: new Date(toDate).toISOString().slice(0, 10),
     checkListStateId,
   });
+export const ContractorAddDate = async (
+  userId,
+  instanceId,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date()
+) =>
+  await axiosInstance.post(`/QC/Contractor.AddDate`, {
+    userId: userId,
+    instanceId,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+  });
 ///////////////////////////////////////////////
 export const TechnicalApproveScheduleQ = async (
   userId,

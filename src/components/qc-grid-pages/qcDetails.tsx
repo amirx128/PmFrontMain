@@ -20,6 +20,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  ContractorAddDateAction,
   GetAllCheckListsAction,
   GetAllContractorAction,
   GetAllSubItemsAction,
@@ -34,8 +35,14 @@ import { useParams } from "react-router-dom";
 const QcDetails = ({ mode }) => {
   const { id } = useParams();
   const dispatch = useDispatch<any>();
-  const { subItems, usabilities, checkLists, contractors, subItemDetails } =
-    useSelector((state: any) => state?.qc);
+  const {
+    subItems,
+    usabilities,
+    checkLists,
+    contractors,
+    subItemDetails,
+    contractorAddDateState,
+  } = useSelector((state: any) => state?.qc);
   const { projects } = useSelector((state: any) => state?.definition);
   const { usersList } = useSelector(
     (state: any) => state?.administrations?.users
@@ -46,17 +53,11 @@ const QcDetails = ({ mode }) => {
   const [technicalAccrodion, setTechnicalAccrodion] = useState<boolean>(
     () => mode === "technical"
   );
-  const [createDate, setCreateDate] = useState(new Date());
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
-  const [contractorActivityDate, setContractorActivityDate] = useState(
-    new Date()
-  );
   const [technicalActivityDate, setTechnicalActivityDate] = useState(
     new Date()
   );
-  const [hasUnHandleCheckList, setHasUnHandleCheckList] =
-    useState<boolean>(false);
   const [technicalApprove, setTechnicalApprove] = useState<boolean>(false);
   const [info, setInfo] = useState({
     trackingNumber: "",
@@ -78,14 +79,13 @@ const QcDetails = ({ mode }) => {
     await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
   };
   const getLists = async () => {
-    await dispatch(GetAllSubItemsAction());
-    await dispatch(GetAllUsabilityAction());
-    await dispatch(getAllProjects());
+    // await dispatch(GetAllSubItemsAction());
+    // await dispatch(GetAllUsabilityAction());
+    // await dispatch(getAllProjects());
     await dispatch(GetAllCheckListsAction());
-    await dispatch(GetAllContractorAction());
-    await dispatch(GetUsersListAction());
+    // await dispatch(GetAllContractorAction());
+    // await dispatch(GetUsersListAction());
   };
-  console.log(subItemDetails);
   const handleChange = (e) => {
     setInfo({
       ...info,
@@ -93,10 +93,6 @@ const QcDetails = ({ mode }) => {
     });
   };
 
-  const setSelectedCreateDate = (e) => {
-    const date = new Date(e);
-    setCreateDate(date);
-  };
   const setSelectedFromDate = (e) => {
     const date = new Date(e);
     setFromDate(date);
@@ -105,13 +101,29 @@ const QcDetails = ({ mode }) => {
     const date = new Date(e);
     setToDate(date);
   };
-  const setSelectedContractorActivityDate = (e) => {
-    const date = new Date(e);
-    setContractorActivityDate(date);
-  };
   const setSelectedTechnicalActivityDate = (e) => {
     const date = new Date(e);
     setTechnicalActivityDate(date);
+  };
+  const submitHandler = async () => {
+    switch (mode) {
+      case "contractor":
+        await dispatch(
+          ContractorAddDateAction({
+            instanceId: +id,
+            fromDate,
+            toDate,
+          })
+        );
+        break;
+    }
+    await getItemData();
+  };
+  const submitLoading = () => {
+    switch (mode) {
+      case "contractor":
+        return contractorAddDateState.pending;
+    }
   };
   return (
     <Card
@@ -125,344 +137,254 @@ const QcDetails = ({ mode }) => {
           textAlign: "left",
         }}
       />
-      <CardContent className="w-1/2">
-        <Accordion sx={{ mt: 5 }}>
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            id="main"
-            sx={{
-              backgroundColor: "#e6fcf5",
-            }}
-          >
-            <Typography>اصلی</Typography>
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              flexDirection: "column",
-            }}
-          >
-            <TextField
-              defaultValue={info?.trackingNumber}
-              value={info?.trackingNumber}
-              name={"trackingNumber"}
-              onChange={handleChange}
-              label={"کد پیگیری"}
-              sx={{ mt: 2, width: "50%" }}
-              disabled={true}
-            />
-
-            {!subItems.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>واحد فرعی</InputLabel>
-                <Select
-                  defaultValue={info?.subItem}
-                  value={info?.subItem}
-                  fullWidth={true}
-                  name={"subItem"}
-                  label="واحد فرعی"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {subItems?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            {!usabilities.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>کاربری</InputLabel>
-                <Select
-                  defaultValue={info?.usability}
-                  value={info?.usability}
-                  fullWidth={true}
-                  name={"usability"}
-                  label="کاربری"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {usabilities?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.usablityName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            <JalaliDatePicker
-              defaultValue={createDate}
-              onChange={setSelectedCreateDate}
-              name="requiredDate"
-              label="تاریخ ایجاد"
-              value={createDate}
-              sx={{ mt: 2, width: "50%" }}
-              disabled={true}
-            />
-            {!projects.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>پروژه</InputLabel>
-                <Select
-                  defaultValue={info?.project}
-                  value={info?.project}
-                  fullWidth={true}
-                  name={"project"}
-                  label="پروژه"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {projects?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            {!projects.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>طبقه</InputLabel>
-                <Select
-                  defaultValue={info?.floor}
-                  value={info?.floor}
-                  fullWidth={true}
-                  name={"floor"}
-                  label="طبقه"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {projects?.data
-                    ?.flatMap((item) => item?.projectfloor)
-                    .map((item) => (
-                      <MenuItem value={item.id} key={item?.id}>
-                        {item?.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            )}
-            {!projects.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>واحد</InputLabel>
-                <Select
-                  defaultValue={info?.unit}
-                  value={info?.unit}
-                  fullWidth={true}
-                  name={"unit"}
-                  label="واحد"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {projects?.data
-                    ?.flatMap((item) => item?.projectfloor)
-                    .flatMap((item) => item?.projectUnit)
-                    .map((item) => (
-                      <MenuItem value={item.id} key={item?.id}>
-                        {item?.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-            )}
-            {!checkLists.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>چک لیست</InputLabel>
-                <Select
-                  defaultValue={info?.checkList}
-                  value={info?.checkList}
-                  fullWidth={true}
-                  name={"checkList"}
-                  label="چک لیست"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {checkLists?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={hasUnHandleCheckList}
-                  onChange={() => setHasUnHandleCheckList((prev) => !prev)}
-                  color="info"
+      <CardContent className="w-3/4">
+        {!subItemDetails.pending && (
+          <>
+            <Accordion sx={{ mt: 5 }}>
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="main"
+                sx={{
+                  backgroundColor: "#e6fcf5",
+                }}
+              >
+                <Typography>اصلی</Typography>
+              </AccordionSummary>
+              <AccordionDetails className="grid grid-cols-2 gap-y-9">
+                <div className="flex">
+                  <Typography className="w-1/5 text-right">
+                    کد پیگیری:{" "}
+                  </Typography>
+                  <Typography>
+                    {subItemDetails?.data?.trackingNumber}
+                  </Typography>
+                </div>
+                <div className="flex">
+                  <Typography className="w-1/5 text-right">
+                    واحد فرعی:{" "}
+                  </Typography>
+                  <Typography>{subItemDetails?.data?.subItem}</Typography>
+                </div>
+                <div className="flex  ">
+                  <Typography className="w-1/5 text-right">کاربری: </Typography>
+                  <Typography>
+                    {subItemDetails?.data?.unitsUsability}
+                  </Typography>
+                </div>
+                <div className="flex  ">
+                  <Typography className="w-1/5 text-right">
+                    تاریخ ایجاد:{" "}
+                  </Typography>
+                  <Typography>{subItemDetails?.data?.createDate}</Typography>
+                </div>
+                <div className="flex  ">
+                  <Typography className="w-1/5 text-right">پروژه: </Typography>
+                  <Typography>{subItemDetails?.data?.project}</Typography>
+                </div>
+                <div className="flex  ">
+                  <Typography className="w-1/5 text-right">طبقه: </Typography>
+                  <Typography>{subItemDetails?.data?.floor}</Typography>
+                </div>
+                <div className="flex  ">
+                  <Typography className="w-1/5 text-right">واحد: </Typography>
+                  <Typography>{subItemDetails?.data?.unit}</Typography>
+                </div>
+                <div className="flex  ">
+                  <Typography className="w-1/5 text-right">
+                    چک لیست:{" "}
+                  </Typography>
+                  <Typography>
+                    {checkLists?.data
+                      ?.filter((check) =>
+                        subItemDetails?.data?.relatedCheckList?.includes(
+                          check.id
+                        )
+                      )
+                      .flatMap((check) => check.name)
+                      .join(" / ")}
+                  </Typography>
+                </div>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={subItemDetails?.data?.hasUnHandledChaeckList}
+                      color="info"
+                      disabled={true}
+                    />
+                  }
+                  label="دارای چک لیست هندل نشده است؟"
+                  dir="ltr"
+                  className="justify-self-start"
+                />
+                <div className="flex gap-12">
+                  <Typography>تعداد چک لیست: </Typography>
+                  <Typography>
+                    {subItemDetails?.data?.contOfChechList}
+                  </Typography>
+                </div>
+                <div className="flex gap-12">
+                  <Typography>تعداد چک لیست های هندل نشده :</Typography>
+                  <Typography>
+                    {subItemDetails?.data?.contOfHandledChechList}
+                  </Typography>
+                </div>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={contractorAccrodion}
+              onChange={() => setContractorAccrodion((prev) => !prev)}
+              sx={{ mt: 2 }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="contractor"
+                sx={{
+                  backgroundColor: "#e6fcf5",
+                }}
+              >
+                <Typography>پیمانکار</Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <div className="grid grid-cols-2 w-1/2">
+                  <div className="flex">
+                    <Typography className="w-1/5 text-right">
+                      پیمانکار:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.contractorUser}
+                    </Typography>
+                  </div>
+                  <div className="flex">
+                    <Typography className="w-1/4 text-right">
+                      تاریخ فعالیت:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.contractorActivityDate &&
+                        new Date(
+                          subItemDetails?.data?.contractorActivityDate
+                        ).toLocaleDateString("fa-ir")}
+                    </Typography>
+                  </div>
+                </div>
+                <JalaliDatePicker
+                  defaultValue={fromDate}
+                  onChange={setSelectedFromDate}
+                  name="requiredDate"
+                  label="از تاریخ"
+                  value={fromDate}
+                  sx={{ mt: 2, width: "50%" }}
+                  disabled={
+                    mode === "contractor"
+                      ? !subItemDetails?.data?.contractorEditable
+                      : true
+                  }
+                />
+                <JalaliDatePicker
+                  defaultValue={toDate}
+                  onChange={setSelectedToDate}
+                  name="requiredDate"
+                  label="تا تاریخ"
+                  value={toDate}
+                  sx={{ mt: 2, width: "50%" }}
+                  disabled={
+                    mode === "contractor"
+                      ? !subItemDetails?.data?.contractorEditable
+                      : true
+                  }
+                />
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={technicalAccrodion}
+              onChange={() => setTechnicalAccrodion((prev) => !prev)}
+              sx={{ mt: 2 }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="contractor"
+                sx={{
+                  backgroundColor: "#e6fcf5",
+                }}
+              >
+                <Typography>دفتر فنی</Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <FormControlLabel
+                  control={
+                    <Switch checked={false} color="info" disabled={true} />
+                  }
+                  sx={{ mt: 2 }}
+                  label="قابل ویرایش؟"
+                  dir="ltr"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={technicalApprove}
+                      color="info"
+                      disabled={true}
+                      onChange={() => setTechnicalApprove((prev) => !prev)}
+                    />
+                  }
+                  sx={{ mt: 2 }}
+                  label="تایید فنی؟"
+                  dir="ltr"
+                />
+                {!!usersList?.length && (
+                  <FormControl sx={{ mt: 2, width: "50%" }}>
+                    <InputLabel>کاربر فنی</InputLabel>
+                    <Select
+                      defaultValue={info?.technicalUser}
+                      value={info?.technicalUser}
+                      fullWidth={true}
+                      name={"technicalUser"}
+                      label="کاربر فنی"
+                      onChange={handleChange}
+                      disabled={true}
+                    >
+                      {usersList?.map((item) => (
+                        <MenuItem value={item.id} key={item?.id}>
+                          {item?.fullName}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                )}
+                <JalaliDatePicker
+                  defaultValue={technicalActivityDate}
+                  onChange={setSelectedTechnicalActivityDate}
+                  name="requiredDate"
+                  label="تاریخ فعالیت فنی"
+                  value={toDate}
+                  sx={{ mt: 2, width: "50%" }}
                   disabled={true}
                 />
-              }
-              sx={{ mt: 2 }}
-              label="دارای چک لیست هندل نشده است؟"
-              dir="ltr"
-            />
-            <div className="flex gap-3 mt-5">
-              <Typography>تعداد چک لیست : </Typography>
-              <Typography>25</Typography>
-            </div>
-            <div className="flex gap-3 mt-5">
-              <Typography>تعداد چک لیست های هندل شده :</Typography>
-              <Typography>25</Typography>
-            </div>
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={contractorAccrodion}
-          onChange={() => setContractorAccrodion((prev) => !prev)}
-          sx={{ mt: 2 }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            id="contractor"
-            sx={{
-              backgroundColor: "#e6fcf5",
-            }}
-          >
-            <Typography>پیمانکار</Typography>
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              flexDirection: "column",
-            }}
-          >
-            <FormControlLabel
-              control={<Switch checked={false} color="info" disabled={true} />}
-              sx={{ mt: 2 }}
-              label="قابل ویرایش؟"
-              dir="ltr"
-            />
-            <JalaliDatePicker
-              defaultValue={fromDate}
-              onChange={setSelectedFromDate}
-              name="requiredDate"
-              label="از تاریخ"
-              value={fromDate}
-              sx={{ mt: 2, width: "50%" }}
-              disabled={true}
-            />
-            <JalaliDatePicker
-              defaultValue={toDate}
-              onChange={setSelectedToDate}
-              name="requiredDate"
-              label="تا تاریخ"
-              value={toDate}
-              sx={{ mt: 2, width: "50%" }}
-              disabled={true}
-            />
-            {!contractors.pending && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>پیمانکار</InputLabel>
-                <Select
-                  defaultValue={info?.contractor}
-                  value={info?.contractor}
-                  fullWidth={true}
-                  name={"contractor"}
-                  label="پیمانکار"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {contractors?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.fullName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            <JalaliDatePicker
-              defaultValue={contractorActivityDate}
-              onChange={setSelectedContractorActivityDate}
-              name="requiredDate"
-              label="تاریخ فعالیت پیمانکار"
-              value={contractorActivityDate}
-              sx={{ mt: 2, width: "50%" }}
-              disabled={true}
-            />
-          </AccordionDetails>
-        </Accordion>
-        <Accordion
-          expanded={technicalAccrodion}
-          onChange={() => setTechnicalAccrodion((prev) => !prev)}
-          sx={{ mt: 2 }}
-        >
-          <AccordionSummary
-            expandIcon={<ExpandMoreIcon />}
-            id="contractor"
-            sx={{
-              backgroundColor: "#e6fcf5",
-            }}
-          >
-            <Typography>دفتر فنی</Typography>
-          </AccordionSummary>
-          <AccordionDetails
-            sx={{
-              display: "flex",
-              justifyContent: "flex-start",
-              alignItems: "flex-start",
-              flexDirection: "column",
-            }}
-          >
-            <FormControlLabel
-              control={<Switch checked={false} color="info" disabled={true} />}
-              sx={{ mt: 2 }}
-              label="قابل ویرایش؟"
-              dir="ltr"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={technicalApprove}
-                  color="info"
-                  disabled={true}
-                  onChange={() => setTechnicalApprove((prev) => !prev)}
-                />
-              }
-              sx={{ mt: 2 }}
-              label="تایید فنی؟"
-              dir="ltr"
-            />
-            {!!usersList?.length && (
-              <FormControl sx={{ mt: 2, width: "50%" }}>
-                <InputLabel>کاربر فنی</InputLabel>
-                <Select
-                  defaultValue={info?.technicalUser}
-                  value={info?.technicalUser}
-                  fullWidth={true}
-                  name={"technicalUser"}
-                  label="کاربر فنی"
-                  onChange={handleChange}
-                  disabled={true}
-                >
-                  {usersList?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.fullName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-            <JalaliDatePicker
-              defaultValue={technicalActivityDate}
-              onChange={setSelectedTechnicalActivityDate}
-              name="requiredDate"
-              label="تاریخ فعالیت فنی"
-              value={toDate}
-              sx={{ mt: 2, width: "50%" }}
-              disabled={true}
-            />
-          </AccordionDetails>
-        </Accordion>
+              </AccordionDetails>
+            </Accordion>
+          </>
+        )}
       </CardContent>
       <CardActions className="justify-end">
-        <LoadingButton variant="outlined" color="success">
+        <LoadingButton
+          variant="outlined"
+          color="success"
+          loading={submitLoading()}
+          onClick={submitHandler}
+        >
           ثبت
         </LoadingButton>
         <Button variant="outlined" color="error">

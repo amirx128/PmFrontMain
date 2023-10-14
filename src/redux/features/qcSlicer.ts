@@ -32,6 +32,7 @@ import {
   TechnicalApproveScheduleSentItems,
   GetOneSubItemDetails,
   GetDuplicated,
+  ContractorAddDate,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -140,6 +141,9 @@ export interface QcState {
   };
   contractorsAddDateSentItem: {
     data: any;
+    pending: boolean;
+  };
+  contractorAddDateState: {
     pending: boolean;
   };
   technicalApproveScheduleQ: {
@@ -260,6 +264,9 @@ const initialState: QcState = {
   },
   contractorsAddDateSentItem: {
     data: [],
+    pending: false,
+  },
+  contractorAddDateState: {
     pending: false,
   },
   technicalApproveScheduleQ: {
@@ -849,6 +856,32 @@ export const ContractorAddDateQAction = createAsyncThunk(
     }
   }
 );
+export const ContractorAddDateAction = createAsyncThunk(
+  "qc/ContractorAddDateAction",
+  async (
+    body: {
+      instanceId: number;
+      fromDate: any;
+      toDate: any;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, instanceId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await ContractorAddDate(
+        userId,
+        instanceId,
+        fromDate,
+        toDate
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 ////////////////////////////////////////////
 export const TechnicalApproveScheduleQAction = createAsyncThunk(
   "qc/TechnicalApproveScheduleQAction",
@@ -934,7 +967,10 @@ export const GetOneSubItemDetailsAction = createAsyncThunk(
 );
 export const GetDuplicatedAction = createAsyncThunk(
   "qc/GetDuplicatedAction",
-  async (body:{data:any}, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+  async (
+    body: { data: any },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
     try {
       const state: any = getState();
       const userId = getUserId(state);
@@ -1429,6 +1465,18 @@ export const QcSlicer = createSlice({
       })
       .addCase(GetDuplicatedAction.rejected, (state: QcState) => {
         state.duplicatedCheckLists.pending = false;
+      });
+    //#endregion
+    //#region ContractorAddDateAction-----
+    builder
+      .addCase(ContractorAddDateAction.pending, (state: QcState) => {
+        state.contractorAddDateState.pending = true;
+      })
+      .addCase(ContractorAddDateAction.fulfilled, (state: QcState) => {
+        state.contractorAddDateState.pending = false;
+      })
+      .addCase(ContractorAddDateAction.rejected, (state: QcState) => {
+        state.contractorAddDateState.pending = false;
       });
     //#endregion
   },
