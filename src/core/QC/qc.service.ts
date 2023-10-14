@@ -140,12 +140,11 @@ export const CreateCheckListInstances = async (
     relatedSubItems,
     relatedCheckLists,
   });
-export const GetDuplicated = async (userId, body) => {
+export const GetDuplicated = async (userId, body) =>
   await axiosInstance.post(`/QC/QcManager.GetDuplicated`, {
     userId: userId,
     ...body,
   });
-};
 
 export const UpdateQcInstance = async (
   userId,

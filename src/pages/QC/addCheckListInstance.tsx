@@ -62,7 +62,7 @@ const AddCheckListInstance = () => {
         relatedUsability: info.relatedUsability,
         relatedSubItems: info.relatedSubItems,
         relatedCheckLists: info.relatedCheckLists,
-        relatedOrginalItems: info.relatedOrginalItems,
+        relatedOriginalItems: info.relatedOrginalItems,
       })
     );
   };

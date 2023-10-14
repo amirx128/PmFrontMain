@@ -154,7 +154,7 @@ const CheckListInstancesListDuplicate = () => {
     if (idsDelete.length) {
       await dispatch(DeleteQcInstanceAction({ instanceIds: idsDelete }));
       setWarningREmoveModal(false);
-      await dispatch(AllActiveCheckListsAction({ fromDate, toDate }));
+      // await dispatch(AllActiveCheckListsAction({}));
       setIdsDelete([]);
     }
   };

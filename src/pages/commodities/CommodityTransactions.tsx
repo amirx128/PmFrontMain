@@ -161,7 +161,7 @@ const CommodityTransactions = () => {
   const HandleGetCount = async () => {
     await dispatch(
       GetCountCommodityInWarehouse({
-        SelectedItemId: id,
+        commodityId: id,
       })
     );
   };
