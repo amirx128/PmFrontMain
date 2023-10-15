@@ -33,6 +33,8 @@ import {
   GetCheckListStatesAction,
   InspectControlCheckListQAction,
   InspectControlCheckListSentItemsAction,
+  QcManagerControlCheckListQAction,
+  QcManagerControlCheckListSentItemsAction,
   SetQcDateQAction,
   SetQcDateSentItemsAction,
   TechnicalApproveScheduleQAction,
@@ -57,6 +59,8 @@ const QcGrid = ({ mode }) => {
     "qc-date-sent-item": "اعلام شده",
     "control-checklist": "ثبت چک لیست ها",
     "control-checklist-sent-item": "ثبت شده",
+    "manager-control-checklist": "مدیر کیفیت- منتظر تایید",
+    "manager-control-checklist-sent-item": "مدیر کیفیت- تایید شده",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -70,6 +74,8 @@ const QcGrid = ({ mode }) => {
     qcDateSentItem,
     controlCheckListQ,
     controlCheckListSentItem,
+    managerControlCheckListQ,
+    managerControlCheckListSentItem,
   } = useSelector((state: any) => state.qc);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -196,6 +202,12 @@ const QcGrid = ({ mode }) => {
       case "control-checklist-sent-item":
         await dispatch(InspectControlCheckListSentItemsAction({}));
         break;
+      case "manager-control-checklist":
+        await dispatch(QcManagerControlCheckListQAction({}));
+        break;
+      case "manager-control-checklist-sent-item":
+        await dispatch(QcManagerControlCheckListSentItemsAction({}));
+        break;
     }
   };
 
@@ -242,6 +254,12 @@ const QcGrid = ({ mode }) => {
       case "control-checklist-sent-item":
         await dispatch(InspectControlCheckListSentItemsAction(model));
         break;
+      case "manager-control-checklist":
+        await dispatch(QcManagerControlCheckListQAction(model));
+        break;
+      case "manager-control-checklist-sent-item":
+        await dispatch(QcManagerControlCheckListSentItemsAction(model));
+        break;
     }
   };
   const handleRmoveFilter = async () => {
@@ -274,6 +292,12 @@ const QcGrid = ({ mode }) => {
         break;
       case "control-checklist-sent-item":
         await dispatch(InspectControlCheckListSentItemsAction(model));
+        break;
+      case "manager-control-checklist":
+        await dispatch(QcManagerControlCheckListQAction(model));
+        break;
+      case "manager-control-checklist-sent-item":
+        await dispatch(QcManagerControlCheckListSentItemsAction(model));
         break;
     }
   };
@@ -407,6 +431,40 @@ const QcGrid = ({ mode }) => {
                 columns={columns}
                 rows={
                   controlCheckListSentItem?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "manager-control-checklist":
+        return (
+          <>
+            {managerControlCheckListQ?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  managerControlCheckListQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "manager-control-checklist-sent-item":
+        return (
+          <>
+            {managerControlCheckListSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  managerControlCheckListSentItem?.data.map((rows, index) => ({
                     ...rows,
                     id: rows.checkListInstanceId,
                   })) ?? []

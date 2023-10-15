@@ -14,6 +14,7 @@ import {
   Select,
   Switch,
   TextField,
+  TextareaAutosize,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
@@ -28,6 +29,7 @@ import {
   GetCheckListStatesAction,
   GetOneSubItemDetailsAction,
   InspectControlCheckListAction,
+  QcManagerControlCheckListAction,
   SetQcDateAction,
   technicalApproveScheduleAction,
 } from "../../redux/features/qcSlicer";
@@ -50,6 +52,7 @@ const QcDetails = ({ mode }) => {
     qcDateAddState,
     checkListStates,
     controlCheckListAddState,
+    managerControlCheckListAddState,
   } = useSelector((state: any) => state?.qc);
   const { projects } = useSelector((state: any) => state?.definition);
   const { usersList } = useSelector(
@@ -64,6 +67,10 @@ const QcDetails = ({ mode }) => {
   const [qcAccrodion, setQcAccrodion] = useState<boolean>(() => mode === "qc");
   const [controlChecklistAccrodion, setControlChecklistAccrodion] =
     useState<boolean>(() => mode === "control-checklist");
+  const [
+    managerControlChecklistAccrodion,
+    setManagerControlChecklistAccrodion,
+  ] = useState<boolean>(() => mode === "manager-control-checklist");
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [qcVisitFromDate, setQcVisitFromDate] = useState(new Date());
@@ -72,6 +79,8 @@ const QcDetails = ({ mode }) => {
   const [technicalApprove, setTechnicalApprove] = useState<boolean>(false);
   const [info, setInfo] = useState({
     inspectControlCheckListStateId: "",
+    qcManagerControlStateId: "",
+    qcManagerDescriptions: "",
   });
 
   useEffect(() => {
@@ -110,6 +119,8 @@ const QcDetails = ({ mode }) => {
       ...prev,
       inspectControlCheckListStateId:
         subItemDetails.data.inspectControlCheckListStateId,
+      qcManagerControlStateId: subItemDetails.data.qcManagerControlStateId,
+      qcManagerDescriptions: subItemDetails.data.qcManagerDescriptions,
     }));
   }, [subItemDetails]);
   const getItemData = async () => {
@@ -191,6 +202,15 @@ const QcDetails = ({ mode }) => {
           })
         );
         break;
+      case "manager-control-checklist":
+        await dispatch(
+          QcManagerControlCheckListAction({
+            instanceId: +id,
+            qcManagerControlStateId: +info.qcManagerControlStateId,
+            qcManagerDescriptions: info?.qcManagerDescriptions,
+          })
+        );
+        break;
     }
     await getItemData();
   };
@@ -204,6 +224,8 @@ const QcDetails = ({ mode }) => {
         return qcDateAddState.pending;
       case "control-checklist":
         return controlCheckListAddState.pending;
+      case "manager-control-checklist":
+        return managerControlCheckListAddState.pending;
     }
   };
   return (
@@ -611,6 +633,84 @@ const QcDetails = ({ mode }) => {
                     ))}
                   </Select>
                 </FormControl>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={managerControlChecklistAccrodion}
+              onChange={() =>
+                setManagerControlChecklistAccrodion((prev) => !prev)
+              }
+              sx={{ mt: 2 }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="contractor"
+                sx={{
+                  backgroundColor: "#e6fcf5",
+                }}
+              >
+                <Typography>مدیر کیفیت</Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <div className="grid grid-cols-2 w-1/2">
+                  <div className="flex">
+                    <Typography className="w-1/2 text-right">
+                      کاربر مدیر کیفیت:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.qcManagerUser}
+                    </Typography>
+                  </div>
+                  <div className="flex">
+                    <Typography className="w-1/3 text-right">
+                      تاریخ فعالیت:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.qcManagerActivityDate &&
+                        new Date(
+                          subItemDetails?.data?.qcManagerActivityDate
+                        ).toLocaleDateString("fa-ir")}
+                    </Typography>
+                  </div>
+                </div>
+                <FormControl sx={{ mt: 2, width: "50%" }}>
+                  <InputLabel>وضعیت چک لیست</InputLabel>
+                  <Select
+                    value={info?.qcManagerControlStateId}
+                    fullWidth={true}
+                    name={"qcManagerControlStateId"}
+                    label="وضعیت چک لیست"
+                    onChange={handleChange}
+                    disabled={
+                      mode === "manager-control-checklist"
+                        ? !subItemDetails?.data?.qcManagerEditable
+                        : true
+                    }
+                  >
+                    {checkListStates?.data?.map((item) => (
+                      <MenuItem value={item.id} key={item?.id}>
+                        {item?.state}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <div className="w-1/2 flex items-center gap-4">
+                  <Typography>توضیحات:</Typography>
+                  <TextareaAutosize
+                    value={info?.qcManagerDescriptions}
+                    name={"qcManagerDescriptions"}
+                    onChange={handleChange}
+                    className="border-2 mt-4 flex-1 border-slate-300 p-4"
+                    minRows={5}
+                  />
+                </div>
               </AccordionDetails>
             </Accordion>
           </>

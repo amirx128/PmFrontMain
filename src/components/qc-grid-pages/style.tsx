@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { Box } from "@mui/material";
-
 const Row = styled.div`
   display: flex;
   align-items: flex-start;
@@ -22,4 +21,5 @@ const ButtonContainer = styled.div`
   gap: 1.6rem;
   justify-content: end;
 `;
+
 export { Row, StyledBox, ButtonContainer, StyledForm };

@@ -43,6 +43,9 @@ import {
   InspectControlCheckListQ,
   InspectControlCheckListSentItems,
   InspectControlCheckList,
+  QcManagerControlCheckListQ,
+  QcManagerControlCheckListSentItems,
+  QcManagerControlCheckList,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -197,6 +200,17 @@ export interface QcState {
   controlCheckListAddState: {
     pending: boolean;
   };
+  managerControlCheckListQ: {
+    data: any;
+    pending: boolean;
+  };
+  managerControlCheckListSentItem: {
+    data: any;
+    pending: boolean;
+  };
+  managerControlCheckListAddState: {
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -343,6 +357,17 @@ const initialState: QcState = {
     pending: false,
   },
   controlCheckListAddState: {
+    pending: false,
+  },
+  managerControlCheckListQ: {
+    data: [],
+    pending: false,
+  },
+  managerControlCheckListSentItem: {
+    data: [],
+    pending: false,
+  },
+  managerControlCheckListAddState: {
     pending: false,
   },
 };
@@ -1189,6 +1214,7 @@ export const InspectControlCheckListSentItemsAction = createAsyncThunk(
     }
   }
 );
+
 export const InspectControlCheckListAction = createAsyncThunk(
   "qc/InspectControlCheckListAction",
   async (
@@ -1206,6 +1232,97 @@ export const InspectControlCheckListAction = createAsyncThunk(
         userId,
         instanceId,
         inspectControlCheckListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+////////////////////////////////////////////
+////////////////////////////////////////////
+export const QcManagerControlCheckListQAction = createAsyncThunk(
+  "qc/QcManagerControlCheckListQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcManagerControlCheckListQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const QcManagerControlCheckListSentItemsAction = createAsyncThunk(
+  "qc/QcManagerControlCheckListSentItemsAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcManagerControlCheckListSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const QcManagerControlCheckListAction = createAsyncThunk(
+  "qc/QcManagerControlCheckListAction",
+  async (
+    body: {
+      instanceId: number;
+      qcManagerControlStateId: number;
+      qcManagerDescriptions: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId, qcManagerControlStateId, qcManagerDescriptions } =
+        body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcManagerControlCheckList(
+        userId,
+        instanceId,
+        qcManagerControlStateId,
+        qcManagerDescriptions
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -1848,6 +1965,56 @@ export const QcSlicer = createSlice({
       })
       .addCase(InspectControlCheckListAction.rejected, (state: QcState) => {
         state.controlCheckListAddState.pending = false;
+      });
+    //#endregion
+    //#region QcManagerControlCheckListQAction-----
+    builder
+      .addCase(QcManagerControlCheckListQAction.pending, (state: QcState) => {
+        state.managerControlCheckListQ.pending = true;
+      })
+      .addCase(
+        QcManagerControlCheckListQAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.managerControlCheckListQ.pending = false;
+          state.managerControlCheckListQ.data = payload.model;
+        }
+      )
+      .addCase(QcManagerControlCheckListQAction.rejected, (state: QcState) => {
+        state.managerControlCheckListQ.pending = false;
+      });
+    //#endregion
+    //#region QcManagerControlCheckListSentItemsAction-----
+    builder
+      .addCase(
+        QcManagerControlCheckListSentItemsAction.pending,
+        (state: QcState) => {
+          state.managerControlCheckListSentItem.pending = true;
+        }
+      )
+      .addCase(
+        QcManagerControlCheckListSentItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.managerControlCheckListSentItem.pending = false;
+          state.managerControlCheckListSentItem.data = payload.model;
+        }
+      )
+      .addCase(
+        QcManagerControlCheckListSentItemsAction.rejected,
+        (state: QcState) => {
+          state.managerControlCheckListSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region QcManagerControlCheckListAction-----
+    builder
+      .addCase(QcManagerControlCheckListAction.pending, (state: QcState) => {
+        state.managerControlCheckListAddState.pending = true;
+      })
+      .addCase(QcManagerControlCheckListAction.fulfilled, (state: QcState) => {
+        state.managerControlCheckListAddState.pending = false;
+      })
+      .addCase(QcManagerControlCheckListAction.rejected, (state: QcState) => {
+        state.managerControlCheckListAddState.pending = false;
       });
     //#endregion
   },

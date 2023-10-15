@@ -463,3 +463,54 @@ export const InspectControlCheckList = async (
     instanceId,
     inspectControlCheckListStateId,
   });
+///////////////////////////////////////////////
+export const QcManagerControlCheckListQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/QcManager.ControlCheckList.Q`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const QcManagerControlCheckListSentItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/QcManager.ControlCheckList.SentItems`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const QcManagerControlCheckList = async (
+  userId,
+  instanceId,
+  qcManagerControlStateId,
+  qcManagerDescriptions
+) =>
+  await axiosInstance.post(`/QC/QcManager.ControlCheckList`, {
+    userId,
+    instanceId,
+    qcManagerControlStateId,
+    qcManagerDescriptions,
+  });
