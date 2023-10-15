@@ -650,6 +650,48 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
     {
+      id: 14,
+      name: "بازرس",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "ثبت چک لیست ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/controlCheckList",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "ثبت شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/controlCheckListSentItem",
+          role: UserRole.Admin,
+        },
+      ],
+    },
+    {
       id: 3,
       name: "مدیریت سیستم",
       icon: (

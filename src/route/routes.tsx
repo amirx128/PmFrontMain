@@ -561,4 +561,33 @@ export const routes: IRoute[] = [
     protected: true,
     title: "کنترل کیفیت",
   },
+  /////////////////////////////////
+  {
+    path: "/qc/controlCheckList",
+    component: <QcGrid mode="control-checklist" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/controlCheckList/edit/:id",
+    component: <QcDetails mode="control-checklist" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/controlCheckListSentItem",
+    component: <QcGrid mode="control-checklist-sent-item" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/controlCheckListSentItem/edit/:id",
+    component: <QcDetails mode="control-checklist" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
 ];

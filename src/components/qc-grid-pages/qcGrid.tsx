@@ -31,6 +31,8 @@ import {
   ContractorAddDateSentItemsAction,
   DeleteQcInstanceAction,
   GetCheckListStatesAction,
+  InspectControlCheckListQAction,
+  InspectControlCheckListSentItemsAction,
   SetQcDateQAction,
   SetQcDateSentItemsAction,
   TechnicalApproveScheduleQAction,
@@ -53,6 +55,8 @@ const QcGrid = ({ mode }) => {
     "technical-sent-item": "دفتر فنی - تایید شده ها",
     "qc-date": "منتظر اعلام برنامه بازدید",
     "qc-date-sent-item": "اعلام شده",
+    "control-checklist": "ثبت چک لیست ها",
+    "control-checklist-sent-item": "ثبت شده",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -64,6 +68,8 @@ const QcGrid = ({ mode }) => {
     technicalApproveScheduleSentItem,
     qcDateQ,
     qcDateSentItem,
+    controlCheckListQ,
+    controlCheckListSentItem,
   } = useSelector((state: any) => state.qc);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -184,6 +190,12 @@ const QcGrid = ({ mode }) => {
       case "qc-date-sent-item":
         await dispatch(SetQcDateSentItemsAction({}));
         break;
+      case "control-checklist":
+        await dispatch(InspectControlCheckListQAction({}));
+        break;
+      case "control-checklist-sent-item":
+        await dispatch(InspectControlCheckListSentItemsAction({}));
+        break;
     }
   };
 
@@ -224,6 +236,12 @@ const QcGrid = ({ mode }) => {
       case "qc-date-sent-item":
         await dispatch(SetQcDateSentItemsAction(model));
         break;
+      case "control-checklist":
+        await dispatch(InspectControlCheckListQAction(model));
+        break;
+      case "control-checklist-sent-item":
+        await dispatch(InspectControlCheckListSentItemsAction(model));
+        break;
     }
   };
   const handleRmoveFilter = async () => {
@@ -250,6 +268,12 @@ const QcGrid = ({ mode }) => {
         break;
       case "qc-date-sent-item":
         await dispatch(SetQcDateSentItemsAction(model));
+        break;
+      case "control-checklist":
+        await dispatch(InspectControlCheckListQAction(model));
+        break;
+      case "control-checklist-sent-item":
+        await dispatch(InspectControlCheckListSentItemsAction(model));
         break;
     }
   };
@@ -349,6 +373,40 @@ const QcGrid = ({ mode }) => {
                 columns={columns}
                 rows={
                   qcDateSentItem?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "control-checklist":
+        return (
+          <>
+            {controlCheckListQ?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  controlCheckListQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "control-checklist-sent-item":
+        return (
+          <>
+            {controlCheckListSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  controlCheckListSentItem?.data.map((rows, index) => ({
                     ...rows,
                     id: rows.checkListInstanceId,
                   })) ?? []
