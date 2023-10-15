@@ -608,6 +608,48 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
     {
+      id: 13,
+      name: "پر کردن چک لیست",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "منتظر تکمیل",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/entryCheckList",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "تکمیل شده ها",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/entryCheckListSentItem",
+          role: UserRole.Admin,
+        },
+      ],
+    },
+    {
       id: 3,
       name: "مدیریت سیستم",
       icon: (
