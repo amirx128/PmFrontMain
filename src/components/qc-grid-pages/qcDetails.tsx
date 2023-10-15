@@ -29,6 +29,7 @@ import {
   GetCheckListStatesAction,
   GetOneSubItemDetailsAction,
   InspectControlCheckListAction,
+  QcFinalApproveAction,
   QcManagerControlCheckListAction,
   SetQcDateAction,
   technicalApproveScheduleAction,
@@ -53,11 +54,14 @@ const QcDetails = ({ mode }) => {
     checkListStates,
     controlCheckListAddState,
     managerControlCheckListAddState,
+    finalApproveAddState,
   } = useSelector((state: any) => state?.qc);
   const { projects } = useSelector((state: any) => state?.definition);
   const { usersList } = useSelector(
     (state: any) => state?.administrations?.users
   );
+
+  ////////////////////////////
   const [contractorAccrodion, setContractorAccrodion] = useState<boolean>(
     () => mode === "contractor"
   );
@@ -67,10 +71,15 @@ const QcDetails = ({ mode }) => {
   const [qcAccrodion, setQcAccrodion] = useState<boolean>(() => mode === "qc");
   const [controlChecklistAccrodion, setControlChecklistAccrodion] =
     useState<boolean>(() => mode === "control-checklist");
+
   const [
     managerControlChecklistAccrodion,
     setManagerControlChecklistAccrodion,
   ] = useState<boolean>(() => mode === "manager-control-checklist");
+  const [finalControlChecklistAccrodion, setFinalControlChecklistAccrodion] =
+    useState<boolean>(() => mode === "final-control-checklist");
+  /////////////////////////////////////////
+
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   const [qcVisitFromDate, setQcVisitFromDate] = useState(new Date());
@@ -81,6 +90,7 @@ const QcDetails = ({ mode }) => {
     inspectControlCheckListStateId: "",
     qcManagerControlStateId: "",
     qcManagerDescriptions: "",
+    qcFinalControlStateId: "",
   });
 
   useEffect(() => {
@@ -121,19 +131,15 @@ const QcDetails = ({ mode }) => {
         subItemDetails.data.inspectControlCheckListStateId,
       qcManagerControlStateId: subItemDetails.data.qcManagerControlStateId,
       qcManagerDescriptions: subItemDetails.data.qcManagerDescriptions,
+      qcFinalControlStateId: subItemDetails.data.qcFinalControlStateId,
     }));
   }, [subItemDetails]);
   const getItemData = async () => {
     await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
   };
   const getLists = async () => {
-    // await dispatch(GetAllSubItemsAction());
-    // await dispatch(GetAllUsabilityAction());
-    // await dispatch(getAllProjects());
     await dispatch(GetAllCheckListsAction());
     await dispatch(GetCheckListStatesAction());
-    // await dispatch(GetAllContractorAction());
-    // await dispatch(GetUsersListAction());
   };
   const handleChange = (e) => {
     setInfo({
@@ -211,6 +217,14 @@ const QcDetails = ({ mode }) => {
           })
         );
         break;
+      case "final-control-checklist":
+        await dispatch(
+          QcFinalApproveAction({
+            instanceId: +id,
+            stateId: +info.qcFinalControlStateId,
+          })
+        );
+        break;
     }
     await getItemData();
   };
@@ -225,7 +239,7 @@ const QcDetails = ({ mode }) => {
       case "control-checklist":
         return controlCheckListAddState.pending;
       case "manager-control-checklist":
-        return managerControlCheckListAddState.pending;
+        return finalApproveAddState.pending;
     }
   };
   return (
@@ -709,8 +723,81 @@ const QcDetails = ({ mode }) => {
                     onChange={handleChange}
                     className="border-2 mt-4 flex-1 border-slate-300 p-4"
                     minRows={5}
+                    disabled={
+                      mode === "manager-control-checklist"
+                        ? !subItemDetails?.data?.qcManagerEditable
+                        : true
+                    }
                   />
                 </div>
+              </AccordionDetails>
+            </Accordion>
+            <Accordion
+              expanded={finalControlChecklistAccrodion}
+              onChange={() =>
+                setFinalControlChecklistAccrodion((prev) => !prev)
+              }
+              sx={{ mt: 2 }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                id="contractor"
+                sx={{
+                  backgroundColor: "#e6fcf5",
+                }}
+              >
+                <Typography>کنترل کیفیت نهایی</Typography>
+              </AccordionSummary>
+              <AccordionDetails
+                sx={{
+                  display: "flex",
+                  justifyContent: "flex-start",
+                  alignItems: "flex-start",
+                  flexDirection: "column",
+                }}
+              >
+                <div className="grid grid-cols-2 w-1/2">
+                  <div className="flex">
+                    <Typography className="w-1/2 text-right">
+                      کاربر کنترل کیفیت نهایی:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.qcFinalControlUser}
+                    </Typography>
+                  </div>
+                  <div className="flex">
+                    <Typography className="w-1/3 text-right">
+                      تاریخ فعالیت:{" "}
+                    </Typography>
+                    <Typography>
+                      {subItemDetails?.data?.qcFinalControlActivityDate &&
+                        new Date(
+                          subItemDetails?.data?.qcFinalControlActivityDate
+                        ).toLocaleDateString("fa-ir")}
+                    </Typography>
+                  </div>
+                </div>
+                <FormControl sx={{ mt: 2, width: "50%" }}>
+                  <InputLabel>وضعیت چک لیست</InputLabel>
+                  <Select
+                    value={info?.qcFinalControlStateId}
+                    fullWidth={true}
+                    name={"qcFinalControlStateId"}
+                    label="وضعیت چک لیست"
+                    onChange={handleChange}
+                    disabled={
+                      mode === "final-control-checklist"
+                        ? !subItemDetails?.data?.qcFinalControlEditable
+                        : true
+                    }
+                  >
+                    {checkListStates?.data?.map((item) => (
+                      <MenuItem value={item.id} key={item?.id}>
+                        {item?.state}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </AccordionDetails>
             </Accordion>
           </>

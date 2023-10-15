@@ -514,3 +514,48 @@ export const QcManagerControlCheckList = async (
     qcManagerControlStateId,
     qcManagerDescriptions,
   });
+///////////////////////////////////////////////
+export const QcFinalApproveQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Qc.FinalApprove.Q`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const QcFinalApproveSentItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Qc.FinalApprove.SentItems`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const QcFinalApprove = async (userId, instanceId, stateId) =>
+  await axiosInstance.post(`/QC/Qc.FinalApprove`, {
+    userId,
+    instanceId,
+    stateId,
+  });

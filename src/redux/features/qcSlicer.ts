@@ -46,6 +46,9 @@ import {
   QcManagerControlCheckListQ,
   QcManagerControlCheckListSentItems,
   QcManagerControlCheckList,
+  QcFinalApproveQ,
+  QcFinalApproveSentItems,
+  QcFinalApprove,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -211,6 +214,17 @@ export interface QcState {
   managerControlCheckListAddState: {
     pending: boolean;
   };
+  finalApproveQ: {
+    data: any;
+    pending: boolean;
+  };
+  finalApproveSentItem: {
+    data: any;
+    pending: boolean;
+  };
+  finalApproveAddState: {
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -368,6 +382,17 @@ const initialState: QcState = {
     pending: false,
   },
   managerControlCheckListAddState: {
+    pending: false,
+  },
+  finalApproveQ: {
+    data: [],
+    pending: false,
+  },
+  finalApproveSentItem: {
+    data: [],
+    pending: false,
+  },
+  finalApproveAddState: {
     pending: false,
   },
 };
@@ -1331,6 +1356,91 @@ export const QcManagerControlCheckListAction = createAsyncThunk(
   }
 );
 ////////////////////////////////////////////
+////////////////////////////////////////////
+
+export const QcFinalApproveQAction = createAsyncThunk(
+  "qc/QcFinalApproveQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcFinalApproveQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const QcFinalApproveSentItemsAction = createAsyncThunk(
+  "qc/QcFinalApproveSentItemsAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcFinalApproveSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const QcFinalApproveAction = createAsyncThunk(
+  "qc/QcFinalApproveAction",
+  async (
+    body: {
+      instanceId: number;
+      stateId: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId, stateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcFinalApprove(userId, instanceId, stateId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+////////////////////////////////////////////
 export const GetOneSubItemDetailsAction = createAsyncThunk(
   "qc/GetOneSubItemDetailsAction",
   async (
@@ -2015,6 +2125,50 @@ export const QcSlicer = createSlice({
       })
       .addCase(QcManagerControlCheckListAction.rejected, (state: QcState) => {
         state.managerControlCheckListAddState.pending = false;
+      });
+    //#endregion
+    //#region QcFinalApproveQAction-----
+    builder
+      .addCase(QcFinalApproveQAction.pending, (state: QcState) => {
+        state.finalApproveQ.pending = true;
+      })
+      .addCase(
+        QcFinalApproveQAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.finalApproveQ.pending = false;
+          state.finalApproveQ.data = payload.model;
+        }
+      )
+      .addCase(QcFinalApproveQAction.rejected, (state: QcState) => {
+        state.finalApproveQ.pending = false;
+      });
+    //#endregion
+    //#region QcFinalApproveSentItemsAction-----
+    builder
+      .addCase(QcFinalApproveSentItemsAction.pending, (state: QcState) => {
+        state.finalApproveSentItem.pending = true;
+      })
+      .addCase(
+        QcFinalApproveSentItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.finalApproveSentItem.pending = false;
+          state.finalApproveSentItem.data = payload.model;
+        }
+      )
+      .addCase(QcFinalApproveSentItemsAction.rejected, (state: QcState) => {
+        state.finalApproveSentItem.pending = false;
+      });
+    //#endregion
+    //#region QcFinalApproveAction-----
+    builder
+      .addCase(QcFinalApproveAction.pending, (state: QcState) => {
+        state.finalApproveAddState.pending = true;
+      })
+      .addCase(QcFinalApproveAction.fulfilled, (state: QcState) => {
+        state.finalApproveAddState.pending = false;
+      })
+      .addCase(QcFinalApproveAction.rejected, (state: QcState) => {
+        state.finalApproveAddState.pending = false;
       });
     //#endregion
   },

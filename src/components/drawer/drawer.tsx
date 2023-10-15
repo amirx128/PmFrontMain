@@ -734,6 +734,48 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
     {
+      id: 16,
+      name: "کنترل نهایی کیفیت",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "منتظر تایید",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/finalControlCheckList",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "تایید شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/finalControlCheckListSentItem",
+          role: UserRole.Admin,
+        },
+      ],
+    },
+    {
       id: 3,
       name: "مدیریت سیستم",
       icon: (

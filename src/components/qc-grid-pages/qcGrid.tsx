@@ -33,6 +33,8 @@ import {
   GetCheckListStatesAction,
   InspectControlCheckListQAction,
   InspectControlCheckListSentItemsAction,
+  QcFinalApproveQAction,
+  QcFinalApproveSentItemsAction,
   QcManagerControlCheckListQAction,
   QcManagerControlCheckListSentItemsAction,
   SetQcDateQAction,
@@ -61,6 +63,8 @@ const QcGrid = ({ mode }) => {
     "control-checklist-sent-item": "ثبت شده",
     "manager-control-checklist": "مدیر کیفیت- منتظر تایید",
     "manager-control-checklist-sent-item": "مدیر کیفیت- تایید شده",
+    "final-control-checklist": "کنترل کیفیت نهایی- منتظر تایید",
+    "final-control-checklist-sent-item": "کنترل کیفیت نهایی- تایید شده",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -76,6 +80,8 @@ const QcGrid = ({ mode }) => {
     controlCheckListSentItem,
     managerControlCheckListQ,
     managerControlCheckListSentItem,
+    finalApproveQ,
+    finalApproveSentItem,
   } = useSelector((state: any) => state.qc);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -208,6 +214,12 @@ const QcGrid = ({ mode }) => {
       case "manager-control-checklist-sent-item":
         await dispatch(QcManagerControlCheckListSentItemsAction({}));
         break;
+      case "final-control-checklist":
+        await dispatch(QcFinalApproveQAction({}));
+        break;
+      case "final-control-checklist-sent-item":
+        await dispatch(QcFinalApproveSentItemsAction({}));
+        break;
     }
   };
 
@@ -260,6 +272,12 @@ const QcGrid = ({ mode }) => {
       case "manager-control-checklist-sent-item":
         await dispatch(QcManagerControlCheckListSentItemsAction(model));
         break;
+      case "final-control-checklist":
+        await dispatch(QcFinalApproveQAction(model));
+        break;
+      case "final-control-checklist-sent-item":
+        await dispatch(QcFinalApproveSentItemsAction(model));
+        break;
     }
   };
   const handleRmoveFilter = async () => {
@@ -298,6 +316,12 @@ const QcGrid = ({ mode }) => {
         break;
       case "manager-control-checklist-sent-item":
         await dispatch(QcManagerControlCheckListSentItemsAction(model));
+        break;
+      case "final-control-checklist":
+        await dispatch(QcFinalApproveQAction(model));
+        break;
+      case "final-control-checklist-sent-item":
+        await dispatch(QcFinalApproveSentItemsAction(model));
         break;
     }
   };
@@ -465,6 +489,40 @@ const QcGrid = ({ mode }) => {
                 columns={columns}
                 rows={
                   managerControlCheckListSentItem?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "final-control-checklist":
+        return (
+          <>
+            {finalApproveQ?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  finalApproveQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                pagination={{}}
+              />
+            )}
+          </>
+        );
+      case "final-control-checklist-sent-item":
+        return (
+          <>
+            {finalApproveSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  finalApproveSentItem?.data.map((rows, index) => ({
                     ...rows,
                     id: rows.checkListInstanceId,
                   })) ?? []
