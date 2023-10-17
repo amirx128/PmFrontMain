@@ -609,7 +609,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     },
     {
       id: 13,
-      name: "پر کردن چک لیست",
+      name: "کارمند کیفیت",
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}

@@ -400,19 +400,11 @@ export const InspectorEntryCheckListSentItems = async (
     toDate: new Date(toDate).toISOString().slice(0, 10),
     checkListStateId,
   });
-export const InspectorEntryCheckList = async (
-  userId,
-  instanceId,
-  qcVisitFromDate,
-  qcVisitToDate,
-  inspectDate
-) =>
+export const InspectorEntryCheckList = async (userId, instanceId, itemsValue) =>
   await axiosInstance.post(`/QC/Inspector.EntryCheckList`, {
     userId,
     instanceId,
-    qcVisitFromDate,
-    qcVisitToDate,
-    inspectDate,
+    itemsValue,
   });
 ///////////////////////////////////////////////
 export const InspectControlCheckListQ = async (
