@@ -15,7 +15,7 @@ interface Iprops {
   rows: any[];
   loading?: boolean;
   rowIdFields?: string[];
-  pagination: GridPaginationInitialState;
+  pagination?: GridPaginationInitialState;
   onFilterCahnge?: (...args: any) => void;
   onSortModelChange?: (...args: any) => void;
   onDoubleClick?: (...args: any) => void;
@@ -29,7 +29,7 @@ const Grid: React.FC<Iprops> = ({
   rows,
   loading,
   rowIdFields,
-  pagination,
+  pagination = {},
   onFilterCahnge,
   onSortModelChange,
   onDoubleClick,

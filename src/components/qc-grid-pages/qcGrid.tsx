@@ -152,30 +152,6 @@ const QcGrid = ({ mode }) => {
       editable: false,
       filterable: false,
     },
-    {
-      field: "actions",
-      headerName: gridDict.actions,
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => navigate(`edit/${params.row.checkListInstanceId}`)}
-            color="inherit"
-          />
-        </>
-      ),
-    },
   ];
   useEffect(() => {
     getList();
@@ -224,7 +200,7 @@ const QcGrid = ({ mode }) => {
   };
 
   const handleDoubleClick = (e) => {
-    navigate(`/warehouse/details/${e.row.warehouseOrderId}`);
+    navigate(`edit/${e.row.checkListInstanceId}`);
   };
   const setSelectedFromDate = (e) => {
     const date = new Date(e);
@@ -340,7 +316,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -357,7 +333,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -374,7 +350,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -391,7 +367,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -408,7 +384,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -425,7 +401,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -442,7 +418,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -459,7 +435,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -476,7 +452,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -493,7 +469,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -510,7 +486,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -527,7 +503,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
-                pagination={{}}
+                onDoubleClick={handleDoubleClick}
               />
             )}
           </>
@@ -606,12 +582,6 @@ const QcGrid = ({ mode }) => {
           </form>
         </Box>
 
-        {/* <Box sx={{ display: "flex", justifyContent: "end", pr: 10, gap: 5 }}>
-          <Button variant="outlined" onClick={() => navigate("add")}>
-            <AddIcon />
-            افزودن
-          </Button>
-        </Box> */}
         {renderGrid()}
       </Card>
     </CardGrid>
