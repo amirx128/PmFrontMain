@@ -551,3 +551,9 @@ export const QcFinalApprove = async (userId, instanceId, stateId) =>
     instanceId,
     stateId,
   });
+/////////////////////////////////////////////
+export const GetCheckListsDataAndValues = async (userId, instanceId) =>
+  await axiosInstance.post(`/QC/GetCheckListsDataAndValues`, {
+    userId,
+    instanceId,
+  });

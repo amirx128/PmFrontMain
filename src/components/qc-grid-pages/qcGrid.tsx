@@ -200,6 +200,13 @@ const QcGrid = ({ mode }) => {
   }, [getList]);
 
   const handleDoubleClick = (e) => {
+    if (mode === "entry-checklist" || mode === "entry-checklist-sent-item") {
+      window.open(
+        `/qc/entryChecklist/${e.row.checkListInstanceId}/entry-checklist`,
+        "_blank"
+      );
+      return;
+    }
     navigate(`edit/${e.row.checkListInstanceId}`);
   };
   const setSelectedFromDate = (e) => {

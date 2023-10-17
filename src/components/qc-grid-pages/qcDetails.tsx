@@ -13,19 +13,15 @@ import {
   MenuItem,
   Select,
   Switch,
-  TextField,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   ContractorAddDateAction,
   GetAllCheckListsAction,
-  GetAllContractorAction,
-  GetAllSubItemsAction,
-  GetAllUsabilityAction,
   GetCheckListStatesAction,
   GetOneSubItemDetailsAction,
   InspectControlCheckListAction,
@@ -34,32 +30,29 @@ import {
   SetQcDateAction,
   technicalApproveScheduleAction,
 } from "../../redux/features/qcSlicer";
-import { getAllProjects } from "../../redux/features/definitionSlicer";
 import JalaliDatePicker from "../date-picker/date-picker";
 import { LoadingButton } from "@mui/lab";
-import { GetUsersListAction } from "../../redux/features/administrationSlicer";
 import { useParams } from "react-router-dom";
+
+const accessToEntryCheckListModes: string[] = [
+  "control-checklist",
+  "manager-control-checklist",
+  "technical",
+];
+
 const QcDetails = ({ mode }) => {
   const { id } = useParams();
   const dispatch = useDispatch<any>();
   const {
-    subItems,
-    usabilities,
     checkLists,
-    contractors,
     subItemDetails,
     contractorAddDateState,
     technicalApproveScheduleAddState,
     qcDateAddState,
     checkListStates,
     controlCheckListAddState,
-    managerControlCheckListAddState,
     finalApproveAddState,
   } = useSelector((state: any) => state?.qc);
-  const { projects } = useSelector((state: any) => state?.definition);
-  const { usersList } = useSelector(
-    (state: any) => state?.administrations?.users
-  );
 
   ////////////////////////////
   const [contractorAccrodion, setContractorAccrodion] = useState<boolean>(
@@ -93,10 +86,18 @@ const QcDetails = ({ mode }) => {
     qcFinalControlStateId: "",
   });
 
+  const getItemData = useCallback(async () => {
+    await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
+  }, [dispatch, id]);
+  const getLists = useCallback(async () => {
+    await dispatch(GetAllCheckListsAction());
+    await dispatch(GetCheckListStatesAction());
+  }, [dispatch]);
+
   useEffect(() => {
     getItemData();
     getLists();
-  }, []);
+  }, [getItemData, getLists]);
   useEffect(() => {
     if (!subItemDetails?.data) return;
     setFromDate(
@@ -134,13 +135,7 @@ const QcDetails = ({ mode }) => {
       qcFinalControlStateId: subItemDetails.data.qcFinalControlStateId,
     }));
   }, [subItemDetails]);
-  const getItemData = async () => {
-    await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
-  };
-  const getLists = async () => {
-    await dispatch(GetAllCheckListsAction());
-    await dispatch(GetCheckListStatesAction());
-  };
+
   const handleChange = (e) => {
     setInfo({
       ...info,
@@ -242,6 +237,9 @@ const QcDetails = ({ mode }) => {
         return finalApproveAddState.pending;
     }
   };
+  const handleClickEntryCheckList = () => {
+    window.open(`/qc/entryChecklist/${id}/${mode}`, "_blank");
+  };
   return (
     <Card
       sx={{
@@ -254,9 +252,22 @@ const QcDetails = ({ mode }) => {
           textAlign: "left",
         }}
       />
+
       <CardContent className="w-3/4">
         {!subItemDetails.pending && (
           <>
+            {accessToEntryCheckListModes.includes(mode) && (
+              <div className="flex justify-start">
+                <Button
+                  variant="outlined"
+                  color="warning"
+                  onClick={handleClickEntryCheckList}
+                >
+                  چک لیست
+                </Button>
+              </div>
+            )}
+
             <Accordion sx={{ mt: 5 }}>
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}

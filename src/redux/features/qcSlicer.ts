@@ -49,6 +49,7 @@ import {
   QcFinalApproveQ,
   QcFinalApproveSentItems,
   QcFinalApprove,
+  GetCheckListsDataAndValues,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -236,6 +237,11 @@ export interface QcState {
   entryCheckListAddState: {
     pending: boolean;
   };
+  /////////////////////////
+  checkListsDataAndValues: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -415,6 +421,11 @@ const initialState: QcState = {
     pending: false,
   },
   entryCheckListAddState: {
+    pending: false,
+  },
+  ///////////////////////////
+  checkListsDataAndValues: {
+    data: [],
     pending: false,
   },
 };
@@ -1587,6 +1598,25 @@ export const GetDuplicatedAction = createAsyncThunk(
     }
   }
 );
+/////////////////////////////////////////////
+
+export const GetCheckListsDataAndValuesAction = createAsyncThunk(
+  "qc/GetCheckListsDataAndValuesAction",
+  async (
+    body: { instanceId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetCheckListsDataAndValues(userId, instanceId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const QcSlicer = createSlice({
   name: "qc",
@@ -2330,6 +2360,22 @@ export const QcSlicer = createSlice({
       })
       .addCase(InspectorEntryCheckListAction.rejected, (state: QcState) => {
         state.entryCheckListAddState.pending = false;
+      });
+    //#endregion
+    //#region GetCheckListsDataAndValuesAction-----
+    builder
+      .addCase(GetCheckListsDataAndValuesAction.pending, (state: QcState) => {
+        state.checkListsDataAndValues.pending = true;
+      })
+      .addCase(
+        GetCheckListsDataAndValuesAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.checkListsDataAndValues.pending = false;
+          state.checkListsDataAndValues.data = payload.model;
+        }
+      )
+      .addCase(GetCheckListsDataAndValuesAction.rejected, (state: QcState) => {
+        state.checkListsDataAndValues.pending = false;
       });
     //#endregion
   },
