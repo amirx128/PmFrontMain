@@ -557,3 +557,14 @@ export const GetCheckListsDataAndValues = async (userId, instanceId) =>
     userId,
     instanceId,
   });
+/////////////////////////////////////////////
+export const TechnicalOfficeAddOrders = async (
+  userId,
+  instanceId,
+  technicalOfficeOrders
+) =>
+  await axiosInstance.post(`/QC/TechnicalOffice.AddOrders`, {
+    userId,
+    instanceId,
+    technicalOfficeOrders,
+  });

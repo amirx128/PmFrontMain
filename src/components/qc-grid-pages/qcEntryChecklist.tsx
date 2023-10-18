@@ -10,6 +10,7 @@ import {
   MenuItem,
   Select,
   Switch,
+  TextField,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
@@ -19,7 +20,10 @@ import { useParams } from "react-router-dom";
 import {
   GetCheckListStatesAction,
   GetCheckListsDataAndValuesAction,
+  InspectControlCheckListAction,
   InspectorEntryCheckListAction,
+  QcManagerControlCheckListAction,
+  TechnicalOfficeAddOrdersAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 
@@ -27,8 +31,7 @@ interface IInfo {
   itemId: number;
   firstControlStateId?: number | string;
   finalControlStateId?: number | string;
-  qcFinalControlStateId?: number | string;
-  contractorIsDone?: boolean;
+  technicalOfficeOrder?: string;
   inspectDescriptions?: string;
 }
 const columns = [
@@ -39,7 +42,7 @@ const columns = [
   { name: "توضیحات بازرسی", class: "w-40" },
   { name: "تاریخ فعالیت فنی" },
   { name: "کاربر فنی" },
-  { name: "technicalOredr" },
+  { name: "سفارش فنی" },
   { name: "تاریخ فعالیت پیمانکار" },
   { name: "پیمانکار" },
   { name: "اتمام پیمانکار" },
@@ -54,8 +57,12 @@ const QcEntryCheckList = () => {
     (state: any) => state.qc
   );
 
-  const [info, setInfo] = useState<IInfo[]>([{ itemId: 1 }]);
-
+  const [info, setInfo] = useState<IInfo[]>([]);
+  const [inspectCheckListStateId, setInspectCheckListStateId] =
+    useState<number>();
+  const [qcManagerCheckListStateId, setQcManagerCheckListStateId] =
+    useState<number>();
+  const [qcManagerDescriptions, setQcManagerDescription] = useState<string>("");
   const getList = useCallback(async () => {
     await dispatch(GetCheckListsDataAndValuesAction({ instanceId: +id }));
     await dispatch(GetCheckListStatesAction());
@@ -64,6 +71,29 @@ const QcEntryCheckList = () => {
   useEffect(() => {
     getList();
   }, [getList]);
+  useEffect(() => {
+    if (checkListsDataAndValues?.data?.checkListAllItemsAndValues) {
+      setInfo(
+        checkListsDataAndValues?.data?.checkListAllItemsAndValues.map(
+          (checklist) => ({
+            itemId: checklist.itemId,
+            firstControlStateId: checklist.firstControlStateId,
+            finalControlStateId: checklist.finalControlStateId,
+            inspectDescriptions: checklist.inspectDescriptions,
+            technicalOfficeOrder: checklist.technicalOrder,
+          })
+        )
+      );
+    }
+    if (checkListsDataAndValues?.data) {
+      setInspectCheckListStateId(
+        checkListsDataAndValues?.data?.inspectCheckListStateId
+      );
+      setQcManagerCheckListStateId(
+        checkListsDataAndValues?.data?.qcManagerCheckListStateId
+      );
+    }
+  }, [checkListsDataAndValues]);
 
   const handleChange = (e, itemId) => {
     setInfo((info) =>
@@ -72,13 +102,7 @@ const QcEntryCheckList = () => {
       )
     );
   };
-  const handleChangeSwitch = (e, itemId) => {
-    setInfo((info) =>
-      info.map((i) =>
-        +i.itemId === +itemId ? { ...i, [e.target?.name]: e.target.checked } : i
-      )
-    );
-  };
+
   const handleSubmit = async () => {
     switch (mode) {
       case "entry-checklist":
@@ -94,7 +118,47 @@ const QcEntryCheckList = () => {
           })
         );
         break;
+      case "control-checklist":
+        await dispatch(
+          InspectControlCheckListAction({
+            instanceId: +id,
+            inspectControlCheckListStateId: +inspectCheckListStateId,
+          })
+        );
+        break;
+      case "manager-control-checklist":
+        await dispatch(
+          QcManagerControlCheckListAction({
+            instanceId: +id,
+            qcManagerControlStateId: +qcManagerCheckListStateId,
+            qcManagerDescriptions: qcManagerDescriptions,
+          })
+        );
+        break;
+      case "technical":
+        await dispatch(
+          TechnicalOfficeAddOrdersAction({
+            instanceId: +id,
+            technicalOfficeOrders: info
+              .filter((i) => i.technicalOfficeOrder)
+              .map((i) => ({
+                itemValueId: +i.itemId,
+                technicalOfficeOrder: i.technicalOfficeOrder,
+              })),
+          })
+        );
+        break;
     }
+    await dispatch(GetCheckListsDataAndValuesAction({ instanceId: +id }));
+  };
+  const handleChangeInpectCheckListId = (e) => {
+    setInspectCheckListStateId(+e.target.value);
+  };
+  const handleChangeQcManagerCheckListId = (e) => {
+    setQcManagerCheckListStateId(+e.target.value);
+  };
+  const handleChangeQcMangerDescription = (e) => {
+    setQcManagerDescription(e.target.value);
   };
   return (
     <Card>
@@ -154,106 +218,172 @@ const QcEntryCheckList = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="border-b">
-                    <td className="text-xs">1</td>
-                    <td className="text-xs">نام تستی</td>
-                    <td className="text-xs">
-                      <Select
-                        value={
-                          info?.find((i) => +i.itemId === 1)
-                            ?.firstControlStateId
-                        }
-                        fullWidth={true}
-                        name={"firstControlStateId"}
-                        label="وضعیت چک لیست"
-                        onChange={(e) => handleChange(e, 1)}
-                        disabled={mode === "entry-checklist" ? false : true}
-                        className="h-10"
-                      >
-                        {checkListStates?.data?.map((item) => (
-                          <MenuItem value={item.id} key={item?.id}>
-                            {item?.state}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </td>
-                    <td className="text-xs">
-                      <Select
-                        value={
-                          info?.find((i) => +i.itemId === 1)
-                            ?.finalControlStateId
-                        }
-                        fullWidth={true}
-                        name={"finalControlStateId"}
-                        label="وضعیت چک لیست"
-                        onChange={(e) => handleChange(e, 1)}
-                        disabled={mode === "entry-checklist" ? false : true}
-                        className="h-10"
-                      >
-                        {checkListStates?.data?.map((item) => (
-                          <MenuItem value={item.id} key={item?.id}>
-                            {item?.state}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </td>
-                    <td className="text-xs">
-                      <TextareaAutosize
-                        value={
-                          info?.find((i) => +i.itemId === 1)
-                            ?.inspectDescriptions
-                        }
-                        name={"inspectDescriptions"}
-                        onChange={(e) => handleChange(e, 1)}
-                        className="border-2 mt-4 flex-1 border-slate-300 p-4 "
-                        minRows={1}
-                        disabled={mode === "entry-checklist" ? false : true}
-                      />
-                    </td>
-                    <td className="text-xs">1402/01/12</td>
-                    <td className="text-xs">کاربر فنی تستی</td>
-                    <td className="text-xs">نمیدونم چی چیه</td>
-                    <td className="text-xs">1402/01/12</td>
-                    <td className="text-xs">پیمانکار تستی</td>
-                    <td className="text-xs">
-                      <Switch
-                        checked={
-                          info?.find((i) => +i.itemId === 1)?.contractorIsDone
-                        }
-                        onChange={(e) => handleChangeSwitch(e, 1)}
-                        name="contractorIsDone"
-                        color="info"
-                      />
-                    </td>
-                    <td className="text-xs">1402/01/12</td>
-                    <td className="text-xs">کنترل کننده تستی</td>
-                    <td className="text-xs">
-                      <Select
-                        value={
-                          info?.find((i) => +i.itemId === 1)
-                            ?.qcFinalControlStateId
-                        }
-                        fullWidth={true}
-                        name={"qcFinalControlStateId"}
-                        label="وضعیت چک لیست"
-                        onChange={(e) => handleChange(e, 1)}
-                        // disabled={
-                        //   mode === "control-checklist"
-                        //     ? !subItemDetails?.data?.inspectorEditable
-                        //     : true
-                        // }
-                        className="h-10"
-                      >
-                        {checkListStates?.data?.map((item) => (
-                          <MenuItem value={item.id} key={item?.id}>
-                            {item?.state}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </td>
-                  </tr>
+                  {checkListsDataAndValues?.data?.checkListAllItemsAndValues?.map(
+                    (checklist) => (
+                      <tr className="border-b" key={checklist.itemId}>
+                        <td className="text-xs">{checklist.itemId}</td>
+                        <td className="text-xs">{checklist.itemName}</td>
+                        <td className="text-xs">
+                          <Select
+                            value={
+                              info?.find((i) => +i.itemId === +checklist.itemId)
+                                ?.firstControlStateId
+                            }
+                            fullWidth={true}
+                            name={"firstControlStateId"}
+                            label="وضعیت چک لیست"
+                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            disabled={mode === "entry-checklist" ? false : true}
+                            className="h-10"
+                          >
+                            {checkListStates?.data?.map((item) => (
+                              <MenuItem value={item.id} key={item?.id}>
+                                {item?.state}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </td>
+                        <td className="text-xs">
+                          <Select
+                            value={
+                              info?.find((i) => +i.itemId === checklist.itemId)
+                                ?.finalControlStateId
+                            }
+                            fullWidth={true}
+                            name={"finalControlStateId"}
+                            label="وضعیت چک لیست"
+                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            disabled={mode === "entry-checklist" ? false : true}
+                            className="h-10"
+                          >
+                            {checkListStates?.data?.map((item) => (
+                              <MenuItem value={item.id} key={item?.id}>
+                                {item?.state}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </td>
+                        <td className="text-xs">
+                          <TextareaAutosize
+                            value={
+                              info?.find((i) => +i.itemId === +checklist.itemId)
+                                ?.inspectDescriptions
+                            }
+                            name="inspectDescriptions"
+                            className="border-2 mt-4 flex-1 border-slate-300 p-4"
+                            minRows={1}
+                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            disabled={mode === "entry-checklist" ? false : true}
+                          />
+                        </td>
+                        <td className="text-xs">
+                          {checklist?.technicaActivityDate &&
+                            new Date(
+                              checklist?.technicaActivityDate
+                            ).toLocaleDateString()}
+                        </td>
+                        <td className="text-xs">{checklist.technicaUser}</td>
+                        <td className="text-xs">
+                          <TextField
+                            value={
+                              info?.find((i) => +i.itemId === +checklist.itemId)
+                                ?.technicalOfficeOrder
+                            }
+                            name={"technicalOfficeOrder"}
+                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            label={"سفارش فنی"}
+                            disabled={mode === "technical" ? false : true}
+                          />
+                        </td>
+                        <td className="text-xs">
+                          {checklist?.contractorActivityDate &&
+                            new Date(
+                              checklist?.contractorActivityDate
+                            ).toLocaleDateString()}
+                        </td>
+                        <td className="text-xs">{checklist.contractorUser}</td>
+                        <td className="text-xs">
+                          <Switch
+                            checked={checklist.contractorIsDone}
+                            name="contractorIsDone"
+                            color="info"
+                            disabled={true}
+                          />
+                        </td>
+                        <td className="text-xs">
+                          {checklist?.qcFinalControlActivityDate &&
+                            new Date(
+                              checklist?.qcFinalControlActivityDate
+                            ).toLocaleDateString()}
+                        </td>
+                        <td className="text-xs">
+                          {checklist.qcFinalControlUser}
+                        </td>
+                        <td className="text-xs">
+                          {
+                            checkListStates?.data.find(
+                              (ch) =>
+                                +ch.id === +checklist.qcFinalControlStateId
+                            )?.state
+                          }
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
+            </div>
+            <div className="w-full flex flex-col gap-16 mb-20">
+              <div className="flex justify-start">
+                <FormControl className="w-1/2">
+                  <InputLabel>وضعیت تایید بازرس</InputLabel>
+                  <Select
+                    value={inspectCheckListStateId}
+                    fullWidth={true}
+                    name={"firstControlStateId"}
+                    label="وضعیت چک لیست"
+                    onChange={handleChangeInpectCheckListId}
+                    disabled={mode === "control-checklist" ? false : true}
+                  >
+                    {checkListStates?.data?.map((item) => (
+                      <MenuItem value={item.id} key={item?.id}>
+                        {item?.state}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </div>
+              <div className="flex justify-start items-center gap-9">
+                <FormControl className="w-1/2">
+                  <InputLabel>وضعیت تایید مدیر کیفیت</InputLabel>
+                  <Select
+                    value={qcManagerCheckListStateId}
+                    fullWidth={true}
+                    onChange={handleChangeQcManagerCheckListId}
+                    disabled={
+                      mode === "manager-control-checklist" ? false : true
+                    }
+                  >
+                    {checkListStates?.data?.map((item) => (
+                      <MenuItem value={item.id} key={item?.id}>
+                        {item?.state}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+                <div className="w-1/2 flex items-center gap-4">
+                  <Typography>توضیحات مدیر کیفیت:</Typography>
+                  <TextareaAutosize
+                    value={qcManagerDescriptions}
+                    onChange={handleChangeQcMangerDescription}
+                    className="border-2 mt-4 flex-1 border-slate-300 p-4"
+                    minRows={5}
+                    disabled={
+                      mode === "manager-control-checklist" ? false : true
+                    }
+                  />
+                </div>
+              </div>
             </div>
           </>
         )}

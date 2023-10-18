@@ -50,6 +50,7 @@ import {
   QcFinalApproveSentItems,
   QcFinalApprove,
   GetCheckListsDataAndValues,
+  TechnicalOfficeAddOrders,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -242,6 +243,10 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  /////////////////////////
+  technicalOfficeAddOrdersAddState: {
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -426,6 +431,9 @@ const initialState: QcState = {
   ///////////////////////////
   checkListsDataAndValues: {
     data: [],
+    pending: false,
+  },
+  technicalOfficeAddOrdersAddState: {
     pending: false,
   },
 };
@@ -1617,6 +1625,27 @@ export const GetCheckListsDataAndValuesAction = createAsyncThunk(
     }
   }
 );
+export const TechnicalOfficeAddOrdersAction = createAsyncThunk(
+  "qc/TechnicalOfficeAddOrdersAction",
+  async (
+    body: { instanceId: number; technicalOfficeOrders: any[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId, technicalOfficeOrders } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await TechnicalOfficeAddOrders(
+        userId,
+        instanceId,
+        technicalOfficeOrders
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const QcSlicer = createSlice({
   name: "qc",
@@ -2376,6 +2405,21 @@ export const QcSlicer = createSlice({
       )
       .addCase(GetCheckListsDataAndValuesAction.rejected, (state: QcState) => {
         state.checkListsDataAndValues.pending = false;
+      });
+    //#endregion
+    //#region TechnicalOfficeAddOrdersAction-----
+    builder
+      .addCase(TechnicalOfficeAddOrdersAction.pending, (state: QcState) => {
+        state.technicalOfficeAddOrdersAddState.pending = true;
+      })
+      .addCase(
+        TechnicalOfficeAddOrdersAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.technicalOfficeAddOrdersAddState.pending = false;
+        }
+      )
+      .addCase(TechnicalOfficeAddOrdersAction.rejected, (state: QcState) => {
+        state.technicalOfficeAddOrdersAddState.pending = false;
       });
     //#endregion
   },
