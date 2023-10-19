@@ -5,6 +5,7 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CircularProgress,
   FormControl,
   InputLabel,
   MenuItem,
@@ -85,12 +86,19 @@ const QcEntryCheckList = () => {
         )
       );
     }
-    if (checkListsDataAndValues?.data) {
+    if (checkListsDataAndValues?.data?.inspectControlCheckListSateId) {
       setInspectCheckListStateId(
-        checkListsDataAndValues?.data?.inspectCheckListStateId
+        checkListsDataAndValues?.data?.inspectControlCheckListSateId
       );
+    }
+    if (checkListsDataAndValues?.data?.qcManagerCheckListStateId) {
       setQcManagerCheckListStateId(
         checkListsDataAndValues?.data?.qcManagerCheckListStateId
+      );
+    }
+    if (checkListsDataAndValues?.data?.qcManagerDescription) {
+      setQcManagerDescription(
+        checkListsDataAndValues?.data?.qcManagerDescription
       );
     }
   }, [checkListsDataAndValues]);
@@ -163,9 +171,9 @@ const QcEntryCheckList = () => {
   return (
     <Card>
       <CardHeader title="پر کردن چک لیست" className="text-right" />
-
       <CardContent className="mt-5 flex flex-col gap-16 items-center">
-        {checkListsDataAndValues?.data && (
+        {checkListsDataAndValues?.pending && <CircularProgress />}
+        {!checkListsDataAndValues?.pending && checkListsDataAndValues?.data && (
           <>
             <div className="grid grid-cols-2 gap-y-11 self-start w-full">
               <div className="flex gap-4">
@@ -227,13 +235,19 @@ const QcEntryCheckList = () => {
                           <Select
                             value={
                               info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.firstControlStateId
+                                ?.firstControlStateId ||
+                              checklist.firstControlStateId
                             }
                             fullWidth={true}
                             name={"firstControlStateId"}
                             label="وضعیت چک لیست"
                             onChange={(e) => handleChange(e, +checklist.itemId)}
-                            disabled={mode === "entry-checklist" ? false : true}
+                            disabled={
+                              mode === "entry-checklist"
+                                ? !checkListsDataAndValues?.data
+                                    ?.inspectEditable
+                                : true
+                            }
                             className="h-10"
                           >
                             {checkListStates?.data?.map((item) => (
@@ -247,13 +261,19 @@ const QcEntryCheckList = () => {
                           <Select
                             value={
                               info?.find((i) => +i.itemId === checklist.itemId)
-                                ?.finalControlStateId
+                                ?.finalControlStateId ||
+                              checklist.finalControlStateId
                             }
                             fullWidth={true}
                             name={"finalControlStateId"}
                             label="وضعیت چک لیست"
                             onChange={(e) => handleChange(e, +checklist.itemId)}
-                            disabled={mode === "entry-checklist" ? false : true}
+                            disabled={
+                              mode === "entry-checklist"
+                                ? !checkListsDataAndValues?.data
+                                    ?.inspectEditable
+                                : true
+                            }
                             className="h-10"
                           >
                             {checkListStates?.data?.map((item) => (
@@ -267,13 +287,19 @@ const QcEntryCheckList = () => {
                           <TextareaAutosize
                             value={
                               info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.inspectDescriptions
+                                ?.inspectDescriptions ||
+                              checklist.inspectDescriptions
                             }
                             name="inspectDescriptions"
                             className="border-2 mt-4 flex-1 border-slate-300 p-4"
                             minRows={1}
                             onChange={(e) => handleChange(e, +checklist.itemId)}
-                            disabled={mode === "entry-checklist" ? false : true}
+                            disabled={
+                              mode === "entry-checklist"
+                                ? !checkListsDataAndValues?.data
+                                    ?.inspectEditable
+                                : true
+                            }
                           />
                         </td>
                         <td className="text-xs">
@@ -287,12 +313,18 @@ const QcEntryCheckList = () => {
                           <TextField
                             value={
                               info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.technicalOfficeOrder
+                                ?.technicalOfficeOrder ||
+                              checklist.technicalOfficeOrder
                             }
                             name={"technicalOfficeOrder"}
                             onChange={(e) => handleChange(e, +checklist.itemId)}
                             label={"سفارش فنی"}
-                            disabled={mode === "technical" ? false : true}
+                            disabled={
+                              mode === "technical"
+                                ? !checkListsDataAndValues?.data
+                                    ?.technicalEditable
+                                : true
+                            }
                           />
                         </td>
                         <td className="text-xs">
@@ -338,12 +370,16 @@ const QcEntryCheckList = () => {
                 <FormControl className="w-1/2">
                   <InputLabel>وضعیت تایید بازرس</InputLabel>
                   <Select
-                    value={inspectCheckListStateId}
+                    value={inspectCheckListStateId || 0}
                     fullWidth={true}
                     name={"firstControlStateId"}
                     label="وضعیت چک لیست"
                     onChange={handleChangeInpectCheckListId}
-                    disabled={mode === "control-checklist" ? false : true}
+                    disabled={
+                      mode === "control-checklist"
+                        ? !checkListsDataAndValues?.data?.inspectEditable
+                        : true
+                    }
                   >
                     {checkListStates?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
@@ -357,15 +393,17 @@ const QcEntryCheckList = () => {
                 <FormControl className="w-1/2">
                   <InputLabel>وضعیت تایید مدیر کیفیت</InputLabel>
                   <Select
-                    value={qcManagerCheckListStateId}
+                    value={qcManagerCheckListStateId || 0}
                     fullWidth={true}
                     onChange={handleChangeQcManagerCheckListId}
                     disabled={
-                      mode === "manager-control-checklist" ? false : true
+                      mode === "manager-control-checklist"
+                        ? !checkListsDataAndValues?.data?.qcManagerEditable
+                        : true
                     }
                   >
                     {checkListStates?.data?.map((item) => (
-                      <MenuItem value={item.id} key={item?.id}>
+                      <MenuItem value={+item.id} key={item?.id}>
                         {item?.state}
                       </MenuItem>
                     ))}
@@ -379,7 +417,9 @@ const QcEntryCheckList = () => {
                     className="border-2 mt-4 flex-1 border-slate-300 p-4"
                     minRows={5}
                     disabled={
-                      mode === "manager-control-checklist" ? false : true
+                      mode === "manager-control-checklist"
+                        ? !checkListsDataAndValues?.data?.qcManagerEditable
+                        : true
                     }
                   />
                 </div>
