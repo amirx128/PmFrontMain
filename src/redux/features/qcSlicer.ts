@@ -51,6 +51,7 @@ import {
   QcFinalApprove,
   GetCheckListsDataAndValues,
   TechnicalOfficeAddOrders,
+  GetControlCheckListStates,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -247,6 +248,10 @@ export interface QcState {
   technicalOfficeAddOrdersAddState: {
     pending: boolean;
   };
+  controlChecklistStates: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -434,6 +439,10 @@ const initialState: QcState = {
     pending: false,
   },
   technicalOfficeAddOrdersAddState: {
+    pending: false,
+  },
+  controlChecklistStates: {
+    data: [],
     pending: false,
   },
 };
@@ -1646,6 +1655,19 @@ export const TechnicalOfficeAddOrdersAction = createAsyncThunk(
     }
   }
 );
+export const GetControlCheckListStatesAction = createAsyncThunk(
+  "qc/GetControlCheckListStatesAction",
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetControlCheckListStates(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const QcSlicer = createSlice({
   name: "qc",
@@ -2420,6 +2442,22 @@ export const QcSlicer = createSlice({
       )
       .addCase(TechnicalOfficeAddOrdersAction.rejected, (state: QcState) => {
         state.technicalOfficeAddOrdersAddState.pending = false;
+      });
+    //#endregion
+    //#region GetControlCheckListStatesAction-----
+    builder
+      .addCase(GetControlCheckListStatesAction.pending, (state: QcState) => {
+        state.controlChecklistStates.pending = true;
+      })
+      .addCase(
+        GetControlCheckListStatesAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.controlChecklistStates.pending = false;
+          state.controlChecklistStates.data = payload.model;
+        }
+      )
+      .addCase(GetControlCheckListStatesAction.rejected, (state: QcState) => {
+        state.controlChecklistStates.pending = false;
       });
     //#endregion
   },

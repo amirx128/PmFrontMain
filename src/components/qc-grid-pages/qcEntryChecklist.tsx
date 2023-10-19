@@ -19,7 +19,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import {
-  GetCheckListStatesAction,
+  GetControlCheckListStatesAction,
   GetCheckListsDataAndValuesAction,
   InspectControlCheckListAction,
   InspectorEntryCheckListAction,
@@ -54,7 +54,7 @@ const columns = [
 const QcEntryCheckList = () => {
   const { id, mode } = useParams();
   const dispatch = useDispatch<any>();
-  const { checkListsDataAndValues, checkListStates } = useSelector(
+  const { checkListsDataAndValues, controlChecklistStates } = useSelector(
     (state: any) => state.qc
   );
 
@@ -66,7 +66,7 @@ const QcEntryCheckList = () => {
   const [qcManagerDescriptions, setQcManagerDescription] = useState<string>("");
   const getList = useCallback(async () => {
     await dispatch(GetCheckListsDataAndValuesAction({ instanceId: +id }));
-    await dispatch(GetCheckListStatesAction());
+    await dispatch(GetControlCheckListStatesAction());
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -250,7 +250,7 @@ const QcEntryCheckList = () => {
                             }
                             className="h-10"
                           >
-                            {checkListStates?.data?.map((item) => (
+                            {controlChecklistStates?.data?.map((item) => (
                               <MenuItem value={item.id} key={item?.id}>
                                 {item?.state}
                               </MenuItem>
@@ -276,7 +276,7 @@ const QcEntryCheckList = () => {
                             }
                             className="h-10"
                           >
-                            {checkListStates?.data?.map((item) => (
+                            {controlChecklistStates?.data?.map((item) => (
                               <MenuItem value={item.id} key={item?.id}>
                                 {item?.state}
                               </MenuItem>
@@ -353,7 +353,7 @@ const QcEntryCheckList = () => {
                         </td>
                         <td className="text-xs">
                           {
-                            checkListStates?.data.find(
+                            controlChecklistStates?.data.find(
                               (ch) =>
                                 +ch.id === +checklist.qcFinalControlStateId
                             )?.state
@@ -381,7 +381,7 @@ const QcEntryCheckList = () => {
                         : true
                     }
                   >
-                    {checkListStates?.data?.map((item) => (
+                    {controlChecklistStates?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
                         {item?.state}
                       </MenuItem>
@@ -402,7 +402,7 @@ const QcEntryCheckList = () => {
                         : true
                     }
                   >
-                    {checkListStates?.data?.map((item) => (
+                    {controlChecklistStates?.data?.map((item) => (
                       <MenuItem value={+item.id} key={item?.id}>
                         {item?.state}
                       </MenuItem>

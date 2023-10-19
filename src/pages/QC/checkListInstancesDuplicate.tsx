@@ -3,13 +3,8 @@ import {
   Card,
   CardHeader,
   Grid as CardGrid,
-  IconButton,
-  Typography,
   Button,
   DialogContent,
-  List,
-  ListItem,
-  ListItemText,
   Dialog,
   DialogContentText,
   DialogActions,
@@ -19,32 +14,25 @@ import {
   GridColDef,
   GridRenderCellParams,
 } from "@mui/x-data-grid";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Grid from "../../components/grid/grid.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import gridDict from "../../dictionary/gridDict.ts";
 import { useNavigate } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import {
-  AllActiveCheckListsAction,
   DeleteQcInstanceAction,
-  GetCheckListStatesAction,
   GetDuplicatedAction,
 } from "../../redux/features/qcSlicer.ts";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
-import { Row } from "./style.tsx";
-import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
-import Filter from "@mui/icons-material/FilterAlt";
-import FilterOff from "@mui/icons-material/FilterAltOff";
-import { Controller, useForm } from "react-hook-form";
-import SelectComponent from "../../components/select/selects.tsx";
 import { LoadingButton } from "@mui/lab";
 const CheckListInstancesListDuplicate = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { duplicatedCheckLists, checkListStates, checkListInstancRemoveState } =
-    useSelector((state: any) => state.qc);
+  const { duplicatedCheckLists, checkListInstancRemoveState } = useSelector(
+    (state: any) => state.qc
+  );
   const [warningRemoveModal, setWarningREmoveModal] = useState(false);
 
   const [idsDelete, setIdsDelete] = useState<number[]>([]);
@@ -147,14 +135,12 @@ const CheckListInstancesListDuplicate = () => {
   }, []);
   const getList = async () => {
     dispatch(GetDuplicatedAction({ data: window.opener.infoData }));
-    dispatch(GetCheckListStatesAction());
   };
 
   const handleDeleteItems = async () => {
     if (idsDelete.length) {
       await dispatch(DeleteQcInstanceAction({ instanceIds: idsDelete }));
       setWarningREmoveModal(false);
-      // await dispatch(AllActiveCheckListsAction({}));
       setIdsDelete([]);
     }
   };
@@ -201,7 +187,6 @@ const CheckListInstancesListDuplicate = () => {
             }
             pagination={{}}
             onRowSelected={(e) => setIdsDelete(e)}
-            // onDoubleClick={handleDoubleClick}
           />
         )}
 

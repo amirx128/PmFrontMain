@@ -22,7 +22,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   ContractorAddDateAction,
   GetAllCheckListsAction,
-  GetCheckListStatesAction,
+  GetControlCheckListStatesAction,
   GetOneSubItemDetailsAction,
   InspectControlCheckListAction,
   QcFinalApproveAction,
@@ -49,7 +49,7 @@ const QcDetails = ({ mode }) => {
     contractorAddDateState,
     technicalApproveScheduleAddState,
     qcDateAddState,
-    checkListStates,
+    controlChecklistStates,
     controlCheckListAddState,
     finalApproveAddState,
   } = useSelector((state: any) => state?.qc);
@@ -91,7 +91,7 @@ const QcDetails = ({ mode }) => {
   }, [dispatch, id]);
   const getLists = useCallback(async () => {
     await dispatch(GetAllCheckListsAction());
-    await dispatch(GetCheckListStatesAction());
+    await dispatch(GetControlCheckListStatesAction());
   }, [dispatch]);
 
   useEffect(() => {
@@ -651,7 +651,7 @@ const QcDetails = ({ mode }) => {
                         : true
                     }
                   >
-                    {checkListStates?.data?.map((item) => (
+                    {controlChecklistStates?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
                         {item?.state}
                       </MenuItem>
@@ -719,7 +719,7 @@ const QcDetails = ({ mode }) => {
                         : true
                     }
                   >
-                    {checkListStates?.data?.map((item) => (
+                    {controlChecklistStates?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
                         {item?.state}
                       </MenuItem>
@@ -802,7 +802,7 @@ const QcDetails = ({ mode }) => {
                         : true
                     }
                   >
-                    {checkListStates?.data?.map((item) => (
+                    {controlChecklistStates?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
                         {item?.state}
                       </MenuItem>

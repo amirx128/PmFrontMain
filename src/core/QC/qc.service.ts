@@ -568,3 +568,8 @@ export const TechnicalOfficeAddOrders = async (
     instanceId,
     technicalOfficeOrders,
   });
+/////////////////////////////////////////////
+export const GetControlCheckListStates = async (userId) =>
+  await axiosInstance.post(`/QC/GetControlCheckListStates`, {
+    userId,
+  });

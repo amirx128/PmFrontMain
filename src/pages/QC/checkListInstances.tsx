@@ -28,7 +28,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import {
   AllActiveCheckListsAction,
   DeleteQcInstanceAction,
-  GetCheckListStatesAction,
+  GetControlCheckListStatesAction,
 } from "../../redux/features/qcSlicer.ts";
 import AddIcon from "@mui/icons-material/Add";
 import EditIcon from "@mui/icons-material/Edit";
@@ -42,8 +42,11 @@ import { LoadingButton } from "@mui/lab";
 const CheckListInstancesList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { checkListInstances, checkListStates, checkListInstancRemoveState } =
-    useSelector((state: any) => state.qc);
+  const {
+    checkListInstances,
+    checkListInstancRemoveState,
+    controlChecklistStates,
+  } = useSelector((state: any) => state.qc);
   const [warningRemoveModal, setWarningREmoveModal] = useState(false);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -156,7 +159,7 @@ const CheckListInstancesList = () => {
   }, []);
   const getList = async () => {
     dispatch(AllActiveCheckListsAction({}));
-    dispatch(GetCheckListStatesAction());
+    dispatch(GetControlCheckListStatesAction());
   };
 
   const handleDoubleClick = (e) => {
@@ -227,7 +230,7 @@ const CheckListInstancesList = () => {
                       label="وضعیت"
                       valuefieldName="id"
                       labelFieldName="state"
-                      options={checkListStates.data}
+                      options={controlChecklistStates.data}
                       field={field}
                     />
                   )}
