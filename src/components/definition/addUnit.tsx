@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddNewUnit,
@@ -25,7 +25,7 @@ import {
   GetOneProjectFloorAction,
 } from "../../redux/features/definitionSlicer.ts";
 
-export const AddUnit = ({
+const AddUnit = ({
   addUnitDialog,
   selectedUnit,
   onClose,
@@ -195,3 +195,5 @@ export const AddUnit = ({
     </Dialog>
   );
 };
+
+export default memo(AddUnit);

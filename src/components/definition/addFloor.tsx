@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   AddNewFloor,
@@ -25,7 +25,7 @@ import {
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
 
-export const AddFloor = ({
+const AddFloor = ({
   addFloorDialog,
   selectedFloor,
   onClose,
@@ -176,3 +176,5 @@ export const AddFloor = ({
     </Dialog>
   );
 };
+
+export default memo(AddFloor);

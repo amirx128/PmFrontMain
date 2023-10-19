@@ -35,6 +35,7 @@ export const ShowUnits = ({
   setAddFloorDialog,
   setSelectedUnit,
   setAddUnitDialog,
+  setShowUsabilitiesDialog,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
@@ -155,7 +156,11 @@ export const ShowUnits = ({
                   },
                 }}
                 key={unit.id}
-                onClick={() => handleEditUnit(unit)}
+                onClick={() => {
+                  // handleEditUnit(unit)
+                  setSelectedUnit(unit);
+                  setShowUsabilitiesDialog(true);
+                }}
               >
                 {`-`}
                 <ListItemText primary={unit.name} />

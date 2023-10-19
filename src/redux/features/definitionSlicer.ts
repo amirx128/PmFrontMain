@@ -713,10 +713,7 @@ export const UpdatePerson = createAsyncThunk(
 
 export const GetAllBusinessRoles = createAsyncThunk(
   "definition/GetAllBusinessRoles",
-  async (
-    body: any,
-    { rejectWithValue, fulfillWithValue, dispatch, getState }
-  ) => {
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
       const userId = getUserId(state);
