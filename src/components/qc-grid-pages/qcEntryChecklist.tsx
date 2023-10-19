@@ -80,7 +80,7 @@ const QcEntryCheckList = () => {
             itemId: checklist.itemId,
             firstControlStateId: checklist.firstControlStateId,
             finalControlStateId: checklist.finalControlStateId,
-            inspectDescriptions: checklist.inspectDescriptions,
+            inspectDescriptions: checklist.inspectDeacription,
             technicalOfficeOrder: checklist.technicalOrder,
           })
         )
@@ -288,7 +288,7 @@ const QcEntryCheckList = () => {
                             value={
                               info?.find((i) => +i.itemId === +checklist.itemId)
                                 ?.inspectDescriptions ||
-                              checklist.inspectDescriptions
+                              checklist.inspectDeacription
                             }
                             name="inspectDescriptions"
                             className="border-2 mt-4 flex-1 border-slate-300 p-4"
