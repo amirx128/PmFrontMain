@@ -32,11 +32,14 @@ import {
   GetApproveStatesAction,
   DownloadFinalApproveQAction,
 } from "../../../redux/features/supportSlicer.ts";
+import AutoCompleteComponent from "../../../components/AutoComplete/AutoCompleteComponent.tsx";
 const FinalApproveRequestList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
   const [toDate, setToDate] = useState<any>(new Date());
+  const [approveStateValue, setAppriveStateValue] = useState(0);
+
   const initialFilter = useRef({
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
@@ -399,13 +402,12 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
     navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = async (sortArr) => {
-    const { approveStateId } = getValues();
     if (!sortArr.at(0)) {
       await dispatch(
         GetFinalApproveQAction({
           fromDate: new Date(fromDate),
           toDate: new Date(toDate),
-          approveStateId,
+          approveStateId: approveStateValue,
         })
       );
       return;
@@ -416,7 +418,7 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
       GetFinalApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
-        approveStateId,
+        approveStateId: approveStateValue,
         orderBy: sortField,
         orderType: sortType,
       })
@@ -448,12 +450,11 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
   };
 
   const handleAddFilter = async () => {
-    const { approveStateId } = getValues();
     await dispatch(
       GetFinalApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
-        approveStateId,
+        approveStateId: approveStateValue,
       })
     );
   };
@@ -467,12 +468,11 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
     );
   };
   const handleDownloadExcel = async () => {
-    const { approveStateId } = getValues();
     await dispatch(
       DownloadFinalApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
-        approveStateId,
+        approveStateId: approveStateValue,
       })
     );
   };
@@ -497,20 +497,13 @@ const FinalApproveRequestList: React.FC<any> = (props) => {
           <form>
             <Row>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>
-                <Controller
-                  control={control}
-                  rules={{ required: " approve state is required" }}
-                  name="approveStateId"
-                  defaultValue={0}
-                  render={({ field }) => (
-                    <SelectComponent
-                      label="وضعیت"
-                      valuefieldName="id"
-                      labelFieldName="state"
-                      options={states?.data}
-                      field={field}
-                    />
-                  )}
+                <AutoCompleteComponent
+                  value={approveStateValue}
+                  options={states?.data}
+                  id="approveStateId"
+                  dataLabel="state"
+                  label="وضعیت"
+                  changeHandler={(value) => setAppriveStateValue(value)}
                 />
               </Box>
               <Box sx={{ flex: 1, marginLeft: "20px" }}>

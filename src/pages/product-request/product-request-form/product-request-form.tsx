@@ -22,6 +22,7 @@ import { Row } from "./style";
 import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../utils/functions.ts";
 import { Link } from "react-router-dom";
+import AutoCompleteComponent from "../../../components/AutoComplete/AutoCompleteComponent.tsx";
 type FormFields = {
   unitId: string;
   placeOfUseId: string;
@@ -40,7 +41,8 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const [trackingCode, setTrackingCode] = useState<string>("");
   const [requestId, setRequestId] = useState<number>(null);
   const { user } = useSelector((state: any) => state?.user);
-
+  const [placeOfUseId, setPlaceOfUseId] = useState();
+  const [unitId, setUnitId] = useState();
   const {
     register,
     handleSubmit,
@@ -57,10 +59,10 @@ const ProductRequest: React.FC<any> = (props: any) => {
   });
 
   useEffect(() => {
-    if (getValues("placeOfUseId") && getValues("unitId")) {
+    if (placeOfUseId && unitId) {
       getAllCommodities();
     }
-  }, [watch("placeOfUseId"), watch("unitId")]);
+  }, [placeOfUseId, unitId]);
   useEffect(() => {
     getAllUnits();
     getAllActivities();
@@ -73,21 +75,19 @@ const ProductRequest: React.FC<any> = (props: any) => {
     }
   }, []);
 
-  const onSubmit = handleSubmit((data) => {
-    addNew(data);
-  });
   const reset = () => {
-    setValue("unitId", "");
-    setValue("placeOfUseId", "");
+    setPlaceOfUseId(undefined);
+    setUnitId(undefined);
     setComodoties([]);
   };
-  const addNew = async (data) => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
     try {
       setLoading(true);
       const response = await axios.post("/RequestCase/NewRequestCase", {
         userId: user?.id ?? getUserIdFromStorage(),
-        unitId: data.unitId,
-        placeOfUseId: data.placeOfUseId,
+        unitId: unitId,
+        placeOfUseId: placeOfUseId,
         commodites: [...comodities],
       });
       if (response.data.statusCode === 200 && response.data.model) {
@@ -121,16 +121,14 @@ const ProductRequest: React.FC<any> = (props: any) => {
   };
 
   const getAllCommodities = async () => {
-    const placeOfUseId = getValues("placeOfUseId");
-    const unitId = getValues("unitId");
     if (!placeOfUseId && !unitId) return;
     try {
       const response: any = await axios.post(
         "/RequestCase/GetAllCommoditiesForOnePlaceOfUse",
         {
           userId: user?.id ?? getUserIdFromStorage(),
-          placeId: getValues("placeOfUseId"),
-          requesterBussinessRoleId: getValues("unitId"),
+          placeId: placeOfUseId,
+          requesterBussinessRoleId: unitId,
         }
       );
       setCommodityDescription(response.data.model);
@@ -206,35 +204,20 @@ const ProductRequest: React.FC<any> = (props: any) => {
       <div className="mx-auto">
         <form onSubmit={onSubmit}>
           <Row>
-            <Controller
-              control={control}
-              name="unitId"
-              render={({ field }) => (
-                <Select
-                  field={field}
-                  valuefieldName="id"
-                  labelFieldName="name"
-                  options={businessRoleDetails}
-                  label="بخش درخواست کننده"
-                />
-              )}
+            <AutoCompleteComponent
+              label="بخش درخواست کننده"
+              id="unitId"
+              options={businessRoleDetails}
+              value={unitId}
+              changeHandler={(value) => setUnitId(value)}
             />
-
-            <Controller
-              control={control}
-              defaultValue={""}
-              name="placeOfUseId"
-              render={({ field }) => (
-                <Select
-                  field={field}
-                  options={placeOfUsed}
-                  valuefieldName="id"
-                  labelFieldName="name"
-                  label="محل مصرف"
-                />
-              )}
+            <AutoCompleteComponent
+              label="محل مصرف"
+              id="placeOfUseId"
+              options={placeOfUsed}
+              value={placeOfUseId}
+              changeHandler={(value) => setPlaceOfUseId(value)}
             />
-            <Box></Box>
           </Row>
           <Divider sx={{ m: "40px 0" }} />
           <Typography

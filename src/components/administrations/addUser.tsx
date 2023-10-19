@@ -32,6 +32,7 @@ import {
   GetAllRoles,
   UpdateUser,
 } from "../../redux/features/administrationSlicer.ts";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 interface IAddUserProps {
   showUserDialog: boolean;
@@ -206,40 +207,32 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             defaultChecked={true}
           />
         </FormGroup>
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>نقش کاربری</InputLabel>
-          <Select
-            multiple
-            value={info?.usersRoles}
-            fullWidth={true}
-            name={"usersRoles"}
-            label="نقش کاربری"
-            onChange={handleChange}
-          >
-            {roles?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.roleTitle}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>نقش تجاری</InputLabel>
-          <Select
-            multiple
-            value={info?.businessRoles}
-            fullWidth={true}
-            name={"businessRoles"}
-            label="نقش تجاری"
-            onChange={handleChange}
-          >
-            {businessRoles?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        <AutoCompleteComponent
+          sx={{ mt: 2 }}
+          options={roles?.data}
+          dataId="id"
+          dataLabel="roleTitle"
+          id="usersRoles"
+          label="نقش کاربری"
+          changeHandler={(value) => {
+            setInfo((prev) => ({ ...prev, usersRoles: value }));
+          }}
+          value={info?.usersRoles || []}
+          multiple={true}
+        />
+        <AutoCompleteComponent
+          sx={{ mt: 2 }}
+          options={businessRoles?.data}
+          dataId="id"
+          dataLabel="name"
+          id="businessRoles"
+          label="نقش تجاری"
+          changeHandler={(value) =>
+            setInfo((prev) => ({ ...prev, businessRoles: value }))
+          }
+          value={info?.businessRoles || []}
+          multiple={true}
+        />
         <FormControl fullWidth sx={{ mt: 2 }}>
           <InputLabel>مدیر</InputLabel>
           <Select
