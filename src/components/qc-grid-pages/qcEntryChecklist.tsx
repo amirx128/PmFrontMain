@@ -400,7 +400,7 @@ const QcEntryCheckList = () => {
               </table>
             </div>
             <div className="w-full flex flex-col gap-16 mb-20">
-              <div className="flex justify-start">
+              <div className="flex justify-start gap-6 w-3/6">
                 <FormControl className="w-1/2">
                   <InputLabel>وضعیت تایید بازرس</InputLabel>
                   <Select
@@ -422,8 +422,6 @@ const QcEntryCheckList = () => {
                     ))}
                   </Select>
                 </FormControl>
-              </div>
-              <div className="flex justify-start items-center gap-9">
                 <FormControl className="w-1/2">
                   <InputLabel>وضعیت تایید مدیر کیفیت</InputLabel>
                   <Select
@@ -443,6 +441,8 @@ const QcEntryCheckList = () => {
                     ))}
                   </Select>
                 </FormControl>
+              </div>
+              <div className="flex justify-start items-center gap-9">
                 <div className="w-1/2 flex items-center gap-4">
                   <Typography>توضیحات مدیر کیفیت:</Typography>
                   <TextareaAutosize
