@@ -85,6 +85,8 @@ const QcDetails = ({ mode }) => {
     qcFinalControlStateId: "",
   });
 
+  const [isPeriodTime, setIsPeriodTime] = useState<boolean>(false);
+
   const getItemData = useCallback(async () => {
     await dispatch(GetOneSubItemDetailsAction({ selectedItemId: +id }));
   }, [dispatch, id]);
@@ -133,6 +135,7 @@ const QcDetails = ({ mode }) => {
       qcManagerDescriptions: subItemDetails.data.qcManagerDescriptions,
       qcFinalControlStateId: subItemDetails.data.qcFinalControlStateId,
     }));
+    setIsPeriodTime(subItemDetails?.data.isPeriodTime);
   }, [subItemDetails]);
 
   const handleChange = (e) => {
@@ -190,6 +193,7 @@ const QcDetails = ({ mode }) => {
             qcVisitFromDate,
             qcVisitToDate,
             inspectDate: qcInspectDate,
+            isPeriodTime,
           })
         );
         break;
@@ -558,39 +562,53 @@ const QcDetails = ({ mode }) => {
                   </div>
                 </div>
 
-                <JalaliDatePicker
-                  defaultValue={qcVisitFromDate}
-                  onChange={setSelectedQcVisitFromDate}
-                  name="requiredDate"
-                  label="از تاریخ"
-                  value={qcVisitFromDate}
-                  sx={{ mt: 2, width: "50%" }}
-                  disabled={
-                    mode === "qc" ? !subItemDetails?.data?.qcEditable : true
-                  }
-                />
-                <JalaliDatePicker
-                  defaultValue={qcVisitToDate}
-                  onChange={setSelectedQcVisitToDate}
-                  name="requiredDate"
-                  label="تا تاریخ"
-                  value={qcVisitToDate}
-                  sx={{ mt: 2, width: "50%" }}
-                  disabled={
-                    mode === "qc" ? !subItemDetails?.data?.qcEditable : true
-                  }
-                />
-                <JalaliDatePicker
-                  defaultValue={qcInspectDate}
-                  onChange={setSelectedQcInspectDate}
-                  name="requiredDate"
-                  label="تاریخ بازرسی"
-                  value={qcInspectDate}
-                  sx={{ mt: 2, width: "50%" }}
-                  disabled={
-                    mode === "qc" ? !subItemDetails?.data?.qcEditable : true
-                  }
-                />
+                <div className="mt-10 flex items-center gap-6">
+                  <Typography>تاریخ قطعی</Typography>
+                  <Switch
+                    checked={isPeriodTime}
+                    onChange={() => setIsPeriodTime((prev) => !prev)}
+                  />
+                  <Typography>تعیین بازه</Typography>
+                </div>
+                {isPeriodTime && (
+                  <>
+                    <JalaliDatePicker
+                      defaultValue={qcVisitFromDate}
+                      onChange={setSelectedQcVisitFromDate}
+                      name="requiredDate"
+                      label="از تاریخ"
+                      value={qcVisitFromDate}
+                      sx={{ mt: 2, width: "50%" }}
+                      disabled={
+                        mode === "qc" ? !subItemDetails?.data?.qcEditable : true
+                      }
+                    />
+                    <JalaliDatePicker
+                      defaultValue={qcVisitToDate}
+                      onChange={setSelectedQcVisitToDate}
+                      name="requiredDate"
+                      label="تا تاریخ"
+                      value={qcVisitToDate}
+                      sx={{ mt: 2, width: "50%" }}
+                      disabled={
+                        mode === "qc" ? !subItemDetails?.data?.qcEditable : true
+                      }
+                    />
+                  </>
+                )}
+                {!isPeriodTime && (
+                  <JalaliDatePicker
+                    defaultValue={qcInspectDate}
+                    onChange={setSelectedQcInspectDate}
+                    name="requiredDate"
+                    label="تاریخ بازرسی"
+                    value={qcInspectDate}
+                    sx={{ mt: 2, width: "50%" }}
+                    disabled={
+                      mode === "qc" ? !subItemDetails?.data?.qcEditable : true
+                    }
+                  />
+                )}
               </AccordionDetails>
             </Accordion>
             <Accordion

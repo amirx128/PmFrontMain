@@ -1257,11 +1257,18 @@ export const SetQcDateAction = createAsyncThunk(
       qcVisitFromDate: any;
       qcVisitToDate: any;
       inspectDate: any;
+      isPeriodTime: boolean;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
-      const { qcVisitFromDate, qcVisitToDate, instanceId, inspectDate } = body;
+      const {
+        qcVisitFromDate,
+        qcVisitToDate,
+        instanceId,
+        inspectDate,
+        isPeriodTime,
+      } = body;
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await SetQcDate(
@@ -1269,7 +1276,8 @@ export const SetQcDateAction = createAsyncThunk(
         instanceId,
         qcVisitFromDate,
         qcVisitToDate,
-        inspectDate
+        inspectDate,
+        isPeriodTime
       );
       return fulfillWithValue(data);
     } catch (err) {

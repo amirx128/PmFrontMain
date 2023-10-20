@@ -352,7 +352,8 @@ export const SetQcDate = async (
   instanceId,
   qcVisitFromDate,
   qcVisitToDate,
-  inspectDate
+  inspectDate,
+  isPeriodTime
 ) =>
   await axiosInstance.post(`/QC/Qc.SetQcDate`, {
     userId,
@@ -360,6 +361,7 @@ export const SetQcDate = async (
     qcVisitFromDate,
     qcVisitToDate,
     inspectDate,
+    isPeriodTime,
   });
 ///////////////////////////////////////////////
 export const InspectorEntryCheckListQ = async (
