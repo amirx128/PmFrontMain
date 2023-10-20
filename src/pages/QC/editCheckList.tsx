@@ -128,9 +128,6 @@ const EditCheckListItem = () => {
             ))}
           </Select>
         </FormControl>
-        <Button variant="outlined" sx={{ mt: 2 }} onClick={handleNewItem}>
-          اضافه کردن آیتم جدید +
-        </Button>
         {items?.map((item) => (
           <Fragment key={item.id}>
             {!item.isDeleted && (
@@ -141,17 +138,22 @@ const EditCheckListItem = () => {
                   alignItems: "center",
                   marginTop: 10,
                 }}
+                className="w-1/2"
               >
                 <TextField
                   value={item.itemName}
                   onChange={(e) => handleChangeItem(e, item)}
                   label={"نام"}
+                  className="w-full"
                 />
                 <IconButton onClick={() => handleRemoveItem(item)}>
                   <ClearIcon color="error" />
                 </IconButton>
               </div>
             )}
+            <Button variant="outlined" sx={{ mt: 2 }} onClick={handleNewItem}>
+              اضافه کردن آیتم جدید +
+            </Button>
           </Fragment>
         ))}
       </CardContent>

@@ -100,9 +100,6 @@ const AddCheckListItem = () => {
             ))}
           </Select>
         </FormControl>
-        <Button variant="outlined" sx={{ mt: 2 }} onClick={handleNewItem}>
-          اضافه کردن آیتم جدید +
-        </Button>
         {items?.map((item) => (
           <div
             key={item.id}
@@ -112,17 +109,22 @@ const AddCheckListItem = () => {
               alignItems: "center",
               marginTop: 10,
             }}
+            className="w-full"
           >
             <TextField
               value={item.itemName}
               onChange={(e) => handleChangeItem(e, item)}
               label={"نام"}
+              className="w-1/2"
             />
             <IconButton onClick={() => handleRemoveItem(item)}>
               <ClearIcon color="error" />
             </IconButton>
           </div>
         ))}
+        <Button variant="outlined" sx={{ mt: 2 }} onClick={handleNewItem}>
+          اضافه کردن آیتم جدید +
+        </Button>
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
         <LoadingButton
