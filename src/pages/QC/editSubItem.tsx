@@ -5,12 +5,10 @@ import {
   CardContent,
   CardHeader,
   FormControl,
-  FormControlLabel,
   IconButton,
   InputLabel,
   MenuItem,
   Select,
-  Switch,
   TextField,
 } from "@mui/material";
 import { useEffect, useState, useCallback } from "react";
@@ -28,10 +26,9 @@ import {
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate, useParams } from "react-router-dom";
-import JalaliDatePicker from "../../components/date-picker/date-picker";
-import { GetUsersListAction } from "../../redux/features/administrationSlicer";
 import { GetAllProjects_Floor_Unit_UsabilityAction } from "../../redux/features/definitionSlicer";
 import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
 
 const EditSubItem = () => {
   const { id } = useParams();
@@ -55,9 +52,9 @@ const EditSubItem = () => {
     usabilities: [],
     masterCheckListId: undefined,
     projectId: undefined,
-    floorId: undefined,
-    unitId: undefined,
-    usabilityId: undefined,
+    floorId: [],
+    unitId: [],
+    usabilityId: [],
     contractorId: undefined,
   });
   const [showAddNewWorkData, setShowAddNewWorkData] = useState<boolean>(false);
@@ -128,9 +125,12 @@ const EditSubItem = () => {
           masterCheckListId: info.masterCheckListId,
           workingData: workingData
             .filter(
-              (work) => work.contractorId || work.usabilityId || work.unitId
+              (work) =>
+                work.contractorId && work.projectId && !!work.floorId.length
             )
             .map((work) => ({
+              projectId: work.projectId,
+              floorId: work.floorId,
               contractorId: work.contractorId,
               usabilityId: work.usabilityId,
               unitId: work.unitId,
@@ -144,6 +144,18 @@ const EditSubItem = () => {
     setWorkingData((prev) => prev.filter((p) => +p.id !== +id));
   };
   const handleAddItem = () => {
+    if (!info.projectId) {
+      toast.error("پروژه انتخاب نشده است");
+      return;
+    }
+    if (!info.floorId) {
+      toast.error("طبقه انتخاب نشده است");
+      return;
+    }
+    if (!info.contractorId) {
+      toast.error("پیمانکار انتخاب نشده است");
+      return;
+    }
     setWorkingData((prev) => [
       ...prev,
       {
@@ -175,62 +187,63 @@ const EditSubItem = () => {
           alignItems: "flex-start",
         }}
       >
-        <TextField
-          value={info?.name}
-          name={"name"}
-          onChange={handleChange}
-          label={"نام"}
-          sx={{ mt: 2, width: "50%" }}
-        />
-        <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم اصلی</InputLabel>
-          <Select
-            value={info?.originalItemId}
-            fullWidth={true}
-            name={"originalItemId"}
-            label="آیتم اصلی"
+        <div className="grid grid-cols-2 gap-6">
+          <TextField
+            value={info?.name}
+            name={"name"}
             onChange={handleChange}
-          >
-            {originalItems?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>چک لیست اصلی</InputLabel>
-          <Select
-            value={info?.masterCheckListId}
-            fullWidth={true}
-            name={"masterCheckListId"}
-            label="آیتم اصلی"
-            onChange={handleChange}
-          >
-            {selectedSubItem?.data?.relatedCheckList?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>کاربری</InputLabel>
-          <Select
-            value={info?.usabilities}
-            fullWidth={true}
-            name={"usabilities"}
-            label="کاربری"
-            onChange={handleChange}
-            multiple
-          >
-            {usabilities?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.usablityName}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+            label={"نام"}
+          />
+          <FormControl>
+            <InputLabel>آیتم اصلی</InputLabel>
+            <Select
+              value={info?.originalItemId}
+              fullWidth={true}
+              name={"originalItemId"}
+              label="آیتم اصلی"
+              onChange={handleChange}
+            >
+              {originalItems?.data?.map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel>چک لیست اصلی</InputLabel>
+            <Select
+              value={info?.masterCheckListId}
+              fullWidth={true}
+              name={"masterCheckListId"}
+              label="آیتم اصلی"
+              onChange={handleChange}
+            >
+              {selectedSubItem?.data?.relatedCheckList?.map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel>کاربری</InputLabel>
+            <Select
+              value={info?.usabilities}
+              fullWidth={true}
+              name={"usabilities"}
+              label="کاربری"
+              onChange={handleChange}
+              multiple
+            >
+              {usabilities?.data?.map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.usablityName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </div>
         {!!workingData.length && (
           <div className="mt-6 flex gap-6">
             {workingData.map((work, index) => (
@@ -239,22 +252,40 @@ const EditSubItem = () => {
                 className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
               >
                 {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    ?.projectUnit?.find((unit) => +unit.id === +work.unitId)
-                    ?.name
+                  allProjectsFloorUnitUsability.data?.find(
+                    (project) => +project.id === +work.projectId
+                  )?.name
                 }
                 /
-                {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    ?.projectUnit?.find((unit) => +unit.id === +work.unitId)
-                    ?.unitsUsability?.find(
-                      (usa) => +usa.id === +work.usabilityId
-                    )?.name
-                }
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  ?.map((floor) => floor.name)
+                  .join(",")}
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  .flatMap((floor) => floor.projectUnit)
+                  ?.filter((unit) => work.unitId.includes(unit.id))
+                  .map((unit) => unit.name)
+                  ?.join(",")}
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  .flatMap((floor) => floor.projectUnit)
+                  ?.filter((unit) => work.unitId.includes(unit.id))
+                  ?.flatMap((unit) => unit.unitsUsability)
+                  ?.filter((usa) => work.usabilityId.includes(usa.id))
+                  ?.map((usa) => usa.name)
+                  ?.join(",")}
                 /
                 {
                   contractors.data?.find((cont) => cont.id == work.contractorId)
@@ -278,103 +309,114 @@ const EditSubItem = () => {
           </Button>
 
           {showAddNewWorkData && (
-            <div className="w-2/3 grid grid-cols-2 gap-12">
-              <FormControl className="w-full">
-                <InputLabel>پروژه</InputLabel>
-                <Select
-                  value={info?.projectId}
-                  fullWidth={true}
-                  name={"projectId"}
-                  label="آیتم اصلی"
-                  onChange={handleChange}
-                >
-                  {allProjectsFloorUnitUsability?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-              <FormControl className="w-full">
-                <InputLabel>طبقه</InputLabel>
-                <Select
-                  value={info?.floorId}
-                  fullWidth={true}
-                  name={"floorId"}
-                  label="آیتم اصلی"
-                  onChange={handleChange}
-                >
-                  {allProjectsFloorUnitUsability?.data
-                    ?.find((project) => +project.id === info.projectId)
-                    ?.projectfloor?.map((item) => (
+            <div className="w-full flex flex-col gap-6">
+              <div className="flex gap-12">
+                <FormControl className="w-full">
+                  <InputLabel>پروژه</InputLabel>
+                  <Select
+                    value={info?.projectId}
+                    fullWidth={true}
+                    name={"projectId"}
+                    label="آیتم اصلی"
+                    onChange={handleChange}
+                  >
+                    {allProjectsFloorUnitUsability?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
                         {item?.name}
                       </MenuItem>
                     ))}
-                </Select>
-              </FormControl>
-              <FormControl className="w-full">
-                <InputLabel>واحد</InputLabel>
-                <Select
-                  value={info?.unitId}
-                  fullWidth={true}
-                  name={"unitId"}
-                  label="آیتم اصلی"
-                  onChange={handleChange}
-                >
-                  {allProjectsFloorUnitUsability?.data
-                    ?.find((project) => +project.id === info.projectId)
-                    ?.projectfloor?.find((floor) => floor.id === info.floorId)
-                    ?.projectUnit?.map((item) => (
+                  </Select>
+                </FormControl>
+                <FormControl className="w-full">
+                  <InputLabel>طبقه</InputLabel>
+                  <Select
+                    value={info?.floorId}
+                    fullWidth={true}
+                    name={"floorId"}
+                    label="آیتم اصلی"
+                    onChange={handleChange}
+                    multiple
+                  >
+                    {allProjectsFloorUnitUsability?.data
+                      ?.find((project) => +project.id === info.projectId)
+                      ?.projectfloor?.map((item) => (
+                        <MenuItem value={item.id} key={item?.id}>
+                          {item?.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <FormControl className="w-full">
+                  <InputLabel>واحد</InputLabel>
+                  <Select
+                    value={info?.unitId}
+                    fullWidth={true}
+                    name={"unitId"}
+                    label="آیتم اصلی"
+                    onChange={handleChange}
+                    multiple
+                  >
+                    {allProjectsFloorUnitUsability?.data
+                      ?.find((project) => +project.id === info.projectId)
+                      ?.projectfloor?.filter((floor) =>
+                        info.floorId?.includes(floor.id)
+                      )
+                      ?.flatMap((floor) => floor.projectUnit)
+                      ?.map((item) => (
+                        <MenuItem value={item.id} key={item?.id}>
+                          {item?.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <FormControl className="w-full">
+                  <InputLabel>کاربری</InputLabel>
+                  <Select
+                    value={info?.usabilityId}
+                    fullWidth={true}
+                    name={"usabilityId"}
+                    label="آیتم اصلی"
+                    onChange={handleChange}
+                    multiple
+                  >
+                    {allProjectsFloorUnitUsability?.data
+                      ?.find((project) => +project.id === info.projectId)
+                      ?.projectfloor?.filter((floor) =>
+                        info.floorId.includes(floor.id)
+                      )
+                      ?.flatMap((floor) => floor.projectUnit)
+                      ?.filter((unit) => info.unitId.includes(unit.id))
+                      ?.flatMap((unit) => unit.unitsUsability)
+                      ?.map((item) => (
+                        <MenuItem value={item.id} key={item?.id}>
+                          {item?.name}
+                        </MenuItem>
+                      ))}
+                  </Select>
+                </FormControl>
+                <FormControl className="w-full">
+                  <InputLabel>پیمانکار</InputLabel>
+                  <Select
+                    value={info?.contractorId}
+                    fullWidth={true}
+                    name={"contractorId"}
+                    label="آیتم اصلی"
+                    onChange={handleChange}
+                  >
+                    {contractors?.data?.map((item) => (
                       <MenuItem value={item.id} key={item?.id}>
-                        {item?.name}
+                        {item?.fullName}
                       </MenuItem>
                     ))}
-                </Select>
-              </FormControl>
-              <FormControl className="w-full">
-                <InputLabel>کاربری</InputLabel>
-                <Select
-                  value={info?.usabilityId}
-                  fullWidth={true}
-                  name={"usabilityId"}
-                  label="آیتم اصلی"
-                  onChange={handleChange}
-                >
-                  {allProjectsFloorUnitUsability?.data
-                    ?.find((project) => +project.id === info.projectId)
-                    ?.projectfloor?.find((floor) => floor.id === info.floorId)
-                    ?.projectUnit?.find((unit) => +unit.id === +info.unitId)
-                    ?.unitsUsability?.map((item) => (
-                      <MenuItem value={item.id} key={item?.id}>
-                        {item?.name}
-                      </MenuItem>
-                    ))}
-                </Select>
-              </FormControl>
-              <FormControl className="w-full">
-                <InputLabel>پیمانکار</InputLabel>
-                <Select
-                  value={info?.contractorId}
-                  fullWidth={true}
-                  name={"contractorId"}
-                  label="آیتم اصلی"
-                  onChange={handleChange}
-                >
-                  {contractors?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.fullName}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-
+                  </Select>
+                </FormControl>
+              </div>
               <Button
                 variant="contained"
-                className="col-span-full"
+                className="self-start"
                 onClick={handleAddItem}
               >
-                اضافه کردن
+                <span className="text-xl">+</span>
               </Button>
             </div>
           )}

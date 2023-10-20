@@ -40,9 +40,9 @@ const AddSubItem = () => {
     usabilities: [],
     masterCheckListId: undefined,
     projectId: undefined,
-    floorId: undefined,
-    unitId: undefined,
-    usabilityId: undefined,
+    floorId: [],
+    unitId: [],
+    usabilityId: [],
     contractorId: undefined,
   });
   const [showAddNewWorkData, setShowAddNewWorkData] = useState<boolean>(false);
@@ -92,12 +92,15 @@ const AddSubItem = () => {
         masterCheckListId: +info.masterCheckListId,
         workingData: workingData
           .filter(
-            (work) => work.contractorId && work.usabilityId && work.unitId
+            (work) =>
+              work.contractorId && work.projectId && !!work.floorId.length
           )
           .map((work) => ({
+            projectId: work.projectId,
+            floorId: work.floorId,
             contractorId: work.contractorId,
-            usabilityId: +work.usabilityId,
-            unitId: +work.unitId,
+            usabilityId: work.usabilityId,
+            unitId: work.unitId,
           })),
       })
     );
@@ -112,14 +115,6 @@ const AddSubItem = () => {
     }
     if (!info.floorId) {
       toast.error("طبقه انتخاب نشده است");
-      return;
-    }
-    if (!info.unitId) {
-      toast.error("واحد انتخاب نشده است");
-      return;
-    }
-    if (!info.usabilityId) {
-      toast.error("کاربری انتخاب نشده است");
       return;
     }
     if (!info.contractorId) {
@@ -222,22 +217,40 @@ const AddSubItem = () => {
                 className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
               >
                 {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    ?.projectUnit?.find((unit) => +unit.id === +work.unitId)
-                    ?.name
+                  allProjectsFloorUnitUsability.data?.find(
+                    (project) => +project.id === +work.projectId
+                  )?.name
                 }
                 /
-                {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    ?.projectUnit?.find((unit) => +unit.id === +work.unitId)
-                    ?.unitsUsability?.find(
-                      (usa) => +usa.id === +work.usabilityId
-                    )?.name
-                }
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  ?.map((floor) => floor.name)
+                  .join(",")}
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  .flatMap((floor) => floor.projectUnit)
+                  ?.filter((unit) => work.unitId.includes(unit.id))
+                  .map((unit) => unit.name)
+                  ?.join(",")}
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  .flatMap((floor) => floor.projectUnit)
+                  ?.filter((unit) => work.unitId.includes(unit.id))
+                  ?.flatMap((unit) => unit.unitsUsability)
+                  ?.filter((usa) => work.usabilityId.includes(usa.id))
+                  ?.map((usa) => usa.name)
+                  ?.join(",")}
                 /
                 {
                   contractors.data?.find((cont) => cont.id == work.contractorId)
@@ -287,6 +300,7 @@ const AddSubItem = () => {
                     name={"floorId"}
                     label="آیتم اصلی"
                     onChange={handleChange}
+                    multiple
                   >
                     {allProjectsFloorUnitUsability?.data
                       ?.find((project) => +project.id === info.projectId)
@@ -305,11 +319,15 @@ const AddSubItem = () => {
                     name={"unitId"}
                     label="آیتم اصلی"
                     onChange={handleChange}
+                    multiple
                   >
                     {allProjectsFloorUnitUsability?.data
                       ?.find((project) => +project.id === info.projectId)
-                      ?.projectfloor?.find((floor) => floor.id === info.floorId)
-                      ?.projectUnit?.map((item) => (
+                      ?.projectfloor?.filter((floor) =>
+                        info.floorId?.includes(floor.id)
+                      )
+                      ?.flatMap((floor) => floor.projectUnit)
+                      ?.map((item) => (
                         <MenuItem value={item.id} key={item?.id}>
                           {item?.name}
                         </MenuItem>
@@ -324,12 +342,17 @@ const AddSubItem = () => {
                     name={"usabilityId"}
                     label="آیتم اصلی"
                     onChange={handleChange}
+                    multiple
                   >
                     {allProjectsFloorUnitUsability?.data
                       ?.find((project) => +project.id === info.projectId)
-                      ?.projectfloor?.find((floor) => floor.id === info.floorId)
-                      ?.projectUnit?.find((unit) => +unit.id === +info.unitId)
-                      ?.unitsUsability?.map((item) => (
+                      ?.projectfloor?.filter((floor) =>
+                        info.floorId.includes(floor.id)
+                      )
+                      ?.flatMap((floor) => floor.projectUnit)
+                      ?.filter((unit) => info.unitId.includes(unit.id))
+                      ?.flatMap((unit) => unit.unitsUsability)
+                      ?.map((item) => (
                         <MenuItem value={item.id} key={item?.id}>
                           {item?.name}
                         </MenuItem>
