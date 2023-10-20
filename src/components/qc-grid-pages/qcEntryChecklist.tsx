@@ -79,7 +79,7 @@ const QcEntryCheckList = () => {
       setInfo(
         checkListsDataAndValues?.data?.checkListAllItemsAndValues.map(
           (checklist) => ({
-            itemId: checklist.itemId,
+            itemId: checklist.valueId,
             firstControlStateId: checklist.firstControlStateId,
             finalControlStateId: checklist.finalControlStateId,
             inspectDescriptions: checklist.inspectDeacription,
