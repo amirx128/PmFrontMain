@@ -650,6 +650,39 @@ export const routes: IRoute[] = [
     title: "کنترل کیفیت",
   },
   /////////////////////////////////
+  /////////////////////////////////
+  {
+    path: "/qc/technicalOffice",
+    component: <QcGrid mode="technical-office" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/technicalOfficeSentItem",
+    component: <QcGrid mode="technical-office-sent-item" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+
+  /////////////////////////////////
+  /////////////////////////////////
+  {
+    path: "/qc/contractorSetIsDone",
+    component: <QcGrid mode="contractor-set-is-done" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  {
+    path: "/qc/contractorSetIsDoneSentItem",
+    component: <QcGrid mode="contractor-set-is-done-sent-item" />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: "کنترل کیفیت",
+  },
+  /////////////////////////////////
   {
     path: "/qc/entryCheckList",
     component: <QcGrid mode="entry-checklist" />,

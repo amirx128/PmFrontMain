@@ -25,6 +25,7 @@ import {
   InspectorEntryCheckListAction,
   QcManagerControlCheckListAction,
   TechnicalOfficeAddOrdersAction,
+  ContractorSetIsDoneAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 
@@ -34,6 +35,7 @@ interface IInfo {
   finalControlStateId?: number | string;
   technicalOfficeOrder?: string;
   inspectDescriptions?: string;
+  setIsDone?: boolean;
 }
 const columns = [
   { name: "#" },
@@ -82,6 +84,7 @@ const QcEntryCheckList = () => {
             finalControlStateId: checklist.finalControlStateId,
             inspectDescriptions: checklist.inspectDeacription,
             technicalOfficeOrder: checklist.technicalOrder,
+            setIsDone: checklist.contractorIsDone,
           })
         )
       );
@@ -114,6 +117,7 @@ const QcEntryCheckList = () => {
   const handleSubmit = async () => {
     switch (mode) {
       case "entry-checklist":
+      case "entry-checklist-sent-item":
         await dispatch(
           InspectorEntryCheckListAction({
             instanceId: +id,
@@ -143,7 +147,8 @@ const QcEntryCheckList = () => {
           })
         );
         break;
-      case "technical":
+      case "technical-office":
+      case "technical-office-sent-item":
         await dispatch(
           TechnicalOfficeAddOrdersAction({
             instanceId: +id,
@@ -153,6 +158,18 @@ const QcEntryCheckList = () => {
                 itemValueId: +i.itemId,
                 technicalOfficeOrder: i.technicalOfficeOrder,
               })),
+          })
+        );
+        break;
+      case "contractor-set-is-done":
+      case "contractor-set-is-done-sent-item":
+        await dispatch(
+          ContractorSetIsDoneAction({
+            instanceId: +id,
+            contractorDoneItemsData: info.map((i) => ({
+              itemValueId: i.itemId,
+              isDone: !!i.setIsDone,
+            })),
           })
         );
         break;
@@ -243,9 +260,9 @@ const QcEntryCheckList = () => {
                             label="وضعیت چک لیست"
                             onChange={(e) => handleChange(e, +checklist.itemId)}
                             disabled={
-                              mode === "entry-checklist"
-                                ? !checkListsDataAndValues?.data
-                                    ?.inspectEditable
+                              mode === "entry-checklist" ||
+                              mode === "entry-checklist-sent-item"
+                                ? !checklist?.inspectEditable
                                 : true
                             }
                             className="h-10"
@@ -269,9 +286,9 @@ const QcEntryCheckList = () => {
                             label="وضعیت چک لیست"
                             onChange={(e) => handleChange(e, +checklist.itemId)}
                             disabled={
-                              mode === "entry-checklist"
-                                ? !checkListsDataAndValues?.data
-                                    ?.inspectEditable
+                              mode === "entry-checklist" ||
+                              mode === "entry-checklist-sent-item"
+                                ? !checklist?.inspectEditable
                                 : true
                             }
                             className="h-10"
@@ -295,9 +312,9 @@ const QcEntryCheckList = () => {
                             minRows={1}
                             onChange={(e) => handleChange(e, +checklist.itemId)}
                             disabled={
-                              mode === "entry-checklist"
-                                ? !checkListsDataAndValues?.data
-                                    ?.inspectEditable
+                              mode === "entry-checklist" ||
+                              mode === "entry-checklist-sent-item"
+                                ? !checklist?.inspectEditable
                                 : true
                             }
                           />
@@ -320,9 +337,9 @@ const QcEntryCheckList = () => {
                             onChange={(e) => handleChange(e, +checklist.itemId)}
                             label={"سفارش فنی"}
                             disabled={
-                              mode === "technical"
-                                ? !checkListsDataAndValues?.data
-                                    ?.technicalEditable
+                              mode === "technical-office" ||
+                              mode === "technical-office-sent-item"
+                                ? !checklist?.technicalEditable
                                 : true
                             }
                           />
@@ -336,10 +353,27 @@ const QcEntryCheckList = () => {
                         <td className="text-xs">{checklist.contractorUser}</td>
                         <td className="text-xs">
                           <Switch
-                            checked={checklist.contractorIsDone}
+                            checked={
+                              info?.find((i) => +i.itemId === +checklist.itemId)
+                                ?.setIsDone ?? checklist.contractorIsDone
+                            }
                             name="contractorIsDone"
                             color="info"
-                            disabled={true}
+                            onChange={(e) => {
+                              setInfo((info) =>
+                                info.map((i) =>
+                                  +i.itemId === +checklist.itemId
+                                    ? { ...i, setIsDone: e.target?.checked }
+                                    : i
+                                )
+                              );
+                            }}
+                            disabled={
+                              mode === "contractor-set-is-done" ||
+                              mode === "contractor-set-is-done-sent-item"
+                                ? !checklist?.contractorEditable
+                                : true
+                            }
                           />
                         </td>
                         <td className="text-xs">

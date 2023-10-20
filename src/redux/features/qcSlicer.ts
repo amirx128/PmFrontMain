@@ -50,8 +50,13 @@ import {
   QcFinalApproveSentItems,
   QcFinalApprove,
   GetCheckListsDataAndValues,
-  TechnicalOfficeAddOrders,
   GetControlCheckListStates,
+  ContractorSetIsDoneQ,
+  ContractorSetIsDoneSentItems,
+  ContractorSetIsDone,
+  TechnicalOfficeAddOrdersQ,
+  TechnicalOfficeAddOrdersSentItems,
+  TechnicalOfficeAddOrders,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -245,9 +250,33 @@ export interface QcState {
     pending: boolean;
   };
   /////////////////////////
+  contractorSetIsDoneQ: {
+    data: any;
+    pending: boolean;
+  };
+  contractorSetIsDoneSentItem: {
+    data: any;
+    pending: boolean;
+  };
+  contractorSetIsDoneAddState: {
+    pending: boolean;
+  };
+  /////////////////////////
+  /////////////////////////
+  technicalOfficeAddOrdersQ: {
+    data: any;
+    pending: boolean;
+  };
+  technicalOfficeAddOrdersSentItem: {
+    data: any;
+    pending: boolean;
+  };
   technicalOfficeAddOrdersAddState: {
     pending: boolean;
   };
+
+  /////////////////////////
+
   controlChecklistStates: {
     data: any;
     pending: boolean;
@@ -433,14 +462,37 @@ const initialState: QcState = {
   entryCheckListAddState: {
     pending: false,
   },
-  ///////////////////////////
-  checkListsDataAndValues: {
+  /////////////////////////
+  contractorSetIsDoneQ: {
+    data: [],
+    pending: false,
+  },
+  contractorSetIsDoneSentItem: {
+    data: [],
+    pending: false,
+  },
+  contractorSetIsDoneAddState: {
+    pending: false,
+  },
+  /////////////////////////
+  /////////////////////////
+  technicalOfficeAddOrdersQ: {
+    data: [],
+    pending: false,
+  },
+  technicalOfficeAddOrdersSentItem: {
     data: [],
     pending: false,
   },
   technicalOfficeAddOrdersAddState: {
     pending: false,
   },
+  ///////////////////////////
+  checkListsDataAndValues: {
+    data: [],
+    pending: false,
+  },
+
   controlChecklistStates: {
     data: [],
     pending: false,
@@ -1580,6 +1632,183 @@ export const InspectorEntryCheckListAction = createAsyncThunk(
   }
 );
 ////////////////////////////////////////////
+////////////////////////////////////////////
+////////////////////////////////////////////
+
+export const ContractorSetIsDoneQAction = createAsyncThunk(
+  "qc/ContractorSetIsDoneQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await ContractorSetIsDoneQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const ContractorSetIsDoneSentItemsAction = createAsyncThunk(
+  "qc/ContractorSetIsDoneSentItemsAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await ContractorSetIsDoneSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const ContractorSetIsDoneAction = createAsyncThunk(
+  "qc/ContractorSetIsDoneAction",
+  async (
+    body: {
+      instanceId: number;
+      contractorDoneItemsData: any[];
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId, contractorDoneItemsData } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await ContractorSetIsDone(
+        userId,
+        instanceId,
+        contractorDoneItemsData
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+////////////////////////////////////////////
+////////////////////////////////////////////
+////////////////////////////////////////////
+
+export const TechnicalOfficeAddOrdersQAction = createAsyncThunk(
+  "qc/TechnicalOfficeAddOrdersQAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await TechnicalOfficeAddOrdersQ(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const TechnicalOfficeAddOrdersSentItemsAction = createAsyncThunk(
+  "qc/TechnicalOfficeAddOrdersSentItemsAction",
+  async (
+    body: {
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+      checkListStateId?: number;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, checkListStateId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await TechnicalOfficeAddOrdersSentItems(
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy,
+        checkListStateId
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const TechnicalOfficeAddOrdersAction = createAsyncThunk(
+  "qc/TechnicalOfficeAddOrdersAction",
+  async (
+    body: { instanceId: number; technicalOfficeOrders: any[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId, technicalOfficeOrders } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await TechnicalOfficeAddOrders(
+        userId,
+        instanceId,
+        technicalOfficeOrders
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+////////////////////////////////////////////
 export const GetOneSubItemDetailsAction = createAsyncThunk(
   "qc/GetOneSubItemDetailsAction",
   async (
@@ -1634,27 +1863,7 @@ export const GetCheckListsDataAndValuesAction = createAsyncThunk(
     }
   }
 );
-export const TechnicalOfficeAddOrdersAction = createAsyncThunk(
-  "qc/TechnicalOfficeAddOrdersAction",
-  async (
-    body: { instanceId: number; technicalOfficeOrders: any[] },
-    { rejectWithValue, fulfillWithValue, dispatch, getState }
-  ) => {
-    try {
-      const { instanceId, technicalOfficeOrders } = body;
-      const state: any = getState();
-      const userId = getUserId(state);
-      const { data } = await TechnicalOfficeAddOrders(
-        userId,
-        instanceId,
-        technicalOfficeOrders
-      );
-      return fulfillWithValue(data);
-    } catch (err) {
-      throw rejectWithValue(err);
-    }
-  }
-);
+
 export const GetControlCheckListStatesAction = createAsyncThunk(
   "qc/GetControlCheckListStatesAction",
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
@@ -2413,6 +2622,92 @@ export const QcSlicer = createSlice({
         state.entryCheckListAddState.pending = false;
       });
     //#endregion
+    //#region ContractorSetIsDoneQAction-----
+    builder
+      .addCase(ContractorSetIsDoneQAction.pending, (state: QcState) => {
+        state.contractorSetIsDoneQ.pending = true;
+      })
+      .addCase(
+        ContractorSetIsDoneQAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.contractorSetIsDoneQ.pending = false;
+          state.contractorSetIsDoneQ.data = payload.model;
+        }
+      )
+      .addCase(ContractorSetIsDoneQAction.rejected, (state: QcState) => {
+        state.contractorSetIsDoneQ.pending = false;
+      });
+    //#endregion
+    //#region ContractorSetIsDoneSentItemsAction-----
+    builder
+      .addCase(ContractorSetIsDoneSentItemsAction.pending, (state: QcState) => {
+        state.contractorSetIsDoneSentItem.pending = true;
+      })
+      .addCase(
+        ContractorSetIsDoneSentItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.contractorSetIsDoneSentItem.pending = false;
+          state.contractorSetIsDoneSentItem.data = payload.model;
+        }
+      )
+      .addCase(
+        ContractorSetIsDoneSentItemsAction.rejected,
+        (state: QcState) => {
+          state.contractorSetIsDoneSentItem.pending = false;
+        }
+      );
+    //#endregion
+    //#region ContractorSetIsDoneAction-----
+    builder
+      .addCase(ContractorSetIsDoneAction.pending, (state: QcState) => {
+        state.contractorSetIsDoneAddState.pending = true;
+      })
+      .addCase(ContractorSetIsDoneAction.fulfilled, (state: QcState) => {
+        state.contractorSetIsDoneAddState.pending = false;
+      })
+      .addCase(ContractorSetIsDoneAction.rejected, (state: QcState) => {
+        state.contractorSetIsDoneAddState.pending = false;
+      });
+    //#endregion
+    //#region TechnicalOfficeAddOrdersQAction-----
+    builder
+      .addCase(TechnicalOfficeAddOrdersQAction.pending, (state: QcState) => {
+        state.technicalOfficeAddOrdersQ.pending = true;
+      })
+      .addCase(
+        TechnicalOfficeAddOrdersQAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.technicalOfficeAddOrdersQ.pending = false;
+          state.technicalOfficeAddOrdersQ.data = payload.model;
+        }
+      )
+      .addCase(TechnicalOfficeAddOrdersQAction.rejected, (state: QcState) => {
+        state.technicalOfficeAddOrdersQ.pending = false;
+      });
+    //#endregion
+    //#region TechnicalOfficeAddOrdersSentItemsAction-----
+    builder
+      .addCase(
+        TechnicalOfficeAddOrdersSentItemsAction.pending,
+        (state: QcState) => {
+          state.technicalOfficeAddOrdersSentItem.pending = true;
+        }
+      )
+      .addCase(
+        TechnicalOfficeAddOrdersSentItemsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.technicalOfficeAddOrdersSentItem.pending = false;
+          state.technicalOfficeAddOrdersSentItem.data = payload.model;
+        }
+      )
+      .addCase(
+        TechnicalOfficeAddOrdersSentItemsAction.rejected,
+        (state: QcState) => {
+          state.technicalOfficeAddOrdersSentItem.pending = false;
+        }
+      );
+    //#endregion
+
     //#region GetCheckListsDataAndValuesAction-----
     builder
       .addCase(GetCheckListsDataAndValuesAction.pending, (state: QcState) => {

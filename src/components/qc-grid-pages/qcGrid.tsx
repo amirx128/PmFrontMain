@@ -14,6 +14,8 @@ import { useNavigate } from "react-router-dom";
 import {
   ContractorAddDateQAction,
   ContractorAddDateSentItemsAction,
+  ContractorSetIsDoneQAction,
+  ContractorSetIsDoneSentItemsAction,
   GetCheckListStatesAction,
   InspectControlCheckListQAction,
   InspectControlCheckListSentItemsAction,
@@ -27,6 +29,8 @@ import {
   SetQcDateSentItemsAction,
   TechnicalApproveScheduleQAction,
   TechnicalApproveScheduleSentItemAction,
+  TechnicalOfficeAddOrdersQAction,
+  TechnicalOfficeAddOrdersSentItemsAction,
 } from "../../redux/features/qcSlicer.ts";
 import { Row } from "./style.tsx";
 import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
@@ -50,6 +54,10 @@ const modeDict = {
   "final-control-checklist-sent-item": "کنترل کیفیت نهایی- تایید شده",
   "entry-checklist": "کارمند کیفیت- تایید شده",
   "entry-checklist-sent-item": "کارمند کیفیت- تایید شده",
+  "contractor-set-is-done": "منتظر اعلام انجام",
+  "contractor-set-is-done-sent-item": "اعلام شده",
+  "technical-office": "منتظر دستور",
+  "technical-office-sent-item": "دستور داده شده",
 };
 const initialFilter = {
   checkListStateId: 1,
@@ -75,6 +83,10 @@ const QcGrid = ({ mode }) => {
     finalApproveSentItem,
     entryCheckListQ,
     entryCheckListSentItem,
+    contractorSetIsDoneQ,
+    contractorSetIsDoneSentItem,
+    technicalOfficeAddOrdersQ,
+    technicalOfficeAddOrdersSentItem,
   } = useSelector((state: any) => state.qc);
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -148,7 +160,6 @@ const QcGrid = ({ mode }) => {
 
   const getList = useCallback(async () => {
     await dispatch(GetCheckListStatesAction());
-    console.log(mode);
     switch (mode) {
       case "contractor-add-date":
         await dispatch(ContractorAddDateQAction({}));
@@ -192,6 +203,18 @@ const QcGrid = ({ mode }) => {
       case "entry-checklist-sent-item":
         await dispatch(InspectorEntryCheckListSentItemsAction({}));
         break;
+      case "contractor-set-is-done":
+        await dispatch(ContractorSetIsDoneQAction({}));
+        break;
+      case "contractor-set-is-done-sent-item":
+        await dispatch(ContractorSetIsDoneSentItemsAction({}));
+        break;
+      case "technical-office":
+        await dispatch(TechnicalOfficeAddOrdersQAction({}));
+        break;
+      case "technical-office-sent-item":
+        await dispatch(TechnicalOfficeAddOrdersSentItemsAction({}));
+        break;
     }
   }, [dispatch, mode]);
 
@@ -200,9 +223,18 @@ const QcGrid = ({ mode }) => {
   }, [getList]);
 
   const handleDoubleClick = (e) => {
-    if (mode === "entry-checklist" || mode === "entry-checklist-sent-item") {
+    if (
+      [
+        "entry-checklist",
+        "entry-checklist-sent-item",
+        "contractor-set-is-done",
+        "contractor-set-is-done-sent-item",
+        "technical-office",
+        "technical-office-sentitem",
+      ].includes(mode)
+    ) {
       window.open(
-        `/qc/entryChecklist/${e.row.checkListInstanceId}/entry-checklist`,
+        `/qc/entryChecklist/${e.row.checkListInstanceId}/${mode}`,
         "_blank"
       );
       return;
@@ -267,6 +299,18 @@ const QcGrid = ({ mode }) => {
       case "entry-checklist-sent-item":
         await dispatch(InspectorEntryCheckListSentItemsAction(model));
         break;
+      case "contractor-set-is-done":
+        await dispatch(ContractorSetIsDoneQAction(model));
+        break;
+      case "contractor-set-is-done-sent-item":
+        await dispatch(ContractorSetIsDoneSentItemsAction(model));
+        break;
+      case "technical-office":
+        await dispatch(TechnicalOfficeAddOrdersQAction(model));
+        break;
+      case "technical-office-sent-item":
+        await dispatch(TechnicalOfficeAddOrdersSentItemsAction(model));
+        break;
     }
   };
   const handleRmoveFilter = async () => {
@@ -317,6 +361,18 @@ const QcGrid = ({ mode }) => {
         break;
       case "entry-checklist-sent-item":
         await dispatch(InspectorEntryCheckListSentItemsAction(model));
+        break;
+      case "contractor-set-is-done":
+        await dispatch(ContractorSetIsDoneQAction(model));
+        break;
+      case "contractor-set-is-done-sent-item":
+        await dispatch(ContractorSetIsDoneSentItemsAction(model));
+        break;
+      case "technical-office":
+        await dispatch(TechnicalOfficeAddOrdersQAction(model));
+        break;
+      case "technical-office-sent-item":
+        await dispatch(TechnicalOfficeAddOrdersSentItemsAction(model));
         break;
     }
   };
@@ -551,6 +607,74 @@ const QcGrid = ({ mode }) => {
                 columns={columns}
                 rows={
                   entryCheckListSentItem?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                onDoubleClick={handleDoubleClick}
+              />
+            )}
+          </>
+        );
+      case "contractor-set-is-done":
+        return (
+          <>
+            {contractorSetIsDoneQ?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  contractorSetIsDoneQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                onDoubleClick={handleDoubleClick}
+              />
+            )}
+          </>
+        );
+      case "contractor-set-is-done-sent-item":
+        return (
+          <>
+            {contractorSetIsDoneSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  contractorSetIsDoneSentItem?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                onDoubleClick={handleDoubleClick}
+              />
+            )}
+          </>
+        );
+      case "technical-office":
+        return (
+          <>
+            {technicalOfficeAddOrdersQ?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  technicalOfficeAddOrdersQ?.data.map((rows, index) => ({
+                    ...rows,
+                    id: rows.checkListInstanceId,
+                  })) ?? []
+                }
+                onDoubleClick={handleDoubleClick}
+              />
+            )}
+          </>
+        );
+      case "technical-office-sent-item":
+        return (
+          <>
+            {technicalOfficeAddOrdersSentItem?.pending || (
+              <Grid
+                columns={columns}
+                rows={
+                  technicalOfficeAddOrdersSentItem?.data.map((rows, index) => ({
                     ...rows,
                     id: rows.checkListInstanceId,
                   })) ?? []

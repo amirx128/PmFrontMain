@@ -37,7 +37,6 @@ import { useParams } from "react-router-dom";
 const accessToEntryCheckListModes: string[] = [
   "control-checklist",
   "manager-control-checklist",
-  "technical",
 ];
 
 const QcDetails = ({ mode }) => {

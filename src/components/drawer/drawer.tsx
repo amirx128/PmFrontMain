@@ -776,6 +776,90 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
     {
+      id: 17,
+      name: "پیمانکار- اعلام انجام شده",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "منتظر اعلام انجام",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/contractorSetIsDone",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "اعلام شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/contractorSetIsDoneSentItem",
+          role: UserRole.Admin,
+        },
+      ],
+    },
+    {
+      id: 18,
+      name: "سفارش فنی",
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: "center" }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      subMenus: [
+        {
+          id: 0,
+          name: "نتظر دستور",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/technicalOffice",
+          role: UserRole.Admin,
+        },
+        {
+          id: 1,
+          name: "دستور داده شده",
+          icon: (
+            <ListItemIcon
+              sx={{ color: theme.palette.secondary.light }}
+              style={{ justifyContent: "center" }}
+            >
+              <HomeIcon fontSize="large" />
+            </ListItemIcon>
+          ),
+          route: "/qc/technicalOfficeSentItem",
+          role: UserRole.Admin,
+        },
+      ],
+    },
+    {
       id: 3,
       name: "مدیریت سیستم",
       icon: (

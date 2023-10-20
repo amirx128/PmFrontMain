@@ -551,13 +551,95 @@ export const QcFinalApprove = async (userId, instanceId, stateId) =>
     instanceId,
     stateId,
   });
-/////////////////////////////////////////////
-export const GetCheckListsDataAndValues = async (userId, instanceId) =>
-  await axiosInstance.post(`/QC/GetCheckListsDataAndValues`, {
+///////////////////////////////////////////////
+export const ContractorSetIsDoneQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Contractor.SetIsDone.Q`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const ContractorSetIsDoneSentItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/Contractor.SetIsDone.SentItems`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const ContractorSetIsDone = async (
+  userId,
+  instanceId,
+  contractorDoneItemsData
+) =>
+  await axiosInstance.post(`/QC/Contractor.SetIsDone`, {
     userId,
     instanceId,
+    contractorDoneItemsData,
   });
 /////////////////////////////////////////////
+///////////////////////////////////////////////
+export const TechnicalOfficeAddOrdersQ = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/TechnicalOffice.AddOrders.Q`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
+export const TechnicalOfficeAddOrdersSentItems = async (
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "subItemTitle",
+  checkListStateId = 0
+) =>
+  await axiosInstance.post(`/QC/TechnicalOffice.AddOrders.SentItems`, {
+    userId: userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+    checkListStateId,
+  });
 export const TechnicalOfficeAddOrders = async (
   userId,
   instanceId,
@@ -568,6 +650,14 @@ export const TechnicalOfficeAddOrders = async (
     instanceId,
     technicalOfficeOrders,
   });
+/////////////////////////////////////////////
+export const GetCheckListsDataAndValues = async (userId, instanceId) =>
+  await axiosInstance.post(`/QC/GetCheckListsDataAndValues`, {
+    userId,
+    instanceId,
+  });
+/////////////////////////////////////////////
+
 /////////////////////////////////////////////
 export const GetControlCheckListStates = async (userId) =>
   await axiosInstance.post(`/QC/GetControlCheckListStates`, {
