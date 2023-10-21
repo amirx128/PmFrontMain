@@ -21,6 +21,7 @@ import {
   GetAllOriginalItemsAction,
   GetAllSubItemsAction,
   GetAllUsabilityAction,
+  GetSubItemLevelsAction,
   GetSubItemsDataAction,
   UpdateSubItemAction,
 } from "../../redux/features/qcSlicer";
@@ -41,6 +42,7 @@ const EditSubItem = () => {
     usabilities,
     checkLists,
     contractors,
+    subItemsLevel,
   } = useSelector((state: any) => state?.qc);
   const { allProjectsFloorUnitUsability } = useSelector(
     (state: any) => state?.definition
@@ -56,6 +58,7 @@ const EditSubItem = () => {
     unitId: [],
     usabilityId: [],
     contractorId: undefined,
+    levelId: undefined,
   });
   const [showAddNewWorkData, setShowAddNewWorkData] = useState<boolean>(false);
   const [workingData, setWorkingData] = useState([]);
@@ -78,6 +81,9 @@ const EditSubItem = () => {
   const getAllContractor = useCallback(async () => {
     await dispatch(GetAllContractorAction());
   }, [dispatch]);
+  const getAllSubItemsLevel = useCallback(async () => {
+    await dispatch(GetSubItemLevelsAction());
+  }, [dispatch]);
 
   useEffect(() => {
     getSubItem();
@@ -86,6 +92,7 @@ const EditSubItem = () => {
     getAllChecklists();
     getAllProjects();
     getAllContractor();
+    getAllSubItemsLevel();
   }, [
     getSubItem,
     getAllOriginalItems,
@@ -93,6 +100,7 @@ const EditSubItem = () => {
     getAllChecklists,
     getAllProjects,
     getAllContractor,
+    getAllSubItemsLevel,
   ]);
 
   useEffect(() => {
@@ -103,6 +111,7 @@ const EditSubItem = () => {
         originalItemId: selectedSubItem?.data.originalItemId,
         masterCheckListId: selectedSubItem?.data.masterCheckListId,
         usabilities: selectedSubItem?.data.usabilities || [],
+        levelId: selectedSubItem?.data.levelId,
       });
       setWorkingData(selectedSubItem?.data.workingDatas);
     }
@@ -123,6 +132,8 @@ const EditSubItem = () => {
           originalItemId: info.originalItemId,
           usabilities: info.usabilities,
           masterCheckListId: info.masterCheckListId,
+          levelId: +info.levelId,
+
           workingData: workingData
             .filter(
               (work) =>
@@ -243,6 +254,22 @@ const EditSubItem = () => {
               ))}
             </Select>
           </FormControl>
+          <FormControl>
+            <InputLabel>سطح آیتم فرعی</InputLabel>
+            <Select
+              value={info?.levelId}
+              fullWidth={true}
+              name={"levelId"}
+              label="کاربری"
+              onChange={handleChange}
+            >
+              {subItemsLevel?.data?.map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.levelName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
         </div>
         {!!workingData.length && (
           <div className="mt-6 flex gap-6">
@@ -260,7 +287,7 @@ const EditSubItem = () => {
                 {allProjectsFloorUnitUsability.data
                   ?.find((project) => +project.id === +work.projectId)
                   ?.projectfloor?.filter((floor) =>
-                    work.floorId.includes(floor.id)
+                    work.floorId?.includes(floor.id)
                   )
                   ?.map((floor) => floor.name)
                   .join(",")}

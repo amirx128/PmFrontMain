@@ -19,6 +19,7 @@ import {
   GetAllContractorAction,
   GetAllOriginalItemsAction,
   GetAllUsabilityAction,
+  GetSubItemLevelsAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
@@ -28,8 +29,14 @@ import { toast } from "react-toastify";
 const AddSubItem = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { AddNewSubItem, originalItems, usabilities, checkLists, contractors } =
-    useSelector((state: any) => state?.qc);
+  const {
+    AddNewSubItem,
+    originalItems,
+    usabilities,
+    checkLists,
+    contractors,
+    subItemsLevel,
+  } = useSelector((state: any) => state?.qc);
   const { allProjectsFloorUnitUsability } = useSelector(
     (state: any) => state?.definition
   );
@@ -44,6 +51,7 @@ const AddSubItem = () => {
     unitId: [],
     usabilityId: [],
     contractorId: undefined,
+    levelId: undefined,
   });
   const [showAddNewWorkData, setShowAddNewWorkData] = useState<boolean>(false);
   const [workingData, setWorkingData] = useState([]);
@@ -62,6 +70,9 @@ const AddSubItem = () => {
   const getAllContractor = useCallback(async () => {
     await dispatch(GetAllContractorAction());
   }, [dispatch]);
+  const getAllSubItemsLevel = useCallback(async () => {
+    await dispatch(GetSubItemLevelsAction());
+  }, [dispatch]);
 
   useEffect(() => {
     getAllOriginalItems();
@@ -69,12 +80,14 @@ const AddSubItem = () => {
     getAllChecklists();
     getAllProjects();
     getAllContractor();
+    getAllSubItemsLevel();
   }, [
     getAllOriginalItems,
     getAllUsabilities,
     getAllChecklists,
     getAllProjects,
     getAllContractor,
+    getAllSubItemsLevel,
   ]);
 
   const handleChange = (e) => {
@@ -90,6 +103,7 @@ const AddSubItem = () => {
         originalItemId: +info.originalItemId,
         usabilities: info.usabilities,
         masterCheckListId: +info.masterCheckListId,
+        levelId: +info.levelId,
         workingData: workingData
           .filter(
             (work) =>
@@ -204,6 +218,22 @@ const AddSubItem = () => {
               {usabilities?.data?.map((item) => (
                 <MenuItem value={item.id} key={item?.id}>
                   {item?.usablityName}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl>
+            <InputLabel>سطح آیتم فرعی</InputLabel>
+            <Select
+              value={info?.levelId}
+              fullWidth={true}
+              name={"levelId"}
+              label="کاربری"
+              onChange={handleChange}
+            >
+              {subItemsLevel?.data?.map((item) => (
+                <MenuItem value={item.id} key={item?.id}>
+                  {item?.levelName}
                 </MenuItem>
               ))}
             </Select>

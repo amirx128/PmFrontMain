@@ -680,3 +680,7 @@ export const GetControlCheckListStates = async (userId) =>
   await axiosInstance.post(`/QC/GetControlCheckListStates`, {
     userId,
   });
+export const GetSubItemLevels = async (userId) =>
+  await axiosInstance.post(`/QC/GetSubItemLevels`, {
+    userId,
+  });

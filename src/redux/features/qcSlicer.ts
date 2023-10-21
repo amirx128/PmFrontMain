@@ -59,6 +59,7 @@ import {
   TechnicalOfficeAddOrders,
   QcFinalApproveCheckListRows,
   GetOneValueHistory,
+  GetSubItemLevels,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -290,6 +291,7 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  subItemsLevel: { data: any; pending: boolean };
 }
 
 const initialState: QcState = {
@@ -510,6 +512,7 @@ const initialState: QcState = {
     pending: false,
   },
   oneValueHistory: { data: [], pending: false },
+  subItemsLevel: { data: [], pending: false },
 };
 
 export const GetAllOriginalItemsAction = createAsyncThunk(
@@ -1939,6 +1942,19 @@ export const GetControlCheckListStatesAction = createAsyncThunk(
     }
   }
 );
+export const GetSubItemLevelsAction = createAsyncThunk(
+  "qc/GetSubItemLevelsAction",
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetSubItemLevels(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const QcSlicer = createSlice({
   name: "qc",
@@ -2846,6 +2862,22 @@ export const QcSlicer = createSlice({
       )
       .addCase(GetOneValueHistoryAction.rejected, (state: QcState) => {
         state.oneValueHistory.pending = false;
+      });
+    //#endregion
+    //#region GetSubItemLevels-----
+    builder
+      .addCase(GetSubItemLevelsAction.pending, (state: QcState) => {
+        state.subItemsLevel.pending = true;
+      })
+      .addCase(
+        GetSubItemLevelsAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.subItemsLevel.pending = false;
+          state.subItemsLevel.data = payload.model;
+        }
+      )
+      .addCase(GetSubItemLevelsAction.rejected, (state: QcState) => {
+        state.subItemsLevel.pending = false;
       });
     //#endregion
   },
