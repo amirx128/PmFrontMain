@@ -362,7 +362,7 @@ const QcEntryCheckList = () => {
                           {checklist?.technicaActivityDate &&
                             new Date(
                               checklist?.technicaActivityDate
-                            ).toLocaleDateString()}
+                            ).toLocaleDateString("fa-ir")}
                         </td>
                         <td className="text-xs">{checklist.technicaUser}</td>
                         <td className="text-xs">
@@ -390,7 +390,7 @@ const QcEntryCheckList = () => {
                           {checklist?.contractorActivityDate &&
                             new Date(
                               checklist?.contractorActivityDate
-                            ).toLocaleDateString()}
+                            ).toLocaleDateString("fa-ir")}
                         </td>
                         <td className="text-xs">{checklist.contractorUser}</td>
                         <td className="text-xs">
@@ -423,7 +423,7 @@ const QcEntryCheckList = () => {
                           {checklist?.qcFinalControlActivityDate &&
                             new Date(
                               checklist?.qcFinalControlActivityDate
-                            ).toLocaleDateString()}
+                            ).toLocaleDateString("fa-ir")}
                         </td>
                         <td className="text-xs">
                           {checklist.qcFinalControlUser}
@@ -611,7 +611,7 @@ const QcEntryCheckList = () => {
                             {checklist?.technicaActivityDate &&
                               new Date(
                                 checklist?.technicaActivityDate
-                              ).toLocaleDateString()}
+                              ).toLocaleDateString("fa-ir")}
                           </td>
                           <td className="text-xs">{checklist.technicaUser}</td>
                           <td className="text-xs">
@@ -621,7 +621,7 @@ const QcEntryCheckList = () => {
                             {checklist?.contractorActivityDate &&
                               new Date(
                                 checklist?.contractorActivityDate
-                              ).toLocaleDateString()}
+                              ).toLocaleDateString("fa-ir")}
                           </td>
                           <td className="text-xs">
                             {checklist.contractorUser}
@@ -638,7 +638,7 @@ const QcEntryCheckList = () => {
                             {checklist?.qcFinalControlActivityDate &&
                               new Date(
                                 checklist?.qcFinalControlActivityDate
-                              ).toLocaleDateString()}
+                              ).toLocaleDateString("fa-ir")}
                           </td>
                           <td className="text-xs">
                             {checklist.qcFinalControlUser}
