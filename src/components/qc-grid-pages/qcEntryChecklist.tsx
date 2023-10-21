@@ -6,7 +6,10 @@ import {
   CardContent,
   CardHeader,
   CircularProgress,
+  Dialog,
+  DialogTitle,
   FormControl,
+  IconButton,
   InputLabel,
   MenuItem,
   Select,
@@ -27,9 +30,12 @@ import {
   TechnicalOfficeAddOrdersAction,
   ContractorSetIsDoneAction,
   QcFinalApproveCheckListRowsAction,
+  GetOneValueHistoryAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
-
+import HistoryIcon from "@mui/icons-material/History";
+import { DialogContent } from "@material-ui/core";
+import CloseIcon from "@mui/icons-material/Close";
 interface IInfo {
   itemId: number;
   firstControlStateId?: number | string;
@@ -56,13 +62,13 @@ const columns = [
   { name: "کنترل کننده نهایی" },
   { name: "وضعیت کنترل نهایی" },
   { name: "توضیحات کنترل نهایی" },
+  { name: "تاریخچه" },
 ];
 const QcEntryCheckList = () => {
   const { id, mode } = useParams();
   const dispatch = useDispatch<any>();
-  const { checkListsDataAndValues, controlChecklistStates } = useSelector(
-    (state: any) => state.qc
-  );
+  const { checkListsDataAndValues, controlChecklistStates, oneValueHistory } =
+    useSelector((state: any) => state.qc);
 
   const [info, setInfo] = useState<IInfo[]>([]);
   const [inspectCheckListStateId, setInspectCheckListStateId] =
@@ -70,6 +76,7 @@ const QcEntryCheckList = () => {
   const [qcManagerCheckListStateId, setQcManagerCheckListStateId] =
     useState<number>();
   const [qcManagerDescriptions, setQcManagerDescription] = useState<string>("");
+  const [isShowHistoryModal, setIsShowHistoryModal] = useState<boolean>(false);
   const getList = useCallback(async () => {
     await dispatch(GetCheckListsDataAndValuesAction({ instanceId: +id }));
     await dispatch(GetControlCheckListStatesAction());
@@ -205,6 +212,10 @@ const QcEntryCheckList = () => {
   const handleChangeQcMangerDescription = (e) => {
     setQcManagerDescription(e.target.value);
   };
+  const handleOpenHistoryModal = async (valueId) => {
+    setIsShowHistoryModal(true);
+    await dispatch(GetOneValueHistoryAction({ valueId }));
+  };
   return (
     <Card>
       <CardHeader title="پر کردن چک لیست" className="text-right" />
@@ -249,7 +260,7 @@ const QcEntryCheckList = () => {
               <table className="table-auto w-full">
                 <thead className="border-b">
                   <tr>
-                    {columns.map((col, index) => (
+                    {columns.slice(-2).map((col, index) => (
                       <th
                         scope="col"
                         key={index}
@@ -466,6 +477,17 @@ const QcEntryCheckList = () => {
                             }
                           />
                         </td>
+                        <td>
+                          {checklist.hasHistory && (
+                            <IconButton
+                              onClick={() =>
+                                handleOpenHistoryModal(checklist.valueId)
+                              }
+                            >
+                              <HistoryIcon />
+                            </IconButton>
+                          )}
+                        </td>
                       </tr>
                     )
                   )}
@@ -532,6 +554,112 @@ const QcEntryCheckList = () => {
                 </div>
               </div>
             </div>
+            <Dialog open={isShowHistoryModal} fullWidth maxWidth="xl">
+              <DialogTitle className="flex justify-between">
+                تاریخچه
+                <IconButton onClick={() => setIsShowHistoryModal(false)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </DialogTitle>
+              <DialogContent>
+                {oneValueHistory.pending && <CircularProgress />}
+                {!oneValueHistory.pending && (
+                  <table className="table-auto w-full">
+                    <thead className="border-b">
+                      <tr>
+                        {columns
+                          .slice(0, columns.length - 1)
+                          .map((col, index) => (
+                            <th
+                              scope="col"
+                              key={index}
+                              className={`px-12 py-4 text-xs ${
+                                col?.class && col.class
+                              }`}
+                            >
+                              {col.name}
+                            </th>
+                          ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {oneValueHistory?.data?.map((checklist) => (
+                        <tr
+                          className="border-b text-center"
+                          key={checklist.itemId}
+                        >
+                          <td className="text-xs">{checklist.itemId}</td>
+                          <td className="text-xs">{checklist.itemName}</td>
+                          <td className="text-xs">
+                            {
+                              controlChecklistStates?.data?.find(
+                                (c) => c.id === checklist.firstControlStateId
+                              )?.state
+                            }
+                          </td>
+                          <td className="text-xs">
+                            {
+                              controlChecklistStates?.data?.find(
+                                (c) => c.id === checklist.finalControlStateId
+                              )?.state
+                            }
+                          </td>
+                          <td className="text-xs">
+                            {checklist.inspectDeacription}
+                          </td>
+                          <td className="text-xs">
+                            {checklist?.technicaActivityDate &&
+                              new Date(
+                                checklist?.technicaActivityDate
+                              ).toLocaleDateString()}
+                          </td>
+                          <td className="text-xs">{checklist.technicaUser}</td>
+                          <td className="text-xs">
+                            {checklist.technicalOfficeOrder}
+                          </td>
+                          <td className="text-xs">
+                            {checklist?.contractorActivityDate &&
+                              new Date(
+                                checklist?.contractorActivityDate
+                              ).toLocaleDateString()}
+                          </td>
+                          <td className="text-xs">
+                            {checklist.contractorUser}
+                          </td>
+                          <td className="text-xs">
+                            <Switch
+                              checked={checklist.contractorIsDone}
+                              name="contractorIsDone"
+                              color="info"
+                              disabled={true}
+                            />
+                          </td>
+                          <td className="text-xs">
+                            {checklist?.qcFinalControlActivityDate &&
+                              new Date(
+                                checklist?.qcFinalControlActivityDate
+                              ).toLocaleDateString()}
+                          </td>
+                          <td className="text-xs">
+                            {checklist.qcFinalControlUser}
+                          </td>
+                          <td className="text-xs">
+                            {
+                              controlChecklistStates?.data?.find(
+                                (c) => c.id === checklist.qcFinalControlStateId
+                              )?.state
+                            }
+                          </td>
+                          <td className="text-xs">
+                            {checklist.finallApproveDescriptions}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </DialogContent>
+            </Dialog>
           </>
         )}
       </CardContent>

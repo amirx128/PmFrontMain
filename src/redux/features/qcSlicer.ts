@@ -58,6 +58,7 @@ import {
   TechnicalOfficeAddOrdersSentItems,
   TechnicalOfficeAddOrders,
   QcFinalApproveCheckListRows,
+  GetOneValueHistory,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -285,6 +286,10 @@ export interface QcState {
     data: any;
     pending: boolean;
   };
+  oneValueHistory: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: QcState = {
@@ -504,6 +509,7 @@ const initialState: QcState = {
     data: [],
     pending: false,
   },
+  oneValueHistory: { data: [], pending: false },
 };
 
 export const GetAllOriginalItemsAction = createAsyncThunk(
@@ -1902,6 +1908,23 @@ export const GetCheckListsDataAndValuesAction = createAsyncThunk(
     }
   }
 );
+export const GetOneValueHistoryAction = createAsyncThunk(
+  "qc/GetOneValueHistoryAction",
+  async (
+    body: { valueId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { valueId } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetOneValueHistory(userId, valueId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const GetControlCheckListStatesAction = createAsyncThunk(
   "qc/GetControlCheckListStatesAction",
@@ -2807,6 +2830,22 @@ export const QcSlicer = createSlice({
       )
       .addCase(GetControlCheckListStatesAction.rejected, (state: QcState) => {
         state.controlChecklistStates.pending = false;
+      });
+    //#endregion
+    //#region GetOneValueHistoryAction-----
+    builder
+      .addCase(GetOneValueHistoryAction.pending, (state: QcState) => {
+        state.oneValueHistory.pending = true;
+      })
+      .addCase(
+        GetOneValueHistoryAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.oneValueHistory.pending = false;
+          state.oneValueHistory.data = payload.model;
+        }
+      )
+      .addCase(GetOneValueHistoryAction.rejected, (state: QcState) => {
+        state.oneValueHistory.pending = false;
       });
     //#endregion
   },

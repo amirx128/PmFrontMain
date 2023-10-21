@@ -668,6 +668,11 @@ export const GetCheckListsDataAndValues = async (userId, instanceId) =>
     userId,
     instanceId,
   });
+export const GetOneValueHistory = async (userId, valueId) =>
+  await axiosInstance.post(`/QC/GetOneValueHistory`, {
+    userId,
+    valueId,
+  });
 /////////////////////////////////////////////
 
 /////////////////////////////////////////////
