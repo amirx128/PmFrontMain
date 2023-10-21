@@ -260,7 +260,7 @@ const QcEntryCheckList = () => {
               <table className="table-auto w-full">
                 <thead className="border-b">
                   <tr>
-                    {columns.slice(-2).map((col, index) => (
+                    {columns.map((col, index) => (
                       <th
                         scope="col"
                         key={index}
