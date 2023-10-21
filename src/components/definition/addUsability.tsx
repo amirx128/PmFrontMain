@@ -1,5 +1,6 @@
 import {
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -17,6 +18,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllUnits } from "../../redux/features/definitionSlicer.ts";
 import {
   AddNewUsabilityAction,
+  GetUsabilityDataAction,
   UpdateUsabilityAction,
 } from "../../redux/features/qcSlicer.ts";
 
@@ -33,23 +35,37 @@ export const AddUsability = ({
     code: selectedUsability?.code,
   });
   const { units } = useSelector((state: any) => state.definition);
-
-  useEffect(() => {
+  const { selectedUsability: usaSelected } = useSelector(
+    (state: any) => state.qc
+  );
+  const getUsabilityData = useCallback(async () => {
     if (selectedUsability) {
-      setInfo({
-        usablityName: selectedUsability?.usablityName,
-        units: selectedUsability?.units?.map((u) => u.id),
-        code: selectedUsability?.code,
-      });
-    } else {
+      await dispatch(
+        GetUsabilityDataAction({ selectedItemId: selectedUsability.id })
+      );
+    }
+  }, []);
+  useEffect(() => {
+    if (!selectedUsability) {
       setInfo({
         usablityName: "",
-        units: [selectedUnit?.id],
+        units: [selectedUsability?.id],
         code: "",
       });
     }
-  }, [selectedUsability, selectedUnit]);
-
+  }, [selectedUsability, selectedUnit, getUsabilityData]);
+  useEffect(() => {
+    if (usaSelected.data) {
+      setInfo({
+        usablityName: usaSelected?.data.usablityName,
+        units: usaSelected?.data.units?.map((u) => u.id),
+        code: usaSelected?.data.code,
+      });
+    }
+  }, [usaSelected]);
+  useEffect(() => {
+    getUsabilityData();
+  }, [selectedUsability]);
   const getAllUnitsFn = useCallback(async () => {
     await dispatch(getAllUnits({ projectId: 0, floorId: 0 }));
   }, [dispatch]);
@@ -107,37 +123,43 @@ export const AddUsability = ({
         </IconButton>
       </DialogTitle>
       <DialogContent className="flex flex-col gap-6">
-        <TextField
-          value={info?.usablityName}
-          name={"usablityName"}
-          onChange={handleChange}
-          label={"نام"}
-          sx={{ mt: 2, width: "50%" }}
-        />
-        <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>واحد</InputLabel>
-          <Select
-            multiple
-            value={info?.units}
-            fullWidth={true}
-            name={"units"}
-            label="واحد"
-            onChange={handleChange}
-          >
-            {units?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <TextField
-          value={info?.code}
-          name={"code"}
-          onChange={handleChange}
-          label={"کد"}
-          sx={{ mt: 2, width: "50%" }}
-        />
+        {usaSelected.pending && <CircularProgress />}
+        {!usaSelected.pending && (
+          <>
+            {" "}
+            <TextField
+              value={info?.usablityName}
+              name={"usablityName"}
+              onChange={handleChange}
+              label={"نام"}
+              sx={{ mt: 2, width: "50%" }}
+            />
+            <FormControl sx={{ mt: 2, width: "50%" }}>
+              <InputLabel>واحد</InputLabel>
+              <Select
+                multiple
+                value={info?.units}
+                fullWidth={true}
+                name={"units"}
+                label="واحد"
+                onChange={handleChange}
+              >
+                {units?.data?.map((item) => (
+                  <MenuItem value={item.id} key={item?.id}>
+                    {item?.name}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <TextField
+              value={info?.code}
+              name={"code"}
+              onChange={handleChange}
+              label={"کد"}
+              sx={{ mt: 2, width: "50%" }}
+            />
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button variant={"contained"} color={"success"} onClick={onSubmit}>
