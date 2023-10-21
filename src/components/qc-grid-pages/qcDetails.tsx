@@ -259,17 +259,15 @@ const QcDetails = ({ mode }) => {
       <CardContent className="w-3/4">
         {!subItemDetails.pending && (
           <>
-            {accessToEntryCheckListModes.includes(mode) && (
-              <div className="flex justify-start">
-                <Button
-                  variant="outlined"
-                  color="warning"
-                  onClick={handleClickEntryCheckList}
-                >
-                  چک لیست
-                </Button>
-              </div>
-            )}
+            <div className="flex justify-start">
+              <Button
+                variant="outlined"
+                color="warning"
+                onClick={handleClickEntryCheckList}
+              >
+                چک لیست
+              </Button>
+            </div>
 
             <Accordion sx={{ mt: 5 }}>
               <AccordionSummary

@@ -553,6 +553,16 @@ export const QcFinalApprove = async (userId, instanceId, stateId) =>
     instanceId,
     stateId,
   });
+export const QcFinalApproveCheckListRows = async (
+  userId,
+  instanceId,
+  dataValues
+) =>
+  await axiosInstance.post(`/QC/Qc.FinalApproveCheckListRows`, {
+    userId,
+    instanceId,
+    dataValues,
+  });
 ///////////////////////////////////////////////
 export const ContractorSetIsDoneQ = async (
   userId,

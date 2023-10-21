@@ -57,6 +57,7 @@ import {
   TechnicalOfficeAddOrdersQ,
   TechnicalOfficeAddOrdersSentItems,
   TechnicalOfficeAddOrders,
+  QcFinalApproveCheckListRows,
 } from "../../core/QC/qc.service";
 
 const getUserId = (state) => {
@@ -231,6 +232,9 @@ export interface QcState {
     pending: boolean;
   };
   finalApproveAddState: {
+    pending: boolean;
+  };
+  finalApproveRowAddState: {
     pending: boolean;
   };
   entryCheckListQ: {
@@ -449,6 +453,9 @@ const initialState: QcState = {
     pending: false,
   },
   finalApproveAddState: {
+    pending: false,
+  },
+  finalApproveRowAddState: {
     pending: false,
   },
   entryCheckListQ: {
@@ -1550,6 +1557,30 @@ export const QcFinalApproveAction = createAsyncThunk(
     }
   }
 );
+export const QcFinalApproveCheckListRowsAction = createAsyncThunk(
+  "qc/QcFinalApproveCheckListRowsAction",
+  async (
+    body: {
+      instanceId: number;
+      dataValues: any[];
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { instanceId, dataValues } = body;
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await QcFinalApproveCheckListRows(
+        userId,
+        instanceId,
+        dataValues
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 
@@ -2578,6 +2609,21 @@ export const QcSlicer = createSlice({
       })
       .addCase(QcFinalApproveAction.rejected, (state: QcState) => {
         state.finalApproveAddState.pending = false;
+      });
+    //#endregion
+    //#region QcFinalApproveCheckListRowsAction-----
+    builder
+      .addCase(QcFinalApproveCheckListRowsAction.pending, (state: QcState) => {
+        state.finalApproveRowAddState.pending = true;
+      })
+      .addCase(
+        QcFinalApproveCheckListRowsAction.fulfilled,
+        (state: QcState) => {
+          state.finalApproveRowAddState.pending = false;
+        }
+      )
+      .addCase(QcFinalApproveCheckListRowsAction.rejected, (state: QcState) => {
+        state.finalApproveRowAddState.pending = false;
       });
     //#endregion
     //#region InspectorEntryCheckListQAction-----

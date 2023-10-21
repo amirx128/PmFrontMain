@@ -26,6 +26,7 @@ import {
   QcManagerControlCheckListAction,
   TechnicalOfficeAddOrdersAction,
   ContractorSetIsDoneAction,
+  QcFinalApproveCheckListRowsAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 
@@ -36,6 +37,8 @@ interface IInfo {
   technicalOfficeOrder?: string;
   inspectDescriptions?: string;
   setIsDone?: boolean;
+  qcFinalControlStateId?: number | string;
+  finallApproveDescriptions?: string;
 }
 const columns = [
   { name: "#" },
@@ -52,6 +55,7 @@ const columns = [
   { name: "تاریخ فعالیت کنترل نهایی" },
   { name: "کنترل کننده نهایی" },
   { name: "وضعیت کنترل نهایی" },
+  { name: "توضیحات کنترل نهایی" },
 ];
 const QcEntryCheckList = () => {
   const { id, mode } = useParams();
@@ -84,6 +88,8 @@ const QcEntryCheckList = () => {
             finalControlStateId: checklist.finalControlStateId,
             inspectDescriptions: checklist.inspectDeacription,
             technicalOfficeOrder: checklist.technicalOrder,
+            qcFinalControlStateId: checklist.qcFinalControlStateId,
+            finallApproveDescriptions: checklist.finallApproveDescriptions,
             setIsDone: checklist.contractorIsDone,
           })
         )
@@ -173,6 +179,20 @@ const QcEntryCheckList = () => {
           })
         );
         break;
+      case "final-control-checklist":
+        await dispatch(
+          QcFinalApproveCheckListRowsAction({
+            instanceId: +id,
+            dataValues: info.map((i) => ({
+              valueId: i.itemId,
+              stateId: +i.qcFinalControlStateId,
+              finallApproveDescriptions: i.finallApproveDescriptions,
+            })),
+          })
+        );
+        break;
+      default:
+        return;
     }
     await dispatch(GetCheckListsDataAndValuesAction({ instanceId: +id }));
   };
@@ -251,14 +271,17 @@ const QcEntryCheckList = () => {
                         <td className="text-xs">
                           <Select
                             value={
-                              info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.firstControlStateId ||
+                              info?.find(
+                                (i) => +i.itemId === +checklist.valueId
+                              )?.firstControlStateId ||
                               checklist.firstControlStateId
                             }
                             fullWidth={true}
                             name={"firstControlStateId"}
                             label="وضعیت چک لیست"
-                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            onChange={(e) =>
+                              handleChange(e, +checklist.valueId)
+                            }
                             disabled={
                               mode === "entry-checklist" ||
                               mode === "entry-checklist-sent-item"
@@ -277,14 +300,16 @@ const QcEntryCheckList = () => {
                         <td className="text-xs">
                           <Select
                             value={
-                              info?.find((i) => +i.itemId === checklist.itemId)
+                              info?.find((i) => +i.itemId === checklist.valueId)
                                 ?.finalControlStateId ||
                               checklist.finalControlStateId
                             }
                             fullWidth={true}
                             name={"finalControlStateId"}
                             label="وضعیت چک لیست"
-                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            onChange={(e) =>
+                              handleChange(e, +checklist.valueId)
+                            }
                             disabled={
                               mode === "entry-checklist" ||
                               mode === "entry-checklist-sent-item"
@@ -303,14 +328,17 @@ const QcEntryCheckList = () => {
                         <td className="text-xs">
                           <TextareaAutosize
                             value={
-                              info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.inspectDescriptions ||
+                              info?.find(
+                                (i) => +i.itemId === +checklist.valueId
+                              )?.inspectDescriptions ||
                               checklist.inspectDeacription
                             }
                             name="inspectDescriptions"
                             className="border-2 mt-4 flex-1 border-slate-300 p-4"
                             minRows={1}
-                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            onChange={(e) =>
+                              handleChange(e, +checklist.valueId)
+                            }
                             disabled={
                               mode === "entry-checklist" ||
                               mode === "entry-checklist-sent-item"
@@ -329,12 +357,15 @@ const QcEntryCheckList = () => {
                         <td className="text-xs">
                           <TextField
                             value={
-                              info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.technicalOfficeOrder ||
+                              info?.find(
+                                (i) => +i.itemId === +checklist.valueId
+                              )?.technicalOfficeOrder ||
                               checklist.technicalOfficeOrder
                             }
                             name={"technicalOfficeOrder"}
-                            onChange={(e) => handleChange(e, +checklist.itemId)}
+                            onChange={(e) =>
+                              handleChange(e, +checklist.valueId)
+                            }
                             label={"سفارش فنی"}
                             disabled={
                               mode === "technical-office" ||
@@ -354,15 +385,16 @@ const QcEntryCheckList = () => {
                         <td className="text-xs">
                           <Switch
                             checked={
-                              info?.find((i) => +i.itemId === +checklist.itemId)
-                                ?.setIsDone ?? checklist.contractorIsDone
+                              info?.find(
+                                (i) => +i.itemId === +checklist.valueId
+                              )?.setIsDone ?? checklist.contractorIsDone
                             }
                             name="contractorIsDone"
                             color="info"
                             onChange={(e) => {
                               setInfo((info) =>
                                 info.map((i) =>
-                                  +i.itemId === +checklist.itemId
+                                  +i.itemId === +checklist.valueId
                                     ? { ...i, setIsDone: e.target?.checked }
                                     : i
                                 )
@@ -386,12 +418,53 @@ const QcEntryCheckList = () => {
                           {checklist.qcFinalControlUser}
                         </td>
                         <td className="text-xs">
-                          {
-                            controlChecklistStates?.data.find(
-                              (ch) =>
-                                +ch.id === +checklist.qcFinalControlStateId
-                            )?.state
-                          }
+                          <Select
+                            value={
+                              info?.find(
+                                (i) => +i.itemId === +checklist.valueId
+                              )?.qcFinalControlStateId ||
+                              checklist.qcFinalControlStateId
+                            }
+                            fullWidth={true}
+                            name="qcFinalControlStateId"
+                            label="وضعیت چک لیست"
+                            onChange={(e) =>
+                              handleChange(e, +checklist.valueId)
+                            }
+                            disabled={
+                              mode === "final-control-checklist"
+                                ? !checklist?.qcFinalControlEditable
+                                : true
+                            }
+                            className="h-10"
+                          >
+                            {controlChecklistStates?.data?.map((item) => (
+                              <MenuItem value={item.id} key={item?.id}>
+                                {item?.state}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </td>
+                        <td className="text-xs">
+                          <TextareaAutosize
+                            value={
+                              info?.find(
+                                (i) => +i.itemId === +checklist.valueId
+                              )?.finallApproveDescriptions ||
+                              checklist.finallApproveDescriptions
+                            }
+                            name="finallApproveDescriptions"
+                            className="border-2 mt-4 flex-1 border-slate-300 p-4 bg-white"
+                            minRows={1}
+                            onChange={(e) =>
+                              handleChange(e, +checklist.valueId)
+                            }
+                            disabled={
+                              mode === "final-control-checklist"
+                                ? !checklist?.qcFinalControlEditable
+                                : true
+                            }
+                          />
                         </td>
                       </tr>
                     )
