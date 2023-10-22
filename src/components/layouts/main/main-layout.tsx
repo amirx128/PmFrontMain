@@ -6,19 +6,25 @@ import IconButton from "@mui/material/IconButton";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { useTheme } from "@mui/material/styles";
-import { FunctionComponent, PropsWithChildren, useState } from "react";
+import {
+  FunctionComponent,
+  PropsWithChildren,
+  useState,
+  useEffect,
+} from "react";
 import PersistentDrawerLeft from "../../drawer/drawer";
 import { AppBarWrapper, DrawerHeader, Container, Main } from "./style";
 
 const drawerWidth = 280;
 
-export const MainLayout: FunctionComponent<PropsWithChildren> = ({
-  children,
-}) => {
+export const MainLayout = ({ children, title }) => {
   const [open, setOpen] = useState(false);
   const toggleMenu = () => {
     setOpen(!open);
   };
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
   const theme = useTheme();
   return (
     <Container

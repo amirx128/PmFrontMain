@@ -57,22 +57,30 @@ function App() {
                           <ProtectedRoute>
                             {item.layout === Layouts.AUTH ? (
                               <div>
-                                <AuthLayout>{item.component}</AuthLayout>
+                                <AuthLayout title={item.title}>
+                                  {item.component}
+                                </AuthLayout>
                               </div>
                             ) : (
                               <div>
-                                <MainLayout>{item.component}</MainLayout>
+                                <MainLayout title={item.title}>
+                                  {item.component}
+                                </MainLayout>
                               </div>
                             )}
                           </ProtectedRoute>
                         ) : item.layout === Layouts.AUTH ? (
                           !isLoggedIn ? (
-                            <AuthLayout>{item.component}</AuthLayout>
+                            <AuthLayout title={item.title}>
+                              {item.component}
+                            </AuthLayout>
                           ) : (
                             <Navigate replace to="/" />
                           )
                         ) : (
-                          <MainLayout>{item.component}</MainLayout>
+                          <MainLayout title={item.title}>
+                            {item.component}
+                          </MainLayout>
                         )
                       }
                     />
