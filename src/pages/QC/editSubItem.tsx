@@ -189,9 +189,9 @@ const EditSubItem = () => {
     setInfo((prev) => ({
       ...prev,
       projectId: undefined,
-      floorId: undefined,
-      unitId: undefined,
-      usabilityId: undefined,
+      floorId: [],
+      unitId: [],
+      usabilityId: [],
       contractorId: undefined,
     }));
     setShowAddNewWorkData(false);
@@ -279,109 +279,7 @@ const EditSubItem = () => {
             </Select>
           </FormControl>
         </div>
-        {!!oldWorkingData.length && (
-          <div className="mt-6 flex gap-6">
-            {oldWorkingData.map((work, index) => (
-              <div
-                key={index}
-                className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
-              >
-                {
-                  allProjectsFloorUnitUsability.data?.find(
-                    (project) => +project.id === +work.projectId
-                  )?.name
-                }
-                /
-                {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    .name
-                }
-                /
-                {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    .projectUnit?.find((unit) => +work.unitId === +unit.id)
-                    ?.name
-                }
-                /
-                {
-                  allProjectsFloorUnitUsability.data
-                    ?.find((project) => +project.id === +work.projectId)
-                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
-                    ?.projectUnit?.find((unit) => +work.unitId === +unit.id)
-                    ?.unitsUsability?.find(
-                      (usa) => +work.usabilityId === +usa.id
-                    )?.name
-                }
-                /
-                {
-                  contractors.data?.find((cont) => cont.id == work.contractorId)
-                    ?.fullName
-                }
-                <IconButton onClick={() => handleDeleteOldItem(work.id)}>
-                  <CloseIcon color="error" />
-                </IconButton>
-              </div>
-            ))}
-          </div>
-        )}
-        {!!workingData.length && (
-          <div className="mt-6 flex gap-6">
-            {workingData.map((work, index) => (
-              <div
-                key={index}
-                className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
-              >
-                {
-                  allProjectsFloorUnitUsability.data?.find(
-                    (project) => +project.id === +work.projectId
-                  )?.name
-                }
-                /
-                {allProjectsFloorUnitUsability.data
-                  ?.find((project) => +project.id === +work.projectId)
-                  ?.projectfloor?.filter((floor) =>
-                    work.floorId?.includes(floor.id)
-                  )
-                  ?.map((floor) => floor.name)
-                  .join(",")}
-                /
-                {allProjectsFloorUnitUsability.data
-                  ?.find((project) => +project.id === +work.projectId)
-                  ?.projectfloor?.filter((floor) =>
-                    work.floorId.includes(floor.id)
-                  )
-                  .flatMap((floor) => floor.projectUnit)
-                  ?.filter((unit) => work.unitId.includes(unit.id))
-                  .map((unit) => unit.name)
-                  ?.join(",")}
-                /
-                {allProjectsFloorUnitUsability.data
-                  ?.find((project) => +project.id === +work.projectId)
-                  ?.projectfloor?.filter((floor) =>
-                    work.floorId.includes(floor.id)
-                  )
-                  .flatMap((floor) => floor.projectUnit)
-                  ?.filter((unit) => work.unitId.includes(unit.id))
-                  ?.flatMap((unit) => unit.unitsUsability)
-                  ?.filter((usa) => work.usabilityId.includes(usa.id))
-                  ?.map((usa) => usa.name)
-                  ?.join(",")}
-                /
-                {
-                  contractors.data?.find((cont) => cont.id == work.contractorId)
-                    ?.fullName
-                }
-                <IconButton onClick={() => handleDeleteItem(work.id)}>
-                  <CloseIcon color="error" />
-                </IconButton>
-              </div>
-            ))}
-          </div>
-        )}
+
         <div className="mt-10 w-full flex flex-col items-start gap-8">
           <Button
             variant="outlined"
@@ -505,6 +403,106 @@ const EditSubItem = () => {
             </div>
           )}
         </div>
+        {!!oldWorkingData.length && (
+          <div className="mt-6 grid gap-6 grid-cols-6 max-h-96 overflow-y-scroll">
+            {oldWorkingData.map((work, index) => (
+              <div
+                key={index}
+                className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
+              >
+                {
+                  allProjectsFloorUnitUsability.data?.find(
+                    (project) => +project.id === +work.projectId
+                  )?.name
+                }
+                /
+                {
+                  allProjectsFloorUnitUsability.data
+                    ?.find((project) => +project.id === +work.projectId)
+                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
+                    .name
+                }
+                /
+                {
+                  allProjectsFloorUnitUsability.data
+                    ?.find((project) => +project.id === +work.projectId)
+                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
+                    .projectUnit?.find((unit) => +work.unitId === +unit.id)
+                    ?.name
+                }
+                /
+                {
+                  allProjectsFloorUnitUsability.data
+                    ?.find((project) => +project.id === +work.projectId)
+                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
+                    ?.projectUnit?.find((unit) => +work.unitId === +unit.id)
+                    ?.unitsUsability?.find(
+                      (usa) => +work.usabilityId === +usa.id
+                    )?.name
+                }
+                /
+                {
+                  contractors.data?.find((cont) => cont.id == work.contractorId)
+                    ?.fullName
+                }
+                <IconButton onClick={() => handleDeleteOldItem(work.id)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </div>
+            ))}
+            {workingData.map((work, index) => (
+              <div
+                key={index}
+                className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
+              >
+                {
+                  allProjectsFloorUnitUsability.data?.find(
+                    (project) => +project.id === +work.projectId
+                  )?.name
+                }
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId?.includes(floor.id)
+                  )
+                  ?.map((floor) => floor.name)
+                  .join(",")}
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  .flatMap((floor) => floor.projectUnit)
+                  ?.filter((unit) => work.unitId.includes(unit.id))
+                  .map((unit) => unit.name)
+                  ?.join(",")}
+                /
+                {allProjectsFloorUnitUsability.data
+                  ?.find((project) => +project.id === +work.projectId)
+                  ?.projectfloor?.filter((floor) =>
+                    work.floorId.includes(floor.id)
+                  )
+                  .flatMap((floor) => floor.projectUnit)
+                  ?.filter((unit) => work.unitId.includes(unit.id))
+                  ?.flatMap((unit) => unit.unitsUsability)
+                  ?.filter((usa) => work.usabilityId.includes(usa.id))
+                  ?.map((usa) => usa.name)
+                  ?.join(",")}
+                /
+                {
+                  contractors.data?.find((cont) => cont.id == work.contractorId)
+                    ?.fullName
+                }
+                <IconButton onClick={() => handleDeleteItem(work.id)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </div>
+            ))}
+          </div>
+        )}
+        {!!workingData.length && <div className="mt-6 flex gap-6"></div>}
       </CardContent>
 
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
