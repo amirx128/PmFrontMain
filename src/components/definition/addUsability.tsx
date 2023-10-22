@@ -44,7 +44,7 @@ export const AddUsability = ({
         GetUsabilityDataAction({ selectedItemId: selectedUsability.id })
       );
     }
-  }, []);
+  }, [selectedUsability]);
   useEffect(() => {
     if (!selectedUsability) {
       setInfo({
@@ -63,9 +63,10 @@ export const AddUsability = ({
       });
     }
   }, [usaSelected]);
+
   useEffect(() => {
     getUsabilityData();
-  }, [selectedUsability]);
+  }, [selectedUsability, getUsabilityData]);
   const getAllUnitsFn = useCallback(async () => {
     await dispatch(getAllUnits({ projectId: 0, floorId: 0 }));
   }, [dispatch]);

@@ -62,10 +62,10 @@ const EditSubItem = () => {
   });
   const [showAddNewWorkData, setShowAddNewWorkData] = useState<boolean>(false);
   const [workingData, setWorkingData] = useState([]);
-
+  const [oldWorkingData, setOldWorkingData] = useState([]);
   const getSubItem = useCallback(async () => {
     await dispatch(GetSubItemsDataAction({ selectedItemId: +id }));
-  }, [dispatch]);
+  }, [dispatch, id]);
   const getAllOriginalItems = useCallback(async () => {
     await dispatch(GetAllOriginalItemsAction());
   }, [dispatch]);
@@ -113,7 +113,7 @@ const EditSubItem = () => {
         usabilities: selectedSubItem?.data.usabilities || [],
         levelId: selectedSubItem?.data.levelId,
       });
-      setWorkingData(selectedSubItem?.data.workingDatas);
+      setOldWorkingData(selectedSubItem?.data.workingDatas);
     }
   }, [selectedSubItem]);
 
@@ -133,8 +133,13 @@ const EditSubItem = () => {
           usabilities: info.usabilities,
           masterCheckListId: info.masterCheckListId,
           levelId: +info.levelId,
-
-          workingData: workingData
+          removedWorkingData: selectedSubItem?.data?.workingDatas
+            .filter(
+              (work) =>
+                !oldWorkingData.map((oWork) => oWork.id).includes(work.id)
+            )
+            ?.map((work) => work.id),
+          newWorkingData: workingData
             .filter(
               (work) =>
                 work.contractorId && work.projectId && !!work.floorId.length
@@ -153,6 +158,9 @@ const EditSubItem = () => {
   };
   const handleDeleteItem = (id) => {
     setWorkingData((prev) => prev.filter((p) => +p.id !== +id));
+  };
+  const handleDeleteOldItem = (id) => {
+    setOldWorkingData((prev) => prev.filter((p) => +p.id !== +id));
   };
   const handleAddItem = () => {
     if (!info.projectId) {
@@ -271,6 +279,55 @@ const EditSubItem = () => {
             </Select>
           </FormControl>
         </div>
+        {!!oldWorkingData.length && (
+          <div className="mt-6 flex gap-6">
+            {oldWorkingData.map((work, index) => (
+              <div
+                key={index}
+                className="bg-slate-200 px-6 py-3 rounded-2xl text-xs"
+              >
+                {
+                  allProjectsFloorUnitUsability.data?.find(
+                    (project) => +project.id === +work.projectId
+                  )?.name
+                }
+                /
+                {
+                  allProjectsFloorUnitUsability.data
+                    ?.find((project) => +project.id === +work.projectId)
+                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
+                    .name
+                }
+                /
+                {
+                  allProjectsFloorUnitUsability.data
+                    ?.find((project) => +project.id === +work.projectId)
+                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
+                    .projectUnit?.find((unit) => +work.unitId === +unit.id)
+                    ?.name
+                }
+                /
+                {
+                  allProjectsFloorUnitUsability.data
+                    ?.find((project) => +project.id === +work.projectId)
+                    ?.projectfloor?.find((floor) => +floor.id === +work.floorId)
+                    ?.projectUnit?.find((unit) => +work.unitId === +unit.id)
+                    ?.unitsUsability?.find(
+                      (usa) => +work.usabilityId === +usa.id
+                    )?.name
+                }
+                /
+                {
+                  contractors.data?.find((cont) => cont.id == work.contractorId)
+                    ?.fullName
+                }
+                <IconButton onClick={() => handleDeleteOldItem(work.id)}>
+                  <CloseIcon color="error" />
+                </IconButton>
+              </div>
+            ))}
+          </div>
+        )}
         {!!workingData.length && (
           <div className="mt-6 flex gap-6">
             {workingData.map((work, index) => (
