@@ -1,4 +1,7 @@
-import {
+import { PageTileComponent} from "../style";
+
+
+     import {
   Card,
   Divider,
   CardHeader,
@@ -195,7 +198,8 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   };
   return (
     <Card>
-      <PurchaseDetail detail={orderDetailData?.data} />
+         <PageTileComponent __text= {document.title} />
+  <PurchaseDetail detail={orderDetailData?.data} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <div
         style={{

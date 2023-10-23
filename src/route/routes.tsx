@@ -307,7 +307,7 @@ export const routes: IRoute[] = [
     component: <PurchaseForm />,
     layout: Layouts.MAIN,
     protected: true,
-    title: "در صف تحویل",
+    title: " حواله خرید",
   },
   {
     path: "/warehosue/warehouse-sentitems",
@@ -335,7 +335,7 @@ export const routes: IRoute[] = [
     component: <WarhouseForm />,
     layout: Layouts.MAIN,
     protected: true,
-    title: "خارج شده",
+    title:"حواله ورود به انبار",
   },
   {
     path: "/exitWarehosue/detail/:id",
