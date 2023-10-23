@@ -1,3 +1,5 @@
+import { PageTileComponent} from "../style";
+
 import {
   GridActionsCellItem,
   GridColDef,
@@ -140,6 +142,7 @@ const SupplierList = () => {
     }
   }, [selectedUser]);
   return (
+    
     <CardGrid
       item
       xs={12}
@@ -149,6 +152,8 @@ const SupplierList = () => {
         marginBottom: "10px",
       }}
     >
+           <PageTileComponent __text= {document.title} />
+
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
           style={{ textAlign: "right" }}

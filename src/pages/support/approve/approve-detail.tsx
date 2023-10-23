@@ -1,3 +1,5 @@
+import { PageTileComponent} from "../../style";
+
 import List from "@mui/icons-material/List";
 import { Box, Button, Card, Divider, Grid, Typography } from "@mui/material";
 import axios from "../../../utils/axios.config";
@@ -93,6 +95,11 @@ const ApproveDetail = (props) => {
   };
   return (
     <Card>
+
+      
+
+     <PageTileComponent __text= {document.title} />
+
       <RequestDetail detail={detail} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <Typography

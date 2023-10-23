@@ -1,5 +1,5 @@
 import { Grid, Box, Typography, useTheme } from "@mui/material";
-import { StyledBox } from "./style";
+import { StyledBox,PageTileComponent} from "./style";
 import { Link } from "react-router-dom";
 
 const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
@@ -8,9 +8,9 @@ const WarehouseDetail = ({ detail, mode = "warehouse" }: any) => {
   console.log(document.title);
   return (
     <>
-      <div className="mb-20 mt-6 text-3xl   flex justify-center">
-        <p className="border border-slate-500 p-6">{document.title}</p>
-      </div>
+     
+     <PageTileComponent __text= {document.title} />
+
       <Grid container spacing={5} p={2}>
         {detail && (
           <>

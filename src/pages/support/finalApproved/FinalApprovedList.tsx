@@ -1,3 +1,5 @@
+import { PageTileComponent} from "../../style";
+
 import EditIcon from "@mui/icons-material/Edit";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
@@ -486,12 +488,9 @@ const FinalApprovedList: React.FC<any> = (props) => {
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
-        <CardHeader
-          style={{ textAlign: "right" }}
-          title="لیست تصویب درخواست"
-          titleTypographyProps={{ variant: "h6" }}
-        />
+        <CardHeader />
 
+        <PageTileComponent __text= {document.title} />
         <Box>
           <form>
             <Row>

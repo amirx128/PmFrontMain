@@ -1,3 +1,5 @@
+import { PageTileComponent} from "../style";
+
 import {
   Box,
   Card,
@@ -196,10 +198,9 @@ const CommodityTransactions = () => {
     >
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
-          style={{ textAlign: "right" }}
-          title="در صف بررسی"
-          titleTypographyProps={{ variant: "h6" }}
+         
         />
+     <PageTileComponent __text= {document.title} />
 
         <Box>
           <form>

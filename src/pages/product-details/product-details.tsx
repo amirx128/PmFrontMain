@@ -1,3 +1,5 @@
+import { PageTileComponent} from "../style";
+
 import { Card, Divider, CardHeader, IconButton } from "@mui/material";
 import axios from "../../utils/axios.config.ts";
 import { useEffect, useState } from "react";
@@ -135,6 +137,9 @@ const ProductDetails = (props) => {
   };
   return (
     <Card>
+      
+     <PageTileComponent __text= {document.title} />
+
       <RequestDetail detail={detail} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <div

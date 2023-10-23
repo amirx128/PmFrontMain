@@ -9,6 +9,7 @@ import RequestDetail from "../request-detail";
 import ApproveCommodityForm from "./approve-commodity-form/aspprove-commodity-form";
 import { useSelector } from "react-redux";
 import { getUserIdFromStorage } from "../../../utils/functions.ts";
+import { PageTileComponent} from "../../style";
 const FinalApproveDetail = (props) => {
   const theme = useTheme();
 
@@ -76,7 +77,11 @@ const FinalApproveDetail = (props) => {
     navigate("/supportFinalApprove");
   };
   return (
+
     <Card>
+      
+     <PageTileComponent __text= {document.title} />
+
       <RequestDetail detail={detail} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <Typography

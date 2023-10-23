@@ -19,6 +19,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+
+import { PageTileComponent} from "../style";
+
 import {
   GetAllRoles,
   UpdateUser,
@@ -137,7 +140,9 @@ const Profile = () => {
         padding: 10,
       }}
     >
-      <Typography variant="h5">اطلاعات کاربر</Typography>
+
+    <PageTileComponent __text= {document.title} />
+
       <CardContent>
         {selectedUser && (
           <>

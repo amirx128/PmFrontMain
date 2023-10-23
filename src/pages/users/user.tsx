@@ -21,6 +21,8 @@ import {
   GetUsersListAction,
   clearSelectedUser,
 } from "../../redux/features/administrationSlicer.ts";
+import { PageTileComponent} from "../style";
+
 import { useNavigate } from "react-router-dom";
 
 const Users = () => {
@@ -143,6 +145,10 @@ const Users = () => {
     }
   }, [selectedUser]);
   return (
+
+
+
+
     <CardGrid
       item
       xs={12}
@@ -152,12 +158,11 @@ const Users = () => {
         marginBottom: "10px",
       }}
     >
+
+      
+    <PageTileComponent __text= {document.title} />
       <Card sx={{ borderRadius: 3 }}>
-        <CardHeader
-          style={{ textAlign: "right" }}
-          title="مدیریت کاربران"
-          titleTypographyProps={{ variant: "h6" }}
-        />
+      
         <ActionRow>
           <Button
             sx={{ justifySelf: "flex-start", marginRight: "20px" }}
