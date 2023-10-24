@@ -126,6 +126,12 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
     }
     onClose();
   };
+  const handleChangeAutoComplete = (val, name) => {
+    setInfo({
+      ...info,
+      [name]: val,
+    });
+  };
   return (
     <Dialog
       open={showUserDialog}
@@ -234,52 +240,37 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
           multiple={true}
         />
         <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>مدیر</InputLabel>
-          <Select
-            value={info?.bossId}
-            fullWidth={true}
-            name={"bossId"}
+          <AutoCompleteComponent
             label="مدیر"
-            onChange={handleChange}
-          >
-            {users?.usersList?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.firstName}
-              </MenuItem>
-            ))}
-          </Select>
+            id="bossId"
+            options={users?.usersList || []}
+            value={info?.bossId}
+            dataLabel="firstName"
+            changeHandler={(value) => handleChangeAutoComplete(value, "bossId")}
+          />
         </FormControl>
         <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>پروژه</InputLabel>
-          <Select
-            value={info?.projectId}
-            fullWidth={true}
-            name={"projectId"}
+          <AutoCompleteComponent
             label="پروژه"
-            onChange={handleChange}
-          >
-            {projects?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            id="projectId"
+            options={projects?.data || []}
+            value={info?.projectId}
+            changeHandler={(value) =>
+              handleChangeAutoComplete(value, "projectId")
+            }
+          />
         </FormControl>
         <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>شخص</InputLabel>
-          <Select
-            value={info?.personId}
-            fullWidth={true}
-            name={"personId"}
+          <AutoCompleteComponent
             label="شخص"
-            onChange={handleChange}
-          >
-            {persons?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.firstName} {item?.lastName}
-              </MenuItem>
-            ))}
-          </Select>
+            id="personId"
+            options={persons?.data || []}
+            value={info?.personId}
+            dataLabel="firstName"
+            changeHandler={(value) =>
+              handleChangeAutoComplete(value, "personId")
+            }
+          />
         </FormControl>
       </DialogContent>
       <DialogActions>

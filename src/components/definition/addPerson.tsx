@@ -22,6 +22,7 @@ import {
   UpdateProject,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 export const AddPerson = ({ addPersonsDialog, selectedPerson, onClose }) => {
   const theme = useTheme();
@@ -157,21 +158,17 @@ export const AddPerson = ({ addPersonsDialog, selectedPerson, onClose }) => {
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <Select
-          multiple
-          value={info?.businessRoles}
-          fullWidth={true}
-          name={"businessRoles"}
-          label={"نقش تجاری"}
-          onChange={handleChange}
+        <AutoCompleteComponent
           sx={{ mt: 2 }}
-        >
-          {businessRoles?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
+          options={businessRoles?.data}
+          id="businessRoles"
+          label="نقش تجاری"
+          changeHandler={(value) =>
+            setInfo((prev) => ({ ...prev, businessRoles: value }))
+          }
+          value={info?.businessRoles || []}
+          multiple={true}
+        />
       </DialogContent>
       <DialogActions>
         <Button variant={"contained"} color={"success"} onClick={onSubmit}>

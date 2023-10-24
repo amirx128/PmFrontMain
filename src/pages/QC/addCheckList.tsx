@@ -20,6 +20,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const AddCheckListItem = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -85,20 +86,17 @@ const AddCheckListItem = () => {
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم فرعی</InputLabel>
-          <Select
-            value={info?.subItemId}
-            fullWidth={true}
-            name={"subItemId"}
+          <AutoCompleteComponent
+            sx={{ mt: 2 }}
+            options={subItems?.data}
+            id="subItemId"
             label="آیتم فرعی"
-            onChange={handleChange}
-          >
-            {subItems?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) =>
+              setInfo((prev) => ({ ...prev, subItemId: value }))
+            }
+            value={info?.subItemId}
+          />
+          <InputLabel>آیتم فرعی</InputLabel>
         </FormControl>
         {items?.map((item) => (
           <div

@@ -24,6 +24,7 @@ import {
   GetAllCommodities,
   GetOneProjectFloorAction,
 } from "../../redux/features/definitionSlicer.ts";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 const AddUnit = ({
   addUnitDialog,
@@ -153,38 +154,32 @@ const AddUnit = ({
           sx={{ mt: 2 }}
         />
         {info.projectfloorId && (
-          <Select
-            value={info?.projectfloorId}
-            fullWidth={true}
-            name={"projectfloorId"}
-            label={"طبقه"}
-            onChange={handleChange}
+          <AutoCompleteComponent
             sx={{ mt: 2 }}
-          >
-            {oneProjectFloor?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            options={oneProjectFloor?.data}
+            id="projectfloorId"
+            label="طبقه"
+            changeHandler={(value) =>
+              setInfo((prev) => ({ ...prev, projectfloorId: value }))
+            }
+            value={info?.projectfloorId}
+          />
         )}
 
         <FormControl fullWidth={true}>
           <Typography sx={{ mt: 2 }}>کالا ها</Typography>
-          <Select
+          <AutoCompleteComponent
             sx={{ mt: 2 }}
-            value={info?.commodities}
-            labelId={"commodities"}
-            fullWidth={true}
-            name={"commodities"}
-            onChange={handleChange}
-            placeholder="کالا ها"
-            multiple
-          >
-            {commodities?.data?.map((item) => (
-              <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
-            ))}
-          </Select>
+            options={commodities?.data}
+            id="commodities"
+            label="کالا ها"
+            changeHandler={(value) =>
+              setInfo((prev) => ({ ...prev, commodities: value }))
+            }
+            dataLabel="serchableName"
+            value={info?.commodities || []}
+            multiple={true}
+          />
         </FormControl>
       </DialogContent>
       <DialogActions>

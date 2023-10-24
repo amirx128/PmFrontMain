@@ -23,6 +23,7 @@ import {
   GetAllCommodities,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
   const theme = useTheme();
@@ -110,20 +111,18 @@ export const AddProject = ({ addProjectDialog, selectedProject, onClose }) => {
         />
         <FormControl fullWidth={true}>
           <Typography sx={{ mt: 2 }}>کالا ها</Typography>
-          <Select
+          <AutoCompleteComponent
             sx={{ mt: 2 }}
-            value={info?.commodities}
-            labelId={"commodities"}
-            fullWidth={true}
-            name={"commodities"}
-            onChange={handleChange}
-            placeholder="کالا ها"
-            multiple
-          >
-            {commodities?.data?.map((item) => (
-              <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
-            ))}
-          </Select>
+            options={commodities?.data}
+            id="commodities"
+            label="کالا ها"
+            changeHandler={(value) =>
+              setInfo((prev) => ({ ...prev, commodities: value }))
+            }
+            dataLabel="serchableName"
+            value={info?.commodities || []}
+            multiple={true}
+          />
         </FormControl>
       </DialogContent>
 

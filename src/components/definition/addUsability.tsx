@@ -21,6 +21,7 @@ import {
   GetUsabilityDataAction,
   UpdateUsabilityAction,
 } from "../../redux/features/qcSlicer.ts";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 export const AddUsability = ({
   addUsabilityDialog,
@@ -136,21 +137,17 @@ export const AddUsability = ({
               sx={{ mt: 2, width: "50%" }}
             />
             <FormControl sx={{ mt: 2, width: "50%" }}>
-              <InputLabel>واحد</InputLabel>
-              <Select
-                multiple
-                value={info?.units}
-                fullWidth={true}
-                name={"units"}
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={units?.data}
+                id="units"
                 label="واحد"
-                onChange={handleChange}
-              >
-                {units?.data?.map((item) => (
-                  <MenuItem value={item.id} key={item?.id}>
-                    {item?.name}
-                  </MenuItem>
-                ))}
-              </Select>
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, units: value }))
+                }
+                value={info?.units || []}
+                multiple={true}
+              />
             </FormControl>
             <TextField
               value={info?.code}

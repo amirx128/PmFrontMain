@@ -24,6 +24,7 @@ import {
   UpdateProject,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 export const AddWarehouse = ({
   addWarehouseDialog,
@@ -111,38 +112,31 @@ export const AddWarehouse = ({
             />
           </div>
           <FormControl fullWidth={true}>
-            <Typography sx={{ mt: 2 }}>کالا ها</Typography>
-            <Select
+            <AutoCompleteComponent
               sx={{ mt: 2 }}
-              value={info?.relatedCommodities}
-              labelId={"relatedCommodities"}
-              fullWidth={true}
-              name={"relatedCommodities"}
-              onChange={handleChange}
-              placeholder="کالا ها"
-              multiple
-            >
-              {commodities?.data?.map((item) => (
-                <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
-              ))}
-            </Select>
+              options={commodities?.data}
+              id="relatedCommodities"
+              label="کالا ها"
+              changeHandler={(value) =>
+                setInfo((prev) => ({ ...prev, relatedCommodities: value }))
+              }
+              dataLabel="serchableName"
+              value={info?.relatedCommodities || []}
+              multiple={true}
+            />
           </FormControl>
           <FormControl fullWidth={true}>
-            <Typography sx={{ mt: 2 }}>پروژه ها</Typography>
-            <Select
+            <AutoCompleteComponent
               sx={{ mt: 2 }}
-              value={info?.projects}
-              labelId={"projects"}
-              fullWidth={true}
-              name={"projects"}
-              onChange={handleChange}
-              placeholder="پروژه ها"
-              multiple
-            >
-              {projects?.data?.map((item) => (
-                <MenuItem value={item?.id}>{item?.name}</MenuItem>
-              ))}
-            </Select>
+              options={projects?.data}
+              id="projects"
+              label="پروژه ها"
+              changeHandler={(value) =>
+                setInfo((prev) => ({ ...prev, projects: value }))
+              }
+              value={info?.projects || []}
+              multiple={true}
+            />
           </FormControl>
         </div>
       </DialogContent>

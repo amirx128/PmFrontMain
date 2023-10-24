@@ -22,6 +22,7 @@ import {
   UpdateProject,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 export const AddRole = ({ addRolesDialog, selectedRole, onClose }) => {
   const theme = useTheme();
@@ -103,20 +104,16 @@ export const AddRole = ({ addRolesDialog, selectedRole, onClose }) => {
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <Select
-          value={info?.projectId}
-          fullWidth={true}
-          name={"projectId"}
-          label={"پروژه"}
-          onChange={handleChange}
+        <AutoCompleteComponent
           sx={{ mt: 2 }}
-        >
-          {projects?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
+          options={projects?.data}
+          id="projectId"
+          label="پروژه"
+          changeHandler={(value) =>
+            setInfo((prev) => ({ ...prev, projectId: value }))
+          }
+          value={info?.projectId}
+        />
       </DialogContent>
       <DialogActions>
         <Button variant={"contained"} color={"success"} onClick={onSubmit}>

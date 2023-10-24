@@ -24,6 +24,7 @@ import {
   GetAllCommodities,
 } from "../../redux/features/definitionSlicer.ts";
 import { toast } from "react-toastify";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 const AddFloor = ({
   addFloorDialog,
@@ -136,36 +137,29 @@ const AddFloor = ({
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <Select
-          value={info?.projectId}
-          fullWidth={true}
-          name={"projectId"}
-          label={"پروژه"}
-          onChange={handleChange}
+        <AutoCompleteComponent
           sx={{ mt: 2 }}
-        >
-          {projects?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
+          options={projects?.data}
+          id="projectId"
+          label="پروژه"
+          changeHandler={(value) =>
+            setInfo((prev) => ({ ...prev, projectId: value }))
+          }
+          value={info?.projectId}
+        />
         <FormControl fullWidth={true}>
-          <Typography sx={{ mt: 2 }}>کالا ها</Typography>
-          <Select
+          <AutoCompleteComponent
             sx={{ mt: 2 }}
-            value={info?.commodities}
-            labelId={"commodities"}
-            fullWidth={true}
-            name={"commodities"}
-            onChange={handleChange}
-            placeholder="کالا ها"
-            multiple
-          >
-            {commodities?.data?.map((item) => (
-              <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
-            ))}
-          </Select>
+            options={commodities?.data}
+            id="commodities"
+            label="کالا ها"
+            changeHandler={(value) =>
+              setInfo((prev) => ({ ...prev, commodities: value }))
+            }
+            dataLabel="serchableName"
+            value={info?.commodities || []}
+            multiple={true}
+          />
         </FormControl>
       </DialogContent>
       <DialogActions>
