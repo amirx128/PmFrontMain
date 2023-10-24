@@ -67,12 +67,10 @@ export const GetTransactions = async (
 export const GetCount = async (
   commodityId,
   userId,
-  
 ) =>
   await axiosInstance.post(`/support/GetCountCommodityInWarehouse`, {
-    commodityId,
     userId: userId,
-   
+    commodityId,
   });
 
   

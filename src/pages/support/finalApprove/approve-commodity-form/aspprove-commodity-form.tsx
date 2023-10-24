@@ -65,9 +65,9 @@ const ApproveCommodityForm: React.FC<any> = ({
   const getCountCommodityInWarehouse = async () => {
     try {
       const response = await axios.post(
-        "/Support/GetCountCommodityInWarehouse" ?? getUserIdFromStorage(),
+        "/Support/GetCountCommodityInWarehouse",
         {
-          userId: user?.id,
+          userId: user?.id ?? getUserIdFromStorage(),
           commodityId: commodity.requestCaseRowCommodityId,
         }
       );
