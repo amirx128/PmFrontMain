@@ -208,7 +208,7 @@ export const routes: IRoute[] = [
     component: <PurchaseApproveDetails />,
     layout: Layouts.MAIN,
     protected: true,
-    title: "دستور خرید " ,
+    title: "دستور خرید ",
   },
   {
     path: "/financials/queue",
@@ -335,7 +335,7 @@ export const routes: IRoute[] = [
     component: <WarhouseForm />,
     layout: Layouts.MAIN,
     protected: true,
-    title:"حواله ورود به انبار",
+    title: "حواله ورود به انبار",
   },
   {
     path: "/exitWarehosue/detail/:id",

@@ -63,6 +63,40 @@ const CommodityTransactions = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/exitWarehosue/detail/${row.exitWarehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "warehouseOrderTrackingCode",
+      headerName: "تراکنش انبار",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -71,6 +105,142 @@ const CommodityTransactions = () => {
       flex: 1,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "type",
+      headerName: "نوع تراکنش",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "activityDate",
+      headerName: "تاریخ",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value }) => (
+        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
+      ),
+    },
+    {
+      field: "count",
+      headerName: "تعداد",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "price",
+      headerName: "قیمت",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+  ];
+  const allColumns: GridColDef[] = [
+    {
+      field: "id",
+      headerName: "شناسه تراکنش",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "exitWarehouseOrderTrackingCode",
+      headerName: "تراکنش خروج از انبار",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/exitWarehosue/detail/${row.exitWarehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "commodityName",
+      headerName: "نام کالا",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "warehouseOrderTrackingCode",
+      headerName: "تراکنش انبار",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "purchaseOrderTrackingCode",
+      headerName: " تراکنش خرید ",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
     },
     {
       field: "type",
@@ -218,7 +388,13 @@ const CommodityTransactions = () => {
         <CardHeader />
         <PageTileComponent __text={document.title} />
         <div className="text-right mb-16 mr-6 text-xl flex gap-12  flex-col">
-          <p>تعداد : {Counter.data && Counter.data}</p>
+          {!isShowAll && (
+            <div className="flex gap-8 items-center">
+              <p>تعداد : {Counter.data && Counter.data}</p>
+              <p>نام کالا : {transaction?.data?.at(0)?.commodityName}</p>
+            </div>
+          )}
+
           {user.usersRoles?.some((role) => role.roleName === "Admin") && (
             <div>
               مشاهده همه
@@ -284,7 +460,7 @@ const CommodityTransactions = () => {
         )}
         {isShowAll && allTransaction.data && (
           <Grid
-            columns={columns}
+            columns={allColumns}
             rows={
               allTransaction?.data.map((row, index) => ({
                 id: index,
