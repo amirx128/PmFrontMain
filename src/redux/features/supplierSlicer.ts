@@ -6,6 +6,7 @@ import {
   DownloadSupplierQ,
   DownloadSupplierSentItem,
   GetCount,
+  GetAllCommodityTransactions,
 } from "../../core/supplier/Supplier.service";
 import downloadExcel from "../../utils/downloadExcell";
 
@@ -26,6 +27,10 @@ export interface SupplierState {
       pending: boolean;
     };
     transaction: {
+      data: any;
+      pending: boolean;
+    };
+    allTransaction: {
       data: any;
       pending: boolean;
     };
@@ -53,6 +58,10 @@ const initialState: SupplierState = {
       pending: false,
     },
     transaction: {
+      data: [],
+      pending: false,
+    },
+    allTransaction: {
       data: [],
       pending: false,
     },
@@ -87,6 +96,38 @@ export const GetOneCommodityTransactions = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await GetTransactions(
+        SelectedItemId,
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetAllCommodityTransactionsAction = createAsyncThunk(
+  "supplier/GetAllCommodityTransactionsAction",
+  async (
+    body: {
+      SelectedItemId: any;
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, SelectedItemId } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllCommodityTransactions(
         SelectedItemId,
         userId,
         1,
@@ -306,6 +347,28 @@ export const supplierSlicer = createSlice({
         }
       );
     //#endregion
+    //#region GetAllCommodityTransactionsAction-----
+    builder
+      .addCase(
+        GetAllCommodityTransactionsAction.pending,
+        (state: SupplierState) => {
+          state.supplier.allTransaction.pending = true;
+        }
+      )
+      .addCase(
+        GetAllCommodityTransactionsAction.fulfilled,
+        (state: SupplierState, { payload }) => {
+          state.supplier.allTransaction.pending = false;
+          state.supplier.allTransaction.data = payload?.model;
+        }
+      )
+      .addCase(
+        GetAllCommodityTransactionsAction.rejected,
+        (state: SupplierState, { error }) => {
+          state.supplier.allTransaction.pending = false;
+        }
+      );
+    //#endregion
     //#region GetCountCommodityInWarehouse-----
     builder
       .addCase(GetCountCommodityInWarehouse.pending, (state: SupplierState) => {
@@ -315,7 +378,7 @@ export const supplierSlicer = createSlice({
         GetCountCommodityInWarehouse.fulfilled,
         (state: SupplierState, { payload }) => {
           state.supplier.Counter.pending = false;
-          state.supplier.Counter.data = [...payload?.model];
+          state.supplier.Counter.data = payload.model;
         }
       )
       .addCase(

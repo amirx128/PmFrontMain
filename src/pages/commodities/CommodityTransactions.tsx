@@ -1,4 +1,4 @@
-import { PageTileComponent} from "../style";
+import { PageTileComponent } from "../style";
 
 import {
   Box,
@@ -7,6 +7,8 @@ import {
   Grid as CardGrid,
   IconButton,
   Typography,
+  Switch,
+  CircularProgress,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +18,10 @@ import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { GetOneCommodityTransactions } from "../../redux/features/supplierSlicer.ts";
+import {
+  GetAllCommodityTransactionsAction,
+  GetOneCommodityTransactions,
+} from "../../redux/features/supplierSlicer.ts";
 import { GetCountCommodityInWarehouse } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link, useParams } from "react-router-dom";
@@ -25,7 +30,9 @@ import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 const CommodityTransactions = () => {
   const { id } = useParams();
   const dispatch = useDispatch<any>();
-  const { transaction } = useSelector((state: any) => state.supplier?.supplier);
+  const { transaction, Counter, allTransaction } = useSelector(
+    (state: any) => state.supplier?.supplier
+  );
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
@@ -34,6 +41,11 @@ const CommodityTransactions = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
+
+  const [user] = useState(() => {
+    return JSON.parse(localStorage.getItem("user"));
+  });
+  const [isShowAll, setIsShowAll] = useState(false);
   // const SelectedItemId:id = 18;
   const columns: GridColDef[] = [
     {
@@ -111,6 +123,11 @@ const CommodityTransactions = () => {
     getList();
     GetCount();
   }, []);
+  useEffect(() => {
+    if (isShowAll) {
+      getAlltransactions();
+    }
+  }, [isShowAll]);
 
   const handleSortModelChange = async (sortArr) => {
     if (!sortArr.at(0)) {
@@ -134,6 +151,14 @@ const CommodityTransactions = () => {
         SelectedItemId: id,
       })
     );
+  };
+  const getAlltransactions = async () => {
+    const body = {
+      SelectedItemId: id,
+      fromDate: new Date(fromDate),
+      toDate: new Date(toDate),
+    };
+    await dispatch(GetAllCommodityTransactionsAction(body));
   };
   const getList = async () => {
     const body = {
@@ -160,13 +185,6 @@ const CommodityTransactions = () => {
     setToDate(date);
   };
 
-  const HandleGetCount = async () => {
-    await dispatch(
-      GetCountCommodityInWarehouse({
-        commodityId: id,
-      })
-    );
-  };
   const handleAddFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
@@ -197,11 +215,20 @@ const CommodityTransactions = () => {
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
-        <CardHeader
-         
-        />
-     <PageTileComponent __text= {document.title} />
-
+        <CardHeader />
+        <PageTileComponent __text={document.title} />
+        <div className="text-right mb-16 mr-6 text-xl flex gap-12  flex-col">
+          <p>تعداد : {Counter.data && Counter.data}</p>
+          {user.usersRoles?.some((role) => role.roleName === "Admin") && (
+            <div>
+              مشاهده همه
+              <Switch
+                checked={isShowAll}
+                onChange={() => setIsShowAll((prev) => !prev)}
+              />
+            </div>
+          )}
+        </div>
         <Box>
           <form>
             <Row>
@@ -240,28 +267,34 @@ const CommodityTransactions = () => {
             </Row>
           </form>
         </Box>
-
-        <Grid
-          rowIdFields={[
-            "Id",
-            "ExitWarehouseOrderId",
-            "ExitWarehouseOrderTrackingCode",
-            "PurchaseOrderId",
-            "PurchaseOrderTrackingCode",
-            "type",
-            "ActivityDate",
-            "Count",
-          ]}
-          columns={columns}
-          rows={
-            transaction?.data.map((row, index) => ({
-              id: index,
-              ...row,
-            })) ?? []
-          }
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        {isShowAll && allTransaction.pending && <CircularProgress />}
+        {!isShowAll && transaction.pending && <CircularProgress />}
+        {!isShowAll && transaction.data && (
+          <Grid
+            columns={columns}
+            rows={
+              transaction?.data.map((row, index) => ({
+                id: index,
+                ...row,
+              })) ?? []
+            }
+            pagination={{}}
+            onSortModelChange={handleSortModelChange}
+          />
+        )}
+        {isShowAll && allTransaction.data && (
+          <Grid
+            columns={columns}
+            rows={
+              allTransaction?.data.map((row, index) => ({
+                id: index,
+                ...row,
+              })) ?? []
+            }
+            pagination={{}}
+            onSortModelChange={handleSortModelChange}
+          />
+        )}
       </Card>
     </CardGrid>
   );

@@ -31,6 +31,7 @@ import { makeTree } from "../../utils/tree.ts";
 import TreeItem from "@mui/lab/TreeItem";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
 
 export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
   const theme = useTheme();
@@ -288,61 +289,54 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth={true}>
-                <Typography sx={{ mt: 2 }}>تامین کننده ها</Typography>
-                <Select
+                <Typography sx={{ mt: 2 }}>تامین کننده</Typography>
+
+                <AutoCompleteComponent
                   sx={{ mt: 2 }}
-                  value={info?.suppliersIds ?? []}
-                  labelId={"suppliersIds"}
-                  fullWidth={true}
-                  name={"suppliersIds"}
-                  onChange={handleChange}
-                  multiple
-                >
-                  {suppliers?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.supplierName}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  options={suppliers?.data}
+                  dataId="id"
+                  dataLabel="supplierName"
+                  id="suppliersIds"
+                  label="تامین کننده ها"
+                  changeHandler={(value) =>
+                    setInfo((prev) => ({ ...prev, suppliersIds: value }))
+                  }
+                  value={info?.suppliersIds || []}
+                  multiple={true}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth={true}>
                 <Typography sx={{ mt: 2 }}>تولید کننده</Typography>
-                <Select
+                <AutoCompleteComponent
                   sx={{ mt: 2 }}
-                  value={info?.producerId}
-                  labelId={"producerId"}
-                  fullWidth={true}
-                  name={"producerId"}
-                  onChange={handleChange}
-                >
-                  {producers?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.name}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  options={producers?.data}
+                  id="producerId"
+                  label="تولید کننده"
+                  changeHandler={(value) =>
+                    setInfo((prev) => ({ ...prev, producerId: value }))
+                  }
+                  value={info?.producerId || []}
+                  multiple={true}
+                />
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6} md={4}>
               <FormControl fullWidth={true}>
                 <Typography sx={{ mt: 2 }}>انبار ها</Typography>
-                <Select
+                <AutoCompleteComponent
                   sx={{ mt: 2 }}
-                  value={info?.warehouses}
-                  labelId={"warehouses"}
-                  fullWidth={true}
-                  name={"warehouses"}
-                  onChange={handleChange}
-                  multiple
-                >
-                  {warehouses?.data?.map((item) => (
-                    <MenuItem value={item.id} key={item?.id}>
-                      {item?.warehouseName}
-                    </MenuItem>
-                  ))}
-                </Select>
+                  options={warehouses?.data}
+                  id="warehouses"
+                  label="انبار ها"
+                  dataLabel="warehouseName"
+                  changeHandler={(value) =>
+                    setInfo((prev) => ({ ...prev, warehouses: value }))
+                  }
+                  value={info?.warehouses || []}
+                  multiple={true}
+                />
               </FormControl>
               <FormControl fullWidth={true}>
                 <Typography sx={{ mt: 2 }}>شاخه ی کالا</Typography>
@@ -368,21 +362,17 @@ export const AddCommodity = ({ addCommodityDialog, onClose, parent }) => {
           </Grid>
           <FormControl fullWidth={true}>
             <Typography sx={{ mt: 2, mb: 1 }}>نقش تجاری</Typography>
-            <Select
-              multiple
-              value={info?.businessRoleIds}
-              labelId={"businessRoleIds"}
-              fullWidth={true}
-              name={"businessRoleIds"}
-              label={"نقش تجاری"}
-              onChange={handleChange}
-            >
-              {businessRoles?.data?.map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-            </Select>
+            <AutoCompleteComponent
+              sx={{ mt: 2 }}
+              options={businessRoles?.data}
+              id="businessRoleIds"
+              label="نقش تجاری"
+              changeHandler={(value) =>
+                setInfo((prev) => ({ ...prev, businessRoleIds: value }))
+              }
+              value={info?.businessRoleIds || []}
+              multiple={true}
+            />
           </FormControl>
 
           <Box sx={{ width: "100%" }}>
