@@ -165,9 +165,17 @@ const CommodityTransactions = () => {
     },
   ];
   const allColumns: GridColDef[] = [
+    // {
+    //   field: "id",
+    //   headerName: "شناسه تراکنش",
+    //   flex: 1,
+    //   minWidth: 150,
+    //   editable: false,
+    //   filterable: false,
+    // },
     {
-      field: "id",
-      headerName: "شناسه تراکنش",
+      field: "commodityName",
+      headerName: "نام کالا",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -194,14 +202,7 @@ const CommodityTransactions = () => {
         );
       },
     },
-    {
-      field: "commodityName",
-      headerName: "نام کالا",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
+   
     {
       field: "warehouseOrderTrackingCode",
       headerName: "تراکنش انبار",
@@ -249,17 +250,7 @@ const CommodityTransactions = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
+      
     },
     {
       field: "activityDate",
@@ -390,7 +381,8 @@ const CommodityTransactions = () => {
         <div className="text-right mb-16 mr-6 text-xl flex gap-12  flex-col">
           {!isShowAll && (
             <div className="flex gap-8 items-center">
-              <p>تعداد : {Counter.data && Counter.data}</p>
+              <p>تعداد موجود در انبار : {Counter.data && Counter.data}</p>
+              <p></p>
               <p>نام کالا : {transaction?.data?.at(0)?.commodityName}</p>
             </div>
           )}
