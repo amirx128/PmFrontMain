@@ -198,7 +198,8 @@ const WarhouseForm = ({
       selectedRow = orderDetailData?.data?.wareHouseDetailsModelResult.at(0);
     }
     if (mode === "exitWarehouse") {
-      selectedRow = exitOrderDetailData?.data?.exitFromWarehouseDetails.at(0);
+      // selectedRow = exitOrderDetailData?.data?.exitFromWarehouseDetails.at(0);
+      selectedRow = undefined;
     }
 
     dispatch(setWarhouseRowSelectedAction(selectedRow));

@@ -34,11 +34,12 @@ const ApproveCommodityForm: React.FC<any> = ({
     defaultValues: {
       purchaseCount: commodity?.purchaseOrderCount || 0,
       finalApproveStateId: commodity?.finalApproveStateId,
-      exitWarehouseCount: commodity?.exitFromWarehouseCount || 0,
+      exitWarehouseCount: 0,
     },
   });
   const onSubmit = handleSubmit((entity: any) => {
-    onSubmitForm({ ...entity, exitWarehouseCount });
+    const { exitWarehouseCount: exitCount } = getValues();
+    onSubmitForm({ ...entity, exitWarehouseCount: exitCount });
   });
   useEffect(() => {
     getApproveStates();
@@ -68,11 +69,10 @@ const ApproveCommodityForm: React.FC<any> = ({
         "/Support/GetCountCommodityInWarehouse",
         {
           userId: user?.id ?? getUserIdFromStorage(),
-          commodityId: commodity.requestCaseRowCommodityId,
+          commodityId: commodity.commodityId,
         }
       );
       setExitWarehouseCount(response.data.model);
-      setValue("exitWarehouseCount", response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
