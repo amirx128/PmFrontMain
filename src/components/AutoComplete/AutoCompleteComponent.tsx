@@ -23,9 +23,11 @@ const AutoCompleteComponent = ({
               ?.filter((op) => value?.includes(op[dataId])) || []
           : options
               ?.map((op) => ({ id: op[dataId], label: op[dataLabel] }))
-              ?.find((op) => op[dataId] == value) || []
+              ?.find((op) => op[dataId] == value)
       }
-      options={options?.map((op) => ({ id: op[dataId], label: op[dataLabel] }))}
+      options={
+        options?.map((op) => ({ id: op[dataId], label: op[dataLabel] })) || []
+      }
       onChange={(e, value: any) =>
         multiple
           ? changeHandler?.(value.map((v) => v?.id))

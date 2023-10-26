@@ -19,6 +19,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { getAllUnits } from "../../redux/features/definitionSlicer";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const AddUsability = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -70,21 +71,15 @@ const AddUsability = () => {
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>واحد</InputLabel>
-          <Select
-            multiple
-            value={info?.units}
-            fullWidth={true}
-            name={"units"}
+          <AutoCompleteComponent
+            options={units?.data}
+            id="units"
             label="واحد"
-            onChange={handleChange}
-          >
-            {units?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, units: value }));
+            }}
+            value={info?.units}
+          />
         </FormControl>
         <TextField
           value={info?.code}

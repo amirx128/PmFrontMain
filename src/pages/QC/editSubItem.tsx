@@ -30,6 +30,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { GetAllProjects_Floor_Unit_UsabilityAction } from "../../redux/features/definitionSlicer";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 
 const EditSubItem = () => {
   const { id } = useParams();
@@ -206,7 +207,7 @@ const EditSubItem = () => {
           alignItems: "flex-start",
         }}
       >
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-9">
           <TextField
             value={info?.name}
             name={"name"}
@@ -214,53 +215,39 @@ const EditSubItem = () => {
             label={"نام"}
           />
           <FormControl>
-            <InputLabel>آیتم اصلی</InputLabel>
-            <Select
+            <AutoCompleteComponent
+              options={originalItems?.data}
+              id="originalItemId"
+              label="آیتم اصلی"
+              changeHandler={(value) => {
+                setInfo((prev) => ({ ...prev, originalItemId: value }));
+              }}
               value={info?.originalItemId}
-              fullWidth={true}
-              name={"originalItemId"}
-              label="آیتم اصلی"
-              onChange={handleChange}
-            >
-              {originalItems?.data?.map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-            </Select>
+            />
           </FormControl>
           <FormControl>
-            <InputLabel>چک لیست اصلی</InputLabel>
-            <Select
+            <AutoCompleteComponent
+              options={checkLists?.data}
+              id="masterCheckListId"
+              label="چک لیست اصلی"
+              changeHandler={(value) => {
+                setInfo((prev) => ({ ...prev, masterCheckListId: value }));
+              }}
               value={info?.masterCheckListId}
-              fullWidth={true}
-              name={"masterCheckListId"}
-              label="آیتم اصلی"
-              onChange={handleChange}
-            >
-              {selectedSubItem?.data?.relatedCheckList?.map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-            </Select>
+            />
           </FormControl>
           <FormControl>
-            <InputLabel>کاربری</InputLabel>
-            <Select
-              value={info?.usabilities}
-              fullWidth={true}
-              name={"usabilities"}
+            <AutoCompleteComponent
+              options={usabilities?.data}
+              id="usabilities"
               label="کاربری"
-              onChange={handleChange}
-              multiple
-            >
-              {usabilities?.data?.map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.usablityName}
-                </MenuItem>
-              ))}
-            </Select>
+              changeHandler={(value) => {
+                setInfo((prev) => ({ ...prev, usabilities: value }));
+              }}
+              value={info?.usabilities || []}
+              dataLabel="usablityName"
+              multiple={true}
+            />
           </FormControl>
           <FormControl>
             <InputLabel>سطح آیتم فرعی</InputLabel>
@@ -294,103 +281,79 @@ const EditSubItem = () => {
             <div className="w-full flex flex-col gap-6">
               <div className="flex gap-12">
                 <FormControl className="w-full">
-                  <InputLabel>پروژه</InputLabel>
-                  <Select
+                  <AutoCompleteComponent
+                    options={allProjectsFloorUnitUsability?.data}
+                    id="projectId"
+                    label="پروژه"
+                    changeHandler={(value) => {
+                      setInfo((prev) => ({ ...prev, projectId: value }));
+                    }}
                     value={info?.projectId}
-                    fullWidth={true}
-                    name={"projectId"}
-                    label="آیتم اصلی"
-                    onChange={handleChange}
-                  >
-                    {allProjectsFloorUnitUsability?.data?.map((item) => (
-                      <MenuItem value={item.id} key={item?.id}>
-                        {item?.name}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  />
                 </FormControl>
                 <FormControl className="w-full">
-                  <InputLabel>طبقه</InputLabel>
-                  <Select
-                    value={info?.floorId}
-                    fullWidth={true}
-                    name={"floorId"}
-                    label="آیتم اصلی"
-                    onChange={handleChange}
-                    multiple
-                  >
-                    {allProjectsFloorUnitUsability?.data
-                      ?.find((project) => +project.id === info.projectId)
-                      ?.projectfloor?.map((item) => (
-                        <MenuItem value={item.id} key={item?.id}>
-                          {item?.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
+                  <AutoCompleteComponent
+                    options={
+                      allProjectsFloorUnitUsability?.data?.find(
+                        (project) => +project.id === +info?.projectId
+                      )?.projectfloor
+                    }
+                    id="floorId"
+                    label="طبقه"
+                    changeHandler={(value) => {
+                      setInfo((prev) => ({ ...prev, floorId: value }));
+                    }}
+                    value={info?.floorId || []}
+                    multiple={true}
+                  />
                 </FormControl>
                 <FormControl className="w-full">
-                  <InputLabel>واحد</InputLabel>
-                  <Select
-                    value={info?.unitId}
-                    fullWidth={true}
-                    name={"unitId"}
-                    label="آیتم اصلی"
-                    onChange={handleChange}
-                    multiple
-                  >
-                    {allProjectsFloorUnitUsability?.data
-                      ?.find((project) => +project.id === info.projectId)
-                      ?.projectfloor?.filter((floor) =>
-                        info.floorId?.includes(floor.id)
-                      )
-                      ?.flatMap((floor) => floor.projectUnit)
-                      ?.map((item) => (
-                        <MenuItem value={item.id} key={item?.id}>
-                          {item?.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
-                </FormControl>
-                <FormControl className="w-full">
-                  <InputLabel>کاربری</InputLabel>
-                  <Select
-                    value={info?.usabilityId}
-                    fullWidth={true}
-                    name={"usabilityId"}
-                    label="آیتم اصلی"
-                    onChange={handleChange}
-                    multiple
-                  >
-                    {allProjectsFloorUnitUsability?.data
-                      ?.find((project) => +project.id === info.projectId)
+                  <AutoCompleteComponent
+                    options={allProjectsFloorUnitUsability?.data
+                      ?.find((project) => +project.id === +info.projectId)
                       ?.projectfloor?.filter((floor) =>
                         info.floorId.includes(floor.id)
                       )
-                      ?.flatMap((floor) => floor.projectUnit)
-                      ?.filter((unit) => info.unitId.includes(unit.id))
-                      ?.flatMap((unit) => unit.unitsUsability)
-                      ?.map((item) => (
-                        <MenuItem value={item.id} key={item?.id}>
-                          {item?.name}
-                        </MenuItem>
-                      ))}
-                  </Select>
+                      .flatMap((floor) => floor?.projectUnit)}
+                    id="unitId"
+                    label="واحد"
+                    changeHandler={(value) => {
+                      setInfo((prev) => ({ ...prev, unitId: value }));
+                    }}
+                    value={info?.unitId || []}
+                    multiple={true}
+                  />
                 </FormControl>
                 <FormControl className="w-full">
-                  <InputLabel>پیمانکار</InputLabel>
-                  <Select
+                  <AutoCompleteComponent
+                    options={allProjectsFloorUnitUsability?.data
+                      ?.find((project) => +project.id === +info.projectId)
+                      ?.projectfloor?.filter((floor) =>
+                        info.floorId.includes(floor.id)
+                      )
+                      .flatMap((floor) => floor?.projectUnit)
+                      .filter((unit) => info.unitId.includes(unit.id))
+                      ?.flatMap((unit) => unit.unitsUsability)}
+                    id="usabilityId"
+                    label="کاربری"
+                    changeHandler={(value) => {
+                      setInfo((prev) => ({ ...prev, usabilityId: value }));
+                    }}
+                    value={info?.usabilityId || []}
+                    multiple={true}
+                  />
+                </FormControl>
+                <FormControl className="w-full">
+                  <AutoCompleteComponent
+                    options={contractors?.data}
+                    id="contractorId"
+                    label="پیمانکار"
+                    changeHandler={(value) => {
+                      setInfo((prev) => ({ ...prev, contractorId: value }));
+                    }}
                     value={info?.contractorId}
-                    fullWidth={true}
-                    name={"contractorId"}
-                    label="آیتم اصلی"
-                    onChange={handleChange}
-                  >
-                    {contractors?.data?.map((item) => (
-                      <MenuItem value={item.id} key={item?.id}>
-                        {item?.fullName}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                    dataLabel="fullName"
+                  />
                 </FormControl>
               </div>
               <Button

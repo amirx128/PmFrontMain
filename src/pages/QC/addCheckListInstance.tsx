@@ -19,6 +19,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { GetAllProjects_Floor_Unit_UsabilityAction } from "../../redux/features/definitionSlicer";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const AddCheckListInstance = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -78,166 +79,126 @@ const AddCheckListInstance = () => {
         }}
       >
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>پروژه</InputLabel>
-          <Select
-            value={info?.relatedProject}
-            fullWidth={true}
-            name={"relatedProject"}
+          <AutoCompleteComponent
+            sx={{ mt: 2 }}
+            options={allProjectsFloorUnitUsability?.data}
+            id="relatedProject"
             label="پروژه"
-            onChange={handleChange}
-          >
-            {allProjectsFloorUnitUsability?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedProject: value }));
+            }}
+            value={info?.relatedProject}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>طبقه</InputLabel>
-          <Select
-            value={info?.relatedFloor}
-            fullWidth={true}
-            name={"relatedFloor"}
+          <AutoCompleteComponent
+            options={
+              allProjectsFloorUnitUsability?.data?.find(
+                (project) => +project.id === +info?.relatedProject
+              )?.projectfloor
+            }
+            id="relatedFloor"
             label="طبقه"
-            onChange={handleChange}
-            multiple
-          >
-            {allProjectsFloorUnitUsability?.data
-              ?.find((project) => +project.id === +info?.relatedProject)
-              ?.projectfloor?.map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedFloor: value }));
+            }}
+            value={info?.relatedFloor || []}
+            multiple={true}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>واحد</InputLabel>
-          <Select
-            value={info?.relatedUnits}
-            fullWidth={true}
-            name={"relatedUnits"}
-            label="واحد"
-            onChange={handleChange}
-            multiple
-          >
-            {allProjectsFloorUnitUsability?.data
+          <AutoCompleteComponent
+            options={allProjectsFloorUnitUsability?.data
               ?.find((project) => +project.id === +info.relatedProject)
               ?.projectfloor?.filter((floor) =>
                 info.relatedFloor.includes(floor.id)
               )
-              .flatMap((floor) => floor?.projectUnit)
-              .map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-          </Select>
+              .flatMap((floor) => floor?.projectUnit)}
+            id="relatedUnits"
+            label="واحد"
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedUnits: value }));
+            }}
+            value={info?.relatedUnits || []}
+            multiple={true}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>کاربری</InputLabel>
-          <Select
-            value={info?.relatedUsability}
-            fullWidth={true}
-            name={"relatedUsability"}
-            label="کاربری"
-            onChange={handleChange}
-            multiple
-          >
-            {allProjectsFloorUnitUsability?.data
+          <AutoCompleteComponent
+            options={allProjectsFloorUnitUsability?.data
               ?.find((project) => +project.id === +info.relatedProject)
               ?.projectfloor?.filter((floor) =>
                 info.relatedFloor.includes(floor.id)
               )
               .flatMap((floor) => floor?.projectUnit)
               .filter((unit) => info.relatedUnits.includes(unit.id))
-              ?.flatMap((unit) => unit.unitsUsability)
-              .map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-          </Select>
+              ?.flatMap((unit) => unit.unitsUsability)}
+            id="relatedUsability"
+            label="کاربری"
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedUsability: value }));
+            }}
+            value={info?.relatedUsability || []}
+            multiple={true}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم اصلی</InputLabel>
-          <Select
-            value={info?.relatedOrginalItems}
-            fullWidth={true}
-            name={"relatedOrginalItems"}
+          <AutoCompleteComponent
+            options={allOrginalSubItemChechLists?.data}
+            id="relatedOrginalItems"
             label="آیتم اصلی"
-            onChange={handleChange}
-            multiple
-          >
-            {allOrginalSubItemChechLists?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedOrginalItems: value }));
+            }}
+            value={info?.relatedOrginalItems || []}
+            multiple={true}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم فرعی</InputLabel>
-          <Select
-            value={info?.relatedSubItems}
-            fullWidth={true}
-            name={"relatedSubItems"}
-            label="آیتم فرعی"
-            onChange={handleChange}
-            multiple
-          >
-            {allOrginalSubItemChechLists?.data
+          <AutoCompleteComponent
+            options={allOrginalSubItemChechLists?.data
               ?.filter((original) =>
                 info.relatedOrginalItems.includes(original.id)
               )
-              .flatMap((original) => original.subItems)
-              .map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-          </Select>
+              .flatMap((original) => original.subItems)}
+            id="relatedSubItems"
+            label="آیتم فرعی"
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedSubItems: value }));
+            }}
+            value={info?.relatedSubItems || []}
+            multiple={true}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>چک لیست</InputLabel>
-          <Select
-            value={info?.relatedCheckLists}
-            fullWidth={true}
-            name={"relatedCheckLists"}
-            label="چک لیست"
-            onChange={handleChange}
-            multiple
-          >
-            {allOrginalSubItemChechLists?.data
+          <AutoCompleteComponent
+            options={allOrginalSubItemChechLists?.data
               ?.filter((original) =>
                 info.relatedOrginalItems.includes(original.id)
               )
               .flatMap((original) => original.subItems)
               .filter((subItem) => info.relatedSubItems.includes(subItem.id))
-              .flatMap((subItem) => subItem.checkLists)
-              .map((item) => (
-                <MenuItem value={item.id} key={item?.id}>
-                  {item?.name}
-                </MenuItem>
-              ))}
-          </Select>
+              .flatMap((subItem) => subItem.checkLists)}
+            id="relatedCheckLists"
+            label="چک لیست"
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, relatedCheckLists: value }));
+            }}
+            value={info?.relatedCheckLists || []}
+            multiple={true}
+          />
         </FormControl>
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>پیمانکار</InputLabel>
-          <Select
-            value={info?.contractorUserId}
-            fullWidth={true}
-            name={"contractorUserId"}
+          <AutoCompleteComponent
+            options={contractors?.data || []}
+            id="contractorUserId"
             label="پیمانکار"
-            onChange={handleChange}
-          >
-            {contractors?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.fullName}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, contractorUserId: value }));
+            }}
+            value={info?.contractorUserId}
+            dataLabel="fullName"
+          />
         </FormControl>
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
