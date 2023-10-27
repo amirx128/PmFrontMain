@@ -1,7 +1,7 @@
 import { Autocomplete, TextField } from "@mui/material";
 
 const AutoCompleteComponent = ({
-  disablePortal = true,
+  disablePortal = false,
   id,
   options,
   label,
