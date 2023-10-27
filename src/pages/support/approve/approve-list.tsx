@@ -40,7 +40,10 @@ import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import axiosInstance from "../../../utils/axios.config";
 import AutoCompleteComponent from "../../../components/AutoComplete/AutoCompleteComponent.tsx";
 import TuneIcon from "@mui/icons-material/Tune";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { LoadingButton } from "@mui/lab";
+import CustomizeGrid from "../../../components/CustomizeGrid/CustomizeGrid.tsx";
 
 const SupportList: React.FC<any> = (props) => {
   const dispatch = useDispatch<any>();
@@ -408,18 +411,20 @@ const SupportList: React.FC<any> = (props) => {
   const getColumns = useCallback(async () => {
     const res = await axiosInstance.post("/AccountCountroller/GetGridColumns", {
       userId: JSON.parse(localStorage.getItem("user")).id,
-      gridName: "SUPPORT_APPROVE-final",
+      gridName: "SUPPORT_APPROVE-final-1",
     });
     if (res?.data?.model) {
       const cols = JSON.parse(res.data.model.grigConfigs).sort(
         (a, b) => +a.order - +b.order
       );
       setColumns(
-        cols.map((c) =>
-          Object.keys(c).includes("renderCell")
-            ? { ...c, renderCell: eval("(" + c.renderCell + ")") }
-            : c
-        )
+        cols
+          .map((c) =>
+            Object.keys(c).includes("renderCell")
+              ? { ...c, renderCell: eval("(" + c.renderCell + ")") }
+              : c
+          )
+          .filter((c) => c.isActive)
       );
       setTempColumns(
         cols.map((c) =>
@@ -429,15 +434,26 @@ const SupportList: React.FC<any> = (props) => {
         )
       );
     } else {
-      setColumns(defaultColumns.map((d, index) => ({ ...d, order: index })));
+      setColumns(
+        defaultColumns.map((d, index) => ({
+          ...d,
+          order: index,
+          isActive: true,
+        }))
+      );
       setTempColumns(
-        defaultColumns.map((d, index) => ({ ...d, order: index }))
+        defaultColumns.map((d, index) => ({
+          ...d,
+          order: index,
+          isActive: true,
+        }))
       );
     }
   }, []);
 
   const [columns, setColumns] = useState([]);
   const [tempColumns, setTempColumns] = useState([]);
+  const [defColumns, setDefColumns] = useState(defaultColumns);
 
   useEffect(() => {
     getList();
@@ -530,7 +546,7 @@ const SupportList: React.FC<any> = (props) => {
         "/AccountCountroller/SaveGridColumn",
         {
           userId: JSON.parse(localStorage.getItem("user")).id,
-          gridName: "SUPPORT_APPROVE-final",
+          gridName: "SUPPORT_APPROVE-final-1",
           gridConfigs: JSON.stringify(
             tempColumns.map((t) =>
               Object.keys(t).includes("renderCell")
@@ -549,6 +565,48 @@ const SupportList: React.FC<any> = (props) => {
     } finally {
       setSaveGridColumnsLoading(false);
     }
+  };
+  const handleChangeCheckbox = (e, column) => {
+    setTempColumns((prev) =>
+      prev.map((p) =>
+        p.field === column.field ? { ...p, isActive: !!e.target.checked } : p
+      )
+    );
+  };
+  const handleChangeSort = (mode, column) => {
+    const el = tempColumns.find((temp) => temp.field === column.field);
+    if (mode === "up") {
+      const oldEl = tempColumns.find((temp) => +temp.order === +el.order - 1);
+      setTempColumns((prev) =>
+        prev.map((p) =>
+          p.field === el.field
+            ? { ...p, order: p.order - 1 }
+            : p.field === oldEl.field
+            ? { ...p, order: +p.order + 1 }
+            : p
+        )
+      );
+    }
+    if (mode === "down") {
+      const oldEl = tempColumns.find((temp) => +temp.order === +el.order + 1);
+      setTempColumns((prev) =>
+        prev.map((p) =>
+          p.field === el.field
+            ? { ...p, order: +p.order + 1 }
+            : p.field === oldEl.field
+            ? { ...p, order: +p.order - 1 }
+            : p
+        )
+      );
+    }
+  };
+  const handleSelectAll = () => {
+    setTempColumns(
+      defaultColumns.map((column, index) => ({
+        ...column,
+        order: index,
+      }))
+    );
   };
   return (
     <CardGrid
@@ -631,55 +689,16 @@ const SupportList: React.FC<any> = (props) => {
               pagination={{}}
               onSortModelChange={handleSortModelChange}
             />
-
-            <Dialog
-              open={isShowCustomizeTableModal}
-              onClose={() => setIsShowCustomizeTableModal(false)}
-            >
-              <DialogTitle>شخصی سازی ستون ها</DialogTitle>
-              <DialogContent className="grid grid-cols-2 gap-x-56 gap-y-6 mt-10">
-                {defaultColumns
-                  .map((column, index) => ({ ...column, order: index }))
-                  .map((column) => (
-                    <div
-                      key={column.field}
-                      className="flex items-center text-center"
-                    >
-                      <Checkbox
-                        checked={tempColumns.some(
-                          (c) => c.field === column.field
-                        )}
-                        onChange={(e) =>
-                          setTempColumns((prev) =>
-                            e.target.checked
-                              ? [column, ...prev]
-                              : prev.filter((p) => p.field !== column.field)
-                          )
-                        }
-                      />
-                      <p className="w-48">{column.headerName}</p>
-                    </div>
-                  ))}
-              </DialogContent>
-              <DialogActions>
-                <LoadingButton
-                  variant="outlined"
-                  color="success"
-                  onClick={onSaveColumnsChanges}
-                  loading={saveGridColumnsLoading}
-                >
-                  ذخیره
-                </LoadingButton>
-                <Button
-                  variant="outlined"
-                  color="error"
-                  disabled={saveGridColumnsLoading}
-                  onClick={() => setIsShowCustomizeTableModal(false)}
-                >
-                  انصراف
-                </Button>
-              </DialogActions>
-            </Dialog>
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={() => setIsShowCustomizeTableModal(false)}
+              handleSave={onSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
           </>
         )}
       </Card>
