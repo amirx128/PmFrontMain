@@ -95,7 +95,7 @@ const LogisticsDetails = () => {
         purchaseOrderId: +orderDetailData.data.purchaseId,
         BaravordFeeKala: baravordFeeKala,
         BaravordkolMandeh: baravordkolMandeh,
-        AllAtachedFiles: files,
+        ...files,
       })
     );
     await dispatch(GetPurchaseOrderDataAction({ id: +id }));
@@ -113,7 +113,7 @@ const LogisticsDetails = () => {
         BaravordFeeKala: baravordFeeKala,
         BaravordkolMandeh: baravordkolMandeh,
         PurchaseOrderDetailsId: +purchaseRowSelected.id,
-        AllAtachedFiles: files,
+        ...files,
       })
     );
     await dispatch(GetPurchaseOrderDataAction({ id: +id }));
