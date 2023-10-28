@@ -33,7 +33,7 @@ const LogisticsDetails = () => {
   } = useSelector((state: any) => state?.purchase);
   const { suppliers } = useSelector((state: any) => state?.definition);
   const [mode, setMode] = useState<"edit" | "add">("add");
-  const [file, setFile] = useState<any>();
+  const [file, setFile] = useState<any>([]);
   const isEditable = purchaseRowSelected?.logisticEditable;
   const {
     register,
@@ -110,10 +110,6 @@ const LogisticsDetails = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
   };
   const uploadFile = async () => {
-    console.log(file);
-    const formData = new FormData();
-    formData.append("test-file", file);
-    console.log(formData);
     const res = await axiosInstance.post(
       "/Warehouse/Supplier.UploadFile",
       {
@@ -209,7 +205,11 @@ const LogisticsDetails = () => {
                 )}
               />
             </Box>
-            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+            <input
+              type="file"
+              onChange={(e) => setFile(e.target.files)}
+              multiple
+            />
             <button onClick={uploadFile}>send</button>
           </Grid>
           <ButtonContainer>
