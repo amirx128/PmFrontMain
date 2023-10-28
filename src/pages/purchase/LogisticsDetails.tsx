@@ -110,13 +110,22 @@ const LogisticsDetails = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
   };
   const uploadFile = async () => {
+    console.log(file);
     const formData = new FormData();
     formData.append("test-file", file);
     console.log(formData);
-    const res = await axiosInstance.post("/Warehouse/Supplier.UploadFile", {
-      userId: "1",
-      fileContent2: formData,
-    });
+    const res = await axiosInstance.post(
+      "/Warehouse/Supplier.UploadFile",
+      {
+        userId: "1",
+        fileContent2: formData,
+      },
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
     console.log(res);
   };
   return (
