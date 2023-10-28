@@ -1,4 +1,4 @@
-import { PageTileComponent} from "../style";
+import { PageTileComponent } from "../style";
 
 import { Card, Divider, Grid, Box, Button } from "@mui/material";
 import PurchaseForm from "./PurchaseForm";
@@ -20,6 +20,7 @@ import SelectComponent from "../../components/select/selects";
 import { useNavigate, useParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
+import axiosInstance from "../../utils/axios.config";
 
 const LogisticsDetails = () => {
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ const LogisticsDetails = () => {
   } = useSelector((state: any) => state?.purchase);
   const { suppliers } = useSelector((state: any) => state?.definition);
   const [mode, setMode] = useState<"edit" | "add">("add");
-
+  const [file, setFile] = useState<any>();
   const isEditable = purchaseRowSelected?.logisticEditable;
   const {
     register,
@@ -108,11 +109,19 @@ const LogisticsDetails = () => {
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
   };
+  const uploadFile = async () => {
+    const formData = new FormData();
+    formData.append("test-file", file);
+    console.log(formData);
+    const res = await axiosInstance.post("/Warehouse/Supplier.UploadFile", {
+      userId: "1",
+      fileContent2: formData,
+    });
+    console.log(res);
+  };
   return (
-
-
     <div>
-     <PageTileComponent __text= {document.title} />
+      <PageTileComponent __text={document.title} />
 
       <PurchaseForm isRowSelectedDefault={false} />
 
@@ -191,6 +200,8 @@ const LogisticsDetails = () => {
                 )}
               />
             </Box>
+            <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+            <button onClick={uploadFile}>send</button>
           </Grid>
           <ButtonContainer>
             {mode === "add" && (
