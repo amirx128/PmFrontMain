@@ -87,7 +87,7 @@ const LogisticsDetails = () => {
     const files = {};
     Object.entries(file).forEach(([key, value]) => {
       console.log(key);
-      files[`fileContent${Number(key) + 1}`] = value;
+      files[`FileContent${Number(key) + 1}`] = value;
     });
     await dispatch(
       AddDetailsToPurchaseOrderAction({
@@ -105,7 +105,7 @@ const LogisticsDetails = () => {
     const files = {};
     Object.entries(file).forEach(([key, value]) => {
       console.log(key);
-      files[`fileContent${Number(key) + 1}`] = value;
+      files[`FileContent${Number(key) + 1}`] = value;
     });
     await dispatch(
       UpdateDetailsToPurchaseOrderAction({
