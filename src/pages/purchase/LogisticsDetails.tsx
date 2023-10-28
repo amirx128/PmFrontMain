@@ -84,46 +84,42 @@ const LogisticsDetails = () => {
   };
   const handleAdd = async () => {
     const { baravordFeeKala, baravordkolMandeh, supporterId } = getValues();
+    const files = {};
+    Object.entries(file).forEach(([key, value]) => {
+      console.log(key);
+      files[`fileContent${Number(key) + 1}`] = value;
+    });
     await dispatch(
       AddDetailsToPurchaseOrderAction({
         supporterId: String(supporterId),
         purchaseOrderId: +orderDetailData.data.purchaseId,
         BaravordFeeKala: baravordFeeKala,
         BaravordkolMandeh: baravordkolMandeh,
+        files,
       })
     );
     await dispatch(GetPurchaseOrderDataAction({ id: +id }));
   };
   const handleEdit = async () => {
     const { baravordFeeKala, baravordkolMandeh, supporterId } = getValues();
+    const files = {};
+    Object.entries(file).forEach(([key, value]) => {
+      console.log(key);
+      files[`fileContent${Number(key) + 1}`] = value;
+    });
     await dispatch(
       UpdateDetailsToPurchaseOrderAction({
         supporterId: String(supporterId),
         BaravordFeeKala: baravordFeeKala,
         BaravordkolMandeh: baravordkolMandeh,
         PurchaseOrderDetailsId: +purchaseRowSelected.id,
+        files,
       })
     );
     await dispatch(GetPurchaseOrderDataAction({ id: +id }));
   };
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
-  };
-  const uploadFile = async () => {
-    console.log(Object.entries(file).map((f) => f[1]));
-    const res = await axiosInstance.post(
-      "/Warehouse/Supplier.UploadFile",
-      {
-        userId: "1",
-        fileContent2: Object.entries(file).map((f) => f[1]),
-      },
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-    console.log(res);
   };
   return (
     <div>
@@ -211,7 +207,6 @@ const LogisticsDetails = () => {
               onChange={(e) => setFile(e.target.files)}
               multiple
             />
-            <button onClick={uploadFile}>send</button>
           </Grid>
           <ButtonContainer>
             {mode === "add" && (
