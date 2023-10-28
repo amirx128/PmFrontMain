@@ -40,10 +40,8 @@ import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import axiosInstance from "../../../utils/axios.config";
 import AutoCompleteComponent from "../../../components/AutoComplete/AutoCompleteComponent.tsx";
 import TuneIcon from "@mui/icons-material/Tune";
-import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import { LoadingButton } from "@mui/lab";
 import CustomizeGrid from "../../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../../hooks/useCustomCol.tsx";
 
 const SupportList: React.FC<any> = (props) => {
   const dispatch = useDispatch<any>();
@@ -55,26 +53,6 @@ const SupportList: React.FC<any> = (props) => {
   );
   const [toDate, setToDate] = useState<any>(new Date());
   const [approveStateValue, setAppriveStateValue] = useState(0);
-  const [saveGridColumnsLoading, setSaveGridColumnsLoading] = useState(false);
-  const [isShowCustomizeTableModal, setIsShowCustomizeTableModal] =
-    useState(false);
-  const initialFilter = useRef({
-    fromDate: new Date().setMonth(new Date().getMonth() - 1),
-    toDate: new Date(),
-    approveStateId: 0,
-  });
-  const navigate = useNavigate();
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<any>({
-    defaultValues: { approveStateId: 0, fromDate: "", toDate: "" },
-  });
   const defaultColumns: GridColDef[] = [
     {
       field: "requesterUser",
@@ -408,56 +386,38 @@ const SupportList: React.FC<any> = (props) => {
       ),
     },
   ];
-  const getColumns = useCallback(async () => {
-    const res = await axiosInstance.post("/AccountCountroller/GetGridColumns", {
-      userId: JSON.parse(localStorage.getItem("user")).id,
-      gridName: "SUPPORT_APPROVE-final-1",
-    });
-    if (res?.data?.model) {
-      const cols = JSON.parse(res.data.model.grigConfigs).sort(
-        (a, b) => +a.order - +b.order
-      );
-      setColumns(
-        cols
-          .map((c) =>
-            Object.keys(c).includes("renderCell")
-              ? { ...c, renderCell: eval("(" + c.renderCell + ")") }
-              : c
-          )
-          .filter((c) => c.isActive)
-      );
-      setTempColumns(
-        cols.map((c) =>
-          Object.keys(c).includes("renderCell")
-            ? { ...c, renderCell: eval("(" + c.renderCell + ")") }
-            : c
-        )
-      );
-    } else {
-      setColumns(
-        defaultColumns.map((d, index) => ({
-          ...d,
-          order: index,
-          isActive: true,
-        }))
-      );
-      setTempColumns(
-        defaultColumns.map((d, index) => ({
-          ...d,
-          order: index,
-          isActive: true,
-        }))
-      );
-    }
-  }, []);
-
-  const [columns, setColumns] = useState([]);
-  const [tempColumns, setTempColumns] = useState([]);
-  const [defColumns, setDefColumns] = useState(defaultColumns);
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol("SUPPORT_APPROVE", defaultColumns);
+  const initialFilter = useRef({
+    fromDate: new Date().setMonth(new Date().getMonth() - 1),
+    toDate: new Date(),
+    approveStateId: 0,
+  });
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    control,
+    setValue,
+    getValues,
+    watch,
+    formState: { errors, isValid, isDirty },
+  } = useForm<any>({
+    defaultValues: { approveStateId: 0, fromDate: "", toDate: "" },
+  });
 
   useEffect(() => {
     getList();
-    getColumns();
   }, []);
   const handleEditClick = (entity) => {
     navigate("/supportApproveDetail/" + entity.requestCommodityId);
@@ -539,75 +499,7 @@ const SupportList: React.FC<any> = (props) => {
       })
     );
   };
-  const onSaveColumnsChanges = async () => {
-    setSaveGridColumnsLoading(true);
-    try {
-      const res = await axiosInstance.post(
-        "/AccountCountroller/SaveGridColumn",
-        {
-          userId: JSON.parse(localStorage.getItem("user")).id,
-          gridName: "SUPPORT_APPROVE-final-1",
-          gridConfigs: JSON.stringify(
-            tempColumns.map((t) =>
-              Object.keys(t).includes("renderCell")
-                ? { ...t, renderCell: t.renderCell.toString() }
-                : t
-            )
-          ),
-        }
-      );
-      if (res?.data.model) {
-        await getColumns();
-        setIsShowCustomizeTableModal(false);
-      }
-    } catch (err) {
-      console.error(err.message);
-    } finally {
-      setSaveGridColumnsLoading(false);
-    }
-  };
-  const handleChangeCheckbox = (e, column) => {
-    setTempColumns((prev) =>
-      prev.map((p) =>
-        p.field === column.field ? { ...p, isActive: !!e.target.checked } : p
-      )
-    );
-  };
-  const handleChangeSort = (mode, column) => {
-    const el = tempColumns.find((temp) => temp.field === column.field);
-    if (mode === "up") {
-      const oldEl = tempColumns.find((temp) => +temp.order === +el.order - 1);
-      setTempColumns((prev) =>
-        prev.map((p) =>
-          p.field === el.field
-            ? { ...p, order: p.order - 1 }
-            : p.field === oldEl.field
-            ? { ...p, order: +p.order + 1 }
-            : p
-        )
-      );
-    }
-    if (mode === "down") {
-      const oldEl = tempColumns.find((temp) => +temp.order === +el.order + 1);
-      setTempColumns((prev) =>
-        prev.map((p) =>
-          p.field === el.field
-            ? { ...p, order: +p.order + 1 }
-            : p.field === oldEl.field
-            ? { ...p, order: +p.order - 1 }
-            : p
-        )
-      );
-    }
-  };
-  const handleSelectAll = () => {
-    setTempColumns(
-      defaultColumns.map((column, index) => ({
-        ...column,
-        order: index,
-      }))
-    );
-  };
+
   return (
     <CardGrid
       item
@@ -671,7 +563,7 @@ const SupportList: React.FC<any> = (props) => {
               </IconButton>
               <IconButton
                 color="success"
-                onClick={() => setIsShowCustomizeTableModal(true)}
+                onClick={handleShowCustomizeTabelModal}
               >
                 <TuneIcon />
               </IconButton>
@@ -694,8 +586,8 @@ const SupportList: React.FC<any> = (props) => {
               columns={tempColumns}
               handleChangeCheckbox={handleChangeCheckbox}
               handleChangeSort={handleChangeSort}
-              handleClose={() => setIsShowCustomizeTableModal(false)}
-              handleSave={onSaveColumnsChanges}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
               handleSelectAll={handleSelectAll}
               isSaveLoading={saveGridColumnsLoading}
             />
