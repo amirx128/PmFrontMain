@@ -118,7 +118,7 @@ const LogisticsDetails = () => {
       "/Warehouse/Supplier.UploadFile",
       {
         userId: "1",
-        fileContent2: formData,
+        fileContent2: file,
       },
       {
         headers: {
