@@ -48,14 +48,14 @@ const CommodityTransactions = () => {
   const [isShowAll, setIsShowAll] = useState(false);
   // const SelectedItemId:id = 18;
   const columns: GridColDef[] = [
-    {
-      field: "id",
-      headerName: "شناسه تراکنش",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
+    // {
+    //   field: "id",
+    //   headerName: "شناسه تراکنش",
+    //   flex: 1,
+    //   minWidth: 150,
+    //   editable: false,
+    //   filterable: false,
+    // },
     {
       field: "exitWarehouseOrderTrackingCode",
       headerName: "تراکنش خروج از انبار",
@@ -123,18 +123,7 @@ const CommodityTransactions = () => {
       flex: 1,
       minWidth: 150,
       editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
+      filterable: false
     },
     {
       field: "activityDate",
@@ -180,6 +169,22 @@ const CommodityTransactions = () => {
       minWidth: 150,
       editable: false,
       filterable: false,
+
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+
+          >
+
+            <Link to={`/CommodityTransactions/${row.commodityId}`}>
+              {value}
+            </Link >
+          </Typography>
+        );
+      },
     },
     {
       field: "exitWarehouseOrderTrackingCode",
