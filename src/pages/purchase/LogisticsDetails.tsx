@@ -110,11 +110,12 @@ const LogisticsDetails = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
   };
   const uploadFile = async () => {
+    console.log(Object.entries(file).map((f) => f[1]));
     const res = await axiosInstance.post(
       "/Warehouse/Supplier.UploadFile",
       {
         userId: "1",
-        fileContent2: file,
+        fileContent2: Object.entries(file).map((f) => f[1]),
       },
       {
         headers: {
