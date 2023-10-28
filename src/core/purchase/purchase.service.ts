@@ -72,7 +72,7 @@ export const AddDetailsToPurchaseOrder = async (
     purchaseOrderId: number;
     BaravordFeeKala: number;
     BaravordkolMandeh: number;
-    files: any;
+    AllAtachedFiles: any;
   }
 ) =>
   await axiosInstance.post(
@@ -90,7 +90,7 @@ export const UpdateDetailsToPurchaseOrder = async (
     PurchaseOrderDetailsId: number;
     BaravordFeeKala: number;
     BaravordkolMandeh: number;
-    files: any;
+    AllAtachedFiles: any;
   }
 ) =>
   await axiosInstance.post(
