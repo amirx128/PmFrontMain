@@ -21,7 +21,10 @@ import {
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { purchaseColumns } from "../../utils/gridColumns.ts";
 const ApproveQueue = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -34,217 +37,18 @@ const ApproveQueue = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
-  const columns: GridColDef[] = [
-    {
-      field: "requesterUser",
-      headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderCount",
-      headerName: gridDict.purchaseOrderCount,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseOrderId",
-      headerName: gridDict.purchaseOrderId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseOrderTrackingCode",
-      headerName: gridDict.purchaseOrderTrackingCode,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseTrackingCode",
-      headerName: gridDict.requestCaseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseId",
-      headerName: gridDict.requestCaseId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "requestCaseCreateDate",
-      headerName: gridDict.requestCaseCreateDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.requestCaseCreateDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "countOfDone",
-      headerName: gridDict.countOfDone,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "commodityName",
-      headerName: gridDict.commodityName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "commodityId",
-      headerName: gridDict.commodityId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-
-    {
-      field: "purchaseTrackingCode",
-      headerName: gridDict.purchaseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseCommodityId",
-      headerName: gridDict.requestCaseCommodityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseOrderDetailsId",
-      headerName: gridDict.purchaseOrderDetailsId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "requiredDate",
-      headerName: gridDict.requiredDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => (
-        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
-      ),
-    },
-    {
-      field: "warehouseTrackingCode",
-      headerName: gridDict.warehouseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
-              {value}
-            </Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "warehouseOrderId",
-      headerName: gridDict.warehouseOrderId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-  ];
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol("َAPPROVE_QUEUE", purchaseColumns);
   useEffect(() => {
     getList();
   }, []);
@@ -363,27 +167,40 @@ const ApproveQueue = () => {
               <IconButton color="success" onClick={handleDownloadExcell}>
                 <SimCardDownloadIcon />
               </IconButton>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
 
-        <Grid
-          onDoubleClick={handleDoubleClick}
-          rowIdFields={[
-            "purchaseOrderId",
-            "requesterUser",
-            "requestCaseId",
-            "commodityId",
-            "requestCaseCommodityId",
-            "purchaseOrderDetailsId",
-            "warehouseOrderId",
-          ]}
-          columns={columns}
-          rows={queue?.data?.map((row, index) => ({ id: index, ...row })) ?? []}
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        {columns && !queue.pending && (
+          <>
+            <Grid
+              onDoubleClick={handleDoubleClick}
+              columns={columns}
+              rows={
+                queue?.data.map((row, index) => ({ id: index, ...row })) ?? []
+              }
+              pagination={{}}
+              onSortModelChange={handleSortModelChange}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );

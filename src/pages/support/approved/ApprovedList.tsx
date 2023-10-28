@@ -1,29 +1,19 @@
-import EditIcon from "@mui/icons-material/Edit";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
-import axios from "../../../utils/axios.config";
 import {
   Box,
   Card,
   Grid as CardGrid,
   CardHeader,
   IconButton,
-  Typography,
 } from "@mui/material";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import SelectComponent from "../../../components/select/selects";
+import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import JalaliDatePicker from "../../../components/date-picker/date-picker";
 import { Row } from "./style";
 import Grid from "../../../components/grid/grid";
 import { useDispatch, useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../../utils/functions.ts";
 import gridDict from "../../../dictionary/gridDict.ts";
 import {
   DownloadApproveQAction,
@@ -32,6 +22,10 @@ import {
 } from "../../../redux/features/supportSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 import AutoCompleteComponent from "../../../components/AutoComplete/AutoCompleteComponent.tsx";
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../../hooks/useCustomCol.tsx";
+import gridFunctionsEnum from "../../../models/gridFunctionsEnum.ts";
 
 const ApprovedList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
@@ -57,7 +51,7 @@ const ApprovedList: React.FC<any> = (props) => {
   } = useForm<any>({
     defaultValues: { approveStateId: 1, fromDate: "", toDate: "" },
   });
-  const columns: GridColDef[] = [
+  const defaultColumns = [
     {
       field: "requesterUser",
       headerName: gridDict.requesterUser,
@@ -73,9 +67,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "commodityName",
@@ -92,9 +84,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "requiredDate",
@@ -103,9 +93,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => (
-        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
-      ),
+      renderType: gridFunctionsEnum.showDateColumns,
     },
     {
       field: "count",
@@ -114,9 +102,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "newcount",
@@ -125,9 +111,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "trackingCode",
@@ -136,17 +120,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
+      renderType: gridFunctionsEnum.navigateToProductDetails_RequestCaseId,
     },
     {
       field: "isEditable",
@@ -155,17 +129,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            {value ? "بله" : "خیر"}
-          </Typography>
-        );
-      },
+      renderType: gridFunctionsEnum.showTrueFalseColumns,
     },
     {
       field: "createDate",
@@ -173,15 +137,8 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       sortable: false,
       filterable: false,
-
       flex: 1,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.createDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
+      renderType: gridFunctionsEnum.showDateColumns,
     },
     {
       field: "placeOfUseName",
@@ -198,9 +155,7 @@ const ApprovedList: React.FC<any> = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "approvestate",
@@ -217,9 +172,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "approverName",
@@ -236,13 +189,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
+      renderType: gridFunctionsEnum.showDateColumns,
     },
     {
       field: "finalApprovestate",
@@ -275,13 +222,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
+      renderType: gridFunctionsEnum.showDateColumns,
     },
     {
       field: "scheduleActivityId",
@@ -290,9 +231,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "purchaseOrderId",
@@ -301,9 +240,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "purchaseOrderTrackingCode",
@@ -312,17 +249,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
+      renderType: gridFunctionsEnum.navigateToPurchaseDetails_purchaseOrderId,
     },
     {
       field: "exitFromWarehouseId",
@@ -331,9 +258,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "exitFromWarehouseTrackingCode",
@@ -350,9 +275,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "purchaseCount",
@@ -361,9 +284,7 @@ const ApprovedList: React.FC<any> = (props) => {
       flex: 1,
       editable: false,
       filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
+      renderType: gridFunctionsEnum.showNumberColumns,
     },
     {
       field: "actions",
@@ -377,19 +298,24 @@ const ApprovedList: React.FC<any> = (props) => {
       type: "actions",
       cellClassName: "actions",
       disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => handleEditClick(params.row)}
-            color="inherit"
-          />
-        </>
-      ),
+      renderType: gridFunctionsEnum.actionEditColumn,
     },
   ];
+  const handleEditClick = (entity) => {
+    navigate("/supportApproveDetail/" + entity.requestCommodityId);
+  };
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol("SUPPORT_APPROVED_LIST_1", defaultColumns, handleEditClick);
   useEffect(() => {
     getList();
   }, []);
@@ -398,9 +324,6 @@ const ApprovedList: React.FC<any> = (props) => {
     (state: any) => state?.support?.approve
   );
 
-  const handleEditClick = (entity) => {
-    navigate("/supportApproveDetail/" + entity.requestCommodityId);
-  };
   const handleSortModelChange = async (sortArr) => {
     if (!sortArr.at(0)) {
       await dispatch(
@@ -538,18 +461,37 @@ const ApprovedList: React.FC<any> = (props) => {
               <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
-        <Grid
-          onDoubleClick={(e) => handleEditClick(e.row)}
-          rowIdFields={["approveStateId", "commodityName", "approverId"]}
-          columns={columns}
-          rows={approveQ?.data.map((row, index) => ({ id: index, ...row }))}
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        {columns && !approveQ.pending && (
+          <>
+            <Grid
+              onDoubleClick={(e) => handleEditClick(e.row)}
+              columns={columns}
+              rows={approveQ?.data.map((row, index) => ({ id: index, ...row }))}
+              pagination={{}}
+              onSortModelChange={handleSortModelChange}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );

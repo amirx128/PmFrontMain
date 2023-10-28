@@ -1,7 +1,8 @@
-import { useState, useCallback, useEffect } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import axiosInstance from "../utils/axios.config";
-
-const useCustomCol = (gridName, defColumns) => {
+import * as gridFunctions from "./../utils/gridFunctions";
+import gridFunctionsEnum from "../models/gridFunctionsEnum";
+const useCustomCol = (gridName, defColumns, handleEditClick = undefined) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [columns, setColumns] = useState([]);
@@ -19,33 +20,79 @@ const useCustomCol = (gridName, defColumns) => {
       setColumns(
         cols
           .map((c) =>
-            Object.keys(c).includes("renderCell")
-              ? { ...c, renderCell: eval("(" + c.renderCell + ")") }
+            Object.keys(c).includes("renderType")
+              ? c.renderType === gridFunctionsEnum.actionEditColumn
+                ? {
+                    ...c,
+                    renderCell: (params) =>
+                      gridFunctions.actionEditColumn(params, handleEditClick),
+                  }
+                : { ...c, renderCell: gridFunctions[c.renderType] }
               : c
           )
           .filter((c) => c.isActive)
       );
       setTempColumns(
         cols.map((c) =>
-          Object.keys(c).includes("renderCell")
-            ? { ...c, renderCell: eval("(" + c.renderCell + ")") }
+          Object.keys(c).includes("renderType")
+            ? c.renderType === gridFunctionsEnum.actionEditColumn
+              ? {
+                  ...c,
+                  renderCell: (params) =>
+                    gridFunctions.actionEditColumn(params, handleEditClick),
+                }
+              : { ...c, renderCell: gridFunctions[c.renderType] }
             : c
         )
       );
     } else {
       setColumns(
-        defColumns.map((d, index) => ({
-          ...d,
-          order: index,
-          isActive: true,
-        }))
+        defColumns.map((d, index) =>
+          Object.keys(d).includes("renderType")
+            ? d.renderType === gridFunctionsEnum.actionEditColumn
+              ? {
+                  ...d,
+                  order: index,
+                  isActive: true,
+                  renderCell: (params) =>
+                    gridFunctions.actionEditColumn(params, handleEditClick),
+                }
+              : {
+                  ...d,
+                  order: index,
+                  isActive: true,
+                  renderCell: gridFunctions[d.renderType],
+                }
+            : {
+                ...d,
+                order: index,
+                isActive: true,
+              }
+        )
       );
       setTempColumns(
-        defColumns.map((d, index) => ({
-          ...d,
-          order: index,
-          isActive: true,
-        }))
+        defColumns.map((d, index) =>
+          Object.keys(d).includes("renderType")
+            ? d.renderType === gridFunctionsEnum.actionEditColumn
+              ? {
+                  ...d,
+                  order: index,
+                  isActive: true,
+                  renderCell: (params) =>
+                    gridFunctions.actionEditColumn(params, handleEditClick),
+                }
+              : {
+                  ...d,
+                  order: index,
+                  isActive: true,
+                  renderCell: gridFunctions[d.renderType],
+                }
+            : {
+                ...d,
+                order: index,
+                isActive: true,
+              }
+        )
       );
     }
   }, []);
