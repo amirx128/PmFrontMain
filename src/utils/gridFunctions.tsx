@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import { GridActionsCellItem, GridRenderCellParams } from "@mui/x-data-grid";
 import { Link } from "react-router-dom";
 import EditIcon from "@mui/icons-material/Edit";
@@ -48,5 +48,17 @@ export const actionEditColumn = (params, handleEditClick) => {
         color="inherit"
       />
     </>
+  );
+};
+
+export const actionCustom = (params, handleAction) => {
+  return (
+    <Button
+      variant="contained"
+      color="inherit"
+      onClick={() => handleAction(params)}
+    >
+      ...
+    </Button>
   );
 };

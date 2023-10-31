@@ -21,7 +21,10 @@ import {
   RequesterUserSentItemAction,
 } from "../../redux/features/productSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { requestCaseGrid } from "../../utils/gridColumns.ts";
 const RequestCase = () => {
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
@@ -32,306 +35,18 @@ const RequestCase = () => {
     toDate: new Date(),
   });
 
-  const columns: GridColDef[] = [
-    {
-      field: "requesterUser",
-      headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "commodityName",
-      headerName: gridDict.commodityName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requiredDate",
-      headerName: gridDict.requiredDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => (
-        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
-      ),
-    },
-    {
-      field: "count",
-      headerName: gridDict.count,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "newcount",
-      headerName: gridDict.newcount,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "trackingCode",
-      headerName: gridDict.trackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => (
-        <Typography
-          variant="body1"
-          color="secondary"
-          sx={{ cursor: "pointer" }}
-        >
-          <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-        </Typography>
-      ),
-    },
-    {
-      field: "createDate",
-      headerName: gridDict.createDate,
-      minWidth: 150,
-      sortable: true,
-      filterable: false,
-      flex: 1,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.createDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-      //   valueGetter: (params: GridValueGetterParams) =>
-      //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
-    },
-    {
-      field: "requestCaseId",
-      headerName: gridDict.requestCaseId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "approvestate",
-      headerName: gridDict.approvestate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approverName",
-      headerName: gridDict.approverName,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approveDate",
-      headerName: gridDict.approveDate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "requesterUserId",
-      headerName: gridDict.requesterUserId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "isEditable",
-      headerName: gridDict.isEditable,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCommodityId",
-      headerName: gridDict.requestCommodityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "approverId",
-      headerName: gridDict.approverId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "finalApprovestate",
-      headerName: gridDict.finalApprovestate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproverId",
-      headerName: gridDict.finalApproverId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproverName",
-      headerName: gridDict.finalApproverName,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproveDate",
-      headerName: gridDict.finalApproveDate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "scheduleActivityId",
-      headerName: gridDict.scheduleActivityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "commodityId",
-      headerName: gridDict.commodityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseOrderId",
-      headerName: gridDict.purchaseOrderId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseOrderTrackingCode",
-      headerName: gridDict.purchaseOrderTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "exitFromWarehouseId",
-      headerName: gridDict.exitFromWarehouseId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "exitFromWarehouseTrackingCode",
-      headerName: gridDict.exitFromWarehouseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitFromWarehouseCount",
-      headerName: gridDict.exitFromWarehouseCount,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseCount",
-      headerName: gridDict.purchaseCount,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-  ];
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol("REQUEST_CASE_SENT_ITEM", requestCaseGrid);
   useEffect(() => {
     getList();
   }, []);
@@ -458,21 +173,42 @@ const RequestCase = () => {
               <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
 
-        <Grid
-          rowIdFields={["approveStateId", "commodityName"]}
-          columns={columns}
-          rows={requestUserSentItem?.data?.map((row, index) => ({
-            id: index,
-            ...row,
-          }))}
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        {columns && !requestUserSentItem.pending && (
+          <>
+            <Grid
+              columns={columns}
+              rows={
+                requestUserSentItem?.data.map((row, index) => ({
+                  id: index,
+                  ...row,
+                })) ?? []
+              }
+              pagination={{}}
+              onSortModelChange={handleSortModelChange}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );

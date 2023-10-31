@@ -29,7 +29,10 @@ import AddIcon from "@mui/icons-material/Add";
 import { Dialog, DialogTitle } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { subItemsGrid } from "../../utils/gridColumns.ts";
 interface IInitialStateReducer {
   selectedCheckLists: any[];
   isOpenCheckListsModal: boolean;
@@ -173,257 +176,60 @@ const SubItemsQCList = () => {
 
   const [state, reduceDispatch] = useReducer(reducer, initialStateReducer);
 
-  const columns: GridColDef[] = [
-    {
-      field: "id",
-      headerName: gridDict.id,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "name",
-      headerName: gridDict.name,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "allCheckList",
-      headerName: gridDict.allCheckList,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "CHECKLISTS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "allFloor",
-      headerName: gridDict.allFloor,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "FLOORS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "allProjects",
-      headerName: gridDict.allProjects,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "PROJECTS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "allUnit",
-      headerName: gridDict.allUnit,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "UNITS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "originalItemName",
-      headerName: gridDict.originalItemName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "relatedCheckList",
-      headerName: gridDict.relatedCheckList,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "RELATED_CHECKLISTS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "relatedFloor",
-      headerName: gridDict.relatedFloor,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "RELATED_FLOORS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "relatedProjects",
-      headerName: gridDict.relatedProjects,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "RELATED_PROJECTS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "relatedUnit",
-      headerName: gridDict.relatedUnit,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() =>
-              // @ts-ignore
-              reduceDispatch({
-                type: "RELATED_UNITS",
-                payload: { data: value, showModal: true },
-              })
-            }
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "actions",
-      headerName: gridDict.actions,
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => navigate(`edit/${params.row.id}`)}
-            color="inherit"
-          />
-        </>
-      ),
-    },
-  ];
-
+  const handleEditClick = (params) => {
+    navigate(`edit/${params.row.id}`);
+  };
+  const handleOpenItems = (params) => {
+    let type;
+    switch (params.field) {
+      case "allCheckList":
+        type = "CHECKLISTS";
+        break;
+      case "allFloor":
+        type = "FLOORS";
+        break;
+      case "allProjects":
+        type = "PROJECTS";
+        break;
+      case "allUnit":
+        type = "UNITS";
+        break;
+      case "relatedCheckList":
+        type = "RELATED_CHECKLISTS";
+        break;
+      case "relatedFloor":
+        type = "RELATED_FLOORS";
+        break;
+      case "relatedProjects":
+        type = "RELATED_PROJECTS";
+        break;
+      case "relatedUnit":
+        type = "RELATED_UNITS";
+        break;
+    }
+    // @ts-ignore
+    reduceDispatch({
+      type,
+      payload: { data: params.value, showModal: true },
+    });
+  };
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol(
+    "QC_SUB_ITEMS",
+    subItemsGrid,
+    handleEditClick,
+    handleOpenItems
+  );
   useEffect(() => {
     getList();
   }, []);
@@ -452,28 +258,35 @@ const SubItemsQCList = () => {
           title="آیتم اصلی"
           titleTypographyProps={{ variant: "h6" }}
         />
-        <Box sx={{ display: "flex", justifyContent: "end", pr: 10 }}>
+        <Box sx={{ display: "flex", justifyContent: "end", pr: 10, gap: 5 }}>
+          <IconButton color="success" onClick={handleShowCustomizeTabelModal}>
+            <TuneIcon />
+          </IconButton>
           <Button variant="outlined" onClick={() => navigate("add")}>
             <AddIcon />
             افزودن
           </Button>
         </Box>
 
-        <Grid
-          rowIdFields={[
-            "purchaseOrderId",
-            "requesterUser",
-            "requestCaseId",
-            "commodityId",
-            "requestCaseCommodityId",
-            "purchaseOrderDetailsId",
-            "warehouseOrderId",
-          ]}
-          columns={columns}
-          rows={subItems?.data ?? []}
-          pagination={{}}
-          // onDoubleClick={handleDoubleClick}
-        />
+        {columns && !subItems.pending && (
+          <>
+            <Grid
+              columns={columns}
+              rows={subItems?.data ?? []}
+              pagination={{}}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
         <Dialog
           open={state[state["modal"]]}
           onClose={() => {

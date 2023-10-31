@@ -26,7 +26,10 @@ import AddIcon from "@mui/icons-material/Add";
 import { Dialog, DialogTitle } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
-
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { usabilitiesGrid } from "../../utils/gridColumns.ts";
 const UsabilitiesListQC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -36,89 +39,29 @@ const UsabilitiesListQC = () => {
   const [isOpenSubItemsModal, setIsOpenSubItemsModal] =
     useState<boolean>(false);
 
-  const columns: GridColDef[] = [
-    {
-      field: "id",
-      headerName: gridDict.id,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "usablityName",
-      headerName: gridDict.usablityName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "units",
-      headerName: gridDict.units,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() => hanldeOpenSubItemModal(value)}
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "code",
-      headerName: gridDict.code,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "createDate",
-      headerName: gridDict.createDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => (
-        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
-      ),
-    },
-    {
-      field: "actions",
-      headerName: gridDict.actions,
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => navigate(`edit/${params.row.id}`)}
-            color="inherit"
-          />
-        </>
-      ),
-    },
-  ];
+  const handleEditClick = (params) => {
+    navigate(`edit/${params.row.id}`);
+  };
+  const handleOpenModal = (params) => {
+    hanldeOpenSubItemModal(params.value);
+  };
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol(
+    "QC_DEFINE_USABILITIES",
+    usabilitiesGrid,
+    handleEditClick,
+    handleOpenModal
+  );
   useEffect(() => {
     getList();
   }, []);
@@ -156,27 +99,34 @@ const UsabilitiesListQC = () => {
           titleTypographyProps={{ variant: "h6" }}
         />
         <Box sx={{ display: "flex", justifyContent: "end", pr: 10 }}>
+          <IconButton color="success" onClick={handleShowCustomizeTabelModal}>
+            <TuneIcon />
+          </IconButton>
           <Button variant="outlined" onClick={() => navigate("add")}>
             <AddIcon />
             افزودن
           </Button>
         </Box>
 
-        <Grid
-          rowIdFields={[
-            "purchaseOrderId",
-            "requesterUser",
-            "requestCaseId",
-            "commodityId",
-            "requestCaseCommodityId",
-            "purchaseOrderDetailsId",
-            "warehouseOrderId",
-          ]}
-          columns={columns}
-          rows={usabilities?.data ?? []}
-          pagination={{}}
-          // onDoubleClick={handleDoubleClick}
-        />
+        {columns && !usabilities.pending && (
+          <>
+            <Grid
+              columns={columns}
+              rows={usabilities?.data ?? []}
+              pagination={{}}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
         <Dialog open={isOpenSubItemsModal} onClose={handleCloseSubItemModal}>
           <DialogTitle>واحد ها</DialogTitle>
           <IconButton

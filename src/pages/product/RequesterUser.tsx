@@ -25,9 +25,11 @@ import {
   GetRequesterUserQAction,
 } from "../../redux/features/productSlicer.ts";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-import DashboardCustomizeIcon from "@mui/icons-material/DashboardCustomize";
-import { DialogContent } from "@material-ui/core";
 
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { requesterUserGrid } from "../../utils/gridColumns.ts";
 const RequesterUser = () => {
   const navigate = useNavigate();
   const [fromDate, setFromDate] = useState(
@@ -39,183 +41,18 @@ const RequesterUser = () => {
     toDate: new Date(),
   });
 
-  const columns: GridColDef[] = [
-    {
-      field: "requesterUser",
-      headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "commodityName",
-      headerName: gridDict.commodityName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requiredDate",
-      headerName: gridDict.requiredDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => (
-        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
-      ),
-    },
-    {
-      field: "purchaseOrderId",
-      headerName: gridDict.purchaseOrderId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "purchaseOrderTrackingCode",
-      headerName: gridDict.purchaseOrderTrackingCode,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseId",
-      headerName: gridDict.requestCaseId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "requestCaseTrackingCode",
-      headerName: gridDict.requestCaseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseCreateDate",
-      headerName: gridDict.requestCaseCreateDate,
-      minWidth: 150,
-      sortable: false,
-      filterable: false,
-      flex: 1,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.createDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "commodityId",
-      headerName: gridDict.commodityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "warehouseOrderCount",
-      headerName: "تعداد سفارش از انبار",
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCaseCommodityId",
-      headerName: gridDict.requestCaseCommodityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "countOfDone",
-      headerName: gridDict.countOfDone,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-    {
-      field: "warehouseTrackingCode",
-      headerName: gridDict.warehouseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
-              {value}
-            </Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "warehouseOrderId",
-      headerName: gridDict.warehouseOrderId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return <p>{new Intl.NumberFormat().format(+value)}</p>;
-      },
-    },
-  ];
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol("REQUESTER_USER", requesterUserGrid);
   useEffect(() => {
     getList();
   }, []);
@@ -293,20 +130,7 @@ const RequesterUser = () => {
       })
     );
   };
-  const handleOpenCustomizeColumns = () => {};
-  const allColumns = [
-    { id: 0, title: "تست", value: "test" },
-    { id: 1, title: "تست", value: "test" },
-    { id: 2, title: "تست", value: "test" },
-    { id: 3, title: "تست", value: "test" },
-    { id: 4, title: "تست", value: "test" },
-    { id: 5, title: "تست", value: "test" },
-    { id: 6, title: "تست", value: "test" },
-    { id: 7, title: "تست", value: "test" },
-    { id: 8, title: "تست", value: "test" },
-    { id: 9, title: "تست", value: "test" },
-    { id: 10, title: "تست", value: "test" },
-  ];
+
   return (
     <CardGrid
       item
@@ -323,20 +147,6 @@ const RequesterUser = () => {
           title="لیست حواله های دریافتی"
           titleTypographyProps={{ variant: "h6" }}
         />
-        <Dialog open={false}>
-          <DialogTitle>شخصی سازی ستون ها</DialogTitle>
-          <DialogContent>
-            <ColumnGrid>
-              {allColumns.map((column) => (
-                <FormControlLabel
-                  dir="ltr"
-                  control={<Switch color="success" />}
-                  label={column.title}
-                />
-              ))}
-            </ColumnGrid>
-          </DialogContent>
-        </Dialog>
 
         <Box>
           <form>
@@ -372,26 +182,43 @@ const RequesterUser = () => {
               <IconButton onClick={handleDownloadExcel} color="success">
                 <SimCardDownloadIcon />
               </IconButton>
-              <IconButton onClick={handleOpenCustomizeColumns} color="success">
-                <DashboardCustomizeIcon />
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
               </IconButton>
-
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
 
-        <Grid
-          rowIdFields={["approveStateId", "commodityName"]}
-          columns={columns}
-          rows={requesterUserQ?.data?.map((row, index) => ({
-            id: index,
-            ...row,
-          }))}
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-          onDoubleClick={handleDoubleClick}
-        />
+        {columns && !requesterUserQ.pending && (
+          <>
+            <Grid
+              columns={columns}
+              rows={
+                requesterUserQ?.data.map((row, index) => ({
+                  id: index,
+                  ...row,
+                })) ?? []
+              }
+              pagination={{}}
+              onSortModelChange={handleSortModelChange}
+              onDoubleClick={handleDoubleClick}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );

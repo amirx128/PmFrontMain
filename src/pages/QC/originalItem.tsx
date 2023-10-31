@@ -27,6 +27,10 @@ import { Dialog, DialogTitle } from "@material-ui/core";
 import CloseIcon from "@mui/icons-material/Close";
 import EditIcon from "@mui/icons-material/Edit";
 
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { originalItemsGrid } from "../../utils/gridColumns.ts";
 const OriginalItemListQC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -36,67 +40,31 @@ const OriginalItemListQC = () => {
   const [isOpenSubItemsModal, setIsOpenSubItemsModal] =
     useState<boolean>(false);
 
-  const columns: GridColDef[] = [
-    {
-      field: "id",
-      headerName: gridDict.id,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "name",
-      headerName: gridDict.name,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "subItems",
-      headerName: gridDict.subItems,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value }) => {
-        return (
-          <Button
-            variant="contained"
-            color="inherit"
-            onClick={() => hanldeOpenSubItemModal(value)}
-          >
-            ...
-          </Button>
-        );
-      },
-    },
-    {
-      field: "actions",
-      headerName: gridDict.actions,
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => navigate(`edit/${params.row.id}`)}
-            color="inherit"
-          />
-        </>
-      ),
-    },
-  ];
+  const handleEditClick = (params) => {
+    navigate(`edit/${params.row.id}`);
+  };
+  const hanldeOpenSubItemModal = (paramas) => {
+    setSelectedSubItems(paramas.value ?? []);
+    setIsOpenSubItemsModal(true);
+  };
+
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol(
+    "QC_ORIGINAL_ITEMS",
+    originalItemsGrid,
+    handleEditClick,
+    hanldeOpenSubItemModal
+  );
   useEffect(() => {
     getList();
   }, []);
@@ -108,10 +76,7 @@ const OriginalItemListQC = () => {
   const handleDoubleClick = (e) => {
     navigate(`/warehouse/details/${e.row.warehouseOrderId}`);
   };
-  const hanldeOpenSubItemModal = (subItems) => {
-    setSelectedSubItems(subItems ?? []);
-    setIsOpenSubItemsModal(true);
-  };
+
   const handleCloseSubItemModal = () => {
     setSelectedSubItems([]);
     setIsOpenSubItemsModal(false);
@@ -133,28 +98,35 @@ const OriginalItemListQC = () => {
           title="آیتم اصلی"
           titleTypographyProps={{ variant: "h6" }}
         />
-        <Box sx={{ display: "flex", justifyContent: "end", pr: 10 }}>
+        <Box sx={{ display: "flex", justifyContent: "end", pr: 10, gap: 5 }}>
+          <IconButton color="success" onClick={handleShowCustomizeTabelModal}>
+            <TuneIcon />
+          </IconButton>
           <Button variant="outlined" onClick={() => navigate("add")}>
             <AddIcon />
             افزودن
           </Button>
         </Box>
 
-        <Grid
-          rowIdFields={[
-            "purchaseOrderId",
-            "requesterUser",
-            "requestCaseId",
-            "commodityId",
-            "requestCaseCommodityId",
-            "purchaseOrderDetailsId",
-            "warehouseOrderId",
-          ]}
-          columns={columns}
-          rows={originalItems?.data ?? []}
-          pagination={{}}
-          // onDoubleClick={handleDoubleClick}
-        />
+        {columns && !originalItems.pending && (
+          <>
+            <Grid
+              columns={columns}
+              rows={originalItems?.data ?? []}
+              pagination={{}}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
         <Dialog open={isOpenSubItemsModal} onClose={handleCloseSubItemModal}>
           <DialogTitle>آیتم های فرعی</DialogTitle>
           <IconButton

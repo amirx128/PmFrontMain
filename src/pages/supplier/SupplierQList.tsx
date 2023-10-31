@@ -171,6 +171,12 @@ const SupplierQList = () => {
               <IconButton color="success" onClick={handleDownloadExcell}>
                 <SimCardDownloadIcon />
               </IconButton>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>

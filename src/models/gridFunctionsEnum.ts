@@ -6,6 +6,7 @@ enum gridFunctionsEnum {
   navigateToPurchaseDetails_purchaseOrderId = "navigateToPurchaseDetails_purchaseOrderId",
   actionEditColumn = "actionEditColumn",
   navigateToWarehouseDetails_warehouseOrderId = "navigateToWarehouseDetails_warehouseOrderId",
+  actionCustom = "actionCustom",
 }
 
 export default gridFunctionsEnum;

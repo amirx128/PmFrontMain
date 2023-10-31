@@ -2,7 +2,12 @@ import React, { useState, useCallback, useEffect } from "react";
 import axiosInstance from "../utils/axios.config";
 import * as gridFunctions from "./../utils/gridFunctions";
 import gridFunctionsEnum from "../models/gridFunctionsEnum";
-const useCustomCol = (gridName, defColumns, handleEditClick = undefined) => {
+const useCustomCol = (
+  gridName,
+  defColumns,
+  handleEditClick = undefined,
+  handleCustomAction = undefined
+) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isShowModal, setIsShowModal] = useState(false);
   const [columns, setColumns] = useState([]);
@@ -27,6 +32,12 @@ const useCustomCol = (gridName, defColumns, handleEditClick = undefined) => {
                     renderCell: (params) =>
                       gridFunctions.actionEditColumn(params, handleEditClick),
                   }
+                : c.renderType === gridFunctionsEnum.actionCustom
+                ? {
+                    ...c,
+                    renderCell: (params) =>
+                      gridFunctions.actionCustom(params, handleCustomAction),
+                  }
                 : { ...c, renderCell: gridFunctions[c.renderType] }
               : c
           )
@@ -40,6 +51,12 @@ const useCustomCol = (gridName, defColumns, handleEditClick = undefined) => {
                   ...c,
                   renderCell: (params) =>
                     gridFunctions.actionEditColumn(params, handleEditClick),
+                }
+              : c.renderType === gridFunctionsEnum.actionCustom
+              ? {
+                  ...c,
+                  renderCell: (params) =>
+                    gridFunctions.actionCustom(params, handleCustomAction),
                 }
               : { ...c, renderCell: gridFunctions[c.renderType] }
             : c
@@ -56,6 +73,14 @@ const useCustomCol = (gridName, defColumns, handleEditClick = undefined) => {
                   isActive: true,
                   renderCell: (params) =>
                     gridFunctions.actionEditColumn(params, handleEditClick),
+                }
+              : d.renderType === gridFunctionsEnum.actionCustom
+              ? {
+                  ...d,
+                  order: index,
+                  isActive: true,
+                  renderCell: (params) =>
+                    gridFunctions.actionCustom(params, handleCustomAction),
                 }
               : {
                   ...d,
@@ -80,6 +105,14 @@ const useCustomCol = (gridName, defColumns, handleEditClick = undefined) => {
                   isActive: true,
                   renderCell: (params) =>
                     gridFunctions.actionEditColumn(params, handleEditClick),
+                }
+              : d.renderType === gridFunctionsEnum.actionCustom
+              ? {
+                  ...d,
+                  order: index,
+                  isActive: true,
+                  renderCell: (params) =>
+                    gridFunctions.actionCustom(params, handleCustomAction),
                 }
               : {
                   ...d,
