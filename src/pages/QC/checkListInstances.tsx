@@ -13,32 +13,36 @@ import {
   Dialog,
   DialogContentText,
   DialogActions,
-} from "@mui/material";
+} from '@mui/material';
 import {
   GridActionsCellItem,
   GridColDef,
   GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { useEffect, useRef, useState } from "react";
-import Grid from "../../components/grid/grid.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import gridDict from "../../dictionary/gridDict.ts";
-import { useNavigate } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
+} from '@mui/x-data-grid';
+import { useEffect, useRef, useState } from 'react';
+import Grid from '../../components/grid/grid.tsx';
+import { useDispatch, useSelector } from 'react-redux';
+import gridDict from '../../dictionary/gridDict.ts';
+import { useNavigate } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
   AllActiveCheckListsAction,
   DeleteQcInstanceAction,
   GetControlCheckListStatesAction,
-} from "../../redux/features/qcSlicer.ts";
-import AddIcon from "@mui/icons-material/Add";
-import EditIcon from "@mui/icons-material/Edit";
-import { Row } from "./style.tsx";
-import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
-import Filter from "@mui/icons-material/FilterAlt";
-import FilterOff from "@mui/icons-material/FilterAltOff";
-import { Controller, useForm } from "react-hook-form";
-import SelectComponent from "../../components/select/selects.tsx";
-import { LoadingButton } from "@mui/lab";
+} from '../../redux/features/qcSlicer.ts';
+import AddIcon from '@mui/icons-material/Add';
+import EditIcon from '@mui/icons-material/Edit';
+import { Row } from './style.tsx';
+import JalaliDatePicker from '../../components/date-picker/date-picker.tsx';
+import Filter from '@mui/icons-material/FilterAlt';
+import FilterOff from '@mui/icons-material/FilterAltOff';
+import { Controller, useForm } from 'react-hook-form';
+import SelectComponent from '../../components/select/selects.tsx';
+import { LoadingButton } from '@mui/lab';
+import TuneIcon from '@mui/icons-material/Tune';
+import CustomizeGrid from '../../components/CustomizeGrid/CustomizeGrid.tsx';
+import useCustomCol from '../../hooks/useCustomCol.tsx';
+import { checklistInstancesGrid } from '../../utils/gridColumns.ts';
 const CheckListInstancesList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -61,99 +65,26 @@ const CheckListInstancesList = () => {
   const { control, getValues } = useForm<any>({
     defaultValues: { checkListStateId: 1 },
   });
-  const columns: GridColDef[] = [
-    {
-      field: "checkListId",
-      headerName: gridDict.id,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "checkListInstanceId",
-      headerName: gridDict.checkListInstanceId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "checkListState",
-      headerName: gridDict.checkListState,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "checkListTitle",
-      headerName: gridDict.checkListTitle,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "checkListTrackingNumber",
-      headerName: gridDict.checkListTrackingNumber,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "placeTitle",
-      headerName: gridDict.placeTitle,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "subItemTitle",
-      headerName: gridDict.subItemTitle,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
+  const handleEditClick = (params) => {
+    navigate(`edit/${params.row.checkListInstanceId}`);
+  };
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol(
+    'QC_CHECKLIST_INSTANCES',
+    checklistInstancesGrid,
+    handleEditClick
+  );
 
-    {
-      field: "actions",
-      headerName: gridDict.actions,
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => navigate(`edit/${params.row.checkListInstanceId}`)}
-            color="inherit"
-          />
-          <GridActionsCellItem
-            icon={<DeleteIcon />}
-            label="Delete"
-            className="textPrimary"
-            onClick={() => {
-              setIdsDelete([params.row.checkListInstanceId]);
-              setWarningREmoveModal(true);
-            }}
-            color="error"
-          />
-        </>
-      ),
-    },
-  ];
   useEffect(() => {
     getList();
   }, []);
@@ -206,23 +137,23 @@ const CheckListInstancesList = () => {
       xs={12}
       sx={{
         borderRadius: 2,
-        boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
-        marginBottom: "10px",
+        boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, 0.1)',
+        marginBottom: '10px',
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
-          style={{ textAlign: "right" }}
+          style={{ textAlign: 'right' }}
           title="چک لیست ها"
-          titleTypographyProps={{ variant: "h6" }}
+          titleTypographyProps={{ variant: 'h6' }}
         />
         <Box>
           <form>
             <Row>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <Controller
                   control={control}
-                  rules={{ required: " approve state is required" }}
+                  rules={{ required: ' approve state is required' }}
                   name="checkListStateId"
                   defaultValue={0}
                   render={({ field }) => (
@@ -236,7 +167,7 @@ const CheckListInstancesList = () => {
                   )}
                 />
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={fromDate}
                   onChange={setSelectedFromDate}
@@ -245,7 +176,7 @@ const CheckListInstancesList = () => {
                   value={fromDate}
                 ></JalaliDatePicker>
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={toDate}
                   onChange={setSelectedToDate}
@@ -264,16 +195,22 @@ const CheckListInstancesList = () => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
               {/* <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton> */}
-              <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}></Box>
             </Row>
           </form>
         </Box>
 
-        <Box sx={{ display: "flex", justifyContent: "end", pr: 10, gap: 5 }}>
-          <Button variant="outlined" onClick={() => navigate("add")}>
+        <Box sx={{ display: 'flex', justifyContent: 'end', pr: 10, gap: 5 }}>
+          <Button variant="outlined" onClick={() => navigate('add')}>
             <AddIcon />
             افزودن
           </Button>
@@ -287,19 +224,30 @@ const CheckListInstancesList = () => {
             حذف موارد انتخابی
           </Button>
         </Box>
-        {checkListInstances?.pending || (
-          <Grid
-            columns={columns}
-            rows={
-              checkListInstances?.data.map((rows, index) => ({
-                ...rows,
-                id: rows.checkListInstanceId,
-              })) ?? []
-            }
-            pagination={{}}
-            onRowSelected={(e) => setIdsDelete(e)}
-            // onDoubleClick={handleDoubleClick}
-          />
+        {columns && !checkListInstances.pending && (
+          <>
+            <Grid
+              columns={columns}
+              rows={
+                checkListInstances?.data.map((rows, index) => ({
+                  ...rows,
+                  id: rows.checkListInstanceId,
+                })) ?? []
+              }
+              pagination={{}}
+              onRowSelected={(e) => setIdsDelete(e)}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
         )}
 
         <Dialog

@@ -4,13 +4,13 @@ import {
   CardHeader,
   Grid as CardGrid,
   IconButton,
-} from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import Grid from "../../components/grid/grid.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import gridDict from "../../dictionary/gridDict.ts";
-import { useNavigate } from "react-router-dom";
+} from '@mui/material';
+import { GridColDef } from '@mui/x-data-grid';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import Grid from '../../components/grid/grid.tsx';
+import { useDispatch, useSelector } from 'react-redux';
+import gridDict from '../../dictionary/gridDict.ts';
+import { useNavigate } from 'react-router-dom';
 import {
   ContractorAddDateQAction,
   ContractorAddDateSentItemsAction,
@@ -31,33 +31,36 @@ import {
   TechnicalApproveScheduleSentItemAction,
   TechnicalOfficeAddOrdersQAction,
   TechnicalOfficeAddOrdersSentItemsAction,
-} from "../../redux/features/qcSlicer.ts";
-import { Row } from "./style.tsx";
-import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
-import Filter from "@mui/icons-material/FilterAlt";
-import FilterOff from "@mui/icons-material/FilterAltOff";
-import { Controller, useForm } from "react-hook-form";
-import SelectComponent from "../../components/select/selects.tsx";
-
+} from '../../redux/features/qcSlicer.ts';
+import { Row } from './style.tsx';
+import JalaliDatePicker from '../../components/date-picker/date-picker.tsx';
+import Filter from '@mui/icons-material/FilterAlt';
+import FilterOff from '@mui/icons-material/FilterAltOff';
+import { Controller, useForm } from 'react-hook-form';
+import SelectComponent from '../../components/select/selects.tsx';
+import TuneIcon from '@mui/icons-material/Tune';
+import CustomizeGrid from '../../components/CustomizeGrid/CustomizeGrid.tsx';
+import useCustomCol from '../../hooks/useCustomCol.tsx';
+import { qcGrid } from '../../utils/gridColumns.ts';
 const modeDict = {
-  "contractor-add-date": "منتظر اعلام زمان",
-  "contractor-add-date-sent-item": "اعلام زمان شده ها",
-  "technical-approve": "دفتر فنی - منتظر تایید",
-  "technical-sent-item": "دفتر فنی - تایید شده ها",
-  "qc-date": "منتظر اعلام برنامه بازدید",
-  "qc-date-sent-item": "اعلام شده",
-  "control-checklist": "ثبت چک لیست ها",
-  "control-checklist-sent-item": "ثبت شده",
-  "manager-control-checklist": "مدیر کیفیت- منتظر تایید",
-  "manager-control-checklist-sent-item": "مدیر کیفیت- تایید شده",
-  "final-control-checklist": "کنترل کیفیت نهایی- منتظر تایید",
-  "final-control-checklist-sent-item": "کنترل کیفیت نهایی- تایید شده",
-  "entry-checklist": "کارمند کیفیت- تایید شده",
-  "entry-checklist-sent-item": "کارمند کیفیت- تایید شده",
-  "contractor-set-is-done": "منتظر اعلام انجام",
-  "contractor-set-is-done-sent-item": "اعلام شده",
-  "technical-office": "منتظر دستور",
-  "technical-office-sent-item": "دستور داده شده",
+  'contractor-add-date': 'منتظر اعلام زمان',
+  'contractor-add-date-sent-item': 'اعلام زمان شده ها',
+  'technical-approve': 'دفتر فنی - منتظر تایید',
+  'technical-sent-item': 'دفتر فنی - تایید شده ها',
+  'qc-date': 'منتظر اعلام برنامه بازدید',
+  'qc-date-sent-item': 'اعلام شده',
+  'control-checklist': 'ثبت چک لیست ها',
+  'control-checklist-sent-item': 'ثبت شده',
+  'manager-control-checklist': 'مدیر کیفیت- منتظر تایید',
+  'manager-control-checklist-sent-item': 'مدیر کیفیت- تایید شده',
+  'final-control-checklist': 'کنترل کیفیت نهایی- منتظر تایید',
+  'final-control-checklist-sent-item': 'کنترل کیفیت نهایی- تایید شده',
+  'entry-checklist': 'کارمند کیفیت- تایید شده',
+  'entry-checklist-sent-item': 'کارمند کیفیت- تایید شده',
+  'contractor-set-is-done': 'منتظر اعلام انجام',
+  'contractor-set-is-done-sent-item': 'اعلام شده',
+  'technical-office': 'منتظر دستور',
+  'technical-office-sent-item': 'دستور داده شده',
 };
 const initialFilter = {
   checkListStateId: 1,
@@ -96,123 +99,74 @@ const QcGrid = ({ mode }) => {
   const { control, getValues } = useForm<any>({
     defaultValues: { checkListStateId: 1 },
   });
-  const columns: GridColDef[] = useMemo(
-    () => [
-      {
-        field: "checkListId",
-        headerName: gridDict.id,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-      {
-        field: "checkListInstanceId",
-        headerName: gridDict.checkListInstanceId,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-      {
-        field: "checkListState",
-        headerName: gridDict.checkListState,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-      {
-        field: "checkListTitle",
-        headerName: gridDict.checkListTitle,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-      {
-        field: "checkListTrackingNumber",
-        headerName: gridDict.checkListTrackingNumber,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-      {
-        field: "placeTitle",
-        headerName: gridDict.placeTitle,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-      {
-        field: "subItemTitle",
-        headerName: gridDict.subItemTitle,
-        flex: 1,
-        minWidth: 150,
-        editable: false,
-        filterable: false,
-      },
-    ],
-    []
-  );
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol(`QC_${mode}`, qcGrid);
 
   const getList = useCallback(async () => {
     await dispatch(GetCheckListStatesAction());
     switch (mode) {
-      case "contractor-add-date":
+      case 'contractor-add-date':
         await dispatch(ContractorAddDateQAction({}));
         break;
-      case "contractor-add-date-sent-item":
+      case 'contractor-add-date-sent-item':
         await dispatch(ContractorAddDateSentItemsAction({}));
         break;
-      case "technical-approve":
+      case 'technical-approve':
         await dispatch(TechnicalApproveScheduleQAction({}));
         break;
-      case "technical-sent-item":
+      case 'technical-sent-item':
         await dispatch(TechnicalApproveScheduleSentItemAction({}));
         break;
-      case "qc-date":
+      case 'qc-date':
         await dispatch(SetQcDateQAction({}));
         break;
-      case "qc-date-sent-item":
+      case 'qc-date-sent-item':
         await dispatch(SetQcDateSentItemsAction({}));
         break;
-      case "control-checklist":
+      case 'control-checklist':
         await dispatch(InspectControlCheckListQAction({}));
         break;
-      case "control-checklist-sent-item":
+      case 'control-checklist-sent-item':
         await dispatch(InspectControlCheckListSentItemsAction({}));
         break;
-      case "manager-control-checklist":
+      case 'manager-control-checklist':
         await dispatch(QcManagerControlCheckListQAction({}));
         break;
-      case "manager-control-checklist-sent-item":
+      case 'manager-control-checklist-sent-item':
         await dispatch(QcManagerControlCheckListSentItemsAction({}));
         break;
-      case "final-control-checklist":
+      case 'final-control-checklist':
         await dispatch(QcFinalApproveQAction({}));
         break;
-      case "final-control-checklist-sent-item":
+      case 'final-control-checklist-sent-item':
         await dispatch(QcFinalApproveSentItemsAction({}));
         break;
-      case "entry-checklist":
+      case 'entry-checklist':
         await dispatch(InspectorEntryCheckListQAction({}));
         break;
-      case "entry-checklist-sent-item":
+      case 'entry-checklist-sent-item':
         await dispatch(InspectorEntryCheckListSentItemsAction({}));
         break;
-      case "contractor-set-is-done":
+      case 'contractor-set-is-done':
         await dispatch(ContractorSetIsDoneQAction({}));
         break;
-      case "contractor-set-is-done-sent-item":
+      case 'contractor-set-is-done-sent-item':
         await dispatch(ContractorSetIsDoneSentItemsAction({}));
         break;
-      case "technical-office":
+      case 'technical-office':
         await dispatch(TechnicalOfficeAddOrdersQAction({}));
         break;
-      case "technical-office-sent-item":
+      case 'technical-office-sent-item':
         await dispatch(TechnicalOfficeAddOrdersSentItemsAction({}));
         break;
     }
@@ -225,17 +179,17 @@ const QcGrid = ({ mode }) => {
   const handleDoubleClick = (e) => {
     if (
       [
-        "entry-checklist",
-        "entry-checklist-sent-item",
-        "contractor-set-is-done",
-        "contractor-set-is-done-sent-item",
-        "technical-office",
-        "technical-office-sentitem",
+        'entry-checklist',
+        'entry-checklist-sent-item',
+        'contractor-set-is-done',
+        'contractor-set-is-done-sent-item',
+        'technical-office',
+        'technical-office-sentitem',
       ].includes(mode)
     ) {
       window.open(
         `/qc/entryChecklist/${e.row.checkListInstanceId}/${mode}`,
-        "_blank"
+        '_blank'
       );
       return;
     }
@@ -257,58 +211,58 @@ const QcGrid = ({ mode }) => {
       checkListStateId: +checkListStateId,
     };
     switch (mode) {
-      case "contractor-add-date":
+      case 'contractor-add-date':
         await dispatch(ContractorAddDateQAction(model));
         break;
-      case "contractor-add-date-sent-item":
+      case 'contractor-add-date-sent-item':
         await dispatch(contractorsAddDateSentItem(model));
         break;
-      case "technical-approve":
+      case 'technical-approve':
         await dispatch(TechnicalApproveScheduleQAction(model));
         break;
-      case "technical-sent-item":
+      case 'technical-sent-item':
         await dispatch(TechnicalApproveScheduleSentItemAction(model));
         break;
-      case "qc-date":
+      case 'qc-date':
         await dispatch(SetQcDateQAction(model));
         break;
-      case "qc-date-sent-item":
+      case 'qc-date-sent-item':
         await dispatch(SetQcDateSentItemsAction(model));
         break;
-      case "control-checklist":
+      case 'control-checklist':
         await dispatch(InspectControlCheckListQAction(model));
         break;
-      case "control-checklist-sent-item":
+      case 'control-checklist-sent-item':
         await dispatch(InspectControlCheckListSentItemsAction(model));
         break;
-      case "manager-control-checklist":
+      case 'manager-control-checklist':
         await dispatch(QcManagerControlCheckListQAction(model));
         break;
-      case "manager-control-checklist-sent-item":
+      case 'manager-control-checklist-sent-item':
         await dispatch(QcManagerControlCheckListSentItemsAction(model));
         break;
-      case "final-control-checklist":
+      case 'final-control-checklist':
         await dispatch(QcFinalApproveQAction(model));
         break;
-      case "final-control-checklist-sent-item":
+      case 'final-control-checklist-sent-item':
         await dispatch(QcFinalApproveSentItemsAction(model));
         break;
-      case "entry-checklist":
+      case 'entry-checklist':
         await dispatch(InspectorEntryCheckListQAction(model));
         break;
-      case "entry-checklist-sent-item":
+      case 'entry-checklist-sent-item':
         await dispatch(InspectorEntryCheckListSentItemsAction(model));
         break;
-      case "contractor-set-is-done":
+      case 'contractor-set-is-done':
         await dispatch(ContractorSetIsDoneQAction(model));
         break;
-      case "contractor-set-is-done-sent-item":
+      case 'contractor-set-is-done-sent-item':
         await dispatch(ContractorSetIsDoneSentItemsAction(model));
         break;
-      case "technical-office":
+      case 'technical-office':
         await dispatch(TechnicalOfficeAddOrdersQAction(model));
         break;
-      case "technical-office-sent-item":
+      case 'technical-office-sent-item':
         await dispatch(TechnicalOfficeAddOrdersSentItemsAction(model));
         break;
     }
@@ -320,68 +274,68 @@ const QcGrid = ({ mode }) => {
       checkListStateId: +initialFilter.checkListStateId,
     };
     switch (mode) {
-      case "contractor-add-date":
+      case 'contractor-add-date':
         await dispatch(ContractorAddDateQAction(model));
         break;
-      case "contractor-add-date-sent-item":
+      case 'contractor-add-date-sent-item':
         await dispatch(contractorsAddDateSentItem(model));
         break;
-      case "technical-approve":
+      case 'technical-approve':
         await dispatch(TechnicalApproveScheduleQAction(model));
         break;
-      case "technical-sent-item":
+      case 'technical-sent-item':
         await dispatch(TechnicalApproveScheduleSentItemAction(model));
         break;
-      case "qc-date":
+      case 'qc-date':
         await dispatch(SetQcDateQAction(model));
         break;
-      case "qc-date-sent-item":
+      case 'qc-date-sent-item':
         await dispatch(SetQcDateSentItemsAction(model));
         break;
-      case "control-checklist":
+      case 'control-checklist':
         await dispatch(InspectControlCheckListQAction(model));
         break;
-      case "control-checklist-sent-item":
+      case 'control-checklist-sent-item':
         await dispatch(InspectControlCheckListSentItemsAction(model));
         break;
-      case "manager-control-checklist":
+      case 'manager-control-checklist':
         await dispatch(QcManagerControlCheckListQAction(model));
         break;
-      case "manager-control-checklist-sent-item":
+      case 'manager-control-checklist-sent-item':
         await dispatch(QcManagerControlCheckListSentItemsAction(model));
         break;
-      case "final-control-checklist":
+      case 'final-control-checklist':
         await dispatch(QcFinalApproveQAction(model));
         break;
-      case "final-control-checklist-sent-item":
+      case 'final-control-checklist-sent-item':
         await dispatch(QcFinalApproveSentItemsAction(model));
         break;
-      case "entry-checklist":
+      case 'entry-checklist':
         await dispatch(InspectorEntryCheckListQAction(model));
         break;
-      case "entry-checklist-sent-item":
+      case 'entry-checklist-sent-item':
         await dispatch(InspectorEntryCheckListSentItemsAction(model));
         break;
-      case "contractor-set-is-done":
+      case 'contractor-set-is-done':
         await dispatch(ContractorSetIsDoneQAction(model));
         break;
-      case "contractor-set-is-done-sent-item":
+      case 'contractor-set-is-done-sent-item':
         await dispatch(ContractorSetIsDoneSentItemsAction(model));
         break;
-      case "technical-office":
+      case 'technical-office':
         await dispatch(TechnicalOfficeAddOrdersQAction(model));
         break;
-      case "technical-office-sent-item":
+      case 'technical-office-sent-item':
         await dispatch(TechnicalOfficeAddOrdersSentItemsAction(model));
         break;
     }
   };
   const renderGrid = () => {
     switch (mode) {
-      case "contractor-add-date":
+      case 'contractor-add-date':
         return (
           <>
-            {contractorsAddDateQ?.pending || (
+            {columns && !contractorsAddDateQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -390,15 +344,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "contractor-add-date-sent-item":
+      case 'contractor-add-date-sent-item':
         return (
           <>
-            {contractorsAddDateSentItem?.pending || (
+            {columns && !contractorsAddDateSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -407,15 +362,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "technical-approve":
+      case 'technical-approve':
         return (
           <>
-            {technicalApproveScheduleQ?.pending || (
+            {columns && !technicalApproveScheduleQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -424,15 +380,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "technical-sent-item":
+      case 'technical-sent-item':
         return (
           <>
-            {technicalApproveScheduleSentItem?.pending || (
+            {columns && !technicalApproveScheduleSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -441,15 +398,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "qc-date":
+      case 'qc-date':
         return (
           <>
-            {qcDateQ?.pending || (
+            {columns && !qcDateQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -458,15 +416,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "qc-date-sent-item":
+      case 'qc-date-sent-item':
         return (
           <>
-            {qcDateSentItem?.pending || (
+            {columns && !qcDateSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -475,15 +434,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "control-checklist":
+      case 'control-checklist':
         return (
           <>
-            {controlCheckListQ?.pending || (
+            {columns && !controlCheckListQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -492,15 +452,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "control-checklist-sent-item":
+      case 'control-checklist-sent-item':
         return (
           <>
-            {controlCheckListSentItem?.pending || (
+            {columns && !controlCheckListSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -509,15 +470,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "manager-control-checklist":
+      case 'manager-control-checklist':
         return (
           <>
-            {managerControlCheckListQ?.pending || (
+            {columns && !managerControlCheckListQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -526,15 +488,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "manager-control-checklist-sent-item":
+      case 'manager-control-checklist-sent-item':
         return (
           <>
-            {managerControlCheckListSentItem?.pending || (
+            {columns && !managerControlCheckListSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -543,15 +506,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "final-control-checklist":
+      case 'final-control-checklist':
         return (
           <>
-            {finalApproveQ?.pending || (
+            {columns && !finalApproveQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -560,15 +524,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "final-control-checklist-sent-item":
+      case 'final-control-checklist-sent-item':
         return (
           <>
-            {finalApproveSentItem?.pending || (
+            {columns && !finalApproveSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -577,12 +542,13 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "entry-checklist":
+      case 'entry-checklist':
         return (
           <>
             {entryCheckListQ?.pending || (
@@ -599,10 +565,10 @@ const QcGrid = ({ mode }) => {
             )}
           </>
         );
-      case "entry-checklist-sent-item":
+      case 'entry-checklist-sent-item':
         return (
           <>
-            {entryCheckListSentItem?.pending || (
+            {columns && !entryCheckListSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -611,15 +577,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "contractor-set-is-done":
+      case 'contractor-set-is-done':
         return (
           <>
-            {contractorSetIsDoneQ?.pending || (
+            {columns && !contractorSetIsDoneQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -628,15 +595,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "contractor-set-is-done-sent-item":
+      case 'contractor-set-is-done-sent-item':
         return (
           <>
-            {contractorSetIsDoneSentItem?.pending || (
+            {columns && !contractorSetIsDoneSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -645,15 +613,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "technical-office":
+      case 'technical-office':
         return (
           <>
-            {technicalOfficeAddOrdersQ?.pending || (
+            {columns && !technicalOfficeAddOrdersQ.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -662,15 +631,16 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
           </>
         );
-      case "technical-office-sent-item":
+      case 'technical-office-sent-item':
         return (
           <>
-            {technicalOfficeAddOrdersSentItem?.pending || (
+            {columns && !technicalOfficeAddOrdersSentItem.pending && (
               <Grid
                 columns={columns}
                 rows={
@@ -679,6 +649,7 @@ const QcGrid = ({ mode }) => {
                     id: rows.checkListInstanceId,
                   })) ?? []
                 }
+                pagination={{}}
                 onDoubleClick={handleDoubleClick}
               />
             )}
@@ -693,23 +664,23 @@ const QcGrid = ({ mode }) => {
       xs={12}
       sx={{
         borderRadius: 2,
-        boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
-        marginBottom: "10px",
+        boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, 0.1)',
+        marginBottom: '10px',
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
-          style={{ textAlign: "right" }}
+          style={{ textAlign: 'right' }}
           title={modeDict[mode]}
-          titleTypographyProps={{ variant: "h6" }}
+          titleTypographyProps={{ variant: 'h6' }}
         />
         <Box>
           <form>
             <Row>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <Controller
                   control={control}
-                  rules={{ required: " approve state is required" }}
+                  rules={{ required: ' approve state is required' }}
                   name="checkListStateId"
                   defaultValue={0}
                   render={({ field }) => (
@@ -723,7 +694,7 @@ const QcGrid = ({ mode }) => {
                   )}
                 />
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={fromDate}
                   onChange={setSelectedFromDate}
@@ -732,7 +703,7 @@ const QcGrid = ({ mode }) => {
                   value={fromDate}
                 ></JalaliDatePicker>
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={toDate}
                   onChange={setSelectedToDate}
@@ -751,12 +722,32 @@ const QcGrid = ({ mode }) => {
               <IconButton onClick={handleRmoveFilter} color="info">
                 <FilterOff />
               </IconButton>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}></Box>
             </Row>
           </form>
         </Box>
 
         {renderGrid()}
+        {columns && (
+          <>
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );
