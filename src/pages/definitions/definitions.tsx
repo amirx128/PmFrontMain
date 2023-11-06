@@ -397,13 +397,11 @@ const Definitions = () => {
           <AddFloor
             setCurrentProject={setCurrentProject}
             addFloorDialog={addFloorDialog}
-            selectedFloor={selectedFloor}
             onClose={floorOnClose}
             currentProject={currentProject}
           />
           <ShowUnits
             showUnitsDialog={showUnitsDialog}
-            selectedFloor={selectedFloor}
             onClose={showUnitsOnClose}
             setAddFloorDialog={setAddFloorDialog}
             setSelectedUnit={setSelectedUnit}
@@ -422,7 +420,6 @@ const Definitions = () => {
             currentProject={currentProject}
             addUnitDialog={addUnitDialog}
             selectedUnit={selectedUnit}
-            selectedFloor={selectedFloor}
             onClose={unitOnClose}
           />
           <AddUsability

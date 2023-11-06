@@ -1,5 +1,17 @@
 import { Autocomplete, TextField } from '@mui/material';
-
+import { boolean } from 'yup';
+interface IAutoCompleteProps {
+  disablePortal?: boolean;
+  id: string;
+  options: any;
+  label: string;
+  changeHandler: any;
+  value: any;
+  dataId?: string;
+  dataLabel?: string | string[];
+  multiple?: boolean;
+  sx?: any;
+}
 const AutoCompleteComponent = ({
   disablePortal = false,
   id,
@@ -11,7 +23,7 @@ const AutoCompleteComponent = ({
   dataLabel = 'name',
   multiple = false,
   sx = {},
-}) => {
+}: IAutoCompleteProps) => {
   return (
     <Autocomplete
       disablePortal={disablePortal}
@@ -19,7 +31,10 @@ const AutoCompleteComponent = ({
       value={
         multiple
           ? options
-              ?.map((op) => ({ id: op[dataId], label: op[dataLabel] }))
+              ?.map((op) => ({
+                id: op[dataId],
+                label: op[dataLabel as string],
+              }))
               ?.filter((op) => value?.includes(op[dataId])) || []
           : options
               ?.map((op) => ({
