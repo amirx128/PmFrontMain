@@ -52,7 +52,6 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const [floorId, setFloorId] = useState();
   const [unitId, setUnitId] = useState();
   const [projectUnitId, setProjectUnitId] = useState();
-  const [usabilityId, setUsabilityId] = useState();
   const getAllProjectFloor = useCallback(async () => {
     await dispatch(GetAllProjects_Floor_Unit_UsabilityAction());
   }, []);
@@ -60,7 +59,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
     if (projectId && unitId) {
       getAllCommodities();
     }
-  }, [projectId, unitId]);
+  }, [projectId, unitId, floorId, projectUnitId]);
   useEffect(() => {
     getAllProjectFloor();
     getAllUnits();
@@ -86,10 +85,11 @@ const ProductRequest: React.FC<any> = (props: any) => {
       const response = await axios.post('/RequestCase/NewRequestCase', {
         userId: user?.id ?? getUserIdFromStorage(),
         unitId,
-        projectId,
-        floorId,
-        projectUnitId,
-        usabilityId,
+        PlaceOfUseId: projectUnitId
+          ? +`3${projectUnitId}`
+          : floorId
+          ? +`2${floorId}`
+          : +`1${projectId}`,
         commodites: [...comodities],
       });
       if (response.data.statusCode === 200 && response.data.model) {
@@ -125,11 +125,16 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const getAllCommodities = async () => {
     if (!projectId && !unitId) return;
     try {
+      console.log(unitId);
       const response: any = await axios.post(
         '/RequestCase/GetAllCommoditiesForOnePlaceOfUse',
         {
           userId: user?.id ?? getUserIdFromStorage(),
-          placeId: placeOfUseId,
+          placeId: projectUnitId
+            ? +`3${projectUnitId}`
+            : floorId
+            ? +`2${floorId}`
+            : +`1${projectId}`,
           requesterBussinessRoleId: unitId,
         }
       );
@@ -243,19 +248,6 @@ const ProductRequest: React.FC<any> = (props: any) => {
                 }
                 value={projectUnitId}
                 changeHandler={(value) => setProjectUnitId(value)}
-              />
-              <AutoCompleteComponent
-                label="کاربری"
-                id="projectUnitId"
-                options={
-                  allProjectsFloorUnitUsability?.data
-                    ?.find((project) => project.id === projectId)
-                    ?.projectfloor?.find((floor) => floor.id === floorId)
-                    ?.projectUnit?.find((unit) => unit.id === projectUnitId)
-                    ?.unitsUsability
-                }
-                value={usabilityId}
-                changeHandler={(value) => setUsabilityId(value)}
               />
             </Row>
             <Divider sx={{ m: '40px 0' }} />
