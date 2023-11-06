@@ -1,26 +1,26 @@
-import DeleteIcon from "@mui/icons-material/Delete";
-import { Controller, useForm } from "react-hook-form";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { Controller, useForm } from 'react-hook-form';
 import {
   DatePickerWrapper,
   Form,
   InputContent,
   Row,
   TreeWrapper,
-} from "./style";
-import persian from "react-date-object/calendars/persian";
-import persian_fa from "react-date-object/locales/persian_fa";
+} from './style';
+import persian from 'react-date-object/calendars/persian';
+import persian_fa from 'react-date-object/locales/persian_fa';
 import {
   Autocomplete,
   Box,
   IconButton,
   TextField,
   Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { IComodityFields } from "../../core/comodity/comodity.model";
-import Tree from "../tree/tree";
-import DatePicker from "react-multi-date-picker";
-import JalaliDatePicker from "../date-picker/date-picker";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { IComodityFields } from '../../core/comodity/comodity.model';
+import Tree from '../tree/tree';
+import DatePicker from 'react-multi-date-picker';
+import JalaliDatePicker from '../date-picker/date-picker';
 interface Iprops {
   comodity?: IComodityFields;
   deleteComodity: () => void;
@@ -44,37 +44,37 @@ const ComodiryForm: React.FC<Iprops> = ({
     getValues,
     formState: { errors },
   } = useForm<IComodityFields>();
-  const [date, setDate] = useState(new Date().toLocaleDateString("fa-IR"));
-  const [unit, setUnit] = useState("");
+  const [date, setDate] = useState(new Date().toLocaleDateString('fa-IR'));
+  const [unit, setUnit] = useState('');
   const onSubmit = handleSubmit((data) => {});
   useEffect(() => {
     if (date) {
-      setValue("requiredDate", date);
+      setValue('requiredDate', date);
       onCommodityChange(getValues());
     }
   }, [date]);
   useEffect(() => {
     onCommodityChange(getValues());
-    setValue("requiredDate", new Date());
+    setValue('requiredDate', new Date());
   }, []);
 
   const comoditiDescriptionChanged = (event, val) => {
     setUnit(val.unit);
-    setValue("commodityId", val.id);
+    setValue('commodityId', val.id);
     onCommodityChange(getValues());
   };
   const activityChange = (event, val) => {
-    setValue("activityId", val.id);
+    setValue('activityId', val.id);
     onCommodityChange(getValues());
   };
   const countChange = (event) => {
-    setValue("count", +event.target.value);
+    setValue('count', +event.target.value);
     onCommodityChange(getValues());
   };
   const setSelectedDate = (e) => {
     const date = new Date(e).toISOString();
     setDate(date);
-    setValue("requiredDate", date);
+    setValue('requiredDate', date);
   };
   return (
     <>
@@ -97,8 +97,8 @@ const ComodiryForm: React.FC<Iprops> = ({
                 <li {...props} value={option}>
                   <span>
                     {option.commodityAddress
-                      .replaceAll(":", ">")
-                      .replace(">", "در دسته")}
+                      .replaceAll(':', '>')
+                      .replace('>', 'در دسته')}
                   </span>
                 </li>
               )}
@@ -134,14 +134,6 @@ const ComodiryForm: React.FC<Iprops> = ({
           name="count"
           defaultValue={null}
           render={() => (
-            // <InputContent
-            //   name="count"
-            //   label="  تعداد/مقدار "
-            //   register={register}
-            //   errors={errors}
-            //   type="number"
-            //   onChange={countChange}
-            // />
             <TextField
               name="count"
               type="number"
@@ -150,10 +142,10 @@ const ComodiryForm: React.FC<Iprops> = ({
             />
           )}
         />
-        <Box sx={{ flex: 1, display: "flex", alignItems: "unset" }}>
+        <Box sx={{ flex: 1, display: 'flex', alignItems: 'unset' }}>
           <Typography
             fontFamily="IRANSans"
-            sx={{ lineHeight: "70px" }}
+            sx={{ lineHeight: '70px' }}
             component="p"
           >
             {unit}
@@ -169,7 +161,7 @@ const ComodiryForm: React.FC<Iprops> = ({
         </Box>
         <IconButton
           onClick={deleteComodity}
-          sx={{ justifySelf: "flex-start", marginBottom: "auto" }}
+          sx={{ justifySelf: 'flex-start', marginBottom: 'auto' }}
         >
           <DeleteIcon />
         </IconButton>

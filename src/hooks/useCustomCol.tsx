@@ -1,7 +1,7 @@
-import React, { useState, useCallback, useEffect } from "react";
-import axiosInstance from "../utils/axios.config";
-import * as gridFunctions from "./../utils/gridFunctions";
-import gridFunctionsEnum from "../models/gridFunctionsEnum";
+import React, { useState, useCallback, useEffect } from 'react';
+import axiosInstance from '../utils/axios.config';
+import * as gridFunctions from './../utils/gridFunctions';
+import gridFunctionsEnum from '../models/gridFunctionsEnum';
 const useCustomCol = (
   gridName,
   defColumns,
@@ -14,8 +14,8 @@ const useCustomCol = (
   const [tempColumns, setTempColumns] = useState([]);
 
   const getColumns = useCallback(async () => {
-    const res = await axiosInstance.post("/AccountCountroller/GetGridColumns", {
-      userId: JSON.parse(localStorage.getItem("user")).id,
+    const res = await axiosInstance.post('/AccountCountroller/GetGridColumns', {
+      userId: JSON.parse(localStorage.getItem('user')).id,
       gridName,
     });
     if (res?.data?.model) {
@@ -25,7 +25,7 @@ const useCustomCol = (
       setColumns(
         cols
           .map((c) =>
-            Object.keys(c).includes("renderType")
+            Object.keys(c).includes('renderType')
               ? c.renderType === gridFunctionsEnum.actionEditColumn
                 ? {
                     ...c,
@@ -45,7 +45,7 @@ const useCustomCol = (
       );
       setTempColumns(
         cols.map((c) =>
-          Object.keys(c).includes("renderType")
+          Object.keys(c).includes('renderType')
             ? c.renderType === gridFunctionsEnum.actionEditColumn
               ? {
                   ...c,
@@ -65,7 +65,7 @@ const useCustomCol = (
     } else {
       setColumns(
         defColumns.map((d, index) =>
-          Object.keys(d).includes("renderType")
+          Object.keys(d).includes('renderType')
             ? d.renderType === gridFunctionsEnum.actionEditColumn
               ? {
                   ...d,
@@ -97,7 +97,7 @@ const useCustomCol = (
       );
       setTempColumns(
         defColumns.map((d, index) =>
-          Object.keys(d).includes("renderType")
+          Object.keys(d).includes('renderType')
             ? d.renderType === gridFunctionsEnum.actionEditColumn
               ? {
                   ...d,
@@ -132,7 +132,7 @@ const useCustomCol = (
 
   useEffect(() => {
     getColumns();
-  }, [getColumns]);
+  }, [getColumns, gridName]);
   const handleShowModal = () => {
     setIsShowModal(true);
   };
@@ -143,13 +143,13 @@ const useCustomCol = (
     setIsLoading(true);
     try {
       const res = await axiosInstance.post(
-        "/AccountCountroller/SaveGridColumn",
+        '/AccountCountroller/SaveGridColumn',
         {
-          userId: JSON.parse(localStorage.getItem("user")).id,
+          userId: JSON.parse(localStorage.getItem('user')).id,
           gridName,
           gridConfigs: JSON.stringify(
             tempColumns.map((t) =>
-              Object.keys(t).includes("renderCell")
+              Object.keys(t).includes('renderCell')
                 ? { ...t, renderCell: t.renderCell.toString() }
                 : t
             )
@@ -175,7 +175,7 @@ const useCustomCol = (
   };
   const handleChangeSort = (mode, column) => {
     const el = tempColumns.find((temp) => temp.field === column.field);
-    if (mode === "up") {
+    if (mode === 'up') {
       const oldEl = tempColumns.find((temp) => +temp.order === +el.order - 1);
       setTempColumns((prev) =>
         prev.map((p) =>
@@ -187,7 +187,7 @@ const useCustomCol = (
         )
       );
     }
-    if (mode === "down") {
+    if (mode === 'down') {
       const oldEl = tempColumns.find((temp) => +temp.order === +el.order + 1);
       setTempColumns((prev) =>
         prev.map((p) =>
