@@ -34,7 +34,9 @@ const ProductRequest: React.FC<any> = (props: any) => {
   const dispatch = useDispatch<any>();
   const [placeOfUsed, setPlacedOdUse] = useState([]);
   const [units, setUnits] = useState([]);
-  const [comodities, setComodoties] = useState<IComodityFields[]>([]);
+  const [comodities, setComodoties] = useState<IComodityFields[]>([
+    { commodityId: null, activityId: null, count: null, requiredDate: null },
+  ]);
   const [activities, setActivities] = useState<IComodityFields[]>([]);
   const [commodityDescription, setCommodityDescription] = useState<any[]>([]);
   const [businessRoleDetails, setbusinessRoleDetails] = useState<any[]>([]);
@@ -251,25 +253,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
               />
             </Row>
             <Divider sx={{ m: '40px 0' }} />
-            <Typography
-              component="h6"
-              sx={{
-                fontFamily: 'IRANSans',
-                textAlign: 'left',
-                display: 'flex',
-                alignItems: 'center',
-                marginTop: '20px',
-              }}
-            >
-              کالاها
-              <IconButton
-                color="info"
-                style={{ outline: 'none' }}
-                onClick={addComodity}
-              >
-                <AddIcon />
-              </IconButton>
-            </Typography>
+
             <Box>
               {comodities.map((item, index) => (
                 <ComodityForm
@@ -282,13 +266,22 @@ const ProductRequest: React.FC<any> = (props: any) => {
                 ></ComodityForm>
               ))}
             </Box>
-            <Row justifycontent="flex-end">
+            <div className="flex items-center gap-8 justify-end mt-10">
+              <IconButton
+                color="info"
+                style={{ outline: 'none' }}
+                onClick={addComodity}
+                className="text-sm"
+                size="small"
+              >
+                افزودن
+                <AddIcon />
+              </IconButton>
               <LoadingButton
                 loading={loading}
                 type="submit"
                 variant="contained"
                 sx={{
-                  marginRight: '20px',
                   color: theme.palette.common.white,
                   backgroundColor: theme.palette.secondary.light,
                   fontFamily: 'IRANSans',
@@ -297,7 +290,7 @@ const ProductRequest: React.FC<any> = (props: any) => {
               >
                 ثبت درخواست
               </LoadingButton>
-            </Row>
+            </div>
           </form>
         </div>
       )}
