@@ -256,10 +256,7 @@ export const getAllProjects = createAsyncThunk(
 );
 export const GetAllProjects_Floor_Unit_UsabilityAction = createAsyncThunk(
   'definition/GetAllProjects_Floor_Unit_UsabilityAction',
-  async (
-    body = undefined,
-    { rejectWithValue, fulfillWithValue, dispatch, getState }
-  ) => {
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
       const userId = getUserId(state);

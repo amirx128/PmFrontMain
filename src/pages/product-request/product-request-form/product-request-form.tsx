@@ -1,6 +1,6 @@
-import { Paper } from "@material-ui/core";
-import AddIcon from "@mui/icons-material/Add";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Paper } from '@material-ui/core';
+import AddIcon from '@mui/icons-material/Add';
+import LoadingButton from '@mui/lab/LoadingButton';
 import {
   Box,
   Card,
@@ -8,72 +8,71 @@ import {
   IconButton,
   Typography,
   Modal,
-} from "@mui/material";
-import React, { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import ComodityForm from "../../../components/comodity-form/comodity-form";
-import Select from "../../../components/select/selects";
-import { IComodityFields } from "../../../core/comodity/comodity.model";
-import axios from "../../../utils/axios.config";
-import { withSnackbar } from "../../../utils/snackbar-hook";
-import theme from "../../../utils/theme";
-import RequestDetail from "../request-detail/request-detail";
-import { Row } from "./style";
-import { useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../../utils/functions.ts";
-import { Link } from "react-router-dom";
-import AutoCompleteComponent from "../../../components/AutoComplete/AutoCompleteComponent.tsx";
+  CircularProgress,
+} from '@mui/material';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import ComodityForm from '../../../components/comodity-form/comodity-form';
+import Select from '../../../components/select/selects';
+import { IComodityFields } from '../../../core/comodity/comodity.model';
+import axios from '../../../utils/axios.config';
+import { withSnackbar } from '../../../utils/snackbar-hook';
+import theme from '../../../utils/theme';
+import RequestDetail from '../request-detail/request-detail';
+import { Row } from './style';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserIdFromStorage } from '../../../utils/functions.ts';
+import { Link } from 'react-router-dom';
+import AutoCompleteComponent from '../../../components/AutoComplete/AutoCompleteComponent.tsx';
+import { GetAllProjects_Floor_Unit_UsabilityAction } from '../../../redux/features/definitionSlicer.ts';
 type FormFields = {
   unitId: string;
   placeOfUseId: string;
 };
 
 const ProductRequest: React.FC<any> = (props: any) => {
+  const dispatch = useDispatch<any>();
   const [placeOfUsed, setPlacedOdUse] = useState([]);
   const [units, setUnits] = useState([]);
   const [comodities, setComodoties] = useState<IComodityFields[]>([]);
   const [activities, setActivities] = useState<IComodityFields[]>([]);
   const [commodityDescription, setCommodityDescription] = useState<any[]>([]);
   const [businessRoleDetails, setbusinessRoleDetails] = useState<any[]>([]);
-  const [userData, setUserData] = useState<any>("");
+  const [userData, setUserData] = useState<any>('');
   const [loading, setLoading] = useState<any>(false);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
-  const [trackingCode, setTrackingCode] = useState<string>("");
+  const [trackingCode, setTrackingCode] = useState<string>('');
   const [requestId, setRequestId] = useState<number>(null);
   const { user } = useSelector((state: any) => state?.user);
+  const { allProjectsFloorUnitUsability } = useSelector(
+    (state: any) => state?.definition
+  );
   const [placeOfUseId, setPlaceOfUseId] = useState();
+  const [projectId, setProjectId] = useState();
+  const [floorId, setFloorId] = useState();
   const [unitId, setUnitId] = useState();
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    getValues,
-    watch,
-    formState: { errors, isValid, isDirty },
-  } = useForm<FormFields>({
-    defaultValues: {
-      unitId: "",
-      placeOfUseId: "",
-    },
-  });
-
+  const [projectUnitId, setProjectUnitId] = useState();
+  const [usabilityId, setUsabilityId] = useState();
+  const getAllProjectFloor = useCallback(async () => {
+    await dispatch(GetAllProjects_Floor_Unit_UsabilityAction());
+  }, []);
   useEffect(() => {
-    if (placeOfUseId && unitId) {
+    if (projectId && unitId) {
       getAllCommodities();
     }
-  }, [placeOfUseId, unitId]);
+  }, [projectId, unitId]);
   useEffect(() => {
+    getAllProjectFloor();
     getAllUnits();
     getAllActivities();
     getPlacedOfUse();
-    const storageData = localStorage.getItem("user");
+    const storageData = localStorage.getItem('user');
     if (storageData) {
       const data = JSON.parse(storageData);
       setUserData(data);
       setbusinessRoleDetails(data?.businessRoles);
     }
-  }, []);
+  }, [getAllProjectFloor]);
 
   const reset = () => {
     setPlaceOfUseId(undefined);
@@ -84,47 +83,50 @@ const ProductRequest: React.FC<any> = (props: any) => {
     e.preventDefault();
     try {
       setLoading(true);
-      const response = await axios.post("/RequestCase/NewRequestCase", {
+      const response = await axios.post('/RequestCase/NewRequestCase', {
         userId: user?.id ?? getUserIdFromStorage(),
-        unitId: unitId,
-        placeOfUseId: placeOfUseId,
+        unitId,
+        projectId,
+        floorId,
+        projectUnitId,
+        usabilityId,
         commodites: [...comodities],
       });
       if (response.data.statusCode === 200 && response.data.model) {
-        props.snackbarShowMessage("ثبت کالا با موفقیت انجام شد");
+        props.snackbarShowMessage('ثبت کالا با موفقیت انجام شد');
         setIsShowModal(true);
         setTrackingCode(response.data.model.trackingCode);
         setRequestId(response.data.model.requestId);
         reset();
       } else {
-        props.snackbarShowMessage("ثبت کالا با خطا مواجه شد", "error");
+        props.snackbarShowMessage('ثبت کالا با خطا مواجه شد', 'error');
       }
       setLoading(false);
     } catch (error) {
-      props.snackbarShowMessage("ثبت کالا با خطا مواجه شد", "error");
+      props.snackbarShowMessage('ثبت کالا با خطا مواجه شد', 'error');
       setLoading(false);
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
   const getAllUnits = async () => {
     try {
-      const response = axios.post("/Definition/GetAllUnit", {
+      const response = axios.post('/Definition/GetAllUnit', {
         userId: user?.id ?? getUserIdFromStorage(),
-        name: "",
+        name: '',
         projectId: 0,
         floorId: 0,
       });
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
   const getAllCommodities = async () => {
-    if (!placeOfUseId && !unitId) return;
+    if (!projectId && !unitId) return;
     try {
       const response: any = await axios.post(
-        "/RequestCase/GetAllCommoditiesForOnePlaceOfUse",
+        '/RequestCase/GetAllCommoditiesForOnePlaceOfUse',
         {
           userId: user?.id ?? getUserIdFromStorage(),
           placeId: placeOfUseId,
@@ -133,31 +135,31 @@ const ProductRequest: React.FC<any> = (props: any) => {
       );
       setCommodityDescription(response.data.model);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   const getAllActivities = async () => {
     try {
       const response: any = await axios.post(
-        "/Definition/GetScheduleActivities",
+        '/Definition/GetScheduleActivities',
         {
           userId: user?.id ?? getUserIdFromStorage(),
         }
       );
       setActivities(response.data.model);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
   const getPlacedOfUse = async () => {
     try {
-      const response = await axios.post("/RequestCase/GetAllPlaseOfUse", {
+      const response = await axios.post('/RequestCase/GetAllPlaseOfUse', {
         userId: user?.id ?? getUserIdFromStorage(),
       });
       setPlacedOdUse(response.data.model);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
@@ -178,20 +180,20 @@ const ProductRequest: React.FC<any> = (props: any) => {
     setComodoties(comodityList);
   };
   return (
-    <Card sx={{ padding: "20px" }}>
+    <Card sx={{ padding: '20px' }}>
       <Box
         sx={{
-          display: "flex",
-          alignItems: "center",
-          placeContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          placeContent: 'space-between',
         }}
       >
         <Typography
           style={{
-            fontFamily: "IRANSans",
-            textAlign: "right",
+            fontFamily: 'IRANSans',
+            textAlign: 'right',
             color: theme.palette.text.primary,
-            fontWeight: "bold",
+            fontWeight: 'bold',
           }}
           variant="h5"
           component="h4"
@@ -200,94 +202,132 @@ const ProductRequest: React.FC<any> = (props: any) => {
         </Typography>
         <RequestDetail />
       </Box>
-
-      <div className="mx-auto">
-        <form onSubmit={onSubmit}>
-          <Row>
-            <AutoCompleteComponent
-              label="بخش درخواست کننده"
-              id="unitId"
-              options={businessRoleDetails}
-              value={unitId}
-              changeHandler={(value) => setUnitId(value)}
-            />
-            <AutoCompleteComponent
-              label="محل مصرف"
-              id="placeOfUseId"
-              options={placeOfUsed}
-              value={placeOfUseId}
-              changeHandler={(value) => setPlaceOfUseId(value)}
-            />
-          </Row>
-          <Divider sx={{ m: "40px 0" }} />
-          <Typography
-            component="h6"
-            sx={{
-              fontFamily: "IRANSans",
-              textAlign: "left",
-              display: "flex",
-              alignItems: "center",
-              marginTop: "20px",
-            }}
-          >
-            کالاها
-            <IconButton
-              color="info"
-              style={{ outline: "none" }}
-              onClick={addComodity}
-            >
-              <AddIcon />
-            </IconButton>
-          </Typography>
-          <Box>
-            {comodities.map((item, index) => (
-              <ComodityForm
-                key={index + "a"}
-                activities={activities}
-                commodityDescription={commodityDescription}
-                comodity={item}
-                onCommodityChange={(e) => commodityChanged(e, index)}
-                deleteComodity={() => deleteComodityRow(index)}
-              ></ComodityForm>
-            ))}
-          </Box>
-          <Row justifycontent="flex-end">
-            <LoadingButton
-              disabled={!isDirty && !isValid}
-              loading={loading}
-              type="submit"
-              variant="contained"
+      {allProjectsFloorUnitUsability.pending && <CircularProgress />}
+      {!allProjectsFloorUnitUsability.pending && (
+        <div className="mx-auto">
+          <form onSubmit={onSubmit}>
+            <Row>
+              <AutoCompleteComponent
+                label="بخش درخواست کننده"
+                id="unitId"
+                options={businessRoleDetails}
+                value={unitId}
+                changeHandler={(value) => setUnitId(value)}
+              />
+              <AutoCompleteComponent
+                label="پروژه"
+                id="projectId"
+                options={allProjectsFloorUnitUsability?.data}
+                value={projectId}
+                changeHandler={(value) => setProjectId(value)}
+              />
+              <AutoCompleteComponent
+                label="طبقه"
+                id="floorId"
+                options={
+                  allProjectsFloorUnitUsability?.data?.find(
+                    (project) => project.id === projectId
+                  )?.projectfloor
+                }
+                value={floorId}
+                changeHandler={(value) => setFloorId(value)}
+              />
+              <AutoCompleteComponent
+                label="واحد"
+                id="projectUnitId"
+                options={
+                  allProjectsFloorUnitUsability?.data
+                    ?.find((project) => project.id === projectId)
+                    ?.projectfloor?.find((floor) => floor.id === floorId)
+                    ?.projectUnit
+                }
+                value={projectUnitId}
+                changeHandler={(value) => setProjectUnitId(value)}
+              />
+              <AutoCompleteComponent
+                label="کاربری"
+                id="projectUnitId"
+                options={
+                  allProjectsFloorUnitUsability?.data
+                    ?.find((project) => project.id === projectId)
+                    ?.projectfloor?.find((floor) => floor.id === floorId)
+                    ?.projectUnit?.find((unit) => unit.id === projectUnitId)
+                    ?.unitsUsability
+                }
+                value={usabilityId}
+                changeHandler={(value) => setUsabilityId(value)}
+              />
+            </Row>
+            <Divider sx={{ m: '40px 0' }} />
+            <Typography
+              component="h6"
               sx={{
-                marginRight: "20px",
-                color: theme.palette.common.white,
-                backgroundColor: theme.palette.secondary.light,
-                fontFamily: "IRANSans",
-                ":hover": { backgroundColor: theme.palette.secondary.dark },
+                fontFamily: 'IRANSans',
+                textAlign: 'left',
+                display: 'flex',
+                alignItems: 'center',
+                marginTop: '20px',
               }}
             >
-              ثبت درخواست
-            </LoadingButton>
-          </Row>
-        </form>
-      </div>
+              کالاها
+              <IconButton
+                color="info"
+                style={{ outline: 'none' }}
+                onClick={addComodity}
+              >
+                <AddIcon />
+              </IconButton>
+            </Typography>
+            <Box>
+              {comodities.map((item, index) => (
+                <ComodityForm
+                  key={index + 'a'}
+                  activities={activities}
+                  commodityDescription={commodityDescription}
+                  comodity={item}
+                  onCommodityChange={(e) => commodityChanged(e, index)}
+                  deleteComodity={() => deleteComodityRow(index)}
+                ></ComodityForm>
+              ))}
+            </Box>
+            <Row justifycontent="flex-end">
+              <LoadingButton
+                loading={loading}
+                type="submit"
+                variant="contained"
+                sx={{
+                  marginRight: '20px',
+                  color: theme.palette.common.white,
+                  backgroundColor: theme.palette.secondary.light,
+                  fontFamily: 'IRANSans',
+                  ':hover': { backgroundColor: theme.palette.secondary.dark },
+                }}
+              >
+                ثبت درخواست
+              </LoadingButton>
+            </Row>
+          </form>
+        </div>
+      )}
+
       <Modal open={isShowModal} onClose={() => setIsShowModal(false)}>
         <Box
           sx={{
-            width: "40%",
-            backgroundColor: "#fff",
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%,-50%)",
-            padding: "1.6rem 3.2rem",
+            width: '40%',
+            backgroundColor: '#fff',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%,-50%)',
+            padding: '1.6rem 3.2rem',
           }}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             ثبت کالا با موفقیت انجام شد
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            کد رهگیری شما برابر :{" "}
-            <Link to={`/product-details/${requestId}`}>{trackingCode}</Link>{" "}
+            کد رهگیری شما برابر :{' '}
+            <Link to={`/product-details/${requestId}`}>{trackingCode}</Link>{' '}
             میباشد
           </Typography>
         </Box>
