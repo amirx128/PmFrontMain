@@ -15,22 +15,21 @@ import {
   ListItem,
   ListItemButton,
   ListItemText,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HighlightOff } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AddNewFloor,
   AddNewProject,
   UpdateFloor,
   GetAllCommodities,
-} from "../../redux/features/definitionSlicer.ts";
-import { toast } from "react-toastify";
+} from '../../redux/features/definitionSlicer.ts';
+import { toast } from 'react-toastify';
 
 export const ShowUnits = ({
   showUnitsDialog,
-  selectedFloor,
   onClose,
   setAddFloorDialog,
   setSelectedUnit,
@@ -39,16 +38,16 @@ export const ShowUnits = ({
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
-  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
+  const { projects, commodities, selectedFloor } = useSelector(
+    (state: any) => state.definition
+  );
   const [info, setInfo] = useState({
     floorName: selectedFloor?.name,
     projectId: selectedFloor?.projectId,
     code: selectedFloor?.code,
     commodities: selectedFloor?.commodities,
   });
-  const { projects, commodities } = useSelector(
-    (state: any) => state.definition
-  );
 
   useEffect(() => {
     if (selectedFloor) {
@@ -60,9 +59,9 @@ export const ShowUnits = ({
       });
     } else {
       setInfo({
-        floorName: "",
+        floorName: '',
         projectId: null,
-        code: "",
+        code: '',
         commodities: [],
       });
     }
@@ -113,18 +112,18 @@ export const ShowUnits = ({
       open={showUnitsDialog}
       onClose={onClose}
       fullWidth={true}
-      maxWidth={"md"}
+      maxWidth={'md'}
       fullScreen={mediumOrSmaller}
     >
       <DialogTitle
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
         واحد ها
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div style={{ display: 'flex', gap: '10px' }}>
           <Button
             variant="outlined"
             color="info"
@@ -151,8 +150,8 @@ export const ShowUnits = ({
             {selectedFloor.projectUnit?.map((unit) => (
               <ListItemButton
                 sx={{
-                  "&:hover": {
-                    backgroundColor: "lightblue",
+                  '&:hover': {
+                    backgroundColor: 'lightblue',
                   },
                 }}
                 key={unit.id}

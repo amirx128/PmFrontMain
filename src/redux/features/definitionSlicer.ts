@@ -1,5 +1,5 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   I_Business_ROLE,
   I_COMMODITY,
@@ -13,7 +13,7 @@ import {
   I_SUPPLIER,
   I_UNIT,
   I_Warehouses,
-} from "../../core/definition/definition.model.ts";
+} from '../../core/definition/definition.model.ts';
 import {
   AddNewActivityScheduleReq,
   AddNewBusinessRoleReq,
@@ -53,12 +53,12 @@ import {
   GetManyUnitUsability,
   GetAllProjects_Floor_Unit_Usability,
   GetOneProjectFloor,
-} from "../../core/definition/definition.service.ts";
+} from '../../core/definition/definition.service.ts';
 
 const getUserId = (state) => {
-  return state?.user?.user?.id ?? localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))?.id
-    : "1";
+  return state?.user?.user?.id ?? localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))?.id
+    : '1';
 };
 
 export interface DefinitionState {
@@ -130,6 +130,7 @@ export interface DefinitionState {
   };
   selectedCommodity: any;
   selectedProject: any;
+  selectedFloor: any;
   allProjectsFloorUnitUsability: {
     data: any;
     pending: boolean;
@@ -210,6 +211,7 @@ const initialState: DefinitionState = {
   },
   selectedCommodity: null,
   selectedProject: null,
+  selectedFloor: null,
   allProjectsFloorUnitUsability: {
     data: [],
     pending: false,
@@ -221,7 +223,7 @@ const initialState: DefinitionState = {
 };
 
 export const getAllWarehouses = createAsyncThunk(
-  "definition/getAllWarehouses",
+  'definition/getAllWarehouses',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -237,7 +239,7 @@ export const getAllWarehouses = createAsyncThunk(
   }
 );
 export const getAllProjects = createAsyncThunk(
-  "definition/getAllProjects",
+  'definition/getAllProjects',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -253,7 +255,7 @@ export const getAllProjects = createAsyncThunk(
   }
 );
 export const GetAllProjects_Floor_Unit_UsabilityAction = createAsyncThunk(
-  "definition/GetAllProjects_Floor_Unit_UsabilityAction",
+  'definition/GetAllProjects_Floor_Unit_UsabilityAction',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -270,7 +272,7 @@ export const GetAllProjects_Floor_Unit_UsabilityAction = createAsyncThunk(
 );
 
 export const GetAllProducers = createAsyncThunk(
-  "definition/GetAllProducers",
+  'definition/GetAllProducers',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -287,7 +289,7 @@ export const GetAllProducers = createAsyncThunk(
 );
 
 export const GetAllPleaseOfUse = createAsyncThunk(
-  "definition/GetAllPleaseOfUse",
+  'definition/GetAllPleaseOfUse',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -304,7 +306,7 @@ export const GetAllPleaseOfUse = createAsyncThunk(
 );
 
 export const GetAllSuppliers = createAsyncThunk(
-  "definition/GetAllSuppliers",
+  'definition/GetAllSuppliers',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -320,7 +322,7 @@ export const GetAllSuppliers = createAsyncThunk(
   }
 );
 export const GetManyFloorUnitAction = createAsyncThunk(
-  "definition/GetManyFloorUnitAction",
+  'definition/GetManyFloorUnitAction',
   async (
     body: { ids: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -336,7 +338,7 @@ export const GetManyFloorUnitAction = createAsyncThunk(
   }
 );
 export const GetManyUnitUsabilityAction = createAsyncThunk(
-  "definition/GetManyUnitUsabilityAction",
+  'definition/GetManyUnitUsabilityAction',
   async (
     body: { ids: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -353,7 +355,7 @@ export const GetManyUnitUsabilityAction = createAsyncThunk(
 );
 
 export const getAllFloors = createAsyncThunk(
-  "definition/getAllFloors",
+  'definition/getAllFloors',
   async (
     projectId: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -370,7 +372,7 @@ export const getAllFloors = createAsyncThunk(
 );
 
 export const getAllUnits = createAsyncThunk(
-  "definition/getAllUnits",
+  'definition/getAllUnits',
   async (
     body: { projectId: any; floorId: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -391,7 +393,7 @@ export const getAllUnits = createAsyncThunk(
 );
 
 export const AddNewProject = createAsyncThunk(
-  "definition/AddNewProject",
+  'definition/AddNewProject',
   async (
     body: { newName: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -415,7 +417,7 @@ export const AddNewProject = createAsyncThunk(
 );
 
 export const UpdateProject = createAsyncThunk(
-  "definition/UpdateProject",
+  'definition/UpdateProject',
   async (
     body: { id: any; name: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -440,7 +442,7 @@ export const UpdateProject = createAsyncThunk(
 );
 
 export const AddNewUnit = createAsyncThunk(
-  "definition/AddNewUnit",
+  'definition/AddNewUnit',
   async (
     body: {
       projectfloorId: any;
@@ -471,7 +473,7 @@ export const AddNewUnit = createAsyncThunk(
 );
 
 export const UpdateUnit = createAsyncThunk(
-  "definition/UpdateUnit",
+  'definition/UpdateUnit',
   async (
     body: {
       id: any;
@@ -504,7 +506,7 @@ export const UpdateUnit = createAsyncThunk(
 );
 
 export const AddNewFloor = createAsyncThunk(
-  "definition/AddNewFloor",
+  'definition/AddNewFloor',
   async (
     body: { projectId: any; floorName: any; code: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -527,7 +529,7 @@ export const AddNewFloor = createAsyncThunk(
 );
 
 export const UpdateFloor = createAsyncThunk(
-  "definition/UpdateFloor",
+  'definition/UpdateFloor',
   async (
     body: {
       projectId: any;
@@ -559,7 +561,7 @@ export const UpdateFloor = createAsyncThunk(
   }
 );
 export const GetAllCommodityOnTree = createAsyncThunk(
-  "definition/GetAllCommodityOnTree",
+  'definition/GetAllCommodityOnTree',
   async (
     body: { projectId: any; commodityName: string; code: string },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -581,7 +583,7 @@ export const GetAllCommodityOnTree = createAsyncThunk(
 );
 
 export const AddNewCommodity = createAsyncThunk(
-  "definition/AddNewCommodity",
+  'definition/AddNewCommodity',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -601,7 +603,7 @@ export const AddNewCommodity = createAsyncThunk(
 );
 
 export const UpdateCommodityDetails = createAsyncThunk(
-  "definition/UpdateCommodityDetails",
+  'definition/UpdateCommodityDetails',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -621,7 +623,7 @@ export const UpdateCommodityDetails = createAsyncThunk(
 );
 
 export const GetOneCommodityDetails = createAsyncThunk(
-  "definition/GetOneCommodityDetails",
+  'definition/GetOneCommodityDetails',
   async (
     commodityId: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -638,7 +640,7 @@ export const GetOneCommodityDetails = createAsyncThunk(
 );
 
 export const GetAllPersons = createAsyncThunk(
-  "definition/GetAllPersons",
+  'definition/GetAllPersons',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -655,7 +657,7 @@ export const GetAllPersons = createAsyncThunk(
 );
 
 export const GetPersonDetails = createAsyncThunk(
-  "definition/GetPersonDetails",
+  'definition/GetPersonDetails',
   async (
     id: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -672,7 +674,7 @@ export const GetPersonDetails = createAsyncThunk(
 );
 
 export const AddNewPerson = createAsyncThunk(
-  "definition/AddNewPerson",
+  'definition/AddNewPerson',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -692,7 +694,7 @@ export const AddNewPerson = createAsyncThunk(
 );
 
 export const UpdatePerson = createAsyncThunk(
-  "definition/UpdatePerson",
+  'definition/UpdatePerson',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -712,7 +714,7 @@ export const UpdatePerson = createAsyncThunk(
 );
 
 export const GetAllBusinessRoles = createAsyncThunk(
-  "definition/GetAllBusinessRoles",
+  'definition/GetAllBusinessRoles',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -726,7 +728,7 @@ export const GetAllBusinessRoles = createAsyncThunk(
 );
 
 export const GetBusinessRoleDetailes = createAsyncThunk(
-  "definition/GetBusinessRoleDetailes",
+  'definition/GetBusinessRoleDetailes',
   async (
     id: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -743,7 +745,7 @@ export const GetBusinessRoleDetailes = createAsyncThunk(
 );
 
 export const AddNewBusinessRole = createAsyncThunk(
-  "definition/AddNewBusinessRole",
+  'definition/AddNewBusinessRole',
   async (
     body: { name: string; title: string; projectId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -769,7 +771,7 @@ export const AddNewBusinessRole = createAsyncThunk(
 );
 
 export const UpdateBusinessRole = createAsyncThunk(
-  "definition/UpdateBusinessRole",
+  'definition/UpdateBusinessRole',
   async (
     body: { name: string; title: string; id: any; projectId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -796,7 +798,7 @@ export const UpdateBusinessRole = createAsyncThunk(
 );
 
 export const GetScheduleActivities = createAsyncThunk(
-  "definition/GetScheduleActivities",
+  'definition/GetScheduleActivities',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -813,7 +815,7 @@ export const GetScheduleActivities = createAsyncThunk(
 );
 
 export const AddNewActivitySchedule = createAsyncThunk(
-  "definition/AddNewActivitySchedule",
+  'definition/AddNewActivitySchedule',
   async (
     body: { name: string; desc: string; fromDate: any; toDate: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -839,7 +841,7 @@ export const AddNewActivitySchedule = createAsyncThunk(
 );
 
 export const AddNewProducer = createAsyncThunk(
-  "definition/AddNewProducer",
+  'definition/AddNewProducer',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -858,7 +860,7 @@ export const AddNewProducer = createAsyncThunk(
   }
 );
 export const AddWarehouse = createAsyncThunk(
-  "definition/AddWarehouse",
+  'definition/AddWarehouse',
   async (
     body: {
       name: string;
@@ -887,7 +889,7 @@ export const AddWarehouse = createAsyncThunk(
   }
 );
 export const UpdateWarehouseInfo = createAsyncThunk(
-  "definition/UpdateWarehouseInfo",
+  'definition/UpdateWarehouseInfo',
   async (
     body: {
       name: string;
@@ -919,7 +921,7 @@ export const UpdateWarehouseInfo = createAsyncThunk(
 );
 
 export const UpdateProducerInfo = createAsyncThunk(
-  "definition/UpdateProducerInfo",
+  'definition/UpdateProducerInfo',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -939,7 +941,7 @@ export const UpdateProducerInfo = createAsyncThunk(
 );
 
 export const UpdateNewActivitySchedule = createAsyncThunk(
-  "definition/UpdateNewActivitySchedule",
+  'definition/UpdateNewActivitySchedule',
   async (
     body: { id: any; name: string; desc: string; fromDate: any; toDate: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -966,7 +968,7 @@ export const UpdateNewActivitySchedule = createAsyncThunk(
 );
 
 export const GetAllCommodities = createAsyncThunk(
-  "definition/GetAllCommodities",
+  'definition/GetAllCommodities',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -983,7 +985,7 @@ export const GetAllCommodities = createAsyncThunk(
 );
 
 export const GetActivityScheduleDetails = createAsyncThunk(
-  "definition/GetActivityScheduleDetails",
+  'definition/GetActivityScheduleDetails',
   async (
     id: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -999,7 +1001,7 @@ export const GetActivityScheduleDetails = createAsyncThunk(
   }
 );
 export const GetOneProjectFloorAction = createAsyncThunk(
-  "definition/GetOneProjectFloorAction",
+  'definition/GetOneProjectFloorAction',
   async (
     body: { selectedItemId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1016,7 +1018,7 @@ export const GetOneProjectFloorAction = createAsyncThunk(
 );
 
 export const definitionSlicer = createSlice({
-  name: "definition",
+  name: 'definition',
   initialState,
   reducers: {
     clearSelectedCommodity: (
@@ -1030,6 +1032,12 @@ export const definitionSlicer = createSlice({
       action: PayloadAction<any>
     ) => {
       state.selectedProject = action.payload;
+    },
+    setSelectedFloorAction: (
+      state: DefinitionState,
+      action: PayloadAction<any>
+    ) => {
+      state.selectedFloor = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -1476,7 +1484,10 @@ export const definitionSlicer = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { clearSelectedCommodity, setSelectedProjectAction } =
-  definitionSlicer.actions;
+export const {
+  clearSelectedCommodity,
+  setSelectedProjectAction,
+  setSelectedFloorAction,
+} = definitionSlicer.actions;
 
 export default definitionSlicer.reducer;

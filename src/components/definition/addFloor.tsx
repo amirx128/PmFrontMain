@@ -12,40 +12,39 @@ import {
   MenuItem,
   FormControl,
   Typography,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { HighlightOff } from "@mui/icons-material";
-import { memo, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HighlightOff } from '@mui/icons-material';
+import { memo, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AddNewFloor,
   AddNewProject,
   UpdateFloor,
   GetAllCommodities,
-} from "../../redux/features/definitionSlicer.ts";
-import { toast } from "react-toastify";
-import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
+} from '../../redux/features/definitionSlicer.ts';
+import { toast } from 'react-toastify';
+import AutoCompleteComponent from '../AutoComplete/AutoCompleteComponent.tsx';
 
 const AddFloor = ({
   addFloorDialog,
-  selectedFloor,
   onClose,
   setCurrentProject,
   currentProject,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
-  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { projects, commodities, selectedProject, selectedFloor } = useSelector(
+    (state: any) => state.definition
+  );
   const [info, setInfo] = useState({
     floorName: selectedFloor?.name,
     projectId: selectedFloor?.projectId,
     code: selectedFloor?.code,
     commodities: selectedFloor?.commodities,
   });
-  const { projects, commodities, selectedProject } = useSelector(
-    (state: any) => state.definition
-  );
-
   useEffect(() => {
     if (selectedFloor) {
       setInfo({
@@ -56,13 +55,13 @@ const AddFloor = ({
       });
     } else {
       setInfo({
-        floorName: "",
+        floorName: '',
         projectId: selectedProject?.id,
-        code: "",
+        code: '',
         commodities: [],
       });
     }
-  }, [selectedFloor]);
+  }, [selectedFloor, selectedProject]);
   useEffect(() => {
     getAllCommodities();
   }, []);
@@ -105,35 +104,35 @@ const AddFloor = ({
       open={addFloorDialog}
       onClose={onClose}
       fullWidth={true}
-      maxWidth={"md"}
+      maxWidth={'md'}
       fullScreen={mediumOrSmaller}
     >
       <DialogTitle
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
-        {selectedFloor ? "ویرایش طبقه" : "افزودن طبقه"}
-        <IconButton color={"error"} onClick={onClose}>
+        {selectedFloor ? 'ویرایش طبقه' : 'افزودن طبقه'}
+        <IconButton color={'error'} onClick={onClose}>
           <HighlightOff />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         <TextField
           value={info?.floorName}
-          name={"floorName"}
+          name={'floorName'}
           onChange={handleChange}
-          label={"نام طبقه"}
+          label={'نام طبقه'}
           fullWidth={true}
           sx={{ mt: 2 }}
         />
         <TextField
           value={info?.code}
-          name={"code"}
+          name={'code'}
           onChange={handleChange}
-          label={"کد طبقه"}
+          label={'کد طبقه'}
           fullWidth={true}
           sx={{ mt: 2 }}
         />
@@ -163,8 +162,8 @@ const AddFloor = ({
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button variant={"contained"} color={"success"} onClick={onSubmit}>
-          {projects?.addState ? <CircularProgress /> : "ثبت"}
+        <Button variant={'contained'} color={'success'} onClick={onSubmit}>
+          {projects?.addState ? <CircularProgress /> : 'ثبت'}
         </Button>
       </DialogActions>
     </Dialog>
