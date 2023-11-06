@@ -83,7 +83,7 @@ const AddFloor = ({
           id: selectedFloor?.id,
           floorName: info.floorName,
           code: info.code,
-          projectId: info.projectId,
+          projectId: info.projectId ?? selectedProject?.id,
           commodities: info.commodities,
         })
       );
@@ -92,7 +92,7 @@ const AddFloor = ({
         AddNewFloor({
           floorName: info.floorName,
           code: info.code,
-          projectId: info.projectId,
+          projectId: info.projectId ?? selectedProject?.id,
           commodities: info.commodities,
         })
       );
