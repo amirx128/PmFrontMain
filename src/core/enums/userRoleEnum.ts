@@ -1,13 +1,13 @@
 enum UserRole {
   "Admin" = 1,
   "Requester" = 2,
-  "Approver" = 3,
-  "FinalApprove" = 4,
-  "Purchase.Logistics" = 5,
-  "Purchase.Financial" = 6,
-  "Purchase.Approver" = 10002,
-  "Supplier" = 10003,
-  "Warehouse.Exit" = 10004,
-  "Warehouse.Warehouser" = 10005,
+  "Approver" = 4,
+  "FinalApprove" = 6,
+  "Purchase.Logistics" = 7,
+  "Purchase.Financial" = 8,
+  "Purchase.Approver" = 10,
+  "Supplier" = 11,
+  "Warehouse.Exit" = 12,
+  "Warehouse.Warehouser" = 13,
 }
 export default UserRole;
