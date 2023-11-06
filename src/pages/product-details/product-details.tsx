@@ -1,23 +1,23 @@
-import { PageTileComponent} from "../style";
+import { PageTileComponent } from '../style';
 
-import { Card, Divider, CardHeader, IconButton } from "@mui/material";
-import axios from "../../utils/axios.config.ts";
-import { useEffect, useState } from "react";
-import RequestDetail from "../support/request-detail.tsx";
-import { useTheme } from "@mui/material";
-import { useNavigate, useParams } from "react-router-dom";
-import { withSnackbar } from "../../utils/snackbar-hook";
-import { useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
-import EditIcon from "@mui/icons-material/Edit";
-import Grid from "../../components/grid/grid";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+import { Card, Divider, CardHeader, IconButton } from '@mui/material';
+import axios from '../../utils/axios.config.ts';
+import { useEffect, useState } from 'react';
+import RequestDetail from '../support/request-detail.tsx';
+import { useTheme } from '@mui/material';
+import { useNavigate, useParams } from 'react-router-dom';
+import { withSnackbar } from '../../utils/snackbar-hook';
+import { useSelector } from 'react-redux';
+import { getUserIdFromStorage } from '../../utils/functions.ts';
+import EditIcon from '@mui/icons-material/Edit';
+import Grid from '../../components/grid/grid';
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 
 import {
   GridActionsCellItem,
   GridColDef,
   GridRenderCellParams,
-} from "@mui/x-data-grid";
+} from '@mui/x-data-grid';
 const ProductDetails = (props) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -27,94 +27,90 @@ const ProductDetails = (props) => {
   const { user } = useSelector((state: any) => state?.user);
   useEffect(() => {
     if (!id) {
-      navigate("/");
+      navigate('/');
     }
     getRequestDetail();
   }, []);
 
   const getRequestDetail = async () => {
     try {
-      const response = await axios.post("/Support/GetRequestDetails", {
+      const response = await axios.post('/Support/GetRequestDetails', {
         userId: user?.id ?? getUserIdFromStorage(),
         requestId: id,
       });
       setDetail(response.data.model);
       setCommodities(response.data.model.commodities);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   const columns: GridColDef[] = [
     {
-      field: "commodity",
-      headerName: "نام کالا",
+      field: 'commodity',
+      headerName: 'نام کالا',
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
     },
     {
-      field: "requiredDate",
-      headerName: "تاریخ نیاز",
+      field: 'requiredDate',
+      headerName: 'تاریخ نیاز',
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      align: "center",
-      headerAlign: "center",
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
+      align: 'center',
+      headerAlign: 'center',
+      renderCell: ({ value }) => (
+        <span>{new Date(value).toLocaleDateString('fa-IR').toString()}</span>
       ),
     },
     {
-      field: "count",
-      headerName: "تعداد مورد نیاز",
+      field: 'count',
+      headerName: 'تعداد مورد نیاز',
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
     },
     {
-      field: "newcount",
-      headerName: "تعداد تایید شده ",
+      field: 'newcount',
+      headerName: 'تعداد تایید شده ',
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       renderCell: ({ value }) => <p>{value || 0}</p>,
     },
     {
-      field: "approveState",
-      headerName: " وضعیت تایید ",
+      field: 'approveState',
+      headerName: ' وضعیت تایید ',
       minWidth: 150,
       flex: 1,
       editable: false,
       filterable: false,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
     },
 
     {
-      field: "actions",
-      headerName: "عملیات",
-      description: "ActionColumn",
+      field: 'actions',
+      headerName: 'عملیات',
+      description: 'ActionColumn',
       sortable: false,
       minWidth: 150,
       flex: 1,
       filterable: false,
       hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
+      type: 'actions',
+      cellClassName: 'actions',
       disableColumnMenu: true,
       renderCell: (params: GridRenderCellParams) => (
         <>
@@ -129,7 +125,7 @@ const ProductDetails = (props) => {
     },
   ];
   const handleDownloadExcell = async () => {
-    const response = await axios.post("/Support/GetRequestDetails", {
+    const response = await axios.post('/Support/GetRequestDetails', {
       userId: user?.id ?? getUserIdFromStorage(),
       requestId: id,
       exportExcell: true,
@@ -137,21 +133,20 @@ const ProductDetails = (props) => {
   };
   return (
     <Card>
-      
-     <PageTileComponent __text= {document.title} />
+      <PageTileComponent __text={document.title} />
 
       <RequestDetail detail={detail} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
+          display: 'flex',
+          justifyContent: 'space-between',
         }}
       >
         <CardHeader
-          style={{ textAlign: "right" }}
+          style={{ textAlign: 'right' }}
           title="لیست کالا ها"
-          titleTypographyProps={{ variant: "h6" }}
+          titleTypographyProps={{ variant: 'h6' }}
         />
         <IconButton
           color="success"
@@ -165,7 +160,7 @@ const ProductDetails = (props) => {
       </div>
       {commodities && (
         <Grid
-          rowIdFields={["requestCaseRowCommodityId"]}
+          rowIdFields={['requestCaseRowCommodityId']}
           columns={columns}
           rows={commodities.map((row, index) => ({ id: index, ...row }))}
           pagination={{}}

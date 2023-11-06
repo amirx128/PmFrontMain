@@ -139,6 +139,9 @@ const ComodiryForm: React.FC<Iprops> = ({
               type="number"
               label="تعداد/مقدار"
               onChange={countChange}
+              inputProps={{
+                step: 0.00000000000001,
+              }}
             />
           )}
         />
