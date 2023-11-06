@@ -41,7 +41,7 @@ const AddFloor = ({
   );
   const [info, setInfo] = useState({
     floorName: selectedFloor?.name,
-    projectId: selectedFloor?.projectId,
+    projectId: selectedProject?.id,
     code: selectedFloor?.code,
     commodities: selectedFloor?.commodities,
   });
@@ -49,7 +49,7 @@ const AddFloor = ({
     if (selectedFloor) {
       setInfo({
         floorName: selectedFloor?.name,
-        projectId: selectedProject?.id,
+        projectId: selectedFloor?.projectId,
         code: selectedFloor?.code,
         commodities: selectedFloor?.commodities,
       });
@@ -120,46 +120,51 @@ const AddFloor = ({
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <TextField
-          value={info?.floorName}
-          name={'floorName'}
-          onChange={handleChange}
-          label={'نام طبقه'}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          value={info?.code}
-          name={'code'}
-          onChange={handleChange}
-          label={'کد طبقه'}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <AutoCompleteComponent
-          sx={{ mt: 2 }}
-          options={projects?.data}
-          id="projectId"
-          label="پروژه"
-          changeHandler={(value) =>
-            setInfo((prev) => ({ ...prev, projectId: value }))
-          }
-          value={info?.projectId}
-        />
-        <FormControl fullWidth={true}>
-          <AutoCompleteComponent
-            sx={{ mt: 2 }}
-            options={commodities?.data}
-            id="commodities"
-            label="کالا ها"
-            changeHandler={(value) =>
-              setInfo((prev) => ({ ...prev, commodities: value }))
-            }
-            dataLabel="serchableName"
-            value={info?.commodities || []}
-            multiple={true}
-          />
-        </FormControl>
+        {projects.pending && <CircularProgress />}
+        {!projects.pending && (
+          <>
+            <TextField
+              value={info?.floorName}
+              name={'floorName'}
+              onChange={handleChange}
+              label={'نام طبقه'}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+            />
+            <TextField
+              value={info?.code}
+              name={'code'}
+              onChange={handleChange}
+              label={'کد طبقه'}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+            />
+            <AutoCompleteComponent
+              sx={{ mt: 2 }}
+              options={projects?.data}
+              id="projectId"
+              label="پروژه"
+              changeHandler={(value) =>
+                setInfo((prev) => ({ ...prev, projectId: value }))
+              }
+              value={info?.projectId ?? selectedProject?.id}
+            />
+            <FormControl fullWidth={true}>
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={commodities?.data}
+                id="commodities"
+                label="کالا ها"
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, commodities: value }))
+                }
+                dataLabel="serchableName"
+                value={info?.commodities || []}
+                multiple={true}
+              />
+            </FormControl>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
         <Button variant={'contained'} color={'success'} onClick={onSubmit}>

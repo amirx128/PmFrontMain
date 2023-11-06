@@ -93,7 +93,7 @@ const AddUnit = ({ addUnitDialog, selectedUnit, onClose, currentProject }) => {
         UpdateUnit({
           id: selectedUnit?.id,
           unitName: info.unitName,
-          projectfloorId: info.projectfloorId,
+          projectfloorId: info.projectfloorId ?? selectedFloor.id,
           code: info.code,
           commodities: info.commodities,
         })
@@ -102,7 +102,7 @@ const AddUnit = ({ addUnitDialog, selectedUnit, onClose, currentProject }) => {
       dispatch(
         AddNewUnit({
           unitName: info.unitName,
-          projectfloorId: info.projectfloorId,
+          projectfloorId: info.projectfloorId ?? selectedFloor.id,
           code: info.code,
           commodities: info.commodities,
         })
