@@ -16,23 +16,23 @@ import {
   InputLabel,
   FormControl,
   Typography,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HighlightOff } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   GetAllBusinessRoles,
   GetAllPersons,
   getAllProjects,
-} from "../../redux/features/definitionSlicer.ts";
-import { toast } from "react-toastify";
+} from '../../redux/features/definitionSlicer.ts';
+import { toast } from 'react-toastify';
 import {
   AddNewUser,
   GetAllRoles,
   UpdateUser,
-} from "../../redux/features/administrationSlicer.ts";
-import AutoCompleteComponent from "../AutoComplete/AutoCompleteComponent.tsx";
+} from '../../redux/features/administrationSlicer.ts';
+import AutoCompleteComponent from '../AutoComplete/AutoCompleteComponent.tsx';
 
 interface IAddUserProps {
   showUserDialog: boolean;
@@ -42,7 +42,7 @@ interface IAddUserProps {
 export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
-  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
   const { roles, selectedUser, users } = useSelector(
     (state: any) => state.administrations
   );
@@ -91,21 +91,21 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
       setInfo({
         // firstName: "",
         // lastName: "",
-        userName: "",
-        password: "",
+        userName: '',
+        password: '',
         isActive: true,
         businessRoles: [],
         usersRoles: [],
-        bossId: "",
-        projectId: "",
-        personId: "",
+        bossId: '',
+        projectId: '',
+        personId: '',
       });
     }
   }, [selectedUser]);
   const { businessRoles } = useSelector((state: any) => state.definition);
 
   const handleChange = (e) => {
-    if (e.target?.name === "isActive") {
+    if (e.target?.name === 'isActive') {
       setInfo({
         ...info,
         [e.target?.name]: e.target?.checked,
@@ -132,50 +132,51 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
       [name]: val,
     });
   };
+  console.log(info.personId);
   return (
     <Dialog
       open={showUserDialog}
       onClose={onClose}
       fullWidth={true}
-      maxWidth={"md"}
+      maxWidth={'md'}
       fullScreen={mediumOrSmaller}
     >
       <DialogTitle
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
-        {selectedUser ? "ویرایش کاربر" : "افزودن کاربر"}
-        <IconButton color={"error"} onClick={onClose}>
+        {selectedUser ? 'ویرایش کاربر' : 'افزودن کاربر'}
+        <IconButton color={'error'} onClick={onClose}>
           <HighlightOff />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "20%" }}>نام</Typography>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography sx={{ width: '20%' }}>نام</Typography>
           <TextField
             value={
               persons?.data?.find((person) => person?.id == info?.personId)
                 ?.firstName
             }
-            name={"firstName"}
+            name={'firstName'}
             onChange={handleChange}
             fullWidth={true}
             sx={{ mt: 2 }}
             disabled
           />
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <Typography sx={{ width: "20%" }}>نام خانوادگی</Typography>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography sx={{ width: '20%' }}>نام خانوادگی</Typography>
           <TextField
             // value={info?.lastName}
             value={
               persons?.data?.find((person) => person?.id == info?.personId)
                 ?.lastName
             }
-            name={"lastName"}
+            name={'lastName'}
             onChange={handleChange}
             fullWidth={true}
             sx={{ mt: 2 }}
@@ -184,28 +185,28 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
         </div>
         <TextField
           value={info?.userName}
-          name={"userName"}
+          name={'userName'}
           onChange={handleChange}
-          label={"نام کاربری"}
+          label={'نام کاربری'}
           fullWidth={true}
           sx={{ mt: 2 }}
         />
         <TextField
           value={info?.password}
-          name={"password"}
+          name={'password'}
           onChange={handleChange}
-          label={"رمزعبور"}
-          type={"password"}
+          label={'رمزعبور'}
+          type={'password'}
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <FormGroup sx={{ width: "100%" }}>
+        <FormGroup sx={{ width: '100%' }}>
           <FormControlLabel
             value={info?.isActive}
             control={
               <Checkbox
                 checked={info?.isActive}
-                name={"isActive"}
+                name={'isActive'}
                 onChange={handleChange}
               />
             }
@@ -246,7 +247,7 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             options={users?.usersList || []}
             value={info?.bossId}
             dataLabel="firstName"
-            changeHandler={(value) => handleChangeAutoComplete(value, "bossId")}
+            changeHandler={(value) => handleChangeAutoComplete(value, 'bossId')}
           />
         </FormControl>
         <FormControl fullWidth sx={{ mt: 2 }}>
@@ -256,7 +257,7 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             options={projects?.data || []}
             value={info?.projectId}
             changeHandler={(value) =>
-              handleChangeAutoComplete(value, "projectId")
+              handleChangeAutoComplete(value, 'projectId')
             }
           />
         </FormControl>
@@ -266,16 +267,16 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             id="personId"
             options={persons?.data || []}
             value={info?.personId}
-            dataLabel="firstName"
+            dataLabel={['firstName', 'lastName']}
             changeHandler={(value) =>
-              handleChangeAutoComplete(value, "personId")
+              handleChangeAutoComplete(value, 'personId')
             }
           />
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button variant={"contained"} color={"success"} onClick={onSubmit}>
-          {businessRoles?.addState ? <CircularProgress /> : "ثبت"}
+        <Button variant={'contained'} color={'success'} onClick={onSubmit}>
+          {businessRoles?.addState ? <CircularProgress /> : 'ثبت'}
         </Button>
       </DialogActions>
     </Dialog>

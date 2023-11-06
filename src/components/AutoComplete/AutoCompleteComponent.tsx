@@ -1,4 +1,4 @@
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, TextField } from '@mui/material';
 
 const AutoCompleteComponent = ({
   disablePortal = false,
@@ -7,8 +7,8 @@ const AutoCompleteComponent = ({
   label,
   changeHandler,
   value,
-  dataId = "id",
-  dataLabel = "name",
+  dataId = 'id',
+  dataLabel = 'name',
   multiple = false,
   sx = {},
 }) => {
@@ -22,11 +22,24 @@ const AutoCompleteComponent = ({
               ?.map((op) => ({ id: op[dataId], label: op[dataLabel] }))
               ?.filter((op) => value?.includes(op[dataId])) || []
           : options
-              ?.map((op) => ({ id: op[dataId], label: op[dataLabel] }))
-              ?.find((op) => op[dataId] == value)
+              ?.map((op) => ({
+                id: op[dataId],
+                label: Array.isArray(dataLabel)
+                  ? `${op[dataLabel[0]]} ${op[dataLabel[1]]}`
+                  : op[dataLabel],
+              }))
+              ?.find((op) => op[dataId] == value) || {
+              id: 0,
+              label: '',
+            }
       }
       options={
-        options?.map((op) => ({ id: op[dataId], label: op[dataLabel] })) || []
+        options?.map((op) => ({
+          id: op[dataId],
+          label: Array.isArray(dataLabel)
+            ? `${op[dataLabel[0]]} ${op[dataLabel[1]]}`
+            : op[dataLabel],
+        })) || []
       }
       onChange={(e, value: any) =>
         multiple
@@ -41,12 +54,12 @@ const AutoCompleteComponent = ({
           ? [
               {
                 id: 0,
-                label: "",
+                label: '',
               },
             ]
           : {
               id: 0,
-              label: "",
+              label: '',
             }
       }
     />
