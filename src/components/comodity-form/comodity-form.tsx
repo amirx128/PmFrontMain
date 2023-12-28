@@ -76,6 +76,7 @@ const ComodiryForm: React.FC<Iprops> = ({
     setDate(date);
     setValue('requiredDate', date);
   };
+  console.log(commodityDescription);
   return (
     <>
       <Row>
@@ -83,7 +84,7 @@ const ComodiryForm: React.FC<Iprops> = ({
           control={control}
           name="commodityId"
           defaultValue={undefined}
-          render={({}) => (
+          render={() => (
             <Autocomplete
               {...register}
               disablePortal
@@ -92,7 +93,9 @@ const ComodiryForm: React.FC<Iprops> = ({
                 comoditiDescriptionChanged(event, value)
               }
               options={commodityDescription ? commodityDescription : []}
-              getOptionLabel={(option: any) => option.serchableName}
+              getOptionLabel={(option: any) => {
+                return `${option.id}- ${option.serchableName}`;
+              }}
               renderOption={(props, option: any) => (
                 <li {...props} value={option}>
                   <span>
