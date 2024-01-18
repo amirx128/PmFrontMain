@@ -1,5 +1,5 @@
 window.globalConfig = {
-  baseUrl: 'http://46.225.142.245:2060',
+  baseUrl: 'http://46.225.142.245:2020',
 };
 // window.globalConfig = {
 //   baseUrl: "http://Localhost:5170",

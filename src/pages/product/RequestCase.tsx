@@ -5,27 +5,26 @@ import {
   CardHeader,
   IconButton,
   Typography,
-} from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
-import { useEffect, useState, useRef } from "react";
-import JalaliDatePicker from "../../components/date-picker/date-picker.tsx";
-import Grid from "../../components/grid/grid.tsx";
-import { Row } from "./style.tsx";
-import Filter from "@mui/icons-material/FilterAlt";
-import FilterOff from "@mui/icons-material/FilterAltOff";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
-import gridDict from "../../dictionary/gridDict.ts";
+} from '@mui/material';
+import { useEffect, useState, useRef } from 'react';
+import JalaliDatePicker from '../../components/date-picker/date-picker.tsx';
+import Grid from '../../components/grid/grid.tsx';
+import { Row } from './style.tsx';
+import Filter from '@mui/icons-material/FilterAlt';
+import FilterOff from '@mui/icons-material/FilterAltOff';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   DownloadRequesterUserSentItemAction,
   RequesterUserSentItemAction,
-} from "../../redux/features/productSlicer.ts";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-import TuneIcon from "@mui/icons-material/Tune";
-import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
-import useCustomCol from "../../hooks/useCustomCol.tsx";
-import { requestCaseGrid } from "../../utils/gridColumns.ts";
+} from '../../redux/features/productSlicer.ts';
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import TuneIcon from '@mui/icons-material/Tune';
+import CustomizeGrid from '../../components/CustomizeGrid/CustomizeGrid.tsx';
+import useCustomCol from '../../hooks/useCustomCol.tsx';
+import { requestCaseGrid } from '../../utils/gridColumns.ts';
 const RequestCase = () => {
+  const navigate = useNavigate();
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
@@ -34,7 +33,9 @@ const RequestCase = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
-
+  const handleEditClick = (params) => {
+    navigate(`edit/${params.row.requestCaseId}`);
+  };
   const {
     isLoading: saveGridColumnsLoading,
     isShowModal: isShowCustomizeTableModal,
@@ -46,7 +47,7 @@ const RequestCase = () => {
     handleCloseModal: handleCloseCustomizeTable,
     handleSaveColumnsChanges,
     handleSelectAll,
-  } = useCustomCol("REQUEST_CASE_SENT_ITEM", requestCaseGrid);
+  } = useCustomCol('REQUEST_CASE_SENT_ITEM', requestCaseGrid, handleEditClick);
   useEffect(() => {
     getList();
   }, []);
@@ -86,7 +87,7 @@ const RequestCase = () => {
         })
       );
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   const setSelectedFromDate = (e) => {
@@ -128,21 +129,21 @@ const RequestCase = () => {
       xs={12}
       sx={{
         borderRadius: 2,
-        boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
-        marginBottom: "10px",
+        boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, 0.1)',
+        marginBottom: '10px',
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
-          style={{ textAlign: "right" }}
+          style={{ textAlign: 'right' }}
           title="لیست درخواست های ارسال شده"
-          titleTypographyProps={{ variant: "h6" }}
+          titleTypographyProps={{ variant: 'h6' }}
         />
 
         <Box>
           <form>
             <Row>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={fromDate}
                   onChange={setSelectedFromDate}
@@ -151,7 +152,7 @@ const RequestCase = () => {
                   value={fromDate}
                 ></JalaliDatePicker>
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={toDate}
                   onChange={setSelectedToDate}
@@ -179,7 +180,7 @@ const RequestCase = () => {
               >
                 <TuneIcon />
               </IconButton>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}></Box>
             </Row>
           </form>
         </Box>
@@ -196,6 +197,7 @@ const RequestCase = () => {
               }
               pagination={{}}
               onSortModelChange={handleSortModelChange}
+              onDoubleClick={handleEditClick}
             />
             <CustomizeGrid
               showModal={isShowCustomizeTableModal}

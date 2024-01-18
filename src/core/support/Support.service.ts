@@ -1,12 +1,12 @@
-import axiosInstance from "../../utils/axios.config.ts";
+import axiosInstance from '../../utils/axios.config.ts';
 
 export const GetApproveQ = async (
   userId,
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "CreateDate",
+  orderType = 'desc',
+  orderBy = 'CreateDate',
   approveStateId = 3
 ) =>
   await axiosInstance.post(`/Support/ApproveQ`, {
@@ -24,8 +24,8 @@ export const DownloadApproveQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "CreateDate",
+  orderType = 'desc',
+  orderBy = 'CreateDate',
   approveStateId = 3
 ) =>
   await axiosInstance.post(
@@ -42,7 +42,7 @@ export const DownloadApproveQ = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 export const GetApproveStates = async (userId) =>
@@ -55,8 +55,8 @@ export const GetFinalApproveQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "CreateDate",
+  orderType = 'desc',
+  orderBy = 'CreateDate',
   approveStateId = 3
 ) =>
   await axiosInstance.post(`/support/FinalApproveQ`, {
@@ -74,8 +74,8 @@ export const DownloadFinalApproveQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "CreateDate",
+  orderType = 'desc',
+  orderBy = 'CreateDate',
   approveStateId = 3
 ) =>
   await axiosInstance.post(
@@ -92,6 +92,11 @@ export const DownloadFinalApproveQ = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
+export const SupportGetRequestDetails = async (userId, requestId) =>
+  await axiosInstance.post(`/Support/GetRequestDetails`, {
+    userId,
+    requestId,
+  });

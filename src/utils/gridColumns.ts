@@ -508,6 +508,20 @@ export const requestCaseGrid = [
     filterable: false,
     renderType: gridFunctionsEnum.showNumberColumns,
   },
+  {
+    field: 'actions',
+    headerName: gridDict.actions,
+    description: 'ActionColumn',
+    sortable: false,
+    minWidth: 150,
+    flex: 1,
+    filterable: false,
+    hideSortIcons: true,
+    type: 'actions',
+    cellClassName: 'actions',
+    disableColumnMenu: true,
+    renderType: gridFunctionsEnum.actionEditColumn,
+  },
 ];
 export const requesterUserGrid = [
   {
@@ -1031,9 +1045,9 @@ export const qcGrid = [
   },
 ];
 
-export const approveGrid=[
+export const approveGrid = [
   {
-    field: "requesterUser",
+    field: 'requesterUser',
     headerName: gridDict.requesterUser,
     flex: 1,
     minWidth: 150,
@@ -1041,7 +1055,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "requestCaseId",
+    field: 'requestCaseId',
     headerName: gridDict.requestCaseId,
     flex: 1,
     minWidth: 150,
@@ -1050,7 +1064,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "commodityName",
+    field: 'commodityName',
     headerName: gridDict.commodityName,
     flex: 1,
     minWidth: 150,
@@ -1058,7 +1072,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "requesterUserId",
+    field: 'requesterUserId',
     headerName: gridDict.requesterUserId,
     flex: 1,
     minWidth: 150,
@@ -1067,7 +1081,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "requiredDate",
+    field: 'requiredDate',
     headerName: gridDict.requiredDate,
     flex: 1,
     minWidth: 150,
@@ -1076,7 +1090,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "count",
+    field: 'count',
     headerName: gridDict.count,
     flex: 1,
     minWidth: 150,
@@ -1085,7 +1099,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "newcount",
+    field: 'newcount',
     headerName: gridDict.newcount,
     flex: 1,
     minWidth: 150,
@@ -1094,7 +1108,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "trackingCode",
+    field: 'trackingCode',
     headerName: gridDict.trackingCode,
     minWidth: 150,
     flex: 1,
@@ -1103,7 +1117,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.navigateToProductDetails_RequestCaseId,
   },
   {
-    field: "isEditable",
+    field: 'isEditable',
     headerName: gridDict.isEditable,
     flex: 1,
     minWidth: 150,
@@ -1112,7 +1126,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showTrueFalseColumns,
   },
   {
-    field: "createDate",
+    field: 'createDate',
     headerName: gridDict.createDate,
     minWidth: 150,
     sortable: false,
@@ -1121,7 +1135,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "placeOfUseName",
+    field: 'placeOfUseName',
     headerName: gridDict.placeOfUseName,
     minWidth: 150,
     flex: 1,
@@ -1129,7 +1143,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "requestCommodityId",
+    field: 'requestCommodityId',
     headerName: gridDict.requestCommodityId,
     flex: 1,
     minWidth: 150,
@@ -1138,7 +1152,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "approvestate",
+    field: 'approvestate',
     headerName: gridDict.approveDate,
     minWidth: 150,
     flex: 1,
@@ -1146,7 +1160,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "approverId",
+    field: 'approverId',
     headerName: gridDict.approverId,
     minWidth: 150,
     flex: 1,
@@ -1155,7 +1169,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "approverName",
+    field: 'approverName',
     headerName: gridDict.approverName,
     minWidth: 150,
     flex: 1,
@@ -1163,7 +1177,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "approveDate",
+    field: 'approveDate',
     headerName: gridDict.approveDate,
     minWidth: 150,
     flex: 1,
@@ -1172,7 +1186,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "finalApprovestate",
+    field: 'finalApprovestate',
     headerName: gridDict.finalApprovestate,
     minWidth: 150,
     flex: 1,
@@ -1180,7 +1194,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "finalApproverId",
+    field: 'finalApproverId',
     headerName: gridDict.finalApproverId,
     minWidth: 150,
     flex: 1,
@@ -1188,7 +1202,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "finalApproverName",
+    field: 'finalApproverName',
     headerName: gridDict.finalApproverName,
     minWidth: 150,
     flex: 1,
@@ -1196,7 +1210,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "finalApproveDate",
+    field: 'finalApproveDate',
     headerName: gridDict.finalApproveDate,
     minWidth: 150,
     flex: 1,
@@ -1205,7 +1219,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "scheduleActivityId",
+    field: 'scheduleActivityId',
     headerName: gridDict.scheduleActivityId,
     minWidth: 150,
     flex: 1,
@@ -1214,7 +1228,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "purchaseOrderId",
+    field: 'purchaseOrderId',
     headerName: gridDict.purchaseOrderId,
     minWidth: 150,
     flex: 1,
@@ -1223,7 +1237,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "purchaseOrderTrackingCode",
+    field: 'purchaseOrderTrackingCode',
     headerName: gridDict.purchaseOrderTrackingCode,
     minWidth: 150,
     flex: 1,
@@ -1232,7 +1246,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.navigateToPurchaseDetails_purchaseOrderId,
   },
   {
-    field: "exitFromWarehouseId",
+    field: 'exitFromWarehouseId',
     headerName: gridDict.exitFromWarehouseId,
     minWidth: 150,
     flex: 1,
@@ -1241,7 +1255,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "exitFromWarehouseTrackingCode",
+    field: 'exitFromWarehouseTrackingCode',
     headerName: gridDict.exitFromWarehouseTrackingCode,
     minWidth: 150,
     flex: 1,
@@ -1249,7 +1263,7 @@ export const approveGrid=[
     filterable: false,
   },
   {
-    field: "exitFromWarehouseCount",
+    field: 'exitFromWarehouseCount',
     headerName: gridDict.exitFromWarehouseCount,
     minWidth: 150,
     flex: 1,
@@ -1258,7 +1272,7 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "purchaseCount",
+    field: 'purchaseCount',
     headerName: gridDict.purchaseCount,
     minWidth: 150,
     flex: 1,
@@ -1267,24 +1281,24 @@ export const approveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "actions",
+    field: 'actions',
     headerName: gridDict.actions,
-    description: "ActionColumn",
+    description: 'ActionColumn',
     sortable: false,
     minWidth: 150,
     flex: 1,
     filterable: false,
     hideSortIcons: true,
-    type: "actions",
-    cellClassName: "actions",
+    type: 'actions',
+    cellClassName: 'actions',
     disableColumnMenu: true,
     renderType: gridFunctionsEnum.actionEditColumn,
   },
-]
+];
 
-export const finalApproveGrid=[
+export const finalApproveGrid = [
   {
-    field: "requesterUser",
+    field: 'requesterUser',
     headerName: gridDict.requesterUser,
     flex: 1,
     minWidth: 150,
@@ -1292,7 +1306,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "requestCaseId",
+    field: 'requestCaseId',
     headerName: gridDict.requestCaseId,
     flex: 1,
     minWidth: 150,
@@ -1301,7 +1315,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "commodityName",
+    field: 'commodityName',
     headerName: gridDict.commodityName,
     flex: 1,
     minWidth: 150,
@@ -1309,7 +1323,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "requesterUserId",
+    field: 'requesterUserId',
     headerName: gridDict.requesterUserId,
     flex: 1,
     minWidth: 150,
@@ -1318,7 +1332,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "requiredDate",
+    field: 'requiredDate',
     headerName: gridDict.requiredDate,
     flex: 1,
     minWidth: 150,
@@ -1327,7 +1341,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "count",
+    field: 'count',
     headerName: gridDict.count,
     flex: 1,
     minWidth: 150,
@@ -1336,7 +1350,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "newcount",
+    field: 'newcount',
     headerName: gridDict.newcount,
     flex: 1,
     minWidth: 150,
@@ -1345,7 +1359,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "trackingCode",
+    field: 'trackingCode',
     headerName: gridDict.trackingCode,
     minWidth: 150,
     flex: 1,
@@ -1354,7 +1368,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.navigateToProductDetails_RequestCaseId,
   },
   {
-    field: "isEditable",
+    field: 'isEditable',
     headerName: gridDict.isEditable,
     flex: 1,
     minWidth: 150,
@@ -1363,7 +1377,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showTrueFalseColumns,
   },
   {
-    field: "createDate",
+    field: 'createDate',
     headerName: gridDict.createDate,
     minWidth: 150,
     sortable: false,
@@ -1373,7 +1387,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "placeOfUseName",
+    field: 'placeOfUseName',
     headerName: gridDict.placeOfUseName,
     minWidth: 150,
     flex: 1,
@@ -1381,7 +1395,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "requestCommodityId",
+    field: 'requestCommodityId',
     headerName: gridDict.requestCommodityId,
     flex: 1,
     minWidth: 150,
@@ -1390,7 +1404,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "approvestate",
+    field: 'approvestate',
     headerName: gridDict.approveDate,
     minWidth: 150,
     flex: 1,
@@ -1398,7 +1412,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "approverId",
+    field: 'approverId',
     headerName: gridDict.approverId,
     minWidth: 150,
     flex: 1,
@@ -1407,7 +1421,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "approverName",
+    field: 'approverName',
     headerName: gridDict.approverName,
     minWidth: 150,
     flex: 1,
@@ -1415,7 +1429,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "approveDate",
+    field: 'approveDate',
     headerName: gridDict.approveDate,
     minWidth: 150,
     flex: 1,
@@ -1424,7 +1438,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "finalApprovestate",
+    field: 'finalApprovestate',
     headerName: gridDict.finalApprovestate,
     minWidth: 150,
     flex: 1,
@@ -1432,7 +1446,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "finalApproverId",
+    field: 'finalApproverId',
     headerName: gridDict.finalApproverId,
     minWidth: 150,
     flex: 1,
@@ -1440,7 +1454,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "finalApproverName",
+    field: 'finalApproverName',
     headerName: gridDict.finalApproverName,
     minWidth: 150,
     flex: 1,
@@ -1448,7 +1462,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "finalApproveDate",
+    field: 'finalApproveDate',
     headerName: gridDict.finalApproveDate,
     minWidth: 150,
     flex: 1,
@@ -1457,7 +1471,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showDateColumns,
   },
   {
-    field: "scheduleActivityId",
+    field: 'scheduleActivityId',
     headerName: gridDict.scheduleActivityId,
     minWidth: 150,
     flex: 1,
@@ -1466,7 +1480,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "purchaseOrderId",
+    field: 'purchaseOrderId',
     headerName: gridDict.purchaseOrderId,
     minWidth: 150,
     flex: 1,
@@ -1475,7 +1489,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "purchaseOrderTrackingCode",
+    field: 'purchaseOrderTrackingCode',
     headerName: gridDict.purchaseOrderTrackingCode,
     minWidth: 150,
     flex: 1,
@@ -1484,7 +1498,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.navigateToPurchaseDetails_purchaseOrderId,
   },
   {
-    field: "exitFromWarehouseId",
+    field: 'exitFromWarehouseId',
     headerName: gridDict.exitFromWarehouseId,
     minWidth: 150,
     flex: 1,
@@ -1493,7 +1507,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "exitFromWarehouseTrackingCode",
+    field: 'exitFromWarehouseTrackingCode',
     headerName: gridDict.exitFromWarehouseTrackingCode,
     minWidth: 150,
     flex: 1,
@@ -1501,7 +1515,7 @@ export const finalApproveGrid=[
     filterable: false,
   },
   {
-    field: "exitFromWarehouseCount",
+    field: 'exitFromWarehouseCount',
     headerName: gridDict.exitFromWarehouseCount,
     minWidth: 150,
     flex: 1,
@@ -1510,7 +1524,7 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "purchaseCount",
+    field: 'purchaseCount',
     headerName: gridDict.purchaseCount,
     minWidth: 150,
     flex: 1,
@@ -1519,17 +1533,17 @@ export const finalApproveGrid=[
     renderType: gridFunctionsEnum.showNumberColumns,
   },
   {
-    field: "actions",
+    field: 'actions',
     headerName: gridDict.actions,
-    description: "ActionColumn",
+    description: 'ActionColumn',
     sortable: false,
     minWidth: 150,
     flex: 1,
     filterable: false,
     hideSortIcons: true,
-    type: "actions",
-    cellClassName: "actions",
+    type: 'actions',
+    cellClassName: 'actions',
     disableColumnMenu: true,
     renderType: gridFunctionsEnum.actionEditColumn,
   },
-]
+];

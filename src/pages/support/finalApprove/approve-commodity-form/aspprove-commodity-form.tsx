@@ -1,17 +1,17 @@
-import SaveIcon from "@mui/icons-material/Save";
-import { LoadingButton } from "@mui/lab";
-import { Box, Divider, Grid, Typography } from "@mui/material";
-import axios from "../../../../utils/axios.config";
-import { useEffect, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { InputContent } from "../../../../components/comodity-form/style";
-import SelectComponent from "../../../../components/select/selects";
-import theme from "../../../../utils/theme";
-import { StyledBox } from "../../approve/style";
-import { useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../../../utils/functions.ts";
-import { getValue } from "@mui/system";
-import { Watch } from "@mui/icons-material";
+import SaveIcon from '@mui/icons-material/Save';
+import { LoadingButton } from '@mui/lab';
+import { Box, Divider, Grid, Typography } from '@mui/material';
+import axios from '../../../../utils/axios.config';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { InputContent } from '../../../../components/comodity-form/style';
+import SelectComponent from '../../../../components/select/selects';
+import theme from '../../../../utils/theme';
+import { StyledBox } from '../../approve/style';
+import { useSelector } from 'react-redux';
+import { getUserIdFromStorage } from '../../../../utils/functions.ts';
+import { getValue } from '@mui/system';
+import { Watch } from '@mui/icons-material';
 const ApproveCommodityForm: React.FC<any> = ({
   commodity,
   loading,
@@ -32,9 +32,8 @@ const ApproveCommodityForm: React.FC<any> = ({
     watch,
   } = useForm<any>({
     defaultValues: {
-      purchaseCount: commodity?.purchaseOrderCount || 0,
+      purchaseCount: commodity?.purchaseOrderCount,
       finalApproveStateId: commodity?.finalApproveStateId,
-      exitWarehouseCount: 0,
     },
   });
   const onSubmit = handleSubmit((entity: any) => {
@@ -55,18 +54,18 @@ const ApproveCommodityForm: React.FC<any> = ({
 
   const getApproveStates = async () => {
     try {
-      const response = await axios.post("/Support/GetApproveStates", {
+      const response = await axios.post('/Support/GetApproveStates', {
         userId: user?.id ?? getUserIdFromStorage(),
       });
       setStates(response.data.model);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   const getCountCommodityInWarehouse = async () => {
     try {
       const response = await axios.post(
-        "/Support/GetCountCommodityInWarehouse",
+        '/Support/GetCountCommodityInWarehouse',
         {
           userId: user?.id ?? getUserIdFromStorage(),
           commodityId: commodity.commodityId,
@@ -74,12 +73,12 @@ const ApproveCommodityForm: React.FC<any> = ({
       );
       setExitWarehouseCount(response.data.model);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
 
   const countChange = (count) => {
-    setValue("purchaseCount", count);
+    setValue('purchaseCount', count);
     setDisabled(+count + exitWarehouseCount === commodity.count);
   };
   return (
@@ -90,26 +89,26 @@ const ApproveCommodityForm: React.FC<any> = ({
       <Grid container spacing={5} p={2}>
         <Grid item xs={12} sm={3} fontFamily="IRANSans">
           <StyledBox theme={theme}>
-            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+            <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  marginRight: "20px",
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginRight: '20px',
                 }}
               >
                 نام فعالیت:
               </Typography>
               <Typography variant="body2">{commodity.activityName}</Typography>
             </Box>
-            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+            <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  marginRight: "20px",
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginRight: '20px',
                 }}
               >
                 شرح کالا
@@ -117,13 +116,13 @@ const ApproveCommodityForm: React.FC<any> = ({
 
               <Typography variant="body2">{commodity.commodity} </Typography>
             </Box>
-            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+            <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  marginRight: "20px",
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginRight: '20px',
                 }}
               >
                 تعداد
@@ -140,7 +139,7 @@ const ApproveCommodityForm: React.FC<any> = ({
                     max: {
                       value: exitWarehouseCount,
                       message:
-                        "مقدار وارد شده نمیتواند از موجودی انبار بیشتر باشد",
+                        'مقدار وارد شده نمیتواند از موجودی انبار بیشتر باشد',
                     },
                   }}
                   render={() => (
@@ -155,7 +154,7 @@ const ApproveCommodityForm: React.FC<any> = ({
                   )}
                 />
                 <Typography color="primary" variant="body2">
-                  {"موجودی انبار: " + exitWarehouseCount}
+                  {'موجودی انبار: ' + exitWarehouseCount}
                 </Typography>
                 {dirtyFields.exitWarehouseCount && !isValid && (
                   <span style={{ color: theme.palette.error.light }}>
@@ -167,13 +166,13 @@ const ApproveCommodityForm: React.FC<any> = ({
           </StyledBox>
         </Grid>
         <Grid item xs={12} sm={3}>
-          <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+          <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
             <Typography
               variant="body2"
               sx={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                marginRight: "20px",
+                fontSize: '14px',
+                fontWeight: 'bold',
+                marginRight: '20px',
               }}
             >
               وضعیت تایید:
@@ -181,13 +180,13 @@ const ApproveCommodityForm: React.FC<any> = ({
 
             <Typography variant="body2">{commodity.approveState}</Typography>
           </Box>
-          <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+          <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
             <Typography
               variant="body2"
               sx={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                marginRight: "20px",
+                fontSize: '14px',
+                fontWeight: 'bold',
+                marginRight: '20px',
               }}
             >
               تایید کننده :
@@ -195,20 +194,20 @@ const ApproveCommodityForm: React.FC<any> = ({
 
             <Typography variant="body2">{commodity.approver}</Typography>
           </Box>
-          <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+          <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
             <Typography
               variant="body2"
               sx={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                marginRight: "20px",
+                fontSize: '14px',
+                fontWeight: 'bold',
+                marginRight: '20px',
               }}
             >
               تاریخ نیاز:
             </Typography>
 
             <Typography variant="body2">
-              {new Date(commodity.requiredDate).toLocaleDateString("fa-IR")}
+              {new Date(commodity.requiredDate).toLocaleDateString('fa-IR')}
             </Typography>
           </Box>
 
@@ -232,26 +231,26 @@ const ApproveCommodityForm: React.FC<any> = ({
             </div>
           </Box>
 
-          <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+          <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
             <Typography
               variant="body2"
               sx={{
-                fontSize: "14px",
-                fontWeight: "bold",
-                marginRight: "20px",
+                fontSize: '14px',
+                fontWeight: 'bold',
+                marginRight: '20px',
               }}
             ></Typography>
           </Box>
         </Grid>
         <Grid item xs={12} sm={3}>
           <StyledBox theme={theme}>
-            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+            <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  marginRight: "20px",
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginRight: '20px',
                 }}
               >
                 وضعیت تصویب:
@@ -261,13 +260,13 @@ const ApproveCommodityForm: React.FC<any> = ({
                 {commodity.finalApproveState}
               </Typography>
             </Box>
-            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+            <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  marginRight: "20px",
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginRight: '20px',
                 }}
               >
                 تضویب کننده:
@@ -275,13 +274,13 @@ const ApproveCommodityForm: React.FC<any> = ({
 
               <Typography variant="body2">{commodity.finalApprover}</Typography>
             </Box>
-            <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+            <Box sx={{ mb: 6.75, display: 'flex', alignItems: 'center' }}>
               <Typography
                 variant="body2"
                 sx={{
-                  fontSize: "14px",
-                  fontWeight: "bold",
-                  marginRight: "20px",
+                  fontSize: '14px',
+                  fontWeight: 'bold',
+                  marginRight: '20px',
                 }}
               >
                 تاریخ تصویب:
@@ -290,14 +289,14 @@ const ApproveCommodityForm: React.FC<any> = ({
               <Typography variant="body2">
                 {commodity.finalApproveDate &&
                   new Date(commodity.finalApproveDate).toLocaleDateString(
-                    "fa-IR"
+                    'fa-IR'
                   )}
               </Typography>
             </Box>
             <Box>
               <Controller
                 control={control}
-                rules={{ required: " approve state is required" }}
+                rules={{ required: ' approve state is required' }}
                 name="finalApproveStateId"
                 render={({ field }) => (
                   <SelectComponent
@@ -367,21 +366,21 @@ const ApproveCommodityForm: React.FC<any> = ({
           </StyledBox>
         </Grid> */}
       </Grid>
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
         <LoadingButton
           loading={loading}
           disabled={loading || !isValid}
           type="submit"
-          sx={{ justifySelf: "flex-start", marginRight: "20px" }}
+          sx={{ justifySelf: 'flex-start', marginRight: '20px' }}
           color="info"
           variant="contained"
         >
           ذخیره
-          <SaveIcon sx={{ marginLeft: "10px" }} />
+          <SaveIcon sx={{ marginLeft: '10px' }} />
         </LoadingButton>
       </Box>
 
-      <Divider sx={{ width: "80%", margin: "20px auto" }} />
+      <Divider sx={{ width: '80%', margin: '20px auto' }} />
     </form>
   );
 };

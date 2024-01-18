@@ -1,14 +1,6 @@
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Controller, useForm } from 'react-hook-form';
-import {
-  DatePickerWrapper,
-  Form,
-  InputContent,
-  Row,
-  TreeWrapper,
-} from './style';
-import persian from 'react-date-object/calendars/persian';
-import persian_fa from 'react-date-object/locales/persian_fa';
+import { Row } from './style';
 import {
   Autocomplete,
   Box,
@@ -18,8 +10,6 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { IComodityFields } from '../../core/comodity/comodity.model';
-import Tree from '../tree/tree';
-import DatePicker from 'react-multi-date-picker';
 import JalaliDatePicker from '../date-picker/date-picker';
 interface Iprops {
   comodity?: IComodityFields;
@@ -46,18 +36,18 @@ const ComodiryForm: React.FC<Iprops> = ({
   } = useForm<IComodityFields>();
   const [date, setDate] = useState(new Date().toLocaleDateString('fa-IR'));
   const [unit, setUnit] = useState('');
-  const onSubmit = handleSubmit((data) => {});
   useEffect(() => {
     if (date) {
       setValue('requiredDate', date);
       onCommodityChange(getValues());
     }
   }, [date]);
+
   useEffect(() => {
+    setDate(comodity.requiredDate);
     onCommodityChange(getValues());
     setValue('requiredDate', new Date());
   }, []);
-
   const comoditiDescriptionChanged = (event, val) => {
     setUnit(val.unit);
     setValue('commodityId', val.id);
@@ -76,14 +66,13 @@ const ComodiryForm: React.FC<Iprops> = ({
     setDate(date);
     setValue('requiredDate', date);
   };
-  console.log(commodityDescription);
   return (
     <>
       <Row>
         <Controller
           control={control}
           name="commodityId"
-          defaultValue={undefined}
+          defaultValue={comodity.commodityId || undefined}
           render={() => (
             <Autocomplete
               {...register}
@@ -106,6 +95,9 @@ const ComodiryForm: React.FC<Iprops> = ({
                 </li>
               )}
               sx={{ flex: 1 }}
+              defaultValue={commodityDescription?.find(
+                (com) => com.id === comodity.commodityId
+              )}
               renderInput={(params) => (
                 <TextField {...params} label="شرح کالا" />
               )}
@@ -118,7 +110,7 @@ const ComodiryForm: React.FC<Iprops> = ({
           control={control}
           name="activityId"
           defaultValue={undefined}
-          render={({}) => (
+          render={() => (
             <Autocomplete
               {...register}
               disablePortal
@@ -127,6 +119,9 @@ const ComodiryForm: React.FC<Iprops> = ({
               options={activities ? activities : []}
               getOptionLabel={(option: any) => option.name}
               sx={{ flex: 1 }}
+              defaultValue={activities.find(
+                (act) => act.id === comodity.activityId
+              )}
               renderInput={(params) => <TextField {...params} label="فعالیت" />}
             />
           )}
@@ -142,8 +137,9 @@ const ComodiryForm: React.FC<Iprops> = ({
               type="number"
               label="تعداد/مقدار"
               onChange={countChange}
+              defaultValue={comodity.count}
               inputProps={{
-                step: 0.00000000000001,
+                step: 0.000_000_000_000_000_1,
               }}
             />
           )}

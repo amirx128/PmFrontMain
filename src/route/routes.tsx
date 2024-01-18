@@ -58,6 +58,7 @@ import QcGrid from '../components/qc-grid-pages/qcGrid.tsx';
 import QcDetails from '../components/qc-grid-pages/qcDetails.tsx';
 import CheckListInstancesListDuplicate from '../pages/QC/checkListInstancesDuplicate.tsx';
 import QcEntryCheckList from '../components/qc-grid-pages/qcEntryChecklist.tsx';
+import RequestCaseEdit from '../pages/product/RequestCaseEdit.tsx';
 export enum Layouts {
   AUTH = 'auth',
   MAIN = 'main',
@@ -745,6 +746,14 @@ export const routes: IRoute[] = [
   {
     path: '/qc/entryChecklist/:id/:mode',
     component: <QcEntryCheckList />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: 'کنترل کیفیت',
+  },
+  /////////////////////////////
+  {
+    path: '/requestcase-sentitem/edit/:id',
+    component: <RequestCaseEdit />,
     layout: Layouts.MAIN,
     protected: true,
     title: 'کنترل کیفیت',
