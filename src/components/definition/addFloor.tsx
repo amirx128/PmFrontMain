@@ -12,38 +12,39 @@ import {
   MenuItem,
   FormControl,
   Typography,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HighlightOff } from '@mui/icons-material';
+import { memo, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AddNewFloor,
   AddNewProject,
   UpdateFloor,
   GetAllCommodities,
-} from "../../redux/features/definitionSlicer.ts";
-import { toast } from "react-toastify";
+} from '../../redux/features/definitionSlicer.ts';
+import { toast } from 'react-toastify';
+import AutoCompleteComponent from '../AutoComplete/AutoCompleteComponent.tsx';
 
-export const AddFloor = ({
+const AddFloor = ({
   addFloorDialog,
-  selectedFloor,
   onClose,
   setCurrentProject,
+  currentProject,
 }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
-  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const { projects, commodities, selectedProject, selectedFloor } = useSelector(
+    (state: any) => state.definition
+  );
   const [info, setInfo] = useState({
     floorName: selectedFloor?.name,
-    projectId: selectedFloor?.projectId,
+    projectId: selectedProject?.id,
     code: selectedFloor?.code,
     commodities: selectedFloor?.commodities,
   });
-  const { projects, commodities } = useSelector(
-    (state: any) => state.definition
-  );
-
   useEffect(() => {
     if (selectedFloor) {
       setInfo({
@@ -54,13 +55,13 @@ export const AddFloor = ({
       });
     } else {
       setInfo({
-        floorName: "",
-        projectId: null,
-        code: "",
+        floorName: '',
+        projectId: selectedProject?.id,
+        code: '',
         commodities: [],
       });
     }
-  }, [selectedFloor]);
+  }, [selectedFloor, selectedProject]);
   useEffect(() => {
     getAllCommodities();
   }, []);
@@ -82,7 +83,7 @@ export const AddFloor = ({
           id: selectedFloor?.id,
           floorName: info.floorName,
           code: info.code,
-          projectId: info.projectId,
+          projectId: info.projectId ?? selectedProject?.id,
           commodities: info.commodities,
         })
       );
@@ -91,7 +92,7 @@ export const AddFloor = ({
         AddNewFloor({
           floorName: info.floorName,
           code: info.code,
-          projectId: info.projectId,
+          projectId: info.projectId ?? selectedProject?.id,
           commodities: info.commodities,
         })
       );
@@ -103,75 +104,75 @@ export const AddFloor = ({
       open={addFloorDialog}
       onClose={onClose}
       fullWidth={true}
-      maxWidth={"md"}
+      maxWidth={'md'}
       fullScreen={mediumOrSmaller}
     >
       <DialogTitle
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
-        {selectedFloor ? "ویرایش طبقه" : "افزودن طبقه"}
-        <IconButton color={"error"} onClick={onClose}>
+        {selectedFloor ? 'ویرایش طبقه' : 'افزودن طبقه'}
+        <IconButton color={'error'} onClick={onClose}>
           <HighlightOff />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <TextField
-          value={info?.floorName}
-          name={"floorName"}
-          onChange={handleChange}
-          label={"نام طبقه"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          value={info?.code}
-          name={"code"}
-          onChange={handleChange}
-          label={"کد طبقه"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <Select
-          value={info?.projectId}
-          fullWidth={true}
-          name={"projectId"}
-          label={"پروژه"}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
-        >
-          {projects?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
-        <FormControl fullWidth={true}>
-          <Typography sx={{ mt: 2 }}>کالا ها</Typography>
-          <Select
-            sx={{ mt: 2 }}
-            value={info?.commodities}
-            labelId={"commodities"}
-            fullWidth={true}
-            name={"commodities"}
-            onChange={handleChange}
-            placeholder="کالا ها"
-            multiple
-          >
-            {commodities?.data?.map((item) => (
-              <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+        {projects.pending && <CircularProgress />}
+        {!projects.pending && (
+          <>
+            <TextField
+              value={info?.floorName}
+              name={'floorName'}
+              onChange={handleChange}
+              label={'نام طبقه'}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+            />
+            <TextField
+              value={info?.code}
+              name={'code'}
+              onChange={handleChange}
+              label={'کد طبقه'}
+              fullWidth={true}
+              sx={{ mt: 2 }}
+            />
+            <AutoCompleteComponent
+              sx={{ mt: 2 }}
+              options={projects?.data}
+              id="projectId"
+              label="پروژه"
+              changeHandler={(value) =>
+                setInfo((prev) => ({ ...prev, projectId: value }))
+              }
+              value={info?.projectId ?? selectedProject?.id}
+            />
+            <FormControl fullWidth={true}>
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={commodities?.data}
+                id="commodities"
+                label="کالا ها"
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, commodities: value }))
+                }
+                dataLabel="serchableName"
+                value={info?.commodities || []}
+                multiple={true}
+              />
+            </FormControl>
+          </>
+        )}
       </DialogContent>
       <DialogActions>
-        <Button variant={"contained"} color={"success"} onClick={onSubmit}>
-          {projects?.addState ? <CircularProgress /> : "ثبت"}
+        <Button variant={'contained'} color={'success'} onClick={onSubmit}>
+          {projects?.addState ? <CircularProgress /> : 'ثبت'}
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
+
+export default memo(AddFloor);

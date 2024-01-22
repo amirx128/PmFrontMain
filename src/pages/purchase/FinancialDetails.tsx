@@ -1,4 +1,7 @@
-import { Card, Divider, Grid, Box, Button } from "@mui/material";
+import { PageTileComponent} from "../style";
+
+
+     import { Card, Divider, Grid, Box, Button } from "@mui/material";
 import PurchaseForm from "./PurchaseForm";
 import { Controller, useForm } from "react-hook-form";
 import { InputContent } from "../../components/comodity-form/style";
@@ -65,7 +68,11 @@ const FinancialDetails = () => {
   };
   return (
     <div>
+     <PageTileComponent __text= {document.title} />
+
       <PurchaseForm />
+
+
       <Card sx={{ padding: 5 }}>
         <StyledForm>
           <Grid container>

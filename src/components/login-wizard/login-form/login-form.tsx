@@ -35,8 +35,6 @@ const LoginForm: React.FC<Iprps> = ({ onSubmit, loading }) => {
     formState: { errors, isDirty, isValid },
   } = useForm<FormFields>();
   const submitForm = handleSubmit((data) => {
-    console.log("submitting...", data);
-    console.log("errors...", errors);
     onSubmit(data);
   });
   return (

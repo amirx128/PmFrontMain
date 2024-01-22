@@ -1,4 +1,5 @@
-import styled from "styled-components";
+import { Box } from '@mui/material';
+import styled from 'styled-components';
 
 const Row = styled.div`
   display: flex;
@@ -14,4 +15,10 @@ const ColumnGrid = styled.div`
   column-gap: 10rem;
   padding: 30px;
 `;
-export { Row, ColumnGrid };
+
+const StyledBox = styled(Box)(({ theme }) => ({
+  [theme.breakpoints.up('sm')]: {
+    //   borderRight: `1px solid ${theme.palette.divider}`
+  },
+}));
+export { Row, ColumnGrid, StyledBox };

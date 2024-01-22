@@ -1,12 +1,12 @@
+import { useEffect } from "react";
 
-
-import { FunctionComponent, PropsWithChildren } from "react";
-
-
-export const AuthLayout: FunctionComponent<PropsWithChildren> = ({
-  children,
-}) => (
-  <div>
-    <main>{children}</main>
-  </div>
-);
+export const AuthLayout = ({ children, title }) => {
+  useEffect(() => {
+    document.title = title;
+  }, [title]);
+  return (
+    <div>
+      <main>{children}</main>
+    </div>
+  );
+};

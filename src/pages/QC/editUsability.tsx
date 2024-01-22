@@ -15,25 +15,46 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   AddNewUsabilityAction,
   GetAllSubItemsAction,
+  GetAllUsabilityAction,
+  GetUsabilityDataAction,
+  UpdateUsabilityAction,
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getAllUnits } from "../../redux/features/definitionSlicer";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const EditUsability = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
-  const { usabilityAddState } = useSelector((state: any) => state?.qc);
+  const { usabilityUpdateState, selectedUsability } = useSelector(
+    (state: any) => state?.qc
+  );
   const { units } = useSelector((state: any) => state.definition);
   const [info, setInfo] = useState({
     usablityName: "",
-    unitId: 0,
+    units: [],
     code: "",
   });
 
   useEffect(() => {
+    getList();
     getUnits();
   }, []);
 
+  useEffect(() => {
+    if (selectedUsability.data) {
+      setInfo({
+        usablityName: selectedUsability.data.usablityName,
+        code: selectedUsability.data.code,
+        units: selectedUsability.data.units.map((unit) => unit.id),
+      });
+      selectedUsability.data;
+    }
+  }, [selectedUsability]);
+  const getList = async () => {
+    await dispatch(GetUsabilityDataAction({ selectedItemId: +id }));
+  };
   const getUnits = async () => {
     dispatch(getAllUnits({ projectId: 0, floorId: 0 }));
   };
@@ -45,9 +66,10 @@ const EditUsability = () => {
   };
   const hanldeSubmit = async () => {
     await dispatch(
-      AddNewUsabilityAction({
+      UpdateUsabilityAction({
+        id: +id,
         usabilityName: info.usablityName,
-        unitId: +info.unitId,
+        units: info.units,
         code: info.code,
       })
     );
@@ -70,20 +92,15 @@ const EditUsability = () => {
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>واحد</InputLabel>
-          <Select
-            value={info?.unitId}
-            fullWidth={true}
-            name={"unitId"}
+          <AutoCompleteComponent
+            options={units?.data}
+            id="units"
             label="واحد"
-            onChange={handleChange}
-          >
-            {units?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, units: value }));
+            }}
+            value={info?.units}
+          />
         </FormControl>
         <TextField
           value={info?.code}
@@ -93,12 +110,12 @@ const EditUsability = () => {
           sx={{ mt: 2, width: "50%" }}
         />
       </CardContent>
-      {/* <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>
         <LoadingButton
           color="success"
           variant="contained"
           onClick={hanldeSubmit}
-          loading={usabilityAddState?.pending}
+          loading={usabilityUpdateState?.pending}
         >
           ثبت
         </LoadingButton>
@@ -106,11 +123,13 @@ const EditUsability = () => {
           color="error"
           variant="contained"
           onClick={() => navigate("/qc/defineUsability")}
-          disabled={usabilityAddState.pending && usabilityAddState?.pending}
+          disabled={
+            usabilityUpdateState.pending && usabilityUpdateState?.pending
+          }
         >
           انصراف
         </Button>
-      </CardActions> */}
+      </CardActions>
     </Card>
   );
 };

@@ -21,4 +21,27 @@ const ButtonContainer = styled.div`
   gap: 1.6rem;
   justify-content: end;
 `;
-export { Row, StyledBox, ButtonContainer, StyledForm };
+
+
+
+
+
+const StyledComponent123 = styled.div`
+  background-color: lightblue;
+  color: darkblue;
+  font-size: 16px;
+`;
+
+function PageTileComponent(__title) {
+  return (
+    <div className="mb-20 mt-6 text-3xl flex justify-center">
+      <p className="border border-slate-500 p-6"> {__title.__text} </p>
+    </div>
+  );
+}
+
+
+
+export { Row, StyledBox, ButtonContainer, StyledForm  ,PageTileComponent };
+
+

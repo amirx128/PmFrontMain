@@ -227,7 +227,6 @@ const GridPages = ({ requestUrl }) => {
     }
   };
   const handleEditClick = (entity) => {
-    console.log(entity);
     navigate("/supportFinalApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = () => {};
@@ -244,7 +243,6 @@ const GridPages = ({ requestUrl }) => {
           filters && filters.fromDate != "" ? filters.fromDate : "2021-07-27",
         toDate: filters && filters.toDate != "" ? filters.toDate : "2024-07-27",
       });
-      console.log(response);
       setData(response.data.model);
     } catch (error) {
       console.error("Error fetching data:", error);

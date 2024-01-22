@@ -18,6 +18,7 @@ import {
 } from "../../redux/features/qcSlicer";
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const AddOriginalItem = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -68,21 +69,16 @@ const AddOriginalItem = () => {
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم فرعی</InputLabel>
-          <Select
-            multiple
-            value={info?.subItemsIds}
-            fullWidth={true}
-            name={"subItemsIds"}
+          <AutoCompleteComponent
+            options={subItems?.data}
+            id="subItemsIds"
             label="آیتم فرعی"
-            onChange={handleChange}
-          >
-            {subItems?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, subItemsIds: value }));
+            }}
+            value={info?.subItemsIds || []}
+            multiple={true}
+          />
         </FormControl>
       </CardContent>
       <CardActions sx={{ display: "flex", justifyContent: "flex-end" }}>

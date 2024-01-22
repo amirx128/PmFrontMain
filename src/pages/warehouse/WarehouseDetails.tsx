@@ -1,4 +1,4 @@
-import { Card, Divider, Grid, Box, Button } from "@mui/material";
+import { Card, Divider, Grid, Box, Button, Typography } from "@mui/material";
 import WarehouseForm from "./WarhouseForm";
 import { Controller, useForm } from "react-hook-form";
 import { InputContent } from "../../components/comodity-form/style";
@@ -85,24 +85,21 @@ const WarehouseDetails = () => {
                 width: "50%",
               }}
             >
-              <Controller
-                control={control}
-                rules={{ required: " approve state is required" }}
-                name="senderId"
-                render={({ field }) => (
-                  <SelectComponent
-                    label="ارسال کننده"
-                    valuefieldName="id"
-                    labelFieldName={["firstName", "lastName"]}
-                    options={usersList && usersList}
-                    field={field}
-                    disabled={true}
-                    sx={{
-                      width: "49%",
-                    }}
-                  />
-                )}
-              />
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  marginRight: "20px",
+                }}
+              >
+                {" "}
+                ارسال کننده:
+              </Typography>
+
+              <Typography variant="body2">
+                {warehouseRowSelected?.senderUser}
+              </Typography>
             </Box>
             <Box
               sx={{
@@ -112,24 +109,21 @@ const WarehouseDetails = () => {
                 width: "50%",
               }}
             >
-              <Controller
-                control={control}
-                rules={{ required: " approve state is required" }}
-                name="receiverId"
-                render={({ field }) => (
-                  <SelectComponent
-                    label="دریافت کننده"
-                    valuefieldName="id"
-                    labelFieldName={["firstName", "lastName"]}
-                    options={usersList && usersList}
-                    field={field}
-                    disabled={true}
-                    sx={{
-                      width: "49%",
-                    }}
-                  />
-                )}
-              />
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  marginRight: "20px",
+                }}
+              >
+                {" "}
+                دریافت کننده:
+              </Typography>
+
+              <Typography variant="body2">
+                {warehouseRowSelected?.receiverUser}
+              </Typography>
             </Box>
           </Grid>
           <Grid container>

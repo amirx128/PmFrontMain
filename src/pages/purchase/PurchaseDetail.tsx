@@ -23,6 +23,21 @@ const PurchaseDetail = ({ detail }) => {
                 </Typography>
                 <Typography variant="body2">{detail?.commodity}</Typography>
               </Box>
+              <Box sx={{ mb: 6.75, display: "flex", alignItems: "center" }}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    marginRight: "20px",
+                  }}
+                >
+                  نام کامل کالا:
+                </Typography>
+                <Typography variant="body2">
+                  {detail?.commodityFullName}
+                </Typography>
+              </Box>
               <Box sx={{ display: "flex", alignItems: "center" }}>
                 <Typography
                   variant="body2"
@@ -96,7 +111,9 @@ const PurchaseDetail = ({ detail }) => {
               </Typography>
 
               <Typography variant="body2" color="secondary">
-                {detail?.purchaseTrackingCode}
+                <Link to={`/purchase/details/${detail.purchaseId}`}>
+                  {detail?.purchaseTrackingCode}
+                </Link>
               </Typography>
             </Box>
           </Grid>

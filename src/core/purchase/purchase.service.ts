@@ -72,12 +72,21 @@ export const AddDetailsToPurchaseOrder = async (
     purchaseOrderId: number;
     BaravordFeeKala: number;
     BaravordkolMandeh: number;
+    FileContent1?: any;
+    FileContent2?: any;
+    FileContent3?: any;
+    FileContent4?: any;
+    FileContent5?: any;
   }
 ) =>
-  await axiosInstance.post(`/Purchase/Logistics.AddDetailsToPurchaseOrder`, {
-    userId: userId,
-    ...body,
-  });
+  await axiosInstance.post(
+    `/Purchase/Logistics.AddDetailsToPurchaseOrder`,
+    {
+      userId: userId,
+      ...body,
+    },
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
 export const UpdateDetailsToPurchaseOrder = async (
   userId,
   body: {
@@ -85,12 +94,21 @@ export const UpdateDetailsToPurchaseOrder = async (
     PurchaseOrderDetailsId: number;
     BaravordFeeKala: number;
     BaravordkolMandeh: number;
+    FileContent1?: any;
+    FileContent2?: any;
+    FileContent3?: any;
+    FileContent4?: any;
+    FileContent5?: any;
   }
 ) =>
-  await axiosInstance.post(`Purchase/Logistics.UpdateDetails`, {
-    userId: userId,
-    ...body,
-  });
+  await axiosInstance.post(
+    `Purchase/Logistics.UpdateDetails`,
+    {
+      userId: userId,
+      ...body,
+    },
+    { headers: { "Content-Type": "multipart/form-data" } }
+  );
 
 export const LogisticsSendItems = async (
   userId,

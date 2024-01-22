@@ -1,8 +1,12 @@
 import axiosInstance from "../../utils/axios.config.ts";
 
 export const getAllProjectsReq = async (userId) =>
-  await axiosInstance.post(`/Definition/GetAllProject`, {
+  await axiosInstance.post(`/Definition/GetAllProjects_Commodities`, {
     userId: userId ?? "1",
+  });
+export const GetAllProjects_Floor_Unit_Usability = async (userId) =>
+  await axiosInstance.post(`/Definition/GetAllProjects_Floor_Unit_Usability`, {
+    userId: userId,
   });
 
 export const getAllFloorsReq = async (userId, projectId) =>
@@ -37,7 +41,6 @@ export const UpdateProjectReq = async (userId, id, projectName, commodities) =>
 
 export const AddNewUnitReq = async (
   userId,
-  projectId,
   projectfloorId,
   unitName,
   code,
@@ -45,7 +48,6 @@ export const AddNewUnitReq = async (
 ) =>
   await axiosInstance.post(`/Definition/AddNewUnit`, {
     userId,
-    projectId,
     projectfloorId,
     name: unitName,
     code,
@@ -55,7 +57,6 @@ export const AddNewUnitReq = async (
 export const UpdateUnitReq = async (
   userId,
   id,
-  projectId,
   projectfloorId,
   unitName,
   code,
@@ -64,7 +65,6 @@ export const UpdateUnitReq = async (
   await axiosInstance.post(`/Definition/UpdateUnit`, {
     userId,
     id,
-    projectId,
     projectfloorId,
     name: unitName,
     code,
@@ -173,19 +173,32 @@ export const GetBusinessRoleDetailesReq = async (userId, selectedItemId) =>
     selectedItemId,
   });
 
-export const AddNewBusinessRoleReq = async (userId, roleName, title) =>
+export const AddNewBusinessRoleReq = async (
+  userId,
+  roleName,
+  title,
+  projectId
+) =>
   await axiosInstance.post(`/Definition/AddNewBusinessRole`, {
     userId,
     name: roleName,
     title,
+    projectId,
   });
 
-export const UpdateBusinessRoleReq = async (userId, id, roleName, title) =>
+export const UpdateBusinessRoleReq = async (
+  userId,
+  id,
+  roleName,
+  title,
+  projectId
+) =>
   await axiosInstance.post(`/Definition/UpdateBusinessRole`, {
     userId,
     name: roleName,
     title,
     id,
+    projectId,
   });
 
 export const GetScheduleActivitiesReq = async (userId) =>
@@ -286,4 +299,19 @@ export const UpdateProducerInfoReq = async (userId, body) =>
   await axiosInstance.post(`/Definition/UpdateProducerInfo`, {
     userId,
     ...body,
+  });
+export const GetManyFloorUnit = async (userId, ids) =>
+  await axiosInstance.post(`/Definition/GetManyFloorUnit`, {
+    userId,
+    ids,
+  });
+export const GetManyUnitUsability = async (userId, ids) =>
+  await axiosInstance.post(`/Definition/GetManyUnitUsability`, {
+    userId,
+    ids,
+  });
+export const GetOneProjectFloor = async (userId, selectedItemId) =>
+  await axiosInstance.post(`/Definition/GetOneProjectFloor`, {
+    userId,
+    selectedItemId,
   });

@@ -1,4 +1,7 @@
-import {
+import { PageTileComponent} from "../style";
+
+
+     import {
   Card,
   Divider,
   CardHeader,
@@ -26,7 +29,7 @@ import {
 import PurchaseDetail from "./PurchaseDetail.tsx";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
-const PurchaseForm = (props) => {
+const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -38,6 +41,7 @@ const PurchaseForm = (props) => {
     getPurchaseDetails();
   }, []);
   useEffect(() => {
+    if (!isRowSelectedDefault) return;
     if (orderDetailData?.data?.purchaseDetails) {
       handleSelectDefaultRow();
     }
@@ -119,6 +123,9 @@ const PurchaseForm = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
     {
       field: "createDate",
@@ -171,6 +178,9 @@ const PurchaseForm = (props) => {
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value }) => {
+        return <p>{new Intl.NumberFormat().format(+value)}</p>;
+      },
     },
   ];
   const handleSelectDefaultRow = () => {
@@ -188,7 +198,8 @@ const PurchaseForm = (props) => {
   };
   return (
     <Card>
-      <PurchaseDetail detail={orderDetailData?.data} />
+         <PageTileComponent __text= {document.title} />
+  <PurchaseDetail detail={orderDetailData?.data} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <div
         style={{

@@ -1,5 +1,5 @@
-import type { PayloadAction } from "@reduxjs/toolkit";
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   I_Business_ROLE,
   I_COMMODITY,
@@ -13,7 +13,7 @@ import {
   I_SUPPLIER,
   I_UNIT,
   I_Warehouses,
-} from "../../core/definition/definition.model.ts";
+} from '../../core/definition/definition.model.ts';
 import {
   AddNewActivityScheduleReq,
   AddNewBusinessRoleReq,
@@ -49,12 +49,16 @@ import {
   UpdateUnitReq,
   UpdateWarehouse,
   GetAllWarehouseReq,
-} from "../../core/definition/definition.service.ts";
+  GetManyFloorUnit,
+  GetManyUnitUsability,
+  GetAllProjects_Floor_Unit_Usability,
+  GetOneProjectFloor,
+} from '../../core/definition/definition.service.ts';
 
 const getUserId = (state) => {
-  return state?.user?.user?.id ?? localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))?.id
-    : "1";
+  return state?.user?.user?.id ?? localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))?.id
+    : '1';
 };
 
 export interface DefinitionState {
@@ -116,7 +120,26 @@ export interface DefinitionState {
     data: I_COMMODITY_TREE[];
     pending: boolean;
   };
+  manyFloorUnit: {
+    data: any;
+    pending: boolean;
+  };
+  manyUnitUsability: {
+    data: any;
+    pending: boolean;
+  };
   selectedCommodity: any;
+  selectedProject: any;
+  selectedFloor: any;
+  allProjectsFloorUnitUsability: {
+    data: any;
+    pending: boolean;
+  };
+
+  oneProjectFloor: {
+    data: any;
+    pending: boolean;
+  };
 }
 
 const initialState: DefinitionState = {
@@ -178,11 +201,29 @@ const initialState: DefinitionState = {
     data: [],
     pending: false,
   },
+  manyFloorUnit: {
+    data: [],
+    pending: false,
+  },
+  manyUnitUsability: {
+    data: [],
+    pending: false,
+  },
   selectedCommodity: null,
+  selectedProject: null,
+  selectedFloor: null,
+  allProjectsFloorUnitUsability: {
+    data: [],
+    pending: false,
+  },
+  oneProjectFloor: {
+    data: [],
+    pending: false,
+  },
 };
 
 export const getAllWarehouses = createAsyncThunk(
-  "definition/getAllWarehouses",
+  'definition/getAllWarehouses',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -198,7 +239,7 @@ export const getAllWarehouses = createAsyncThunk(
   }
 );
 export const getAllProjects = createAsyncThunk(
-  "definition/getAllProjects",
+  'definition/getAllProjects',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -213,9 +254,22 @@ export const getAllProjects = createAsyncThunk(
     }
   }
 );
+export const GetAllProjects_Floor_Unit_UsabilityAction = createAsyncThunk(
+  'definition/GetAllProjects_Floor_Unit_UsabilityAction',
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllProjects_Floor_Unit_Usability(userId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const GetAllProducers = createAsyncThunk(
-  "definition/GetAllProducers",
+  'definition/GetAllProducers',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -232,7 +286,7 @@ export const GetAllProducers = createAsyncThunk(
 );
 
 export const GetAllPleaseOfUse = createAsyncThunk(
-  "definition/GetAllPleaseOfUse",
+  'definition/GetAllPleaseOfUse',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -249,7 +303,7 @@ export const GetAllPleaseOfUse = createAsyncThunk(
 );
 
 export const GetAllSuppliers = createAsyncThunk(
-  "definition/GetAllSuppliers",
+  'definition/GetAllSuppliers',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -264,9 +318,41 @@ export const GetAllSuppliers = createAsyncThunk(
     }
   }
 );
+export const GetManyFloorUnitAction = createAsyncThunk(
+  'definition/GetManyFloorUnitAction',
+  async (
+    body: { ids: number[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetManyFloorUnit(userId, body.ids);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetManyUnitUsabilityAction = createAsyncThunk(
+  'definition/GetManyUnitUsabilityAction',
+  async (
+    body: { ids: number[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetManyUnitUsability(userId, body.ids);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const getAllFloors = createAsyncThunk(
-  "definition/getAllFloors",
+  'definition/getAllFloors',
   async (
     projectId: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -283,7 +369,7 @@ export const getAllFloors = createAsyncThunk(
 );
 
 export const getAllUnits = createAsyncThunk(
-  "definition/getAllUnits",
+  'definition/getAllUnits',
   async (
     body: { projectId: any; floorId: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -304,7 +390,7 @@ export const getAllUnits = createAsyncThunk(
 );
 
 export const AddNewProject = createAsyncThunk(
-  "definition/AddNewProject",
+  'definition/AddNewProject',
   async (
     body: { newName: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -328,7 +414,7 @@ export const AddNewProject = createAsyncThunk(
 );
 
 export const UpdateProject = createAsyncThunk(
-  "definition/UpdateProject",
+  'definition/UpdateProject',
   async (
     body: { id: any; name: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -353,10 +439,9 @@ export const UpdateProject = createAsyncThunk(
 );
 
 export const AddNewUnit = createAsyncThunk(
-  "definition/AddNewUnit",
+  'definition/AddNewUnit',
   async (
     body: {
-      projectId: any;
       projectfloorId: any;
       unitName: string;
       code: string;
@@ -369,7 +454,6 @@ export const AddNewUnit = createAsyncThunk(
       const userId = getUserId(state);
       const { data } = await AddNewUnitReq(
         userId,
-        body.projectId,
         body.projectfloorId,
         body.unitName,
         body.code,
@@ -386,10 +470,9 @@ export const AddNewUnit = createAsyncThunk(
 );
 
 export const UpdateUnit = createAsyncThunk(
-  "definition/UpdateUnit",
+  'definition/UpdateUnit',
   async (
     body: {
-      projectId: any;
       id: any;
       projectfloorId: any;
       unitName: string;
@@ -404,7 +487,6 @@ export const UpdateUnit = createAsyncThunk(
       const { data } = await UpdateUnitReq(
         userId,
         body.id,
-        body.projectId,
         body.projectfloorId,
         body.unitName,
         body.code,
@@ -421,7 +503,7 @@ export const UpdateUnit = createAsyncThunk(
 );
 
 export const AddNewFloor = createAsyncThunk(
-  "definition/AddNewFloor",
+  'definition/AddNewFloor',
   async (
     body: { projectId: any; floorName: any; code: any; commodities?: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -444,7 +526,7 @@ export const AddNewFloor = createAsyncThunk(
 );
 
 export const UpdateFloor = createAsyncThunk(
-  "definition/UpdateFloor",
+  'definition/UpdateFloor',
   async (
     body: {
       projectId: any;
@@ -476,7 +558,7 @@ export const UpdateFloor = createAsyncThunk(
   }
 );
 export const GetAllCommodityOnTree = createAsyncThunk(
-  "definition/GetAllCommodityOnTree",
+  'definition/GetAllCommodityOnTree',
   async (
     body: { projectId: any; commodityName: string; code: string },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -498,7 +580,7 @@ export const GetAllCommodityOnTree = createAsyncThunk(
 );
 
 export const AddNewCommodity = createAsyncThunk(
-  "definition/AddNewCommodity",
+  'definition/AddNewCommodity',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -518,7 +600,7 @@ export const AddNewCommodity = createAsyncThunk(
 );
 
 export const UpdateCommodityDetails = createAsyncThunk(
-  "definition/UpdateCommodityDetails",
+  'definition/UpdateCommodityDetails',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -538,7 +620,7 @@ export const UpdateCommodityDetails = createAsyncThunk(
 );
 
 export const GetOneCommodityDetails = createAsyncThunk(
-  "definition/GetOneCommodityDetails",
+  'definition/GetOneCommodityDetails',
   async (
     commodityId: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -555,7 +637,7 @@ export const GetOneCommodityDetails = createAsyncThunk(
 );
 
 export const GetAllPersons = createAsyncThunk(
-  "definition/GetAllPersons",
+  'definition/GetAllPersons',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -572,7 +654,7 @@ export const GetAllPersons = createAsyncThunk(
 );
 
 export const GetPersonDetails = createAsyncThunk(
-  "definition/GetPersonDetails",
+  'definition/GetPersonDetails',
   async (
     id: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -589,7 +671,7 @@ export const GetPersonDetails = createAsyncThunk(
 );
 
 export const AddNewPerson = createAsyncThunk(
-  "definition/AddNewPerson",
+  'definition/AddNewPerson',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -609,7 +691,7 @@ export const AddNewPerson = createAsyncThunk(
 );
 
 export const UpdatePerson = createAsyncThunk(
-  "definition/UpdatePerson",
+  'definition/UpdatePerson',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -629,11 +711,8 @@ export const UpdatePerson = createAsyncThunk(
 );
 
 export const GetAllBusinessRoles = createAsyncThunk(
-  "definition/GetAllBusinessRoles",
-  async (
-    body: any,
-    { rejectWithValue, fulfillWithValue, dispatch, getState }
-  ) => {
+  'definition/GetAllBusinessRoles',
+  async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
       const userId = getUserId(state);
@@ -646,7 +725,7 @@ export const GetAllBusinessRoles = createAsyncThunk(
 );
 
 export const GetBusinessRoleDetailes = createAsyncThunk(
-  "definition/GetBusinessRoleDetailes",
+  'definition/GetBusinessRoleDetailes',
   async (
     id: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -663,9 +742,9 @@ export const GetBusinessRoleDetailes = createAsyncThunk(
 );
 
 export const AddNewBusinessRole = createAsyncThunk(
-  "definition/AddNewBusinessRole",
+  'definition/AddNewBusinessRole',
   async (
-    body: { name: string; title: string },
+    body: { name: string; title: string; projectId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -674,7 +753,8 @@ export const AddNewBusinessRole = createAsyncThunk(
       const { data } = await AddNewBusinessRoleReq(
         userId,
         body.name,
-        body.title
+        body.title,
+        body.projectId
       );
       if (data?.isSuccess) {
         // @ts-ignore
@@ -688,9 +768,9 @@ export const AddNewBusinessRole = createAsyncThunk(
 );
 
 export const UpdateBusinessRole = createAsyncThunk(
-  "definition/UpdateBusinessRole",
+  'definition/UpdateBusinessRole',
   async (
-    body: { name: string; title: string; id: any },
+    body: { name: string; title: string; id: any; projectId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -700,7 +780,8 @@ export const UpdateBusinessRole = createAsyncThunk(
         userId,
         body.id,
         body.name,
-        body.title
+        body.title,
+        body.projectId
       );
       if (data?.isSuccess) {
         // @ts-ignore
@@ -714,7 +795,7 @@ export const UpdateBusinessRole = createAsyncThunk(
 );
 
 export const GetScheduleActivities = createAsyncThunk(
-  "definition/GetScheduleActivities",
+  'definition/GetScheduleActivities',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -731,7 +812,7 @@ export const GetScheduleActivities = createAsyncThunk(
 );
 
 export const AddNewActivitySchedule = createAsyncThunk(
-  "definition/AddNewActivitySchedule",
+  'definition/AddNewActivitySchedule',
   async (
     body: { name: string; desc: string; fromDate: any; toDate: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -757,7 +838,7 @@ export const AddNewActivitySchedule = createAsyncThunk(
 );
 
 export const AddNewProducer = createAsyncThunk(
-  "definition/AddNewProducer",
+  'definition/AddNewProducer',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -776,7 +857,7 @@ export const AddNewProducer = createAsyncThunk(
   }
 );
 export const AddWarehouse = createAsyncThunk(
-  "definition/AddWarehouse",
+  'definition/AddWarehouse',
   async (
     body: {
       name: string;
@@ -805,7 +886,7 @@ export const AddWarehouse = createAsyncThunk(
   }
 );
 export const UpdateWarehouseInfo = createAsyncThunk(
-  "definition/UpdateWarehouseInfo",
+  'definition/UpdateWarehouseInfo',
   async (
     body: {
       name: string;
@@ -837,7 +918,7 @@ export const UpdateWarehouseInfo = createAsyncThunk(
 );
 
 export const UpdateProducerInfo = createAsyncThunk(
-  "definition/UpdateProducerInfo",
+  'definition/UpdateProducerInfo',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -857,7 +938,7 @@ export const UpdateProducerInfo = createAsyncThunk(
 );
 
 export const UpdateNewActivitySchedule = createAsyncThunk(
-  "definition/UpdateNewActivitySchedule",
+  'definition/UpdateNewActivitySchedule',
   async (
     body: { id: any; name: string; desc: string; fromDate: any; toDate: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -884,7 +965,7 @@ export const UpdateNewActivitySchedule = createAsyncThunk(
 );
 
 export const GetAllCommodities = createAsyncThunk(
-  "definition/GetAllCommodities",
+  'definition/GetAllCommodities',
   async (
     body = undefined,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -901,7 +982,7 @@ export const GetAllCommodities = createAsyncThunk(
 );
 
 export const GetActivityScheduleDetails = createAsyncThunk(
-  "definition/GetActivityScheduleDetails",
+  'definition/GetActivityScheduleDetails',
   async (
     id: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -916,9 +997,25 @@ export const GetActivityScheduleDetails = createAsyncThunk(
     }
   }
 );
+export const GetOneProjectFloorAction = createAsyncThunk(
+  'definition/GetOneProjectFloorAction',
+  async (
+    body: { selectedItemId: number },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetOneProjectFloor(userId, body.selectedItemId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 
 export const definitionSlicer = createSlice({
-  name: "definition",
+  name: 'definition',
   initialState,
   reducers: {
     clearSelectedCommodity: (
@@ -926,6 +1023,18 @@ export const definitionSlicer = createSlice({
       action: PayloadAction<any>
     ) => {
       state.selectedCommodity = action.payload;
+    },
+    setSelectedProjectAction: (
+      state: DefinitionState,
+      action: PayloadAction<any>
+    ) => {
+      state.selectedProject = action.payload;
+    },
+    setSelectedFloorAction: (
+      state: DefinitionState,
+      action: PayloadAction<any>
+    ) => {
+      state.selectedFloor = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -944,6 +1053,28 @@ export const definitionSlicer = createSlice({
       .addCase(getAllProjects.rejected, (state: DefinitionState, { error }) => {
         state.projects.pending = false;
       });
+    //#endregion
+    //#region GetAllProjects_Floor_Unit_UsabilityAction-----
+    builder
+      .addCase(
+        GetAllProjects_Floor_Unit_UsabilityAction.pending,
+        (state: DefinitionState) => {
+          state.allProjectsFloorUnitUsability.pending = true;
+        }
+      )
+      .addCase(
+        GetAllProjects_Floor_Unit_UsabilityAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.allProjectsFloorUnitUsability.pending = false;
+          state.allProjectsFloorUnitUsability.data = payload?.model;
+        }
+      )
+      .addCase(
+        GetAllProjects_Floor_Unit_UsabilityAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.allProjectsFloorUnitUsability.pending = false;
+        }
+      );
     //#endregion
     //#region getAllWarehouses-----
     builder
@@ -1034,6 +1165,44 @@ export const definitionSlicer = createSlice({
       .addCase(AddNewFloor.rejected, (state: DefinitionState, { error }) => {
         state.floors.addState = false;
       });
+    //#endregion
+    // #region GetManyFloorUnitAction-----
+    builder
+      .addCase(GetManyFloorUnitAction.pending, (state: DefinitionState) => {
+        state.manyFloorUnit.pending = true;
+      })
+      .addCase(
+        GetManyFloorUnitAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.manyFloorUnit.pending = false;
+          state.manyFloorUnit.data = payload.model;
+        }
+      )
+      .addCase(
+        GetManyFloorUnitAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.manyFloorUnit.pending = false;
+        }
+      );
+    //#endregion
+    // #region GetManyUnitUsabilityAction-----
+    builder
+      .addCase(GetManyUnitUsabilityAction.pending, (state: DefinitionState) => {
+        state.manyUnitUsability.pending = true;
+      })
+      .addCase(
+        GetManyUnitUsabilityAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.manyUnitUsability.pending = false;
+          state.manyUnitUsability.data = payload.model;
+        }
+      )
+      .addCase(
+        GetManyUnitUsabilityAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.manyUnitUsability.pending = false;
+        }
+      );
     //#endregion
     // #region AddWarehouse-----
     builder
@@ -1289,10 +1458,33 @@ export const definitionSlicer = createSlice({
         }
       );
     //#endregion
+    // #region GetOneProjectFloorAction-----
+    builder
+      .addCase(GetOneProjectFloorAction.pending, (state: DefinitionState) => {
+        state.oneProjectFloor.pending = true;
+      })
+      .addCase(
+        GetOneProjectFloorAction.fulfilled,
+        (state: DefinitionState, { payload }) => {
+          state.oneProjectFloor.pending = false;
+          state.oneProjectFloor.data = payload.model;
+        }
+      )
+      .addCase(
+        GetOneProjectFloorAction.rejected,
+        (state: DefinitionState, { error }) => {
+          state.oneProjectFloor.pending = false;
+        }
+      );
+    //#endregion
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { clearSelectedCommodity } = definitionSlicer.actions;
+export const {
+  clearSelectedCommodity,
+  setSelectedProjectAction,
+  setSelectedFloorAction,
+} = definitionSlicer.actions;
 
 export default definitionSlicer.reducer;

@@ -61,6 +61,31 @@ export const GetTransactions = async (
     fromDate: new Date(fromDate).toISOString().slice(0, 10),
     toDate: new Date(toDate).toISOString().slice(0, 10),
   });
+export const GetAllCommodityTransactions = async (
+  SelectedItemId,
+  userId,
+  pageIndex = 1,
+  fromDate = new Date().setMonth(new Date().getMonth() - 1),
+  toDate = new Date(),
+  orderType = "desc",
+  orderBy = "activityDate"
+) =>
+  await axiosInstance.post(`/Warehouse/GetAllCommodityTransactions`, {
+    SelectedItemId,
+    userId,
+    pageIndex,
+    pageCount: 20,
+    orderType,
+    orderBy,
+    fromDate: new Date(fromDate).toISOString().slice(0, 10),
+    toDate: new Date(toDate).toISOString().slice(0, 10),
+  });
+
+export const GetCount = async (commodityId, userId) =>
+  await axiosInstance.post(`/support/GetCountCommodityInWarehouse`, {
+    userId: userId,
+    commodityId,
+  });
 
 export const SupplierSentItem = async (
   userId,

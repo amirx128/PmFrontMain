@@ -1,42 +1,40 @@
-import EditIcon from "@mui/icons-material/Edit";
-import Filter from "@mui/icons-material/FilterAlt";
-import FilterOff from "@mui/icons-material/FilterAltOff";
-import axios from "../../../utils/axios.config";
+import Filter from '@mui/icons-material/FilterAlt';
+import FilterOff from '@mui/icons-material/FilterAltOff';
 import {
   Box,
   Card,
   Grid as CardGrid,
   CardHeader,
   IconButton,
-  Typography,
-} from "@mui/material";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { useEffect, useRef, useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import SelectComponent from "../../../components/select/selects";
-import JalaliDatePicker from "../../../components/date-picker/date-picker";
-import { Row } from "./style";
-import Grid from "../../../components/grid/grid";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../../utils/functions.ts";
-import gridDict from "../../../dictionary/gridDict.ts";
+} from '@mui/material';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import JalaliDatePicker from '../../../components/date-picker/date-picker';
+import { Row } from './style';
+import Grid from '../../../components/grid/grid';
+import { useDispatch, useSelector } from 'react-redux';
+import gridDict from '../../../dictionary/gridDict.ts';
 import {
   DownloadApproveQAction,
   GetApproveQAction,
   GetApproveStatesAction,
-} from "../../../redux/features/supportSlicer.ts";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+} from '../../../redux/features/supportSlicer.ts';
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import AutoCompleteComponent from '../../../components/AutoComplete/AutoCompleteComponent.tsx';
+import TuneIcon from '@mui/icons-material/Tune';
+import CustomizeGrid from '../../../components/CustomizeGrid/CustomizeGrid.tsx';
+import useCustomCol from '../../../hooks/useCustomCol.tsx';
+import gridFunctionsEnum from '../../../models/gridFunctionsEnum.ts';
+import { approveGrid } from '../../../utils/gridColumns.ts';
 
 const ApprovedList: React.FC<any> = (props) => {
   const [fromDate, setFromDate] = useState(
     new Date().setMonth(new Date().getMonth() - 1)
   );
   const [toDate, setToDate] = useState<any>(new Date());
+  const [approveStateValue, setAppriveStateValue] = useState(1);
+
   const initialFilter = useRef({
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
@@ -52,312 +50,24 @@ const ApprovedList: React.FC<any> = (props) => {
     watch,
     formState: { errors, isValid, isDirty },
   } = useForm<any>({
-    defaultValues: { approveStateId: 1, fromDate: "", toDate: "" },
+    defaultValues: { approveStateId: 1, fromDate: '', toDate: '' },
   });
-  const columns: GridColDef[] = [
-    {
-      field: "requesterUser",
-      headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCaseId",
-      headerName: gridDict.requestCaseId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "commodityName",
-      headerName: gridDict.commodityName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requesterUserId",
-      headerName: gridDict.requesterUserId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requiredDate",
-      headerName: gridDict.requiredDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "count",
-      headerName: gridDict.count,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "newcount",
-      headerName: gridDict.newcount,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "trackingCode",
-      headerName: gridDict.trackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "isEditable",
-      headerName: gridDict.isEditable,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            {value ? "بله" : "خیر"}
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "createDate",
-      headerName: gridDict.createDate,
-      minWidth: 150,
-      sortable: false,
-      filterable: false,
 
-      flex: 1,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.createDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "placeOfUseName",
-      headerName: gridDict.placeOfUseName,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCommodityId",
-      headerName: gridDict.requestCommodityId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approvestate",
-      headerName: gridDict.approveDate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approverId",
-      headerName: gridDict.approverId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approverName",
-      headerName: gridDict.approverName,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "approveDate",
-      headerName: gridDict.approveDate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "finalApprovestate",
-      headerName: gridDict.finalApprovestate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproverId",
-      headerName: gridDict.finalApproverId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproverName",
-      headerName: gridDict.finalApproverName,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "finalApproveDate",
-      headerName: gridDict.finalApproveDate,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "scheduleActivityId",
-      headerName: gridDict.scheduleActivityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderId",
-      headerName: gridDict.purchaseOrderId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderTrackingCode",
-      headerName: gridDict.purchaseOrderTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "exitFromWarehouseId",
-      headerName: gridDict.exitFromWarehouseId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitFromWarehouseTrackingCode",
-      headerName: gridDict.exitFromWarehouseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "exitFromWarehouseCount",
-      headerName: gridDict.exitFromWarehouseCount,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseCount",
-      headerName: gridDict.purchaseCount,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "actions",
-      headerName: gridDict.actions,
-      description: "ActionColumn",
-      sortable: false,
-      minWidth: 150,
-      flex: 1,
-      filterable: false,
-      hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
-      disableColumnMenu: true,
-      renderCell: (params: GridRenderCellParams) => (
-        <>
-          <GridActionsCellItem
-            icon={<EditIcon />}
-            label="Edit"
-            className="textPrimary"
-            onClick={() => handleEditClick(params.row)}
-            color="inherit"
-          />
-        </>
-      ),
-    },
-  ];
+  const handleEditClick = (entity) => {
+    navigate('/supportApproveDetail/' + entity.requestCommodityId);
+  };
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol('SUPPORT_APPROVED_LIST_1', approveGrid, handleEditClick);
   useEffect(() => {
     getList();
   }, []);
@@ -366,17 +76,13 @@ const ApprovedList: React.FC<any> = (props) => {
     (state: any) => state?.support?.approve
   );
 
-  const handleEditClick = (entity) => {
-    navigate("/supportApproveDetail/" + entity.requestCommodityId);
-  };
   const handleSortModelChange = async (sortArr) => {
-    const { approveStateId } = getValues();
     if (!sortArr.at(0)) {
       await dispatch(
         GetApproveQAction({
           fromDate: new Date(fromDate),
           toDate: new Date(toDate),
-          approveStateId,
+          approveStateId: approveStateValue,
         })
       );
       return;
@@ -387,7 +93,7 @@ const ApprovedList: React.FC<any> = (props) => {
       GetApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
-        approveStateId,
+        approveStateId: approveStateValue,
         orderBy: sortField,
         orderType: sortType,
       })
@@ -404,18 +110,18 @@ const ApprovedList: React.FC<any> = (props) => {
       );
       await dispatch(GetApproveStatesAction());
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   const setSelectedFromDate = (e) => {
-    const date = new Date(e).toLocaleDateString("en-US");
+    const date = new Date(e).toLocaleDateString('en-US');
     setFromDate(+date);
-    setValue("fromDate", date);
+    setValue('fromDate', date);
   };
   const setSelectedToDate = (e) => {
-    const date = new Date(e).toLocaleDateString("en-US");
+    const date = new Date(e).toLocaleDateString('en-US');
     setToDate(date);
-    setValue("toDate", date);
+    setValue('toDate', date);
   };
 
   const handleAddFilter = async () => {
@@ -424,7 +130,7 @@ const ApprovedList: React.FC<any> = (props) => {
       GetApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
-        approveStateId,
+        approveStateId: approveStateValue,
       })
     );
   };
@@ -438,12 +144,11 @@ const ApprovedList: React.FC<any> = (props) => {
     );
   };
   const handleDownloadExcel = async () => {
-    const { approveStateId } = getValues();
     await dispatch(
       DownloadApproveQAction({
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
-        approveStateId,
+        approveStateId: approveStateValue,
       })
     );
   };
@@ -453,38 +158,31 @@ const ApprovedList: React.FC<any> = (props) => {
       xs={12}
       sx={{
         borderRadius: 2,
-        boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
-        marginBottom: "10px",
+        boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, 0.1)',
+        marginBottom: '10px',
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
-          style={{ textAlign: "right" }}
+          style={{ textAlign: 'right' }}
           title="لیست تائید درخواست"
-          titleTypographyProps={{ variant: "h6" }}
+          titleTypographyProps={{ variant: 'h6' }}
         />
 
         <Box>
           <form>
             <Row>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
-                <Controller
-                  control={control}
-                  rules={{ required: " approve state is required" }}
-                  name="approveStateId"
-                  defaultValue={0}
-                  render={({ field }) => (
-                    <SelectComponent
-                      label="وضعیت"
-                      valuefieldName="id"
-                      labelFieldName="state"
-                      options={states?.data}
-                      field={field}
-                    />
-                  )}
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
+                <AutoCompleteComponent
+                  value={approveStateValue}
+                  options={states?.data}
+                  dataLabel="state"
+                  id="approveStateId"
+                  label="وضعیت"
+                  changeHandler={(value) => setAppriveStateValue(value)}
                 />
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={fromDate}
                   onChange={setSelectedFromDate}
@@ -493,7 +191,7 @@ const ApprovedList: React.FC<any> = (props) => {
                   value={fromDate}
                 ></JalaliDatePicker>
               </Box>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}>
                 <JalaliDatePicker
                   defaultValue={toDate}
                   onChange={setSelectedToDate}
@@ -515,18 +213,37 @@ const ApprovedList: React.FC<any> = (props) => {
               <IconButton color="success" onClick={handleDownloadExcel}>
                 <SimCardDownloadIcon />
               </IconButton>
-              <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
+              <Box sx={{ flex: 1, marginLeft: '20px' }}></Box>
             </Row>
           </form>
         </Box>
-        <Grid
-          onDoubleClick={(e) => handleEditClick(e.row)}
-          rowIdFields={["approveStateId", "commodityName", "approverId"]}
-          columns={columns}
-          rows={approveQ?.data.map((row, index) => ({ id: index, ...row }))}
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        {columns && !approveQ.pending && (
+          <>
+            <Grid
+              onDoubleClick={(e) => handleEditClick(e.row)}
+              columns={columns}
+              rows={approveQ?.data.map((row, index) => ({ id: index, ...row }))}
+              pagination={{}}
+              onSortModelChange={handleSortModelChange}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );

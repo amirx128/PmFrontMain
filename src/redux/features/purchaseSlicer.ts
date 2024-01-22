@@ -307,6 +307,11 @@ export const AddDetailsToPurchaseOrderAction = createAsyncThunk(
       purchaseOrderId: number;
       BaravordFeeKala: number;
       BaravordkolMandeh: number;
+      FileContent1?: any;
+      FileContent2?: any;
+      FileContent3?: any;
+      FileContent4?: any;
+      FileContent5?: any;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
@@ -328,6 +333,11 @@ export const UpdateDetailsToPurchaseOrderAction = createAsyncThunk(
       PurchaseOrderDetailsId: number;
       BaravordFeeKala: number;
       BaravordkolMandeh: number;
+      FileContent1?: any;
+      FileContent2?: any;
+      FileContent3?: any;
+      FileContent4?: any;
+      FileContent5?: any;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {

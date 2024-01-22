@@ -12,64 +12,67 @@ import {
   TextField,
   Typography,
   useMediaQuery,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HighlightOff } from '@mui/icons-material';
+import { memo, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   AddNewUnit,
   getAllFloors,
   UpdateUnit,
   GetAllCommodities,
-} from "../../redux/features/definitionSlicer.ts";
+  GetOneProjectFloorAction,
+} from '../../redux/features/definitionSlicer.ts';
+import AutoCompleteComponent from '../AutoComplete/AutoCompleteComponent.tsx';
 
-export const AddUnit = ({
-  addUnitDialog,
-  selectedUnit,
-  onClose,
-  currentProject,
-}) => {
+const AddUnit = ({ addUnitDialog, selectedUnit, onClose, currentProject }) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
-  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
+  const {
+    projects,
+    units,
+    floors,
+    commodities,
+    oneProjectFloor,
+    selectedProject,
+    selectedFloor,
+  } = useSelector((state: any) => state.definition);
+
   const [info, setInfo] = useState({
-    unitName: selectedUnit?.name,
-    projectId: currentProject?.id,
-    projectfloorId: selectedUnit?.projectfloorId,
-    code: selectedUnit?.code,
-    commodities: selectedUnit?.commodities,
+    unitName: '',
+    projectfloorId: undefined,
+    code: undefined,
+    commodities: undefined,
   });
-  const { projects, units, floors, commodities } = useSelector(
-    (state: any) => state.definition
-  );
 
   useEffect(() => {
-    if (currentProject) {
-      dispatch(getAllFloors(currentProject?.id));
-      setInfo({ ...info, projectId: currentProject?.id });
+    if (selectedProject) {
+      dispatch(
+        GetOneProjectFloorAction({ selectedItemId: +selectedProject?.id })
+      );
+      setInfo({ ...info });
     }
-  }, [currentProject]);
+  }, [selectedProject]);
 
   useEffect(() => {
     if (selectedUnit) {
       setInfo({
         unitName: selectedUnit?.name,
-        projectId: currentProject?.id,
         projectfloorId: selectedUnit?.projectfloorId,
         code: selectedUnit?.code,
         commodities: selectedUnit?.commodities,
       });
     } else {
       setInfo({
-        unitName: "",
-        projectId: currentProject?.id ?? null,
-        projectfloorId: null,
-        code: "",
+        unitName: '',
+        projectfloorId: selectedFloor?.id,
+        code: '',
         commodities: [],
       });
     }
-  }, [selectedUnit]);
+  }, [selectedUnit, selectedFloor]);
   useEffect(() => {
     getAllCommodities();
   }, []);
@@ -90,9 +93,8 @@ export const AddUnit = ({
         UpdateUnit({
           id: selectedUnit?.id,
           unitName: info.unitName,
-          projectfloorId: info.projectfloorId,
+          projectfloorId: info.projectfloorId ?? selectedFloor.id,
           code: info.code,
-          projectId: currentProject?.id,
           commodities: info.commodities,
         })
       );
@@ -100,9 +102,8 @@ export const AddUnit = ({
       dispatch(
         AddNewUnit({
           unitName: info.unitName,
-          projectfloorId: info.projectfloorId,
+          projectfloorId: info.projectfloorId ?? selectedFloor.id,
           code: info.code,
-          projectId: currentProject?.id,
           commodities: info.commodities,
         })
       );
@@ -110,93 +111,84 @@ export const AddUnit = ({
     onClose();
   };
   return (
-    <Dialog
-      open={addUnitDialog}
-      onClose={onClose}
-      fullWidth={true}
-      maxWidth={"md"}
-      fullScreen={mediumOrSmaller}
-    >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
+    <>
+      <Dialog
+        open={addUnitDialog}
+        onClose={onClose}
+        fullWidth={true}
+        maxWidth={'md'}
+        fullScreen={mediumOrSmaller}
       >
-        {selectedUnit ? "ویرایش واحد" : "افزودن واحد"}
-        <IconButton color={"error"} onClick={onClose}>
-          <HighlightOff />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent>
-        <TextField
-          value={info?.unitName}
-          name={"unitName"}
-          onChange={handleChange}
-          label={"نام واحد"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          value={info?.code}
-          name={"code"}
-          onChange={handleChange}
-          label={"کد واحد"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <Select
-          value={info?.projectId}
-          fullWidth={true}
-          name={"projectId"}
-          label={"پروژه"}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
+        <DialogTitle
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
         >
-          {projects?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          value={info?.projectfloorId}
-          fullWidth={true}
-          name={"projectfloorId"}
-          label={"طبقه"}
-          onChange={handleChange}
-          sx={{ mt: 2 }}
-        >
-          {floors?.data?.map((item) => (
-            <MenuItem value={item.id} key={item?.id}>
-              {item?.name}
-            </MenuItem>
-          ))}
-        </Select>
-        <FormControl fullWidth={true}>
-          <Typography sx={{ mt: 2 }}>کالا ها</Typography>
-          <Select
-            sx={{ mt: 2 }}
-            value={info?.commodities}
-            labelId={"commodities"}
-            fullWidth={true}
-            name={"commodities"}
-            onChange={handleChange}
-            placeholder="کالا ها"
-            multiple
-          >
-            {commodities?.data?.map((item) => (
-              <MenuItem value={item?.id}>{item?.serchableName}</MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-      </DialogContent>
-      <DialogActions>
-        <Button variant={"contained"} color={"success"} onClick={onSubmit}>
-          {units?.addState ? <CircularProgress /> : "ثبت"}
-        </Button>
-      </DialogActions>
-    </Dialog>
+          {selectedUnit ? 'ویرایش واحد' : 'افزودن واحد'}
+          <IconButton color={'error'} onClick={onClose}>
+            <HighlightOff />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent>
+          {oneProjectFloor.pending && <CircularProgress />}
+          {!oneProjectFloor.pending && (
+            <>
+              <TextField
+                value={info?.unitName}
+                name={'unitName'}
+                onChange={handleChange}
+                label={'نام واحد'}
+                fullWidth={true}
+                sx={{ mt: 2 }}
+              />
+              <TextField
+                value={info?.code}
+                name={'code'}
+                onChange={handleChange}
+                label={'کد واحد'}
+                fullWidth={true}
+                sx={{ mt: 2 }}
+              />
+
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={oneProjectFloor?.data}
+                id="projectfloorId"
+                label="طبقه"
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, projectfloorId: value }))
+                }
+                value={info?.projectfloorId ?? selectedFloor?.id}
+              />
+
+              <FormControl fullWidth={true}>
+                <Typography sx={{ mt: 2 }}>کالا ها</Typography>
+                <AutoCompleteComponent
+                  sx={{ mt: 2 }}
+                  options={commodities?.data}
+                  id="commodities"
+                  label="کالا ها"
+                  changeHandler={(value) =>
+                    setInfo((prev) => ({ ...prev, commodities: value }))
+                  }
+                  dataLabel="serchableName"
+                  value={info?.commodities || []}
+                  multiple={true}
+                />
+              </FormControl>
+            </>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button variant={'contained'} color={'success'} onClick={onSubmit}>
+            {units?.addState ? <CircularProgress /> : 'ثبت'}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </>
   );
 };
+
+export default memo(AddUnit);

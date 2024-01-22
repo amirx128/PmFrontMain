@@ -21,7 +21,10 @@ import {
 import gridDict from "../../dictionary/gridDict.ts";
 import { Link, useNavigate } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
-
+import TuneIcon from "@mui/icons-material/Tune";
+import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
+import useCustomCol from "../../hooks/useCustomCol.tsx";
+import { warehouseGrid } from "../../utils/gridColumns.ts";
 const SupplierQList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -34,158 +37,18 @@ const SupplierQList = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
-  const columns: GridColDef[] = [
-    {
-      field: "requesterUser",
-      headerName: gridDict.requesterUser,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderId",
-      headerName: gridDict.purchaseOrderId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "purchaseOrderTrackingCode",
-      headerName: gridDict.purchaseOrderTrackingCode,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCaseTrackingCode",
-      headerName: gridDict.requestCaseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "requestCaseId",
-      headerName: gridDict.requestCaseId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCaseCreateDate",
-      headerName: gridDict.requestCaseCreateDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.requestCaseCreateDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "countOfDone",
-      headerName: gridDict.countOfDone,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "commodityName",
-      headerName: gridDict.commodityName,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "commodityId",
-      headerName: gridDict.commodityId,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requestCaseCommodityId",
-      headerName: gridDict.requestCaseCommodityId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "warehouseOrderCount",
-      headerName: gridDict.warehouseOrderCount,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-    {
-      field: "requiredDate",
-      headerName: gridDict.requiredDate,
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.approveDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
-      ),
-    },
-    {
-      field: "warehouseTrackingCode",
-      headerName: gridDict.warehouseTrackingCode,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-      renderCell: ({ value, row }) => {
-        return (
-          <Typography
-            variant="body1"
-            color="secondary"
-            sx={{ cursor: "pointer" }}
-          >
-            <Link to={`/supplier/details/${row.warehouseOrderId}`}>
-              {value}
-            </Link>
-          </Typography>
-        );
-      },
-    },
-    {
-      field: "warehouseOrderId",
-      headerName: gridDict.warehouseOrderId,
-      minWidth: 150,
-      flex: 1,
-      editable: false,
-      filterable: false,
-    },
-  ];
+  const {
+    isLoading: saveGridColumnsLoading,
+    isShowModal: isShowCustomizeTableModal,
+    handleShowModal: handleShowCustomizeTabelModal,
+    columns,
+    tempColumns,
+    handleChangeCheckbox,
+    handleChangeSort,
+    handleCloseModal: handleCloseCustomizeTable,
+    handleSaveColumnsChanges,
+    handleSelectAll,
+  } = useCustomCol("SUPPLIER_SUPPLIER_QUEUE_LIST", warehouseGrid);
   useEffect(() => {
     getList();
   }, []);
@@ -308,29 +171,41 @@ const SupplierQList = () => {
               <IconButton color="success" onClick={handleDownloadExcell}>
                 <SimCardDownloadIcon />
               </IconButton>
+              <IconButton
+                color="success"
+                onClick={handleShowCustomizeTabelModal}
+              >
+                <TuneIcon />
+              </IconButton>
               <Box sx={{ flex: 1, marginLeft: "20px" }}></Box>
             </Row>
           </form>
         </Box>
 
-        <Grid
-          rowIdFields={[
-            "purchaseOrderId",
-            "requesterUser",
-            "requestCaseId",
-            "commodityId",
-            "requestCaseCommodityId",
-            "purchaseOrderDetailsId",
-            "warehouseOrderId",
-          ]}
-          columns={columns}
-          rows={
-            supplierQ?.data.map((row, index) => ({ id: index, ...row })) ?? []
-          }
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-          onDoubleClick={handleDoubleClick}
-        ></Grid>
+        {columns && !supplierQ.pending && (
+          <>
+            <Grid
+              onDoubleClick={handleDoubleClick}
+              columns={columns}
+              rows={
+                supplierQ?.data.map((row, index) => ({ id: index, ...row })) ??
+                []
+              }
+              pagination={{}}
+              onSortModelChange={handleSortModelChange}
+            />
+            <CustomizeGrid
+              showModal={isShowCustomizeTableModal}
+              columns={tempColumns}
+              handleChangeCheckbox={handleChangeCheckbox}
+              handleChangeSort={handleChangeSort}
+              handleClose={handleCloseCustomizeTable}
+              handleSave={handleSaveColumnsChanges}
+              handleSelectAll={handleSelectAll}
+              isSaveLoading={saveGridColumnsLoading}
+            />
+          </>
+        )}
       </Card>
     </CardGrid>
   );

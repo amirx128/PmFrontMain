@@ -5,6 +5,8 @@ import {
   GetTransactions,
   DownloadSupplierQ,
   DownloadSupplierSentItem,
+  GetCount,
+  GetAllCommodityTransactions,
 } from "../../core/supplier/Supplier.service";
 import downloadExcel from "../../utils/downloadExcell";
 
@@ -28,6 +30,14 @@ export interface SupplierState {
       data: any;
       pending: boolean;
     };
+    allTransaction: {
+      data: any;
+      pending: boolean;
+    };
+    Counter: {
+      data: any;
+      pending: boolean;
+    };
     downloadQueue: {
       pending: boolean;
     };
@@ -48,6 +58,14 @@ const initialState: SupplierState = {
       pending: false,
     },
     transaction: {
+      data: [],
+      pending: false,
+    },
+    allTransaction: {
+      data: [],
+      pending: false,
+    },
+    Counter: {
       data: [],
       pending: false,
     },
@@ -86,6 +104,59 @@ export const GetOneCommodityTransactions = createAsyncThunk(
         orderType,
         orderBy
       );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const GetAllCommodityTransactionsAction = createAsyncThunk(
+  "supplier/GetAllCommodityTransactionsAction",
+  async (
+    body: {
+      SelectedItemId: any;
+      fromDate?: any;
+      toDate?: any;
+      orderType?: "desc" | "asc";
+      orderBy?: string;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { fromDate, toDate, orderType, orderBy, SelectedItemId } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetAllCommodityTransactions(
+        SelectedItemId,
+        userId,
+        1,
+        fromDate,
+        toDate,
+        orderType,
+        orderBy
+      );
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+
+export const GetCountCommodityInWarehouse = createAsyncThunk(
+  "Warehouse/GetCountCommodityInWarehouse",
+  async (
+    body: {
+      commodityId: any;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const { commodityId } = body;
+
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await GetCount(commodityId, userId);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -273,6 +344,47 @@ export const supplierSlicer = createSlice({
         GetOneCommodityTransactions.rejected,
         (state: SupplierState, { error }) => {
           state.supplier.transaction.pending = false;
+        }
+      );
+    //#endregion
+    //#region GetAllCommodityTransactionsAction-----
+    builder
+      .addCase(
+        GetAllCommodityTransactionsAction.pending,
+        (state: SupplierState) => {
+          state.supplier.allTransaction.pending = true;
+        }
+      )
+      .addCase(
+        GetAllCommodityTransactionsAction.fulfilled,
+        (state: SupplierState, { payload }) => {
+          state.supplier.allTransaction.pending = false;
+          state.supplier.allTransaction.data = payload?.model;
+        }
+      )
+      .addCase(
+        GetAllCommodityTransactionsAction.rejected,
+        (state: SupplierState, { error }) => {
+          state.supplier.allTransaction.pending = false;
+        }
+      );
+    //#endregion
+    //#region GetCountCommodityInWarehouse-----
+    builder
+      .addCase(GetCountCommodityInWarehouse.pending, (state: SupplierState) => {
+        state.supplier.Counter.pending = true;
+      })
+      .addCase(
+        GetCountCommodityInWarehouse.fulfilled,
+        (state: SupplierState, { payload }) => {
+          state.supplier.Counter.pending = false;
+          state.supplier.Counter.data = payload.model;
+        }
+      )
+      .addCase(
+        GetCountCommodityInWarehouse.rejected,
+        (state: SupplierState, { error }) => {
+          state.supplier.Counter.pending = false;
         }
       );
     //#endregion

@@ -1,3 +1,5 @@
+import { PageTileComponent} from "../style";
+
 import {
   Box,
   Button,
@@ -160,8 +162,11 @@ const Commodities = () => {
   };
 
   return (
+    
     <Grid container>
+
       <Grid item xs={12}>
+
         <Box
           sx={{
             borderRadius: 2,
@@ -177,6 +182,7 @@ const Commodities = () => {
             alignItems={"center"}
             mb={1}
           >
+            
             <Typography sx={{ display: "flex", alignItems: "center", mb: 1 }}>
               <Inventory />
               کالا ها
@@ -198,7 +204,6 @@ const Commodities = () => {
                   const find = commodities?.data?.find(
                     (item) => item?.id == selectedNode
                   );
-                  console.log(typeof commidtyOnTree.isCategory);
                   if (commidtyOnTree.isCategory) {
                     setSelectedCommodity(commidtyOnTree);
                     setSelectedNode(null);

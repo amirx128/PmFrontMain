@@ -192,7 +192,6 @@ const SupportList: React.FC<any> = (props) => {
     getApproveStates();
   }, []);
   useEffect(() => {
-    console.log(watch);
     getList();
   }, [watch]);
   const getApproveStates = async () => {
@@ -206,14 +205,12 @@ const SupportList: React.FC<any> = (props) => {
     }
   };
   const handleEditClick = (entity) => {
-    console.log(entity);
     navigate("/supportApproveDetail/" + entity.requestCommodityId);
   };
   const handleSortModelChange = () => {};
   const { user } = useSelector((state: any) => state?.user);
   const getList = async () => {
     const filters = getValues();
-    console.log(filters);
     try {
       const response = await axios.post(props.apiUrl, {
         userId: user?.id ?? getUserIdFromStorage(),
@@ -235,7 +232,6 @@ const SupportList: React.FC<any> = (props) => {
   };
   const setSelectedFromDate = (e) => {
     const date = new Date(e).toLocaleDateString("en-US");
-    console.log(date);
     setFromDate(date);
     setValue("fromDate", date);
   };
@@ -245,10 +241,7 @@ const SupportList: React.FC<any> = (props) => {
     setValue("toDate", date);
   };
   const onSubmit = (data) => {};
-  const stateChanged = (e) => {
-    console.log("aaa", e);
-    // getList();
-  };
+
   return (
     <CardGrid
       item

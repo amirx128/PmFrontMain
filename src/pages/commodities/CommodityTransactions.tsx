@@ -1,3 +1,5 @@
+import { PageTileComponent } from "../style";
+
 import {
   Box,
   Card,
@@ -5,6 +7,8 @@ import {
   Grid as CardGrid,
   IconButton,
   Typography,
+  Switch,
+  CircularProgress,
 } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useRef, useState } from "react";
@@ -14,15 +18,19 @@ import { Row } from "./style.tsx";
 import Filter from "@mui/icons-material/FilterAlt";
 import FilterOff from "@mui/icons-material/FilterAltOff";
 import { useDispatch, useSelector } from "react-redux";
-import { GetOneCommodityTransactions } from "../../redux/features/supplierSlicer.ts";
+import {
+  GetAllCommodityTransactionsAction,
+  GetOneCommodityTransactions,
+} from "../../redux/features/supplierSlicer.ts";
+import { GetCountCommodityInWarehouse } from "../../redux/features/supplierSlicer.ts";
 import gridDict from "../../dictionary/gridDict.ts";
-import { Link, useParams, } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
 
 const CommodityTransactions = () => {
-  const{id}= useParams();
+  const { id } = useParams();
   const dispatch = useDispatch<any>();
-  const { transaction } = useSelector(
+  const { transaction, Counter, allTransaction } = useSelector(
     (state: any) => state.supplier?.supplier
   );
   const [fromDate, setFromDate] = useState(
@@ -33,27 +41,66 @@ const CommodityTransactions = () => {
     fromDate: new Date().setMonth(new Date().getMonth() - 1),
     toDate: new Date(),
   });
+
+  const [user] = useState(() => {
+    return JSON.parse(localStorage.getItem("user"));
+  });
+  const [isShowAll, setIsShowAll] = useState(false);
   // const SelectedItemId:id = 18;
   const columns: GridColDef[] = [
-    {
-      field: "id",
-      headerName: "شناسه تراکنش",
-      flex: 1,
-      minWidth: 150,
-      editable: false,
-      filterable: false,
-    },
+    // {
+    //   field: "id",
+    //   headerName: "شناسه تراکنش",
+    //   flex: 1,
+    //   minWidth: 150,
+    //   editable: false,
+    //   filterable: false,
+    // },
     {
       field: "exitWarehouseOrderTrackingCode",
-      headerName: "کد رهگیری خروج",
+      headerName: "تراکنش خروج از انبار",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/exitWarehosue/detail/${row.exitWarehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
-      field: "PurchaseOrderTrackingCode",
-      headerName: "کد رهگیری خرید",
+      field: "warehouseOrderTrackingCode",
+      headerName: "تراکنش انبار",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "purchaseOrderTrackingCode",
+      headerName: " تراکنش خرید ",
       minWidth: 150,
       flex: 1,
       editable: false,
@@ -65,14 +112,83 @@ const CommodityTransactions = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
           </Typography>
         );
       },
     },
     {
       field: "type",
-      headerName:"نوع تراکنش",
+      headerName: "نوع تراکنش",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false
+    },
+    {
+      field: "activityDate",
+      headerName: "تاریخ",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value }) => (
+        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
+      ),
+    },
+    {
+      field: "count",
+      headerName: "تعداد",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+    {
+      field: "price",
+      headerName: "قیمت",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
+  ];
+  const allColumns: GridColDef[] = [
+    // {
+    //   field: "id",
+    //   headerName: "شناسه تراکنش",
+    //   flex: 1,
+    //   minWidth: 150,
+    //   editable: false,
+    //   filterable: false,
+    // },
+    {
+      field: "commodityName",
+      headerName: "نام کالا",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+
+          >
+
+            <Link to={`/CommodityTransactions/${row.commodityId}`}>
+              {value}
+            </Link >
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "exitWarehouseOrderTrackingCode",
+      headerName: "تراکنش خروج از انبار",
       flex: 1,
       minWidth: 150,
       editable: false,
@@ -84,44 +200,106 @@ const CommodityTransactions = () => {
             color="secondary"
             sx={{ cursor: "pointer" }}
           >
-            <Link to={`/approve/details/${row.purchaseOrderId}`}>{value}</Link>
+            <Link to={`/exitWarehosue/detail/${row.exitWarehouseOrderId}`}>
+              {value}
+            </Link>
           </Typography>
         );
-        }
+      },
+    },
+   
+    {
+      field: "warehouseOrderTrackingCode",
+      headerName: "تراکنش انبار",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/warehouse/detail/${row.warehouseOrderId}`}>
+              {value}
+            </Link>
+          </Typography>
+        );
+      },
     },
     {
-      field: "ActivityDate",
+      field: "purchaseOrderTrackingCode",
+      headerName: " تراکنش خرید ",
+      minWidth: 150,
+      flex: 1,
+      editable: false,
+      filterable: false,
+      renderCell: ({ value, row }) => {
+        return (
+          <Typography
+            variant="body1"
+            color="secondary"
+            sx={{ cursor: "pointer" }}
+          >
+            <Link to={`/purchase/details/${row.purchaseOrderId}`}>{value}</Link>
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "type",
+      headerName: "نوع تراکنش",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+      
+    },
+    {
+      field: "activityDate",
       headerName: "تاریخ",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-      renderCell: (params) => (
-        <span>
-          {new Date(params.row.requestCaseCreateDate)
-            .toLocaleDateString("fa-IR")
-            .toString()}
-        </span>
+      renderCell: ({ value }) => (
+        <span>{new Date(value).toLocaleDateString("fa-IR").toString()}</span>
       ),
     },
     {
-      field: "Count",
+      field: "count",
       headerName: "تعداد",
       flex: 1,
       minWidth: 150,
       editable: false,
       filterable: false,
-    }
+    },
+    {
+      field: "price",
+      headerName: "قیمت",
+      flex: 1,
+      minWidth: 150,
+      editable: false,
+      filterable: false,
+    },
   ];
   useEffect(() => {
     getList();
+    GetCount();
   }, []);
+  useEffect(() => {
+    if (isShowAll) {
+      getAlltransactions();
+    }
+  }, [isShowAll]);
 
   const handleSortModelChange = async (sortArr) => {
     if (!sortArr.at(0)) {
       await dispatch(
         GetOneCommodityTransactions({
-          SelectedItemId:id,
+          SelectedItemId: id,
           fromDate: new Date(fromDate),
           toDate: new Date(toDate),
         })
@@ -136,17 +314,31 @@ const CommodityTransactions = () => {
         toDate: new Date(toDate),
         orderBy: sortField,
         orderType: sortType,
-        SelectedItemId:id,
+        SelectedItemId: id,
       })
     );
   };
-  const getList = async () => {
+  const getAlltransactions = async () => {
     const body = {
-      SelectedItemId:id,
+      SelectedItemId: id,
       fromDate: new Date(fromDate),
       toDate: new Date(toDate),
     };
-    dispatch(GetOneCommodityTransactions(body));
+    await dispatch(GetAllCommodityTransactionsAction(body));
+  };
+  const getList = async () => {
+    const body = {
+      SelectedItemId: id,
+      fromDate: new Date(fromDate),
+      toDate: new Date(toDate),
+    };
+    await dispatch(GetOneCommodityTransactions(body));
+  };
+  const GetCount = async () => {
+    const body = {
+      commodityId: id,
+    };
+    await dispatch(GetCountCommodityInWarehouse(body));
   };
 
   const setSelectedFromDate = (e) => {
@@ -162,7 +354,7 @@ const CommodityTransactions = () => {
   const handleAddFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-        SelectedItemId:id,
+        SelectedItemId: id,
         fromDate: new Date(fromDate),
         toDate: new Date(toDate),
       })
@@ -172,7 +364,7 @@ const CommodityTransactions = () => {
   const handleRmoveFilter = async () => {
     await dispatch(
       GetOneCommodityTransactions({
-        SelectedItemId:id,
+        SelectedItemId: id,
         fromDate: new Date(initialFilter.current.fromDate),
         toDate: new Date(initialFilter.current.toDate),
       })
@@ -189,12 +381,27 @@ const CommodityTransactions = () => {
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
-        <CardHeader
-          style={{ textAlign: "right" }}
-          title="در صف بررسی"
-          titleTypographyProps={{ variant: "h6" }}
-        />
+        <CardHeader />
+        <PageTileComponent __text={document.title} />
+        <div className="text-right mb-16 mr-6 text-xl flex gap-12  flex-col">
+          {!isShowAll && (
+            <div className="flex gap-8 items-center">
+              <p>تعداد موجود در انبار : {Counter.data && Counter.data}</p>
+              <p></p>
+              <p>نام کالا : {transaction?.data?.at(0)?.commodityName}</p>
+            </div>
+          )}
 
+          {user.usersRoles?.some((role) => role.roleName === "Admin") && (
+            <div>
+              مشاهده همه
+              <Switch
+                checked={isShowAll}
+                onChange={() => setIsShowAll((prev) => !prev)}
+              />
+            </div>
+          )}
+        </div>
         <Box>
           <form>
             <Row>
@@ -233,28 +440,34 @@ const CommodityTransactions = () => {
             </Row>
           </form>
         </Box>
-
-        <Grid
-          rowIdFields={[
-            "Id",
-            "ExitWarehouseOrderId",
-            "ExitWarehouseOrderTrackingCode",
-            "PurchaseOrderId",
-            "PurchaseOrderTrackingCode",
-            "type",
-            "ActivityDate",
-            "Count",
-          ]}
-          columns={columns}
-          rows={
-            transaction?.data.map((row, index) => ({
-              id: index,
-              ...row,
-            })) ?? []
-          }
-          pagination={{}}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        {isShowAll && allTransaction.pending && <CircularProgress />}
+        {!isShowAll && transaction.pending && <CircularProgress />}
+        {!isShowAll && transaction.data && (
+          <Grid
+            columns={columns}
+            rows={
+              transaction?.data.map((row, index) => ({
+                id: index,
+                ...row,
+              })) ?? []
+            }
+            pagination={{}}
+            onSortModelChange={handleSortModelChange}
+          />
+        )}
+        {isShowAll && allTransaction.data && (
+          <Grid
+            columns={allColumns}
+            rows={
+              allTransaction?.data.map((row, index) => ({
+                id: index,
+                ...row,
+              })) ?? []
+            }
+            pagination={{}}
+            onSortModelChange={handleSortModelChange}
+          />
+        )}
       </Card>
     </CardGrid>
   );

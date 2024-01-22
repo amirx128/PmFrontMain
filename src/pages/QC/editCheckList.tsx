@@ -21,6 +21,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useNavigate, useParams } from "react-router-dom";
 import ClearIcon from "@mui/icons-material/Clear";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const EditCheckListItem = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -113,24 +114,16 @@ const EditCheckListItem = () => {
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>آیتم فرعی</InputLabel>
-          <Select
-            value={info?.subItemId}
-            fullWidth={true}
-            name={"subItemId"}
+          <AutoCompleteComponent
+            options={subItems?.data}
+            id="subItemId"
             label="آیتم فرعی"
-            onChange={handleChange}
-          >
-            {subItems?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, subItemId: value }));
+            }}
+            value={info?.subItemId}
+          />
         </FormControl>
-        <Button variant="outlined" sx={{ mt: 2 }} onClick={handleNewItem}>
-          اضافه کردن آیتم جدید +
-        </Button>
         {items?.map((item) => (
           <Fragment key={item.id}>
             {!item.isDeleted && (
@@ -141,17 +134,22 @@ const EditCheckListItem = () => {
                   alignItems: "center",
                   marginTop: 10,
                 }}
+                className="w-1/2"
               >
                 <TextField
                   value={item.itemName}
                   onChange={(e) => handleChangeItem(e, item)}
                   label={"نام"}
+                  className="w-full"
                 />
                 <IconButton onClick={() => handleRemoveItem(item)}>
                   <ClearIcon color="error" />
                 </IconButton>
               </div>
             )}
+            <Button variant="outlined" sx={{ mt: 2 }} onClick={handleNewItem}>
+              اضافه کردن آیتم جدید +
+            </Button>
           </Fragment>
         ))}
       </CardContent>

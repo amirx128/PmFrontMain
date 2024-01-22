@@ -1,17 +1,18 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   GetApproveQ,
   GetApproveStates,
   GetFinalApproveQ,
   DownloadApproveQ,
   DownloadFinalApproveQ,
-} from "../../core/support/Support.service";
-import downloadExcel from "../../utils/downloadExcell";
+  SupportGetRequestDetails,
+} from '../../core/support/Support.service';
+import downloadExcel from '../../utils/downloadExcell';
 
 const getUserId = (state) => {
-  return state?.user?.user?.id ?? localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))?.id
-    : "1";
+  return state?.user?.user?.id ?? localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))?.id
+    : '1';
 };
 
 export interface supportState {
@@ -21,6 +22,10 @@ export interface supportState {
       pending: boolean;
     };
     states: {
+      data: any;
+      pending: boolean;
+    };
+    requestDetail: {
       data: any;
       pending: boolean;
     };
@@ -57,16 +62,20 @@ const initialState: supportState = {
     downloadFinalApproveQ: {
       pending: false,
     },
+    requestDetail: {
+      data: undefined,
+      pending: false,
+    },
   },
 };
 
 export const GetApproveQAction = createAsyncThunk(
-  "support/GetApproveQAction",
+  'support/GetApproveQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       approveStateId: number;
     },
@@ -92,12 +101,12 @@ export const GetApproveQAction = createAsyncThunk(
   }
 );
 export const GetFinalApproveQAction = createAsyncThunk(
-  "support/GetFinalApproveQAction",
+  'support/GetFinalApproveQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       approveStateId: number;
     },
@@ -123,7 +132,7 @@ export const GetFinalApproveQAction = createAsyncThunk(
   }
 );
 export const GetApproveStatesAction = createAsyncThunk(
-  "support/GetApproveStatesAction",
+  'support/GetApproveStatesAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -137,12 +146,12 @@ export const GetApproveStatesAction = createAsyncThunk(
 );
 
 export const DownloadApproveQAction = createAsyncThunk(
-  "support/DownloadApproveQAction",
+  'support/DownloadApproveQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       approveStateId: number;
     },
@@ -167,13 +176,32 @@ export const DownloadApproveQAction = createAsyncThunk(
     }
   }
 );
+export const SupportGetRequestDetailsAction = createAsyncThunk(
+  'support/SupportGetRequestDetailsAction',
+  async (
+    body: {
+      requestId;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { requestId } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SupportGetRequestDetails(userId, requestId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const DownloadFinalApproveQAction = createAsyncThunk(
-  "support/DownloadFinalApproveQAction",
+  'support/DownloadFinalApproveQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       approveStateId: number;
     },
@@ -200,7 +228,7 @@ export const DownloadFinalApproveQAction = createAsyncThunk(
 );
 
 export const supportSlicer = createSlice({
-  name: "support",
+  name: 'support',
   initialState,
   reducers: undefined,
   extraReducers: (builder) => {
@@ -293,6 +321,28 @@ export const supportSlicer = createSlice({
         GetFinalApproveQAction.rejected,
         (state: supportState, { error }) => {
           state.approve.finalApproveQ.pending = false;
+        }
+      );
+    //#endregion
+    //#region SupportGetRequestDetailsAction-----
+    builder
+      .addCase(
+        SupportGetRequestDetailsAction.pending,
+        (state: supportState) => {
+          state.approve.requestDetail.pending = true;
+        }
+      )
+      .addCase(
+        SupportGetRequestDetailsAction.fulfilled,
+        (state: supportState, { payload }) => {
+          state.approve.requestDetail.pending = false;
+          state.approve.requestDetail.data = payload?.model;
+        }
+      )
+      .addCase(
+        SupportGetRequestDetailsAction.rejected,
+        (state: supportState, { error }) => {
+          state.approve.requestDetail.pending = false;
         }
       );
     //#endregion

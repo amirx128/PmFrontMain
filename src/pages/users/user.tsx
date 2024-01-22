@@ -3,40 +3,42 @@ import {
   GridColDef,
   GridRenderCellParams,
   GridValueGetterParams,
-} from "@mui/x-data-grid";
-import Grid from "../../components/grid/grid";
-import { useEffect, useState } from "react";
-import { Button, Card, CardHeader, Typography } from "@mui/material";
-import { Grid as CardGrid } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import AddIcon from "@mui/icons-material/AddOutlined";
-import { ActionRow } from "./style";
-import axios from "../../utils/axios.config";
-import { useDispatch, useSelector } from "react-redux";
-import { getUserIdFromStorage } from "../../utils/functions.ts";
-import { AddUser } from "../../components/administrations/addUser.tsx";
+} from '@mui/x-data-grid';
+import Grid from '../../components/grid/grid';
+import { useEffect, useState } from 'react';
+import { Button, Card, CardHeader, Typography } from '@mui/material';
+import { Grid as CardGrid } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import AddIcon from '@mui/icons-material/AddOutlined';
+import { ActionRow } from './style';
+import axios from '../../utils/axios.config';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserIdFromStorage } from '../../utils/functions.ts';
+import { AddUser } from '../../components/administrations/addUser.tsx';
 import {
   GetUserInfo,
   GetUsersListAction,
   clearSelectedUser,
-} from "../../redux/features/administrationSlicer.ts";
-import { useNavigate } from "react-router-dom";
+} from '../../redux/features/administrationSlicer.ts';
+import { PageTileComponent } from '../style';
+
+import { useNavigate } from 'react-router-dom';
 
 const Users = () => {
   const dispatch = useDispatch<any>();
   const navigate = useNavigate();
   const columns: GridColDef[] = [
     {
-      field: "firstName",
-      headerName: " نام",
+      field: 'firstName',
+      headerName: ' نام',
       flex: 1,
       minWidth: 150,
       editable: true,
     },
     {
-      field: "lastName",
-      headerName: " نام خانوادگی",
+      field: 'lastName',
+      headerName: ' نام خانوادگی',
       minWidth: 150,
       flex: 1,
       editable: true,
@@ -47,8 +49,8 @@ const Users = () => {
       ),
     },
     {
-      field: "userName",
-      headerName: "نام کاربری",
+      field: 'userName',
+      headerName: 'نام کاربری',
       minWidth: 150,
       flex: 1,
       editable: true,
@@ -61,27 +63,27 @@ const Users = () => {
     // when type of column is number align should be left, because of rtl direction
 
     {
-      field: "isActive",
-      headerName: " وضعیت",
-      description: "This column has a value getter and is not sortable.",
+      field: 'isActive',
+      headerName: ' وضعیت',
+      description: 'This column has a value getter and is not sortable.',
       minWidth: 150,
       sortable: false,
       flex: 1,
-      renderCell: (params) => <span>{params.value ? "فعال" : "غیرفعال"}</span>,
+      renderCell: (params) => <span>{params.value ? 'فعال' : 'غیرفعال'}</span>,
       //   valueGetter: (params: GridValueGetterParams) =>
       //     `${params.row.firstName || ""} ${params.row.lastName || ""}`,
     },
     {
-      field: "actions",
-      headerName: "Actions",
-      description: "ActionColumn",
+      field: 'actions',
+      headerName: 'Actions',
+      description: 'ActionColumn',
       sortable: false,
       minWidth: 150,
       flex: 1,
       filterable: false,
       hideSortIcons: true,
-      type: "actions",
-      cellClassName: "actions",
+      type: 'actions',
+      cellClassName: 'actions',
       disableColumnMenu: true,
       renderCell: (params: GridRenderCellParams) => (
         <>
@@ -108,7 +110,7 @@ const Users = () => {
     setSelectedUser(row);
   };
   const handleDeleteClick = (row) => {
-    console.log("delete", row);
+    console.log('delete', row);
   };
   const { usersList } = useSelector(
     (state: any) => state?.administrations?.users
@@ -132,14 +134,8 @@ const Users = () => {
     try {
       dispatch(GetUsersListAction());
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
-  };
-  const handleFilter = (entity) => {
-    console.log(entity);
-  };
-  const handleSortModelChange = (entity) => {
-    console.log(entity);
   };
 
   useEffect(() => {
@@ -154,19 +150,15 @@ const Users = () => {
       xs={12}
       sx={{
         borderRadius: 2,
-        boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
-        marginBottom: "10px",
+        boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, 0.1)',
+        marginBottom: '10px',
       }}
     >
+      <PageTileComponent __text={document.title} />
       <Card sx={{ borderRadius: 3 }}>
-        <CardHeader
-          style={{ textAlign: "right" }}
-          title="مدیریت کاربران"
-          titleTypographyProps={{ variant: "h6" }}
-        />
         <ActionRow>
           <Button
-            sx={{ justifySelf: "flex-start", marginRight: "20px" }}
+            sx={{ justifySelf: 'flex-start', marginRight: '20px' }}
             color="info"
             variant="outlined"
             onClick={() => {
@@ -177,24 +169,18 @@ const Users = () => {
             افزودن
           </Button>
           <Button
-            sx={{ justifySelf: "flex-start", marginRight: "20px" }}
+            sx={{ justifySelf: 'flex-start', marginRight: '20px' }}
             color="info"
             variant="outlined"
             onClick={() => {
-              navigate("/supplier-list");
+              navigate('/supplier-list');
             }}
           >
             تامین کنندگان
           </Button>
         </ActionRow>
 
-        <Grid
-          columns={columns}
-          rows={usersList || []}
-          pagination={{}}
-          onFilterCahnge={handleFilter}
-          onSortModelChange={handleSortModelChange}
-        ></Grid>
+        <Grid columns={columns} rows={usersList || []} pagination={{}}></Grid>
       </Card>
       <AddUser showUserDialog={showUserDialog} onClose={userOnClose} />
     </CardGrid>

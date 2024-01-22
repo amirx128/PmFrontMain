@@ -19,6 +19,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { useNavigate } from "react-router-dom";
 import { getAllUnits } from "../../redux/features/definitionSlicer";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const AddUsability = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
@@ -26,7 +27,7 @@ const AddUsability = () => {
   const { units } = useSelector((state: any) => state.definition);
   const [info, setInfo] = useState({
     usablityName: "",
-    unitId: 0,
+    units: [],
     code: "",
   });
 
@@ -47,7 +48,7 @@ const AddUsability = () => {
     await dispatch(
       AddNewUsabilityAction({
         usabilityName: info.usablityName,
-        unitId: +info.unitId,
+        units: info.units,
         code: info.code,
       })
     );
@@ -70,20 +71,15 @@ const AddUsability = () => {
           sx={{ mt: 2, width: "50%" }}
         />
         <FormControl sx={{ mt: 2, width: "50%" }}>
-          <InputLabel>واحد</InputLabel>
-          <Select
-            value={info?.unitId}
-            fullWidth={true}
-            name={"unitId"}
+          <AutoCompleteComponent
+            options={units?.data}
+            id="units"
             label="واحد"
-            onChange={handleChange}
-          >
-            {units?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
+            changeHandler={(value) => {
+              setInfo((prev) => ({ ...prev, units: value }));
+            }}
+            value={info?.units}
+          />
         </FormControl>
         <TextField
           value={info?.code}

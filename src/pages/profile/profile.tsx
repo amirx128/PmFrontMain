@@ -19,6 +19,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+
+import { PageTileComponent } from "../style";
+
 import {
   GetAllRoles,
   UpdateUser,
@@ -28,6 +31,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useState, useEffect } from "react";
 import { GetAllBusinessRoles } from "../../redux/features/definitionSlicer";
+import AutoCompleteComponent from "../../components/AutoComplete/AutoCompleteComponent";
 const Profile = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const dispatch = useDispatch<any>();
@@ -106,7 +110,11 @@ const Profile = () => {
     if (info.password) {
       model.password = info.password;
     }
-    if (info?.password && info?.password !== info?.repeatPassword) return;
+    if (
+      (info?.password && info?.password !== info?.repeatPassword) ||
+      isShowPassword
+    )
+      return;
     dispatch(
       UpdateUserProfile({
         id: user?.id,
@@ -133,7 +141,8 @@ const Profile = () => {
         padding: 10,
       }}
     >
-      <Typography variant="h5">اطلاعات کاربر</Typography>
+      <PageTileComponent __text={document.title} />
+
       <CardContent>
         {selectedUser && (
           <>
@@ -166,57 +175,44 @@ const Profile = () => {
             />
 
             <FormControl fullWidth sx={{ mt: 2 }}>
-              <InputLabel>نقش کاربری</InputLabel>
-              <Select
-                multiple
-                value={info?.usersRoles}
-                fullWidth={true}
-                name={"usersRoles"}
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={roles?.data}
+                id="usersRoles"
                 label="نقش کاربری"
-                onChange={handleChange}
-                disabled={true}
-              >
-                {roles?.data?.map((item) => (
-                  <MenuItem value={item.id} key={item?.id}>
-                    {item?.roleTitle}
-                  </MenuItem>
-                ))}
-              </Select>
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, usersRoles: value }))
+                }
+                value={info?.usersRoles || []}
+                dataLabel="roleTitle"
+                multiple={true}
+              />
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
-              <InputLabel>نقش تجاری</InputLabel>
-              <Select
-                multiple
-                value={info?.businessRoles}
-                fullWidth={true}
-                name={"businessRoles"}
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={businessRoles?.data}
+                id="businessRoles"
                 label="نقش تجاری"
-                onChange={handleChange}
-                disabled={true}
-              >
-                {businessRoles?.data?.map((item) => (
-                  <MenuItem value={item.id} key={item?.id}>
-                    {item?.name}
-                  </MenuItem>
-                ))}
-              </Select>
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, businessRoles: value }))
+                }
+                value={info?.businessRoles || []}
+                multiple={true}
+              />
             </FormControl>
             <FormControl fullWidth sx={{ mt: 2 }}>
-              <InputLabel>مدیر</InputLabel>
-              <Select
-                value={info?.bossId}
-                fullWidth={true}
-                name={"bossId"}
+              <AutoCompleteComponent
+                sx={{ mt: 2 }}
+                options={users?.usersList}
+                id="bossId"
                 label="مدیر"
-                onChange={handleChange}
-                disabled={true}
-              >
-                {users?.usersList?.map((item) => (
-                  <MenuItem value={item.id} key={item?.id}>
-                    {item?.firstName}
-                  </MenuItem>
-                ))}
-              </Select>
+                changeHandler={(value) =>
+                  setInfo((prev) => ({ ...prev, bossId: value }))
+                }
+                value={info?.bossId}
+                dataLabel="firstName"
+              />
             </FormControl>
             <div
               style={{

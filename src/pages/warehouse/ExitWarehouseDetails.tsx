@@ -72,7 +72,6 @@ const ExitWarehouseDetails = () => {
 
   const handleAdd = async () => {
     const { count } = getValues();
-    console.log(receiveIsOk);
     await dispatch(
       WarehouseAddDetailsToExitFromWarehouseAction({
         count,

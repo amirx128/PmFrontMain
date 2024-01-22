@@ -12,6 +12,7 @@ const StyledBox = styled(Box)(({ theme }) => ({
     //   borderRight: `1px solid ${theme.palette.divider}`
   },
 }));
+
 const StyledForm = styled.div`
   display: flex;
   flex-direction: column;

@@ -15,24 +15,24 @@ import {
   FormGroup,
   InputLabel,
   FormControl,
-} from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import { HighlightOff } from "@mui/icons-material";
-import { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+  Typography,
+} from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { HighlightOff } from '@mui/icons-material';
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import {
-  AddNewPerson,
-  AddNewProject,
   GetAllBusinessRoles,
-  UpdatePerson,
-  UpdateProject,
-} from "../../redux/features/definitionSlicer.ts";
-import { toast } from "react-toastify";
+  GetAllPersons,
+  getAllProjects,
+} from '../../redux/features/definitionSlicer.ts';
+import { toast } from 'react-toastify';
 import {
   AddNewUser,
   GetAllRoles,
   UpdateUser,
-} from "../../redux/features/administrationSlicer.ts";
+} from '../../redux/features/administrationSlicer.ts';
+import AutoCompleteComponent from '../AutoComplete/AutoCompleteComponent.tsx';
 
 interface IAddUserProps {
   showUserDialog: boolean;
@@ -42,20 +42,23 @@ interface IAddUserProps {
 export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
   const theme = useTheme();
   const dispatch = useDispatch<any>();
-  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down("sm"));
+  const mediumOrSmaller = useMediaQuery(theme.breakpoints.down('sm'));
   const { roles, selectedUser, users } = useSelector(
     (state: any) => state.administrations
   );
+  const { persons, projects } = useSelector((state: any) => state.definition);
 
   const [info, setInfo] = useState({
-    firstName: selectedUser?.firstName,
-    lastName: selectedUser?.lastName,
+    // firstName: selectedUser?.firstName,
+    // lastName: selectedUser?.lastName,
     userName: selectedUser?.userName,
     password: selectedUser?.password,
     isActive: selectedUser?.isActive,
     businessRoles: selectedUser?.businessRoles?.map((item) => item.id) ?? [],
     usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
     bossId: selectedUser?.bossId,
+    projectId: selectedUser?.projectId,
+    personId: selectedUser?.personId,
   });
 
   useEffect(() => {
@@ -63,13 +66,17 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
     dispatch(GetAllBusinessRoles());
     //@ts-ignore
     dispatch(GetAllRoles());
+    //@ts-ignore
+    dispatch(getAllProjects());
+    //@ts-ignore
+    dispatch(GetAllPersons());
   }, []);
 
   useEffect(() => {
     if (selectedUser) {
       setInfo({
-        firstName: selectedUser?.firstName,
-        lastName: selectedUser?.lastName,
+        // firstName: selectedUser?.firstName,
+        // lastName: selectedUser?.lastName,
         userName: selectedUser?.userName,
         password: selectedUser?.password,
         isActive: selectedUser?.isActive,
@@ -77,24 +84,28 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
           selectedUser?.businessRoles?.map((item) => item.id) ?? [],
         usersRoles: selectedUser?.usersRoles?.map((item) => item.id) ?? [],
         bossId: selectedUser?.bossId,
+        projectId: selectedUser?.projectId,
+        personId: selectedUser?.personId,
       });
     } else {
       setInfo({
-        firstName: "",
-        lastName: "",
-        userName: "",
-        password: "",
+        // firstName: "",
+        // lastName: "",
+        userName: '',
+        password: '',
         isActive: true,
         businessRoles: [],
         usersRoles: [],
-        bossId: "",
+        bossId: '',
+        projectId: '',
+        personId: '',
       });
     }
   }, [selectedUser]);
   const { businessRoles } = useSelector((state: any) => state.definition);
 
   const handleChange = (e) => {
-    if (e.target?.name === "isActive") {
+    if (e.target?.name === 'isActive') {
       setInfo({
         ...info,
         [e.target?.name]: e.target?.checked,
@@ -115,67 +126,87 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
     }
     onClose();
   };
+  const handleChangeAutoComplete = (val, name) => {
+    setInfo({
+      ...info,
+      [name]: val,
+    });
+  };
+  console.log(info.personId);
   return (
     <Dialog
       open={showUserDialog}
       onClose={onClose}
       fullWidth={true}
-      maxWidth={"md"}
+      maxWidth={'md'}
       fullScreen={mediumOrSmaller}
     >
       <DialogTitle
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
-        {selectedUser ? "ویرایش کاربر" : "افزودن کاربر"}
-        <IconButton color={"error"} onClick={onClose}>
+        {selectedUser ? 'ویرایش کاربر' : 'افزودن کاربر'}
+        <IconButton color={'error'} onClick={onClose}>
           <HighlightOff />
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <TextField
-          value={info?.firstName}
-          name={"firstName"}
-          onChange={handleChange}
-          label={"نام"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
-        <TextField
-          value={info?.lastName}
-          name={"lastName"}
-          onChange={handleChange}
-          label={"نام خانوادگی"}
-          fullWidth={true}
-          sx={{ mt: 2 }}
-        />
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography sx={{ width: '20%' }}>نام</Typography>
+          <TextField
+            value={
+              persons?.data?.find((person) => person?.id == info?.personId)
+                ?.firstName
+            }
+            name={'firstName'}
+            onChange={handleChange}
+            fullWidth={true}
+            sx={{ mt: 2 }}
+            disabled
+          />
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography sx={{ width: '20%' }}>نام خانوادگی</Typography>
+          <TextField
+            // value={info?.lastName}
+            value={
+              persons?.data?.find((person) => person?.id == info?.personId)
+                ?.lastName
+            }
+            name={'lastName'}
+            onChange={handleChange}
+            fullWidth={true}
+            sx={{ mt: 2 }}
+            disabled
+          />
+        </div>
         <TextField
           value={info?.userName}
-          name={"userName"}
+          name={'userName'}
           onChange={handleChange}
-          label={"نام کاربری"}
+          label={'نام کاربری'}
           fullWidth={true}
           sx={{ mt: 2 }}
         />
         <TextField
           value={info?.password}
-          name={"password"}
+          name={'password'}
           onChange={handleChange}
-          label={"رمزعبور"}
-          type={"password"}
+          label={'رمزعبور'}
+          type={'password'}
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <FormGroup sx={{ width: "100%" }}>
+        <FormGroup sx={{ width: '100%' }}>
           <FormControlLabel
             value={info?.isActive}
             control={
               <Checkbox
                 checked={info?.isActive}
-                name={"isActive"}
+                name={'isActive'}
                 onChange={handleChange}
               />
             }
@@ -183,60 +214,69 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             defaultChecked={true}
           />
         </FormGroup>
+        <AutoCompleteComponent
+          sx={{ mt: 2 }}
+          options={roles?.data}
+          dataId="id"
+          dataLabel="roleTitle"
+          id="usersRoles"
+          label="نقش کاربری"
+          changeHandler={(value) => {
+            setInfo((prev) => ({ ...prev, usersRoles: value }));
+          }}
+          value={info?.usersRoles || []}
+          multiple={true}
+        />
+        <AutoCompleteComponent
+          sx={{ mt: 2 }}
+          options={businessRoles?.data}
+          dataId="id"
+          dataLabel="name"
+          id="businessRoles"
+          label="نقش تجاری"
+          changeHandler={(value) =>
+            setInfo((prev) => ({ ...prev, businessRoles: value }))
+          }
+          value={info?.businessRoles || []}
+          multiple={true}
+        />
         <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>نقش کاربری</InputLabel>
-          <Select
-            multiple
-            value={info?.usersRoles}
-            fullWidth={true}
-            name={"usersRoles"}
-            label="نقش کاربری"
-            onChange={handleChange}
-          >
-            {roles?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.roleTitle}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>نقش تجاری</InputLabel>
-          <Select
-            multiple
-            value={info?.businessRoles}
-            fullWidth={true}
-            name={"businessRoles"}
-            label="نقش تجاری"
-            onChange={handleChange}
-          >
-            {businessRoles?.data?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.name}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl fullWidth sx={{ mt: 2 }}>
-          <InputLabel>مدیر</InputLabel>
-          <Select
-            value={info?.bossId}
-            fullWidth={true}
-            name={"bossId"}
+          <AutoCompleteComponent
             label="مدیر"
-            onChange={handleChange}
-          >
-            {users?.usersList?.map((item) => (
-              <MenuItem value={item.id} key={item?.id}>
-                {item?.firstName}
-              </MenuItem>
-            ))}
-          </Select>
+            id="bossId"
+            options={users?.usersList || []}
+            value={info?.bossId}
+            dataLabel="firstName"
+            changeHandler={(value) => handleChangeAutoComplete(value, 'bossId')}
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <AutoCompleteComponent
+            label="پروژه"
+            id="projectId"
+            options={projects?.data || []}
+            value={info?.projectId}
+            changeHandler={(value) =>
+              handleChangeAutoComplete(value, 'projectId')
+            }
+          />
+        </FormControl>
+        <FormControl fullWidth sx={{ mt: 2 }}>
+          <AutoCompleteComponent
+            label="شخص"
+            id="personId"
+            options={persons?.data || []}
+            value={info?.personId}
+            dataLabel={['firstName', 'lastName']}
+            changeHandler={(value) =>
+              handleChangeAutoComplete(value, 'personId')
+            }
+          />
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button variant={"contained"} color={"success"} onClick={onSubmit}>
-          {businessRoles?.addState ? <CircularProgress /> : "ثبت"}
+        <Button variant={'contained'} color={'success'} onClick={onSubmit}>
+          {businessRoles?.addState ? <CircularProgress /> : 'ثبت'}
         </Button>
       </DialogActions>
     </Dialog>
