@@ -45,10 +45,12 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
   const [floorId, setFloorId] = useState();
   const [unitId, setUnitId] = useState();
   const [projectUnitId, setProjectUnitId] = useState();
+  const [removedItems, setRemovedItems] = useState<number[]>([]);
   const getAllProjectFloor = useCallback(async () => {
     await dispatch(GetAllProjects_Floor_Unit_UsabilityAction());
   }, []);
 
+  const baseIsEditable = requestDetail.data?.isEditable;
   useEffect(() => {
     getDetail();
   }, []);
@@ -76,19 +78,17 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
       setFloorId(requestDetail.data.floorId);
       setProjectUnitId(requestDetail.data.unitId);
       setComodoties(
-        requestDetail.data.commodities?.map((com) => {
-          return {
-            id: com.commodityId,
-            commodityId: com.commodityId,
-            activityId: com.activityId,
-            count: com.count,
-            requiredDate: com.requiredDate,
-          };
-        })
+        requestDetail.data.commodities?.map((com) => ({
+          id: com.commodityId,
+          commodityId: com.commodityId,
+          activityId: com.activityId,
+          count: com.count,
+          requiredDate: com.requiredDate,
+          requestCaseRowCommodityId: com.requestCaseRowCommodityId,
+        }))
       );
     }
   }, [requestDetail]);
-
   const getDetail = async () => {
     await dispatch(SupportGetRequestDetailsAction({ requestId: id }));
   };
@@ -105,6 +105,7 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
           ? +`2${floorId}`
           : +`1${projectId}`,
         commodites: [...comodities],
+        removedItems,
         id: id,
       });
       if (response.data.statusCode === 200) {
@@ -181,7 +182,13 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
   const addComodity = () => {
     setComodoties([
       ...comodities,
-      { commodityId: null, activityId: null, count: null, requiredDate: null },
+      {
+        commodityId: null,
+        activityId: null,
+        count: null,
+        requiredDate: null,
+        requestCaseRowCommodityId: null,
+      },
     ]);
   };
   const commodityChanged = (value, index) => {
@@ -189,10 +196,11 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
     newList[index] = value;
     setComodoties(newList);
   };
-  const deleteComodityRow = (index: number) => {
-    let comodityList = [...comodities];
-    comodityList.splice(index, 1);
-    setComodoties(comodityList);
+  const deleteComodityRow = (item) => {
+    setComodoties((prev) =>
+      prev.filter((p) => p.commodityId !== item.commodityId)
+    );
+    setRemovedItems((prev) => [...prev, item.requestCaseRowCommodityId]);
   };
   return (
     <Card sx={{ padding: '20px' }}>
@@ -229,6 +237,7 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
                 value={unitId}
                 changeHandler={(value) => setUnitId(value)}
                 sx={{ flex: 1 }}
+                disabled={!baseIsEditable}
               />
               <AutoCompleteComponent
                 label="پروژه"
@@ -237,6 +246,7 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
                 value={projectId}
                 changeHandler={(value) => setProjectId(value)}
                 sx={{ flex: 1 }}
+                disabled={!baseIsEditable}
               />
               <AutoCompleteComponent
                 label="طبقه"
@@ -249,6 +259,7 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
                 value={floorId}
                 changeHandler={(value) => setFloorId(value)}
                 sx={{ flex: 1 }}
+                disabled={!baseIsEditable}
               />
               <AutoCompleteComponent
                 label="واحد"
@@ -262,6 +273,7 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
                 value={projectUnitId}
                 changeHandler={(value) => setProjectUnitId(value)}
                 sx={{ flex: 1 }}
+                disabled={!baseIsEditable}
               />
             </div>
             <Divider sx={{ m: '40px 0' }} />
@@ -276,7 +288,8 @@ const RequestCaseEdit: React.FC<any> = (props: any) => {
                     commodityDescription={commodityDescription}
                     comodity={item}
                     onCommodityChange={(e) => commodityChanged(e, index)}
-                    deleteComodity={() => deleteComodityRow(index)}
+                    deleteComodity={() => deleteComodityRow(item)}
+                    disabled={!item?.isEditable}
                   ></ComodityForm>
                 ))}
             </Box>

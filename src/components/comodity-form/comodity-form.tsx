@@ -17,6 +17,7 @@ interface Iprops {
   onCommodityChange: (data: any) => void;
   commodityDescription?: any[];
   activities?: any[];
+  disabled?: boolean;
 }
 
 const ComodiryForm: React.FC<Iprops> = ({
@@ -25,6 +26,7 @@ const ComodiryForm: React.FC<Iprops> = ({
   commodityDescription,
   activities,
   onCommodityChange,
+  disabled = false,
 }) => {
   const {
     register,
@@ -39,27 +41,42 @@ const ComodiryForm: React.FC<Iprops> = ({
   useEffect(() => {
     if (date) {
       setValue('requiredDate', date);
-      onCommodityChange(getValues());
+      onCommodityChange({
+        ...getValues(),
+        requestCaseRowCommodityId: comodity.requestCaseRowCommodityId,
+      });
     }
   }, [date]);
 
   useEffect(() => {
     setDate(comodity.requiredDate);
-    onCommodityChange(getValues());
+    onCommodityChange({
+      ...getValues(),
+      requestCaseRowCommodityId: comodity.requestCaseRowCommodityId,
+    });
     setValue('requiredDate', new Date());
   }, []);
   const comoditiDescriptionChanged = (event, val) => {
     setUnit(val.unit);
     setValue('commodityId', val.id);
-    onCommodityChange(getValues());
+    onCommodityChange({
+      ...getValues(),
+      requestCaseRowCommodityId: comodity.requestCaseRowCommodityId,
+    });
   };
   const activityChange = (event, val) => {
     setValue('activityId', val.id);
-    onCommodityChange(getValues());
+    onCommodityChange({
+      ...getValues(),
+      requestCaseRowCommodityId: comodity.requestCaseRowCommodityId,
+    });
   };
   const countChange = (event) => {
     setValue('count', +event.target.value);
-    onCommodityChange(getValues());
+    onCommodityChange({
+      ...getValues(),
+      requestCaseRowCommodityId: comodity.requestCaseRowCommodityId,
+    });
   };
   const setSelectedDate = (e) => {
     const date = new Date(e).toISOString();
@@ -101,6 +118,7 @@ const ComodiryForm: React.FC<Iprops> = ({
               renderInput={(params) => (
                 <TextField {...params} label="شرح کالا" />
               )}
+              disabled={disabled}
             />
           )}
         />
@@ -123,6 +141,7 @@ const ComodiryForm: React.FC<Iprops> = ({
                 (act) => act.id === comodity.activityId
               )}
               renderInput={(params) => <TextField {...params} label="فعالیت" />}
+              disabled={disabled}
             />
           )}
         />
@@ -141,6 +160,7 @@ const ComodiryForm: React.FC<Iprops> = ({
               inputProps={{
                 step: 0.000_000_000_000_000_1,
               }}
+              disabled={disabled}
             />
           )}
         />
@@ -159,11 +179,13 @@ const ComodiryForm: React.FC<Iprops> = ({
             onChange={setSelectedDate}
             name="requiredDate"
             label="تاریخ نیاز"
+            disabled={disabled}
           ></JalaliDatePicker>
         </Box>
         <IconButton
           onClick={deleteComodity}
           sx={{ justifySelf: 'flex-start', marginBottom: 'auto' }}
+          disabled={disabled}
         >
           <DeleteIcon />
         </IconButton>

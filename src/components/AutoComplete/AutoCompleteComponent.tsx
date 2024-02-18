@@ -11,6 +11,7 @@ interface IAutoCompleteProps {
   dataLabel?: string | string[];
   multiple?: boolean;
   sx?: any;
+  disabled?: boolean;
 }
 const AutoCompleteComponent = ({
   disablePortal = false,
@@ -23,6 +24,7 @@ const AutoCompleteComponent = ({
   dataLabel = 'name',
   multiple = false,
   sx = {},
+  disabled = false,
 }: IAutoCompleteProps) => {
   return (
     <Autocomplete
@@ -64,6 +66,7 @@ const AutoCompleteComponent = ({
       renderInput={(params) => <TextField {...params} label={label} />}
       sx={sx}
       multiple={multiple}
+      disabled={disabled}
       defaultValue={
         multiple
           ? [
