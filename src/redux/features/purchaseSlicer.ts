@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 import {
   AddDetailsToPurchaseOrder,
@@ -20,13 +20,13 @@ import {
   DownloadLogisticsQ,
   DownloadLogisticsSendItems,
   DownloadPurchaseOrderData,
-} from "../../core/purchase/purchase.service.ts";
-import downloadExcel from "../../utils/downloadExcell.ts";
+} from '../../core/purchase/purchase.service.ts';
+import downloadExcel from '../../utils/downloadExcell.ts';
 
 const getUserId = (state) => {
-  return state?.user?.user?.id ?? localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))?.id
-    : "1";
+  return state?.user?.user?.id ?? localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))?.id
+    : '1';
 };
 
 export interface PurchaseState {
@@ -189,12 +189,12 @@ const initialState: PurchaseState = {
   purchaseRowSelected: undefined,
 };
 export const GetLogisticsQAction = createAsyncThunk(
-  "purchase/GetLogisticsQAction",
+  'purchase/GetLogisticsQAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -219,12 +219,12 @@ export const GetLogisticsQAction = createAsyncThunk(
   }
 );
 export const DownloadLogisticsQAction = createAsyncThunk(
-  "purchase/DownloadLogisticsQAction",
+  'purchase/DownloadLogisticsQAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -250,7 +250,7 @@ export const DownloadLogisticsQAction = createAsyncThunk(
 );
 
 export const GetPurchaseOrderDataAction = createAsyncThunk(
-  "purchase/GetPurchaseOrderDataAction",
+  'purchase/GetPurchaseOrderDataAction',
   async (
     body: { id: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -266,7 +266,7 @@ export const GetPurchaseOrderDataAction = createAsyncThunk(
   }
 );
 export const DownloadPurchaseOrderDataAction = createAsyncThunk(
-  "purchase/DownloadPurchaseOrderDataAction",
+  'purchase/DownloadPurchaseOrderDataAction',
   async (
     body: { id: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -283,7 +283,7 @@ export const DownloadPurchaseOrderDataAction = createAsyncThunk(
 );
 
 export const GetPurchaseOrderDetailsDataAction = createAsyncThunk(
-  "purchase/GetPurchaseOrderDetailsDataAction",
+  'purchase/GetPurchaseOrderDetailsDataAction',
   async (
     body: { id: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -300,7 +300,7 @@ export const GetPurchaseOrderDetailsDataAction = createAsyncThunk(
 );
 
 export const AddDetailsToPurchaseOrderAction = createAsyncThunk(
-  "purchase/AddDetailsToPurchaseOrderAction",
+  'purchase/AddDetailsToPurchaseOrderAction',
   async (
     body: {
       supporterId: string;
@@ -326,7 +326,7 @@ export const AddDetailsToPurchaseOrderAction = createAsyncThunk(
   }
 );
 export const UpdateDetailsToPurchaseOrderAction = createAsyncThunk(
-  "purchase/UpdateDetailsToPurchaseOrderAction",
+  'purchase/UpdateDetailsToPurchaseOrderAction',
   async (
     body: {
       supporterId: string;
@@ -338,6 +338,7 @@ export const UpdateDetailsToPurchaseOrderAction = createAsyncThunk(
       FileContent3?: any;
       FileContent4?: any;
       FileContent5?: any;
+      removedFilesIds?: number[];
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
@@ -353,12 +354,12 @@ export const UpdateDetailsToPurchaseOrderAction = createAsyncThunk(
 );
 
 export const LogisticsSendItemsAction = createAsyncThunk(
-  "purchase/LogisticsSendItemsAction",
+  'purchase/LogisticsSendItemsAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -383,12 +384,12 @@ export const LogisticsSendItemsAction = createAsyncThunk(
   }
 );
 export const DownloadLogisticsSendItemsAction = createAsyncThunk(
-  "purchase/DownloadLogisticsSendItemsAction",
+  'purchase/DownloadLogisticsSendItemsAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -414,12 +415,12 @@ export const DownloadLogisticsSendItemsAction = createAsyncThunk(
 );
 
 export const GetFinancialQAction = createAsyncThunk(
-  "purchase/GetFinancialQAction",
+  'purchase/GetFinancialQAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -444,12 +445,12 @@ export const GetFinancialQAction = createAsyncThunk(
   }
 );
 export const DownloadFinancialQAction = createAsyncThunk(
-  "purchase/DownloadFinancialQAction",
+  'purchase/DownloadFinancialQAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -475,9 +476,13 @@ export const DownloadFinancialQAction = createAsyncThunk(
 );
 
 export const FinancialUpdateDetailsActions = createAsyncThunk(
-  "purchase/FinancialUpdateDetailsActions",
+  'purchase/FinancialUpdateDetailsActions',
   async (
-    body: { mablaghEtebar: any; purchaseOrderDetailsId: number | string },
+    body: {
+      mablaghEtebar: any;
+      purchaseOrderDetailsId: number | string;
+      removedFilesIds: number[];
+    },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
     try {
@@ -486,7 +491,8 @@ export const FinancialUpdateDetailsActions = createAsyncThunk(
       const { data } = await FinancialUpdateDetails(
         userId,
         body.mablaghEtebar,
-        body.purchaseOrderDetailsId
+        body.purchaseOrderDetailsId,
+        body.removedFilesIds
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -496,12 +502,12 @@ export const FinancialUpdateDetailsActions = createAsyncThunk(
 );
 
 export const FinancialSendItemsActions = createAsyncThunk(
-  "purchase/FinancialSendItemsActions",
+  'purchase/FinancialSendItemsActions',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -526,12 +532,12 @@ export const FinancialSendItemsActions = createAsyncThunk(
   }
 );
 export const DownloadFinancialSendItemsActions = createAsyncThunk(
-  "purchase/DownloadFinancialSendItemsActions",
+  'purchase/DownloadFinancialSendItemsActions',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -557,12 +563,12 @@ export const DownloadFinancialSendItemsActions = createAsyncThunk(
 );
 
 export const GetApproveQAction = createAsyncThunk(
-  "purchase/GetApproveQAction",
+  'purchase/GetApproveQAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }: any
@@ -587,12 +593,12 @@ export const GetApproveQAction = createAsyncThunk(
   }
 );
 export const DownloadPurchaseApproveQAction = createAsyncThunk(
-  "purchase/DownloadPurchaseApproveQAction",
+  'purchase/DownloadPurchaseApproveQAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }: any
@@ -618,12 +624,12 @@ export const DownloadPurchaseApproveQAction = createAsyncThunk(
 );
 
 export const ApproveSendItemsAction = createAsyncThunk(
-  "purchase/ApproveSendItemsAction",
+  'purchase/ApproveSendItemsAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -648,12 +654,12 @@ export const ApproveSendItemsAction = createAsyncThunk(
   }
 );
 export const DownloadApproveSendItemsAction = createAsyncThunk(
-  "purchase/DownloadApproveSendItemsAction",
+  'purchase/DownloadApproveSendItemsAction',
   async (
     body: {
       fromDate: any;
       toDate: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -679,12 +685,13 @@ export const DownloadApproveSendItemsAction = createAsyncThunk(
 );
 
 export const ApproveUpdateDetailsAction = createAsyncThunk(
-  "purchase/ApproveUpdateDetailsAction",
+  'purchase/ApproveUpdateDetailsAction',
   async (
     body: {
       count: number;
       ApproveStateId: number;
       purchaseOrderDetailsId: number;
+      removedFilesIds: number[];
     },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
   ) => {
@@ -695,7 +702,8 @@ export const ApproveUpdateDetailsAction = createAsyncThunk(
         userId,
         body.count,
         body.ApproveStateId,
-        body.purchaseOrderDetailsId
+        body.purchaseOrderDetailsId,
+        body.removedFilesIds
       );
       return fulfillWithValue(data);
     } catch (err) {
@@ -705,7 +713,7 @@ export const ApproveUpdateDetailsAction = createAsyncThunk(
 );
 
 export const purchaseSlicer = createSlice({
-  name: "purchase",
+  name: 'purchase',
   initialState,
   reducers: {
     setPurchaseRowSelectedAction(state, action) {

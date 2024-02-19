@@ -6,6 +6,7 @@ import {
   DownloadApproveQ,
   DownloadFinalApproveQ,
   SupportGetRequestDetails,
+  SupportDownloadFiles,
 } from '../../core/support/Support.service';
 import downloadExcel from '../../utils/downloadExcell';
 
@@ -40,6 +41,9 @@ export interface supportState {
       pending: boolean;
     };
   };
+  download: {
+    pending: boolean;
+  };
 }
 
 const initialState: supportState = {
@@ -66,6 +70,9 @@ const initialState: supportState = {
       data: undefined,
       pending: false,
     },
+  },
+  download: {
+    pending: false,
   },
 };
 
@@ -189,6 +196,25 @@ export const SupportGetRequestDetailsAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await SupportGetRequestDetails(userId, requestId);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const SupportDownloadFilesAction = createAsyncThunk(
+  'support/SupportDownloadFilesAction',
+  async (
+    body: {
+      fileId;
+    },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    const { fileId } = body;
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await SupportDownloadFiles(userId, fileId);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -343,6 +369,24 @@ export const supportSlicer = createSlice({
         SupportGetRequestDetailsAction.rejected,
         (state: supportState, { error }) => {
           state.approve.requestDetail.pending = false;
+        }
+      );
+    //#endregion
+    //#region SupportDownloadFilesAction-----
+    builder
+      .addCase(SupportDownloadFilesAction.pending, (state: supportState) => {
+        state.download.pending = true;
+      })
+      .addCase(
+        SupportDownloadFilesAction.fulfilled,
+        (state: supportState, { payload }) => {
+          state.download.pending = false;
+        }
+      )
+      .addCase(
+        SupportDownloadFilesAction.rejected,
+        (state: supportState, { error }) => {
+          state.download.pending = false;
         }
       );
     //#endregion

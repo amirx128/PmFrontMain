@@ -1,12 +1,12 @@
-import axiosInstance from "../../utils/axios.config.ts";
+import axiosInstance from '../../utils/axios.config.ts';
 
 export const GetLogisticsQ = async (
   userId,
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(`/Purchase/Logistics.Q`, {
     userId: userId,
@@ -22,8 +22,8 @@ export const DownloadLogisticsQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(
     `/Purchase/Logistics.Q`,
@@ -38,7 +38,7 @@ export const DownloadLogisticsQ = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 export const GetPurchaseOrderData = async (userId, purchaseOrderId) =>
@@ -55,7 +55,7 @@ export const DownloadPurchaseOrderData = async (userId, purchaseOrderId) =>
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 
@@ -85,7 +85,7 @@ export const AddDetailsToPurchaseOrder = async (
       userId: userId,
       ...body,
     },
-    { headers: { "Content-Type": "multipart/form-data" } }
+    { headers: { 'Content-Type': 'multipart/form-data' } }
   );
 export const UpdateDetailsToPurchaseOrder = async (
   userId,
@@ -99,6 +99,7 @@ export const UpdateDetailsToPurchaseOrder = async (
     FileContent3?: any;
     FileContent4?: any;
     FileContent5?: any;
+    removedFilesIds?: number[];
   }
 ) =>
   await axiosInstance.post(
@@ -107,7 +108,7 @@ export const UpdateDetailsToPurchaseOrder = async (
       userId: userId,
       ...body,
     },
-    { headers: { "Content-Type": "multipart/form-data" } }
+    { headers: { 'Content-Type': 'multipart/form-data' } }
   );
 
 export const LogisticsSendItems = async (
@@ -115,8 +116,8 @@ export const LogisticsSendItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(`/Purchase/Logistics.SendItems`, {
     userId: userId,
@@ -132,8 +133,8 @@ export const DownloadLogisticsSendItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(
     `/Purchase/Logistics.SendItems`,
@@ -148,7 +149,7 @@ export const DownloadLogisticsSendItems = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 
@@ -157,8 +158,8 @@ export const GetFinancialQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(`/Purchase/Financial.Q`, {
     userId: userId,
@@ -174,8 +175,8 @@ export const DownloadFinancialQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(
     `/Purchase/Financial.Q`,
@@ -190,19 +191,21 @@ export const DownloadFinancialQ = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 
 export const FinancialUpdateDetails = async (
   userId,
   mablaghEtebar,
-  purchaseOrderDetailsId
+  purchaseOrderDetailsId,
+  removedFilesIds
 ) =>
   await axiosInstance.post(`/Purchase/Financial.UpdateDetails`, {
     userId: userId,
     mablaghEtebar,
     purchaseOrderDetailsId,
+    removedFilesIds,
   });
 
 export const FinancialSendItems = async (
@@ -210,8 +213,8 @@ export const FinancialSendItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(`/Purchase/Financial.SendItems`, {
     userId: userId,
@@ -227,8 +230,8 @@ export const DownloadFinancialSendItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(
     `/Purchase/Financial.SendItems`,
@@ -243,7 +246,7 @@ export const DownloadFinancialSendItems = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 
@@ -252,8 +255,8 @@ export const GetApproveQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(`/Purchase/Approve.Q`, {
     userId: userId,
@@ -269,8 +272,8 @@ export const DownloadApproveQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(
     `/Purchase/Approve.Q`,
@@ -285,7 +288,7 @@ export const DownloadApproveQ = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );
 
@@ -293,13 +296,15 @@ export const ApproveUpdateDetails = async (
   userId,
   count,
   ApproveStateId,
-  purchaseOrderDetailsId
+  purchaseOrderDetailsId,
+  removedFilesIds
 ) =>
   await axiosInstance.post(`/Purchase/Approve.UpdateDetails`, {
     userId: userId,
     count,
     ApproveStateId,
     purchaseOrderDetailsId,
+    removedFilesIds,
   });
 
 export const ApproveSendItems = async (
@@ -307,8 +312,8 @@ export const ApproveSendItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(`/Purchase/Approve.SendItems`, {
     userId: userId,
@@ -324,8 +329,8 @@ export const DownloadApproveSendItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "requestCaseCreateDate"
+  orderType = 'desc',
+  orderBy = 'requestCaseCreateDate'
 ) =>
   await axiosInstance.post(
     `/Purchase/Approve.SendItems`,
@@ -340,6 +345,6 @@ export const DownloadApproveSendItems = async (
       exportExcell: true,
     },
     {
-      responseType: "arraybuffer",
+      responseType: 'arraybuffer',
     }
   );

@@ -100,3 +100,8 @@ export const SupportGetRequestDetails = async (userId, requestId) =>
     userId,
     requestId,
   });
+export const SupportDownloadFiles = async (userId, fileID) =>
+  await axiosInstance.post(`/Support/DownloadFiles`, {
+    userId,
+    fileID,
+  });

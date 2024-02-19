@@ -21,6 +21,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { useEffect, useState } from 'react';
 import axiosInstance from '../../utils/axios.config';
+import UploadFile from '../../components/File/UploadFIle';
 
 const LogisticsDetails = () => {
   const navigate = useNavigate();
@@ -34,6 +35,8 @@ const LogisticsDetails = () => {
   const { suppliers } = useSelector((state: any) => state?.definition);
   const [mode, setMode] = useState<'edit' | 'add'>('add');
   const [file, setFile] = useState<any>([]);
+  const [fileUpload, setFileUpload] = useState([]);
+  const [removedFiles, setRemovedFiles] = useState([]);
   const isEditable = purchaseRowSelected?.logisticEditable;
   const {
     register,
@@ -67,11 +70,18 @@ const LogisticsDetails = () => {
     getAllSupplires();
   }, []);
   useEffect(() => {
+    setRemovedFiles([]);
     if (purchaseRowSelected) {
       setMode('edit');
       setValue('baravordFeeKala', purchaseRowSelected.baravordFeeKala);
       setValue('baravordkolMandeh', purchaseRowSelected.baravordkolMandeh);
       setValue('supporterId', purchaseRowSelected.supporterUserId);
+      setFile(
+        purchaseRowSelected.relatedFiles.map((file) => ({
+          ...file,
+          isNew: false,
+        }))
+      );
     } else {
       setMode('add');
       setValue('baravordFeeKala', 0);
@@ -85,8 +95,7 @@ const LogisticsDetails = () => {
   const handleAdd = async () => {
     const { baravordFeeKala, baravordkolMandeh, supporterId } = getValues();
     const files = {};
-    Object.entries(file).forEach(([key, value]) => {
-      console.log(key);
+    Object.entries(fileUpload).forEach(([key, value]) => {
       files[`FileContent${Number(key) + 1}`] = value;
     });
     await dispatch(
@@ -103,8 +112,7 @@ const LogisticsDetails = () => {
   const handleEdit = async () => {
     const { baravordFeeKala, baravordkolMandeh, supporterId } = getValues();
     const files = {};
-    Object.entries(file).forEach(([key, value]) => {
-      console.log(key);
+    Object.entries(fileUpload).forEach(([key, value]) => {
       files[`FileContent${Number(key) + 1}`] = value;
     });
     await dispatch(
@@ -113,6 +121,7 @@ const LogisticsDetails = () => {
         BaravordFeeKala: baravordFeeKala,
         BaravordkolMandeh: baravordkolMandeh,
         PurchaseOrderDetailsId: +purchaseRowSelected.id,
+        removedFilesIds: removedFiles,
         ...files,
       })
     );
@@ -120,6 +129,18 @@ const LogisticsDetails = () => {
   };
   const handleCancelEdit = () => {
     dispatch(setPurchaseRowSelectedAction(undefined));
+  };
+  const handleUpload = (e) => {
+    setFile((prev) => [
+      ...prev,
+      ...Array.from(e.target.files).map((f: any) => ({
+        fileName: f.name,
+        id: file.length,
+        isNew: true,
+      })),
+    ]);
+
+    setFileUpload(e.target.files);
   };
   return (
     <div>
@@ -202,12 +223,16 @@ const LogisticsDetails = () => {
                 )}
               />
             </Box>
-            <input
-              type="file"
-              onChange={(e) => setFile(e.target.files)}
-              multiple
-            />
           </Grid>
+          <UploadFile
+            changeHandler={(e) => handleUpload(e)}
+            multiple
+            maxFileUpload={5}
+            defaultValue={file}
+            removeHandler={(fileId) =>
+              setRemovedFiles((prev) => [...prev, fileId])
+            }
+          />
           <ButtonContainer>
             {mode === 'add' && (
               <LoadingButton
