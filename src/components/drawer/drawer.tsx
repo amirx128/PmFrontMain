@@ -421,7 +421,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/originalItems",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -435,7 +435,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/subItems",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 2,
@@ -449,7 +449,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/defineUsability",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 3,
@@ -463,7 +463,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/checkLists",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 4,
@@ -477,7 +477,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/checkListInstances",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -505,7 +505,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/ContractorAddDate",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -519,7 +519,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/ContractorAddDateSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -547,7 +547,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/technialApprove",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -561,7 +561,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/technialApproveSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -589,7 +589,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/qcDate",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -603,7 +603,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/qcDateSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -631,7 +631,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/entryCheckList",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -645,7 +645,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/entryCheckListSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -673,7 +673,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/controlCheckList",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -687,7 +687,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/controlCheckListSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -715,7 +715,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/managerControlCheckList",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -729,7 +729,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/managerControlCheckListSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -757,7 +757,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/finalControlCheckList",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -771,7 +771,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/finalControlCheckListSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -799,7 +799,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/contractorSetIsDone",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -813,7 +813,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/contractorSetIsDoneSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },
@@ -841,7 +841,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/technicalOffice",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
         {
           id: 1,
@@ -855,7 +855,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
             </ListItemIcon>
           ),
           route: "/qc/technicalOfficeSentItem",
-          role: UserRole.Admin,
+          role: UserRole.QC,
         },
       ],
     },

@@ -9,5 +9,6 @@ enum UserRole {
   "Supplier" = 11,
   "Warehouse.Exit" = 12,
   "Warehouse.Warehouser" = 13,
+  "QC" = 17,
 }
 export default UserRole;
