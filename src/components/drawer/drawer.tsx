@@ -1,33 +1,33 @@
-import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
-import HomeIcon from "@mui/icons-material/HomeOutlined";
-import ListIcon from "@mui/icons-material/ListOutlined";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import FactCheckIcon from "@mui/icons-material/FactCheck";
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import HomeIcon from '@mui/icons-material/HomeOutlined';
+import ListIcon from '@mui/icons-material/ListOutlined';
+import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import FactCheckIcon from '@mui/icons-material/FactCheck';
 
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import RoleIcon from "@mui/icons-material/SettingsAccessibilityOutlined";
-import Warehouse from "@mui/icons-material/WarehouseOutlined";
-import Support from "@mui/icons-material/SupportAgentOutlined";
-import SupportApprove from "@mui/icons-material/SupportTwoTone";
-import ProductIcon from "@mui/icons-material/CategoryOutlined";
-import { useTheme } from "@mui/material/styles";
-import { DrawerHeader } from "./style";
-import { useLocation, useNavigate } from "react-router-dom";
-import { ListItemText, Typography } from "@mui/material";
-import { Abc, ExpandMore, ExpandLess, Inventory } from "@mui/icons-material";
-import { Collapse } from "@mui/material";
-import { useState, Fragment, useRef, useEffect } from "react";
-import UserRole from "../../core/enums/userRoleEnum";
-import { useDispatch } from "react-redux";
-import { setLoggedOut } from "../../redux/features/userSlicer";
-import LogoutIcon from "@mui/icons-material/Logout";
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import RoleIcon from '@mui/icons-material/SettingsAccessibilityOutlined';
+import Warehouse from '@mui/icons-material/WarehouseOutlined';
+import Support from '@mui/icons-material/SupportAgentOutlined';
+import SupportApprove from '@mui/icons-material/SupportTwoTone';
+import ProductIcon from '@mui/icons-material/CategoryOutlined';
+import { useTheme } from '@mui/material/styles';
+import { DrawerHeader } from './style';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { ListItemText, Typography } from '@mui/material';
+import { Abc, ExpandMore, ExpandLess, Inventory } from '@mui/icons-material';
+import { Collapse } from '@mui/material';
+import { useState, Fragment, useRef, useEffect } from 'react';
+import UserRole from '../../core/enums/userRoleEnum';
+import { useDispatch } from 'react-redux';
+import { setLoggedOut } from '../../redux/features/userSlicer';
+import LogoutIcon from '@mui/icons-material/Logout';
 const drawerWidth = 200;
 
 export default function PersistentDrawerLeft({ open, closeDrawer }) {
@@ -37,7 +37,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
   const dispatch = useDispatch();
   const [activeMenu, setActiveMenu] = useState(null);
   const [openCollapse, setOpenCollapse] = useState(false);
-  const [user] = useState(() => JSON.parse(localStorage.getItem("user")));
+  const [user] = useState(() => JSON.parse(localStorage.getItem('user')));
   useEffect(() => {
     const { pathname } = location;
     const isActive = MenuList.find((menu) =>
@@ -56,18 +56,18 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
   };
   const exitHandler = () => {
     dispatch(setLoggedOut(false));
-    localStorage.removeItem("user");
-    navigate("/login");
+    localStorage.removeItem('user');
+    navigate('/login');
     navigate(0);
   };
   const MenuList = [
     {
       id: 2,
-      name: "مدیریت درخواست",
+      name: 'مدیریت درخواست',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <ListIcon fontSize="large" />
         </ListItemIcon>
@@ -75,83 +75,83 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "ثبت درخواست ",
+          name: 'ثبت درخواست ',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/productRequest",
+          route: '/productRequest',
           role: UserRole.Requester,
         },
         {
           id: 0,
-          name: "لیست انتظار تائید درخواست",
+          name: 'لیست انتظار تائید درخواست',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/supportApprove",
+          route: '/supportApprove',
           role: UserRole.Approver,
         },
         {
           id: 1,
-          name: "لیست تائید درخواست",
+          name: 'لیست تائید درخواست',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/support/Approved-list",
+          route: '/support/Approved-list',
           role: UserRole.Approver,
         },
         {
           id: 2,
-          name: "لیست انتظار تصویب درخواست",
+          name: 'لیست انتظار تصویب درخواست',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/supportFinalApprove",
+          route: '/supportFinalApprove',
           role: UserRole.FinalApprove,
         },
         {
           id: 3,
-          name: "لیست تصویب درخواست",
+          name: 'لیست تصویب درخواست',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/support/final-Approved-list",
+          route: '/support/final-Approved-list',
           role: UserRole.FinalApprove,
         },
       ],
     },
     {
       id: 5,
-      name: "مدیریت خرید",
+      name: 'مدیریت خرید',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <ProductIcon fontSize="large" />
         </ListItemIcon>
@@ -159,97 +159,97 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "لیست انتظار درخواست خرید",
+          name: 'لیست انتظار درخواست خرید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/logistics/queue",
-          role: UserRole["Purchase.Logistics"],
+          route: '/logistics/queue',
+          role: UserRole['Purchase.Logistics'],
         },
         {
           id: 1,
-          name: "لیست درخواست خرید",
+          name: 'لیست درخواست خرید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/logistics/send-items",
-          role: UserRole["Purchase.Logistics"],
+          route: '/logistics/send-items',
+          role: UserRole['Purchase.Logistics'],
         },
         {
           id: 2,
-          name: "لیست انتظار بررسی مالی خرید",
+          name: 'لیست انتظار بررسی مالی خرید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/financials/queue",
-          role: UserRole["Purchase.Financial"],
+          route: '/financials/queue',
+          role: UserRole['Purchase.Financial'],
         },
         {
           id: 3,
-          name: "لیست بررسی مالی خرید",
+          name: 'لیست بررسی مالی خرید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/financials/send-items",
-          role: UserRole["Purchase.Financial"],
+          route: '/financials/send-items',
+          role: UserRole['Purchase.Financial'],
         },
         {
           id: 4,
-          name: "لیست انتظار دستور خرید",
+          name: 'لیست انتظار دستور خرید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/approve/queue",
-          role: UserRole["Purchase.Approver"],
+          route: '/approve/queue',
+          role: UserRole['Purchase.Approver'],
         },
         {
           id: 5,
-          name: "لیست دستور خرید",
+          name: 'لیست دستور خرید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/approve/send-items",
-          role: UserRole["Purchase.Financial"],
+          route: '/approve/send-items',
+          role: UserRole['Purchase.Financial'],
         },
       ],
     },
     {
       id: 7,
-      name: "مدیریت انبار",
+      name: 'مدیریت انبار',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <SupportApprove fontSize="large" />
         </ListItemIcon>
@@ -257,69 +257,69 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "لیست انتظار تحویل انبار",
+          name: 'لیست انتظار تحویل انبار',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/warehosue/warehouse-queue",
-          role: UserRole["Warehouse.Warehouser"],
+          route: '/warehosue/warehouse-queue',
+          role: UserRole['Warehouse.Warehouser'],
         },
         {
           id: 1,
-          name: "لیست تحویل انبار",
+          name: 'لیست تحویل انبار',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/warehosue/warehouse-sentitems",
-          role: UserRole["Warehouse.Warehouser"],
+          route: '/warehosue/warehouse-sentitems',
+          role: UserRole['Warehouse.Warehouser'],
         },
         {
           id: 2,
-          name: "لیست انتظار خروج از انبار",
+          name: 'لیست انتظار خروج از انبار',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/warehosue/exitwarehouse-queue",
-          role: UserRole["Warehouse.Exit"],
+          route: '/warehosue/exitwarehouse-queue',
+          role: UserRole['Warehouse.Exit'],
         },
         {
           id: 3,
-          name: "لیست خروج از انبار",
+          name: 'لیست خروج از انبار',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/warehosue/exitwarehouse-sentitems",
-          role: UserRole["Warehouse.Exit"],
+          route: '/warehosue/exitwarehouse-sentitems',
+          role: UserRole['Warehouse.Exit'],
         },
       ],
     },
     {
       id: 4,
-      name: "مدیریت درخواست کنندگان",
+      name: 'مدیریت درخواست کنندگان',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <RoleIcon fontSize="large" />
         </ListItemIcon>
@@ -327,41 +327,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 2,
-          name: "لیست درخواست های ارسال شده",
+          name: 'لیست درخواست های ارسال شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/requestcase-sentitem",
+          route: '/requestcase-sentitem',
           role: UserRole.Requester,
         },
         {
           id: 1,
-          name: "لیست حواله های دریافتی",
+          name: 'لیست حواله های دریافتی',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/requesteruser",
+          route: '/requesteruser',
           role: UserRole.Requester,
         },
       ],
     },
     {
       id: 6,
-      name: "مدیریت تامین کنندگان",
+      name: 'مدیریت تامین کنندگان',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <Support fontSize="large" />
         </ListItemIcon>
@@ -369,41 +369,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "لیست انتظار بررسی تامین کننده",
+          name: 'لیست انتظار بررسی تامین کننده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/supplier/supplier-queue",
+          route: '/supplier/supplier-queue',
           role: UserRole.Supplier,
         },
         {
           id: 1,
-          name: "لیست بررسی تامین کننده",
+          name: 'لیست بررسی تامین کننده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/supplier/supplier-sentitem",
+          route: '/supplier/supplier-sentitem',
           role: UserRole.Supplier,
         },
       ],
     },
     {
       id: 8,
-      name: "کنترل کیفیت",
+      name: 'کنترل کیفیت',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -411,83 +411,83 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "آیتم اصلی",
+          name: 'آیتم اصلی',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/originalItems",
+          route: '/qc/originalItems',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "آیتم فرعی",
+          name: 'آیتم فرعی',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/subItems",
+          route: '/qc/subItems',
           role: UserRole.Admin,
         },
         {
           id: 2,
-          name: "تعریف کاربری",
+          name: 'تعریف کاربری',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/defineUsability",
+          route: '/qc/defineUsability',
           role: UserRole.Admin,
         },
         {
           id: 3,
-          name: "چک لیست ها",
+          name: 'چک لیست ها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/checkLists",
+          route: '/qc/checkLists',
           role: UserRole.Admin,
         },
         {
           id: 4,
-          name: "شروع چک لیست ها",
+          name: 'شروع چک لیست ها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/checkListInstances",
+          route: '/qc/checkListInstances',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 10,
-      name: "پیمانکار",
+      name: 'پیمانکار',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -495,41 +495,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر اعلام زمان",
+          name: 'منتظر اعلام زمان',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/ContractorAddDate",
+          route: '/qc/ContractorAddDate',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "اعلام زمان شده ها",
+          name: 'اعلام زمان شده ها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/ContractorAddDateSentItem",
+          route: '/qc/ContractorAddDateSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 11,
-      name: "دفتر فنی",
+      name: 'دفتر فنی',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -537,41 +537,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر تایید",
+          name: 'منتظر تایید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/technialApprove",
+          route: '/qc/technialApprove',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "تایید شده ها",
+          name: 'تایید شده ها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/technialApproveSentItem",
+          route: '/qc/technialApproveSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 12,
-      name: "واحد کیفیت",
+      name: 'واحد کیفیت',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -579,41 +579,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر اعلام برنامه بازدید",
+          name: 'منتظر اعلام برنامه بازدید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/qcDate",
+          route: '/qc/qcDate',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "اعلام شده",
+          name: 'اعلام شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/qcDateSentItem",
+          route: '/qc/qcDateSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 13,
-      name: "کارمند کیفیت",
+      name: 'کارمند کیفیت',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -621,41 +621,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر تکمیل",
+          name: 'منتظر تکمیل',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/entryCheckList",
+          route: '/qc/entryCheckList',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "تکمیل شده ها",
+          name: 'تکمیل شده ها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/entryCheckListSentItem",
+          route: '/qc/entryCheckListSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 14,
-      name: "بازرس",
+      name: 'بازرس',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -663,41 +663,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "ثبت چک لیست ها",
+          name: 'ثبت چک لیست ها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/controlCheckList",
+          route: '/qc/controlCheckList',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "ثبت شده",
+          name: 'ثبت شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/controlCheckListSentItem",
+          route: '/qc/controlCheckListSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 15,
-      name: "مدیر کیفیت",
+      name: 'مدیر کیفیت',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -705,41 +705,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر تایید",
+          name: 'منتظر تایید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/managerControlCheckList",
+          route: '/qc/managerControlCheckList',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "تایید شده",
+          name: 'تایید شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/managerControlCheckListSentItem",
+          route: '/qc/managerControlCheckListSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 16,
-      name: "کنترل نهایی کیفیت",
+      name: 'کنترل نهایی کیفیت',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -747,41 +747,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر تایید",
+          name: 'منتظر تایید',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/finalControlCheckList",
+          route: '/qc/finalControlCheckList',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "تایید شده",
+          name: 'تایید شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/finalControlCheckListSentItem",
+          route: '/qc/finalControlCheckListSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 17,
-      name: "پیمانکار- اعلام انجام شده",
+      name: 'پیمانکار- اعلام انجام شده',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -789,41 +789,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "منتظر اعلام انجام",
+          name: 'منتظر اعلام انجام',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/contractorSetIsDone",
+          route: '/qc/contractorSetIsDone',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "اعلام شده",
+          name: 'اعلام شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/contractorSetIsDoneSentItem",
+          route: '/qc/contractorSetIsDoneSentItem',
           role: UserRole.Admin,
         },
       ],
     },
     {
       id: 18,
-      name: "سفارش فنی",
+      name: 'سفارش فنی',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <FactCheckIcon fontSize="large" />
         </ListItemIcon>
@@ -831,41 +831,41 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "نتظر دستور",
+          name: 'نتظر دستور',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/technicalOffice",
-          role: UserRole.Admin,
+          route: '/qc/technicalOffice',
+          role: UserRole.QC,
         },
         {
           id: 1,
-          name: "دستور داده شده",
+          name: 'دستور داده شده',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/qc/technicalOfficeSentItem",
-          role: UserRole.Admin,
+          route: '/qc/technicalOfficeSentItem',
+          role: UserRole.QC,
         },
       ],
     },
     {
       id: 3,
-      name: "مدیریت سیستم",
+      name: 'مدیریت سیستم',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <RoleIcon fontSize="large" />
         </ListItemIcon>
@@ -873,44 +873,44 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       subMenus: [
         {
           id: 0,
-          name: "مدیریت کاربران",
+          name: 'مدیریت کاربران',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/users",
+          route: '/users',
           role: UserRole.Admin,
         },
         {
           id: 1,
-          name: "تعاریف پایه",
+          name: 'تعاریف پایه',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <HomeIcon fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/definitions",
+          route: '/definitions',
           role: UserRole.Admin,
         },
         {
           id: 2,
-          name: "مدیریت کالاها",
+          name: 'مدیریت کالاها',
           icon: (
             <ListItemIcon
               sx={{ color: theme.palette.secondary.light }}
-              style={{ justifyContent: "center" }}
+              style={{ justifyContent: 'center' }}
             >
               <Inventory fontSize="large" />
             </ListItemIcon>
           ),
-          route: "/commodities",
+          route: '/commodities',
           role: UserRole.Admin,
         },
         // ,
@@ -932,27 +932,28 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
     },
     {
       id: 9,
-      name: "خروج",
+      name: 'خروج',
       icon: (
         <ListItemIcon
           sx={{ color: theme.palette.secondary.light }}
-          style={{ justifyContent: "center" }}
+          style={{ justifyContent: 'center' }}
         >
           <LogoutIcon fontSize="large" />
         </ListItemIcon>
       ),
-      role: "public",
+      role: 'public',
       clickHandler: exitHandler,
     },
   ];
+  console.log(user);
   return (
     <Drawer
       sx={{
         width: drawerWidth,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
+        '& .MuiDrawer-paper': {
           width: drawerWidth,
-          boxSizing: "border-box",
+          boxSizing: 'border-box',
         },
       }}
       PaperProps={{ style: { backgroundColor: theme.palette.primary.main } }}
@@ -963,27 +964,27 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       <DrawerHeader theme={theme} sx={{ mt: 3 }}>
         <div
           style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            width: '100%',
           }}
         >
           <Typography
             color="white"
             fontSize={13}
-            sx={{ ml: 5, cursor: "pointer", "&:hover": { color: "GrayText" } }}
-            onClick={() => navigate("/profile")}
+            sx={{ ml: 5, cursor: 'pointer', '&:hover': { color: 'GrayText' } }}
+            onClick={() => navigate('/profile')}
           >
             {user?.fullName}
           </Typography>
           <IconButton onClick={closeDrawer}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon color="secondary" sx={{ color: "secondary" }} />
+            {theme.direction === 'ltr' ? (
+              <ChevronLeftIcon color="secondary" sx={{ color: 'secondary' }} />
             ) : (
               <ChevronRightIcon
                 color="secondary"
-                sx={{ color: "secondary", colordisablePadding: "primary" }}
+                sx={{ color: 'secondary', colordisablePadding: 'primary' }}
               />
             )}
           </IconButton>
@@ -998,7 +999,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               .some((subMneu) =>
                 user.usersRoles.map((role) => role.id).includes(subMneu)
               ) ||
-              item?.role === "public") && (
+              item?.role === 'public') && (
               <>
                 <ListItem
                   key={item.id}
@@ -1014,13 +1015,13 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                         : handleClickMenu(item.id)
                     }
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
-                      justifyContent: "center",
-                      textAlign: "center",
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      textAlign: 'center',
                     }}
                   >
-                    <>{item["icon"]}</>
+                    <>{item['icon']}</>
                     <ListItemText
                       sx={{ color: theme.palette.common.white }}
                       primary={item.name}
@@ -1052,7 +1053,7 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                             <ListItemButton
                               onClick={() => handleClickSubMenu(sub.route)}
                               sx={{
-                                "&:hover": {
+                                '&:hover': {
                                   backgroundColor:
                                     theme.palette.secondary.light,
                                 },
@@ -1065,12 +1066,12 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                                   theme.palette.secondary.main,
                               }}
                             >
-                              <ListItem style={{ justifyContent: "center" }}>
+                              <ListItem style={{ justifyContent: 'center' }}>
                                 <p
                                   style={{
                                     color: theme.palette.common.white,
-                                    fontSize: "12px",
-                                    textAlign: "center",
+                                    fontSize: '12px',
+                                    textAlign: 'center',
                                   }}
                                 >
                                   {sub.name}

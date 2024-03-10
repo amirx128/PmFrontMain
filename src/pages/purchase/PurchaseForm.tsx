@@ -1,33 +1,33 @@
-import { PageTileComponent} from "../style";
+import { PageTileComponent } from '../style';
 
-
-     import {
+import {
   Card,
   Divider,
   CardHeader,
   Typography,
   IconButton,
-} from "@mui/material";
-import axios from "../../utils/axios.config.ts";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams, Link } from "react-router-dom";
-import { withSnackbar } from "../../utils/snackbar-hook";
-import { useSelector, useDispatch } from "react-redux";
-import EditIcon from "@mui/icons-material/Edit";
-import Grid from "../../components/grid/grid";
-import gridDict from "../../dictionary/gridDict.ts";
+} from '@mui/material';
+import axios from '../../utils/axios.config.ts';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams, Link } from 'react-router-dom';
+import { withSnackbar } from '../../utils/snackbar-hook';
+import { useSelector, useDispatch } from 'react-redux';
+import EditIcon from '@mui/icons-material/Edit';
+import Grid from '../../components/grid/grid';
+import gridDict from '../../dictionary/gridDict.ts';
 import {
   GridActionsCellItem,
   GridColDef,
   GridRenderCellParams,
-} from "@mui/x-data-grid";
+} from '@mui/x-data-grid';
 import {
   DownloadPurchaseOrderDataAction,
   GetPurchaseOrderDataAction,
   setPurchaseRowSelectedAction,
-} from "../../redux/features/purchaseSlicer.ts";
-import PurchaseDetail from "./PurchaseDetail.tsx";
-import SimCardDownloadIcon from "@mui/icons-material/SimCardDownload";
+} from '../../redux/features/purchaseSlicer.ts';
+import PurchaseDetail from './PurchaseDetail.tsx';
+import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import { getUserIdFromStorage } from '../../utils/functions.ts';
 
 const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   const { id } = useParams();
@@ -36,8 +36,9 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   const { orderDetailData, purchaseRowSelected } = useSelector(
     (state: any) => state?.purchase
   );
+  const { user } = useSelector((state: any) => state?.user);
   useEffect(() => {
-    if (!id) navigate("/");
+    if (!id) navigate('/');
     getPurchaseDetails();
   }, []);
   useEffect(() => {
@@ -51,12 +52,12 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
     try {
       await dispatch(GetPurchaseOrderDataAction({ id: +id }));
     } catch (error) {
-      console.error("Error fetching data:", error);
+      console.error('Error fetching data:', error);
     }
   };
   const columns: GridColDef[] = [
     {
-      field: "id",
+      field: 'id',
       headerName: gridDict.id,
       flex: 1,
       minWidth: 150,
@@ -64,7 +65,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "approveDate",
+      field: 'approveDate',
       headerName: gridDict.approveDate,
       flex: 1,
       minWidth: 150,
@@ -72,12 +73,12 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
       renderCell: ({ value }) => (
         <span>
-          {value ? new Date(value).toLocaleDateString("fa-IR").toString() : "-"}
+          {value ? new Date(value).toLocaleDateString('fa-IR').toString() : '-'}
         </span>
       ),
     },
     {
-      field: "approveState",
+      field: 'approveState',
       headerName: gridDict.approvestate,
       flex: 1,
       minWidth: 150,
@@ -85,7 +86,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "approverUser",
+      field: 'approverUser',
       headerName: gridDict.approverUser,
       flex: 1,
       minWidth: 150,
@@ -93,7 +94,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "supporterUser",
+      field: 'supporterUser',
       headerName: gridDict.supporterUser,
       flex: 1,
       minWidth: 150,
@@ -101,7 +102,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "baravordFeeKala",
+      field: 'baravordFeeKala',
       headerName: gridDict.baravordFeeKala,
       flex: 1,
       minWidth: 150,
@@ -109,7 +110,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "baravordkolMandeh",
+      field: 'baravordkolMandeh',
       headerName: gridDict.baravordkolMandeh,
       flex: 1,
       minWidth: 150,
@@ -117,7 +118,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "count",
+      field: 'count',
       headerName: gridDict.count,
       flex: 1,
       minWidth: 150,
@@ -128,7 +129,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       },
     },
     {
-      field: "createDate",
+      field: 'createDate',
       headerName: gridDict.createDate,
       flex: 1,
       minWidth: 150,
@@ -138,14 +139,14 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
         <span>
           {value
             ? new Date(value.slice(0, 10))
-                .toLocaleDateString("fa-IR")
+                .toLocaleDateString('fa-IR')
                 .toString()
-            : "-"}
+            : '-'}
         </span>
       ),
     },
     {
-      field: "etebar",
+      field: 'etebar',
       headerName: gridDict.etebar,
       flex: 1,
       minWidth: 150,
@@ -153,7 +154,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       filterable: false,
     },
     {
-      field: "requestCaseTrackingCode",
+      field: 'requestCaseTrackingCode',
       headerName: gridDict.requestCaseTrackingCode,
       minWidth: 150,
       flex: 1,
@@ -164,7 +165,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
           <Typography
             variant="body1"
             color="secondary"
-            sx={{ cursor: "pointer" }}
+            sx={{ cursor: 'pointer' }}
           >
             <Link to={`/product-details/${row.requestCaseId}`}>{value}</Link>
           </Typography>
@@ -172,7 +173,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       },
     },
     {
-      field: "requestCaseId",
+      field: 'requestCaseId',
       headerName: gridDict.requestCaseId,
       flex: 1,
       minWidth: 150,
@@ -196,36 +197,47 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   const handleDownloadExcell = async () => {
     await dispatch(DownloadPurchaseOrderDataAction({ id: +id }));
   };
+  const handleDownloadPDF = async () => {
+    await axios.post(
+      '/Purchase/PrintPurchaseOrderData',
+      {
+        userId: user?.id ?? getUserIdFromStorage(),
+        requestId: id,
+      },
+      {
+        responseType: 'arraybuffer',
+      }
+    );
+  };
   return (
     <Card>
-         <PageTileComponent __text= {document.title} />
-  <PurchaseDetail detail={orderDetailData?.data} />
+      <PageTileComponent __text={document.title} />
+      <PurchaseDetail detail={orderDetailData?.data} />
       <Divider sx={{ marginTop: 6.5, marginBottom: 2 }} />
       <div
         style={{
-          display: "flex",
-          justifyContent: "space-between",
+          display: 'flex',
+          justifyContent: 'space-between',
         }}
       >
         <CardHeader
-          style={{ textAlign: "right" }}
+          style={{ textAlign: 'right' }}
           title="لیست کالا ها"
-          titleTypographyProps={{ variant: "h6" }}
+          titleTypographyProps={{ variant: 'h6' }}
         />
-        <IconButton
-          color="success"
-          onClick={handleDownloadExcell}
-          sx={{
-            mr: 10,
-          }}
-        >
-          <SimCardDownloadIcon />
-        </IconButton>
+        <div className="flex gap-2">
+          <IconButton color="success" onClick={handleDownloadExcell}>
+            <SimCardDownloadIcon />
+          </IconButton>
+          <IconButton color="error" onClick={handleDownloadPDF}>
+            <SimCardDownloadIcon />
+          </IconButton>
+        </div>
       </div>
 
       {orderDetailData?.data?.purchaseDetails && (
         <Grid
-          rowIdFields={["requestCaseRowCommodityId"]}
+          rowIdFields={['requestCaseRowCommodityId']}
           columns={columns}
           rows={orderDetailData?.data?.purchaseDetails.map((row, index) => ({
             id: index,

@@ -124,12 +124,17 @@ const ProductDetails = (props) => {
       ),
     },
   ];
-  const handleDownloadExcell = async () => {
-    const response = await axios.post('/Support/GetRequestDetails', {
-      userId: user?.id ?? getUserIdFromStorage(),
-      requestId: id,
-      exportExcell: true,
-    });
+  const handleDownloadPDF = async () => {
+    await axios.post(
+      '/Support/PrintRequestDetails',
+      {
+        userId: user?.id ?? getUserIdFromStorage(),
+        requestId: id,
+      },
+      {
+        responseType: 'arraybuffer',
+      }
+    );
   };
   return (
     <Card>
@@ -150,7 +155,7 @@ const ProductDetails = (props) => {
         />
         <IconButton
           color="success"
-          onClick={handleDownloadExcell}
+          onClick={handleDownloadPDF}
           sx={{
             mr: 10,
           }}
