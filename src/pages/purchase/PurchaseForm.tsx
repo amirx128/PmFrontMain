@@ -28,6 +28,7 @@ import {
 import PurchaseDetail from './PurchaseDetail.tsx';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
 import { getUserIdFromStorage } from '../../utils/functions.ts';
+import PrintIcon from '@mui/icons-material/Print';
 
 const PurchaseForm = ({ isRowSelectedDefault = true }) => {
   const { id } = useParams();
@@ -230,7 +231,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
             <SimCardDownloadIcon />
           </IconButton>
           <IconButton color="error" onClick={handleDownloadPDF}>
-            <SimCardDownloadIcon />
+            <PrintIcon />
           </IconButton>
         </div>
       </div>

@@ -12,6 +12,7 @@ import { getUserIdFromStorage } from '../../utils/functions.ts';
 import EditIcon from '@mui/icons-material/Edit';
 import Grid from '../../components/grid/grid';
 import SimCardDownloadIcon from '@mui/icons-material/SimCardDownload';
+import PrintIcon from '@mui/icons-material/Print';
 
 import {
   GridActionsCellItem,
@@ -160,7 +161,7 @@ const ProductDetails = (props) => {
             mr: 10,
           }}
         >
-          <SimCardDownloadIcon />
+          <PrintIcon />
         </IconButton>
       </div>
       {commodities && (
