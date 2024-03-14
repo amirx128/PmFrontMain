@@ -203,7 +203,7 @@ const PurchaseForm = ({ isRowSelectedDefault = true }) => {
       '/Purchase/PrintPurchaseOrderData',
       {
         userId: user?.id ?? getUserIdFromStorage(),
-        requestId: id,
+        purchaseOrderId: id,
       },
       {
         responseType: 'arraybuffer',
