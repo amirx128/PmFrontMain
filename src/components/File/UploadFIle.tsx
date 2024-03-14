@@ -5,7 +5,7 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { IconButton } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { SupportDownloadFilesAction } from '../../redux/features/supportSlicer';
-
+import EditIcon from '@mui/icons-material/Edit';
 interface IUploadFileProps {
   changeHandler?: (e: any) => void;
   multiple?: boolean;
@@ -14,6 +14,11 @@ interface IUploadFileProps {
   removeHandler?: (file: any) => void;
   uploadable?: boolean;
   canDelete?: boolean;
+  text?: string;
+  hasPreview?: boolean;
+  previewUrl?: string;
+  onEditFile?: () => void;
+  downloadable?: boolean;
 }
 export default function UploadFIle({
   changeHandler,
@@ -23,10 +28,14 @@ export default function UploadFIle({
   removeHandler,
   uploadable = true,
   canDelete = true,
+  text = 'آپلود فایل',
+  hasPreview = false,
+  previewUrl = '',
+  onEditFile,
+  downloadable = true,
 }: IUploadFileProps) {
   const dispatch = useDispatch<any>();
   const [files, setFiles] = useState(defaultValue);
-  console.log(defaultValue);
   useEffect(() => {
     setFiles(defaultValue);
   }, [defaultValue]);
@@ -60,10 +69,41 @@ export default function UploadFIle({
     }
     await dispatch(SupportDownloadFilesAction({ fileId: file.id }));
   };
-
+  const handleDownloadPreviewFile = async () => {
+    const link = document.createElement('a');
+    link.href = previewUrl;
+    link.target = '_blank';
+    link.download = previewUrl.split('/')?.at(-1);
+    link.click();
+  };
+  if (hasPreview && previewUrl.length > 0) {
+    return (
+      <div className="flex">
+        <img src={previewUrl} alt="signature" width={200} height={200} />
+        <div>
+          <div>
+            <IconButton
+              onClick={handleDownloadPreviewFile}
+              className="text-green-500 hover:text-green-700 "
+            >
+              <ArrowDownwardIcon fontSize="medium" />
+            </IconButton>
+          </div>
+          <div>
+            <IconButton
+              onClick={onEditFile}
+              className="text-green-500 hover:text-green-700 "
+            >
+              <EditIcon fontSize="medium" />
+            </IconButton>
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="mt-4 flex gap-6">
-      {uploadable && (
+      {uploadable && files.length < maxFileUpload && (
         <label className="w-64 flex flex-col items-center px-4 py-6 bg-white text-blue-500 rounded-lg shadow-lg tracking-wide uppercase border border-blue cursor-pointer hover:bg-blue-500 hover:text-white">
           <svg
             className="w-8 h-8 mb-2"
@@ -76,7 +116,7 @@ export default function UploadFIle({
               d="M10 0C4.48 0 0 4.48 0 10s4.48 10 10 10 10-4.48 10-10S15.52 0 10 0zM4.72 11l1.06-1.06L10 14.88l4.22-4.94 1.06 1.06L10 16.12 4.72 11z"
             />
           </svg>
-          <span className="text-base leading-normal">انتخاب فایل</span>
+          <span className="text-base leading-normal">{text}</span>
           <input
             type="file"
             className="hidden"
@@ -125,15 +165,16 @@ export default function UploadFIle({
                       </IconButton>
                     </div>
                   )}
-
-                  <div className="absolute top-0 left-0 hidden group-hover:block">
-                    <IconButton
-                      onClick={() => handleDownloadFile(file)}
-                      className="text-green-500 hover:text-green-700 "
-                    >
-                      <ArrowDownwardIcon fontSize="medium" />
-                    </IconButton>
-                  </div>
+                  {downloadable && (
+                    <div className="absolute top-0 left-0 hidden group-hover:block">
+                      <IconButton
+                        onClick={() => handleDownloadFile(file)}
+                        className="text-green-500 hover:text-green-700 "
+                      >
+                        <ArrowDownwardIcon fontSize="medium" />
+                      </IconButton>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

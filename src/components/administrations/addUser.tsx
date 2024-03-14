@@ -33,6 +33,9 @@ import {
   UpdateUser,
 } from '../../redux/features/administrationSlicer.ts';
 import AutoCompleteComponent from '../AutoComplete/AutoCompleteComponent.tsx';
+import UploadFIle from '../File/UploadFIle.tsx';
+import axios from 'axios';
+import axiosInstance from '../../utils/axios.config.ts';
 
 interface IAddUserProps {
   showUserDialog: boolean;
@@ -47,7 +50,8 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
     (state: any) => state.administrations
   );
   const { persons, projects } = useSelector((state: any) => state.definition);
-
+  const [signatureUrl, setSignatureUrl] = useState<string>();
+  const [signatureFile, setSignatureFile] = useState([]);
   const [info, setInfo] = useState({
     // firstName: selectedUser?.firstName,
     // lastName: selectedUser?.lastName,
@@ -70,6 +74,10 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
     dispatch(getAllProjects());
     //@ts-ignore
     dispatch(GetAllPersons());
+    return () => {
+      setSignatureFile([]);
+      setSignatureUrl('');
+    };
   }, []);
 
   useEffect(() => {
@@ -88,6 +96,8 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
         personId: selectedUser?.personId,
       });
     } else {
+      setSignatureUrl('');
+      setSignatureFile([]);
       setInfo({
         // firstName: "",
         // lastName: "",
@@ -100,6 +110,11 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
         projectId: '',
         personId: '',
       });
+    }
+  }, [selectedUser]);
+  useEffect(() => {
+    if (selectedUser?.userHasSignature) {
+      getSignatureFile();
     }
   }, [selectedUser]);
   const { businessRoles } = useSelector((state: any) => state.definition);
@@ -117,12 +132,33 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
       });
     }
   };
+  const getSignatureFile = async () => {
+    const result = await axiosInstance.post(
+      '/Administration/DownloadUserSignature',
+      {
+        userId: selectedUser.id,
+      },
+      {
+        responseType: 'blob',
+      }
+    );
+
+    const blob = new Blob([result.data], { type: 'image/jpeg' });
+    const url = URL.createObjectURL(blob);
+    setSignatureUrl(url);
+  };
 
   const onSubmit = () => {
     if (selectedUser) {
-      dispatch(UpdateUser({ id: selectedUser?.id, ...info }));
+      dispatch(
+        UpdateUser({
+          id: selectedUser?.id,
+          SignatureFile: signatureFile,
+          ...info,
+        })
+      );
     } else {
-      dispatch(AddNewUser({ ...info }));
+      dispatch(AddNewUser({ ...info, SignatureFile: signatureFile }));
     }
     onClose();
   };
@@ -132,7 +168,9 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
       [name]: val,
     });
   };
-  console.log(info.personId);
+  const handleUploadFile = (e) => {
+    setSignatureFile([e.target.files[0]]);
+  };
   return (
     <Dialog
       open={showUserDialog}
@@ -200,7 +238,7 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
           fullWidth={true}
           sx={{ mt: 2 }}
         />
-        <FormGroup sx={{ width: '100%' }}>
+        <div className="w-full flex justify-between items-center">
           <FormControlLabel
             value={info?.isActive}
             control={
@@ -213,7 +251,25 @@ export const AddUser = ({ showUserDialog, onClose }: IAddUserProps) => {
             label="کاربر فعال باشد"
             defaultChecked={true}
           />
-        </FormGroup>
+          <div>
+            <UploadFIle
+              canDelete
+              maxFileUpload={1}
+              text="آپلود فایل امضا"
+              hasPreview
+              previewUrl={signatureUrl}
+              onEditFile={() => {
+                setSignatureUrl('');
+              }}
+              changeHandler={handleUploadFile}
+              defaultValue={signatureFile}
+              removeHandler={() => {
+                setSignatureFile([]);
+              }}
+              downloadable={false}
+            />
+          </div>
+        </div>
         <AutoCompleteComponent
           sx={{ mt: 2 }}
           options={roles?.data}
