@@ -159,41 +159,6 @@ const ReportMain = () => {
   const getList = async () => {
     await dispatch(GetAllRepoertsAndPropsAction());
   };
-  const setSelectedFromDate = (e) => {
-    const date = new Date(e);
-    setFromDate(+date);
-  };
-  const setSelectedToDate = (e) => {
-    const date = new Date(e);
-    setToDate(date);
-  };
-  const handleAddFilter = async () => {
-    await dispatch(
-      GetLogisticsQAction({
-        fromDate: new Date(fromDate),
-        toDate: new Date(toDate),
-      })
-    );
-  };
-  const handleRmoveFilter = async () => {
-    await dispatch(
-      GetLogisticsQAction({
-        fromDate: new Date(initialFilter.current.fromDate),
-        toDate: new Date(initialFilter.current.toDate),
-      })
-    );
-  };
-  const handleDoubleClick = (e) => {
-    navigate(`/logistics/details/${e.row.purchaseOrderId}`);
-  };
-  const handleDownloadExcell = async () => {
-    await dispatch(
-      DownloadLogisticsQAction({
-        fromDate: new Date(fromDate),
-        toDate: new Date(toDate),
-      })
-    );
-  };
   const handleChangeData = (name, value) => {
     setData((prev) => ({ ...prev, [name]: value }));
   };
