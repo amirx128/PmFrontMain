@@ -1,14 +1,14 @@
-import { useState } from "react";
-import Box from "@mui/material/Box";
+import { useState } from 'react';
+import Box from '@mui/material/Box';
 import {
   DataGrid,
   GridColDef,
   GridPaginationInitialState,
   GridToolbar,
   GridValueGetterParams,
-} from "@mui/x-data-grid";
-import { GridWrapper } from "./style";
-import { useTheme } from "@emotion/react";
+} from '@mui/x-data-grid';
+import { GridWrapper } from './style';
+import { useTheme } from '@emotion/react';
 
 interface Iprops {
   columns: GridColDef[];
@@ -20,7 +20,7 @@ interface Iprops {
   onSortModelChange?: (...args: any) => void;
   onDoubleClick?: (...args: any) => void;
   checkboxSelection?: boolean;
-  selectMode?: "single" | "multiple";
+  selectMode?: 'single' | 'multiple';
   onRowSelected?: (...args: any) => void;
   seletedRow?: any;
 }
@@ -33,7 +33,7 @@ const Grid: React.FC<Iprops> = ({
   onFilterCahnge,
   onSortModelChange,
   onDoubleClick,
-  selectMode = "multiple",
+  selectMode = 'multiple',
   onRowSelected,
   seletedRow,
 }: Iprops) => {
@@ -42,18 +42,18 @@ const Grid: React.FC<Iprops> = ({
   const [selectionMode, setSelectionMode] = useState([]);
   return (
     <GridWrapper theme={theme}>
-      <Box sx={{ height: "unset", width: "100%" }}>
+      <Box sx={{ height: 'unset', width: '100%' }}>
         <DataGrid
-          sx={{ ml: "auto", direction: "ltr" }}
+          sx={{ ml: 'auto', direction: 'ltr' }}
           rows={rows.map((row, index) => ({ ...row }))}
           columns={columns}
           initialState={{
             pagination: {
               ...pagination,
-              paginationModel: { pageSize: 30 },
+              paginationModel: pagination.paginationModel,
             },
           }}
-          pageSizeOptions={[30]}
+          pageSizeOptions={[5, 10, 15]}
           checkboxSelection
           filterMode="server"
           sortingMode="server"
@@ -63,11 +63,11 @@ const Grid: React.FC<Iprops> = ({
           onFilterModelChange={onFilterCahnge}
           getRowId={(row) => row.id}
           onRowSelectionModelChange={(selectionModel) => {
-            if (selectMode === "single") {
+            if (selectMode === 'single') {
               setSelectionMode((prev) =>
                 selectionModel.filter((newId) => !prev.includes(newId))
               );
-            } else if (selectMode === "multiple") {
+            } else if (selectMode === 'multiple') {
               setSelectionMode(selectionModel);
             }
             onRowSelected?.(selectionModel);

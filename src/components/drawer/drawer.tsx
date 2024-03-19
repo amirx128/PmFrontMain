@@ -860,6 +860,20 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       ],
     },
     {
+      id: 19,
+      name: 'گزارشات',
+      icon: (
+        <ListItemIcon
+          sx={{ color: theme.palette.secondary.light }}
+          style={{ justifyContent: 'center' }}
+        >
+          <FactCheckIcon fontSize="large" />
+        </ListItemIcon>
+      ),
+      route: '/reporting',
+      role: UserRole.Admin,
+    },
+    {
       id: 3,
       name: 'مدیریت سیستم',
       icon: (
@@ -945,7 +959,6 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
       clickHandler: exitHandler,
     },
   ];
-  console.log(user);
   return (
     <Drawer
       sx={{
@@ -999,7 +1012,8 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
               .some((subMneu) =>
                 user.usersRoles.map((role) => role.id).includes(subMneu)
               ) ||
-              item?.role === 'public') && (
+              item?.role === 'public' ||
+              user.usersRoles.map((role) => role.id).includes(item?.role)) && (
               <>
                 <ListItem
                   key={item.id}
@@ -1012,6 +1026,8 @@ export default function PersistentDrawerLeft({ open, closeDrawer }) {
                     onClick={() =>
                       item.clickHandler
                         ? item.clickHandler()
+                        : item.route
+                        ? handleClickSubMenu(item.route)
                         : handleClickMenu(item.id)
                     }
                     style={{

@@ -59,6 +59,7 @@ import QcDetails from '../components/qc-grid-pages/qcDetails.tsx';
 import CheckListInstancesListDuplicate from '../pages/QC/checkListInstancesDuplicate.tsx';
 import QcEntryCheckList from '../components/qc-grid-pages/qcEntryChecklist.tsx';
 import RequestCaseEdit from '../pages/product/RequestCaseEdit.tsx';
+import ReportMain from '../pages/reporting/index.tsx';
 export enum Layouts {
   AUTH = 'auth',
   MAIN = 'main',
@@ -757,5 +758,14 @@ export const routes: IRoute[] = [
     layout: Layouts.MAIN,
     protected: true,
     title: 'کنترل کیفیت',
+  },
+
+  //////////////////////////////////
+  {
+    path: '/reporting',
+    component: <ReportMain />,
+    layout: Layouts.MAIN,
+    protected: true,
+    title: 'گزارشات',
   },
 ];
