@@ -192,18 +192,46 @@ const ReportMain = () => {
             />
           </div>
         );
-      case 'string':
-        return (
-          <div>
-            <TextField
-              id={inp.propName}
-              label={inp.propTitle}
-              variant="outlined"
-              onChange={(e) => handleChangeData(inp.propName, e.target.value)}
-              value={data[inp.propName]}
-            />
-          </div>
-        );
+        case 'string':
+          return (
+            <div>
+              <TextField
+                id={inp.propName}
+                label={inp.propTitle}
+                variant="outlined"
+                onChange={(e) => handleChangeData(inp.propName, e.target.value)}
+                value={data[inp.propName]}
+              />
+            </div>
+          );    
+            case 'stringId':
+          {
+        if(inp.propName=='SupplierId')
+        {
+            return (
+            <div>
+              <TextField
+                id={inp.propName}
+                label={inp.propTitle }
+                variant="outlined"
+                onChange={(e) => handleChangeData(inp.propName, e.target.value)}
+                value={data[inp.propName]}
+              />
+            </div>
+          )
+            }
+            return (
+              <div>
+                <TextField
+                  id={inp.propName}
+                  label={inp.propTitle}
+                  variant="outlined"
+                  onChange={(e) => handleChangeData(inp.propName, e.target.value)}
+                  value={data[inp.propName]}
+                />
+              </div>
+            )
+        };
       case 'long':
         return (
           <div>
