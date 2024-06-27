@@ -1,7 +1,7 @@
 import {  apiReza } from "./ApiCaller"
 
-export function getRequest(route: string) {
-    return apiReza.get(route).catch(() => console.error('1111'))
+export default function getRequest(route: string) {
+    return apiReza.get(route).catch(() => console.error('1111')).finally(() => {console.log("object")})
 
 }
 
