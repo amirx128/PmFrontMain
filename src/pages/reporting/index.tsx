@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
-import getRequest from './ApiRequestHandeler'
+import {getRequest,postRequest} from './ApiRequestHandeler'
 import { idID } from '@mui/material/locale';
 import { Value } from '../product-details/style';
 
@@ -26,29 +26,38 @@ export default function index() {
     const handelSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
         event.preventDefault()
 
-
         getRequest("AccountCountroller/testGet2?input2=11")
 
             .then((response) => {
                 SetIsLoading(false)
                 setValue(response.data)
             })
-        // axios.post("http://82.99.252.77:2060/AccountController/login",{
-        //     userName: Formdata.userName,
-        //     password: Formdata.Password.trim()
-        // }).then(res => console.log(res.status)).catch(error => {
-        //     console.log(error)
-        // })
+
+            
+
+
+    }
+
+    const handelSubmit2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+        event.preventDefault()
+
+        postRequest("AccountCountroller/Login")
+
 
     }
 
     return (
         <div>
-<form onSubmit={handelSubmit} >
-                 
-                <button type='submit'>submit</button>
-            </form> 
+        <form onSubmit={handelSubmit} >
+                         
+                        <button type='submit'>submit</button>
+                    </form> 
           
+<form onSubmit={handelSubmit2} >
+                 
+                 <button type='submit'>submit2</button>
+             </form> 
+                   
             {
             value.map(( v, index ) => {
           return (
