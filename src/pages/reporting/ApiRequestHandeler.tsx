@@ -37,15 +37,12 @@
 
 // /// api route any 
 import axios from 'axios';
+import { apiReza } from './ApiCaller';
 
 export const getRequest = (url) => {
-    return axios.get(url);
+    return apiReza.get(url);
 };
 
 export const postRequest = (url, data = {}) => {
-    return axios.post(url, data);
-};
-
-export const postRequest2 = (url, data = {}) => {
-    return axios.post(url, data);
+    return apiReza.post(url, data);
 };

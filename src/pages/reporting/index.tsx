@@ -113,11 +113,13 @@
 // }
 
 import React, { useEffect, useState } from 'react';
-import { getRequest, postRequest, postRequest2 } from './ApiRequestHandeler';
+import { getRequest, postRequest } from './ApiRequestHandeler';
 
 export default function Index() {
 
-  const [value, setValue] = useState([]);
+  // const [value, setValue] = useState([]);
+  const [apiTestGet, setApiTestGet] = useState([]);
+  const [getAllPersons, setGetAllPersons] = useState([]); // GetAllPersons
   const [businessRoles, setBusinessRoles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loginInputs, setLoginInputs] = useState({
@@ -126,23 +128,15 @@ export default function Index() {
   });
 
   useEffect(() => {
-    postRequest2("http://82.99.252.77:2060/Definition/GetAllPersons")
-      .then((response) => {
-        setIsLoading(false);
-        setValue(response.data);
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        console.error('Error fetching data:', error);
-      });
-  }, []);
+
+  });
 
   const handleSubmitGet = (event) => {
     event.preventDefault();
     getRequest("AccountCountroller/testGet2?input2=11")
       .then((response) => {
         setIsLoading(false);
-        setValue(response.data);
+        setApiTestGet(response.data);
       })
       .catch((error) => {
         setIsLoading(false);
@@ -150,15 +144,37 @@ export default function Index() {
       });
   };
 
-  const handleSubmitPost = (event) => {
+  const Login_handleSubmitPost = (event) => {
     event.preventDefault();
-    postRequest("AccountCountroller/Login", loginInputs)
+    postRequest("AccountCountroller/Login", {
+      CaptchaId: '1',
+       CaptchaValues: '2', 
+      username: loginInputs.username,
+      password: loginInputs.password
+    })
       .then((response) => {
         // Assuming the response contains the business roles
-        setBusinessRoles(response.data);
+        setBusinessRoles(response.data.model.businessRoles);
+        setIsLoading(false);
+
       })
       .catch((error) => {
         console.error('Error posting data:', error);
+      });
+  };
+  const GetAllPerson_Post = (event) => {
+    postRequest("Definition/GetAllPersons", {
+      userId: "1",
+      username: "ali"
+    })
+      .then((response) => {
+        setIsLoading(false);
+        console.log(response.data.model)
+        setGetAllPersons(response.data.model);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error('Error fetching data:', error);
       });
   };
 
@@ -172,11 +188,21 @@ export default function Index() {
 
   return (
     <div>
+
+
+      <button onClick={GetAllPerson_Post} > get all person (POST) 123</button>
+
+
+
       <form onSubmit={handleSubmitGet}>
         <button type='submit'>Submit GET</button>
+
+        {/* <input type='butten' onClick={GetAllPerson_Post} > get all person (POST)</input> */}
+
       </form>
 
-      <form onSubmit={handleSubmitPost}>
+
+      <form onSubmit={Login_handleSubmitPost}>
         <input
           type="text"
           name="username"
@@ -191,7 +217,7 @@ export default function Index() {
           onChange={handleInputChange}
           placeholder="Password"
         />
-        <button type='submit'>Submit POST</button>
+        <button type='submit'>Submit POST (login)</button>
       </form>
 
       {isLoading && <h2>Loading...</h2>}
@@ -199,15 +225,36 @@ export default function Index() {
       {!isLoading && (
         <div>
           <h2>Persons</h2>
-          {value.map((v, index) => (
-            <div key={index} style={{ border: '1px solid black', margin: '10px', padding: '10px' }}>
+          {getAllPersons.map((v) => (
+            <div key={v.id} style={{ border: '1px solid black', margin: '10px', padding: '10px' }}>
               <p>ID: {v.id}</p>
               <p>First Name: {v.firstName}</p>
               <p>Last Name: {v.lastName}</p>
               <p>Roles:</p>
               <ul>
-                {v.usersRoles.map((r, ir) => (
-                  <li key={ir}>
+                {v.businessRoles.map((r) => (
+                  <li key={r.id}>
+                    {r.roleTitle} ({r.roleName})
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {!isLoading && (
+        <div>
+          <h2>users </h2>
+          {apiTestGet.map((v) => (
+            <div key={v.id} style={{ border: '1px solid black', margin: '10px', padding: '10px' }}>
+              <p>ID: {v.id}</p>
+              <p>First Name: {v.firstName}</p>
+              <p>Last Name: {v.lastName}</p>
+              <p>Roles:</p>
+              <ul>
+                {v.usersRoles.map((r) => (
+                  <li key={r.id}>
                     {r.roleTitle} ({r.roleName})
                   </li>
                 ))}
@@ -220,8 +267,8 @@ export default function Index() {
       {!isLoading && (
         <div>
           <h2>Business Roles</h2>
-          {businessRoles.map((role, index) => (
-            <div key={index} style={{ border: '1px solid black', margin: '10px', padding: '10px' }}>
+          {businessRoles.map((role) => (
+            <div key={role.id} style={{ border: '1px solid black', margin: '10px', padding: '10px' }}>
               <p>ID: {role.id}</p>
               <p>Name: {role.name}</p>
             </div>
