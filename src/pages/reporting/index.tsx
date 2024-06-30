@@ -1,119 +1,7 @@
-// import React, { useEffect, useState } from 'react'
-// import axios from 'axios'
-// import {getRequest,postRequest} from './ApiRequestHandeler'
-// import { idID } from '@mui/material/locale';
-// import { Value } from '../product-details/style';
-// // 1=> VORODI HAYE LOGIN HANDEL 
-// // 2=> method dovom get... az noe post seda zade shavad => http://82.99.252.77:2060/Definition/GetAllPersons 
-// // ==============>>>>>> 2 ta map mesle mesale paiin. dovomi roye (businessRoles) AZ postRequest2 estefade shavad
-
-// export default function index() {
-
-//     const [value, setValue] = useState([]);
-//     const [isLoading, SetIsLoading] = useState(true);
-
-//     useEffect(() => {
-
-//         // getRequest("AccountCountroller/testGet")
-
-
-//         // getRequest("AccountCountroller/testGet2?input2=11")
-
-//         //     .then((response) => {
-//         //         SetIsLoading(false)
-//         //         setValue(response.data)
-//         //     })
-//     })
-
-
-//     const handelSubmit = (event: React.ChangeEvent<HTMLInputElement>) => {
-//         event.preventDefault()
-
-//         getRequest("AccountCountroller/testGet2?input2=11")
-
-//             .then((response) => {
-//                 SetIsLoading(false)
-//                 setValue(response.data)
-//             })
-
-
-
-
-//     }
-
-//     const handelSubmit2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-//         event.preventDefault()
-
-//         postRequest("AccountCountroller/Login")
-
-
-//     }
-
-//     return (
-//         <div>
-
-
-//         <form onSubmit={handelSubmit} >
-
-//                         <button type='submit'>submit</button>
-//                     </form> 
-
-// <form onSubmit={handelSubmit2} >
-
-//                  <button type='submit'>submit POST</button>
-//              </form> 
-
-
-
-//             {
-//             value.map(( v, index ) => {
-//           return (
-//             <tr key={index} style={{border: 150}}>
-//               <td>{v.id}</td>
-//               <td>{v.firstName}</td>
-//               <td> rols :  {
-
-//                 v.usersRoles.map(( r, ir ) => {
-//                     return (
-//                       <tr key={index}>
-//                         <td>{r.id}</td>
-//                         <td>{r.roleName}</td>
-//                         <td>{r.roleTitle}</td>
-//                       </tr>
-//                     );
-//                   })}
-// <tr>....</tr>
-//                 </td>
-//             </tr>
-//           );
-//         })
-//     }
-//             <h2>salam.....</h2>
-
-
-
-//             { isLoading && <h2>loading...</h2> }
-//     {
-//         value.map(v => (
-
-//             <h2 key={v.id}  >
-
-
-//                 {v.usersRoles[0].roleTitle}
-
-
-
-//                 iiiiii
-//                 {v.firstName} -
-//                 {v.lastName}
-//             </h2>))
-//     }
-//         </div >
-//     )
-// }
 
 import React, { useEffect, useState } from 'react';
 import { getRequest, postRequest } from './ApiRequestHandeler';
+import { getAllUnits } from '../../redux/features/definitionSlicer';
 
 export default function Index() {
 
@@ -122,14 +10,18 @@ export default function Index() {
   const [getAllPersons, setGetAllPersons] = useState([]); // GetAllPersons
   const [businessRoles, setBusinessRoles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [slecteItem1, setSlecteItem1] = useState([]);
   const [loginInputs, setLoginInputs] = useState({
     username: '',
     password: ''
   });
-
-  useEffect(() => {
-
-  });
+  const [projects, setAllProjects] = useState([]);
+  const sp = 1;
+  const sf = 1;
+  const [selectedProjects, setSelectedProjects] = useState(1);
+  const [selectedFloor, setSelectedFloor] = useState(1);
+  const [floor, setAllFloor] = useState([]);
+  const [units, setAllUnits] = useState([]);
 
   const handleSubmitGet = (event) => {
     event.preventDefault();
@@ -144,11 +36,66 @@ export default function Index() {
       });
   };
 
+  const getAllProjects = () => {
+    postRequest("Definition/getAllJustProjects", {
+      userId: "1",
+    })
+      .then((response) => {
+        setIsLoading(false);
+        setAllProjects(response.data.model);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error('Error fetching data:', error);
+      });
+
+  };
+
+
+  const getAllFloor = () => {
+    postRequest("Definition/getAllFloor", {
+      userId: "1",
+      name: 'ali',
+      projectId: selectedProjects
+    })
+      .then((response) => {
+        setIsLoading(false);
+        setAllFloor(response.data.model);
+      }).then((r) => {
+        console.log(selectedProjects);
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error('Error fetching data:', error);
+      });
+
+  };
+
+  const getAllunit = () => {
+    postRequest("Definition/getallUnit", {
+      userId: "1",
+      name: 'ali',
+      floorId: selectedFloor,
+      projectId: 0
+    })
+      .then((response) => {
+        setIsLoading(false);
+        setAllUnits(response.data.model);
+      }).then((r) => {
+
+      })
+      .catch((error) => {
+        setIsLoading(false);
+        console.error('Error fetching data:', error);
+      });
+
+  };
+
   const Login_handleSubmitPost = (event) => {
     event.preventDefault();
     postRequest("AccountCountroller/Login", {
       CaptchaId: '1',
-       CaptchaValues: '2', 
+      CaptchaValues: '2',
       username: loginInputs.username,
       password: loginInputs.password
     })
@@ -171,6 +118,7 @@ export default function Index() {
         setIsLoading(false);
         console.log(response.data.model)
         setGetAllPersons(response.data.model);
+
       })
       .catch((error) => {
         setIsLoading(false);
@@ -186,11 +134,116 @@ export default function Index() {
     });
   };
 
+
+  useEffect(() => {
+    getAllProjects()
+  }, []);
+
+
+  function handleDropDown1Change(e) {
+    debugger;
+    setSelectedProjects(e);
+    getAllFloor();
+  };
+
+
+  function handleDropDown2Change(e) {
+
+    setSelectedFloor(e);
+    getAllunit();
+  };
+
+
   return (
     <div>
 
 
-      <button onClick={GetAllPerson_Post} > get all person (POST) 123</button>
+      <div>
+        <h3>پروژه ها</h3>
+        <select onChange={e => handleDropDown1Change(e.target.value)}>
+          {projects
+            // filter to only completed teachers
+            // .filter((teacher) => teacher.status === "COMPLETED")
+            // render an option for each teacher
+            .map((teacher) => (
+              <option
+                // map needs a unique key, so use the teacher id
+                key={teacher.id}
+                // this will be e.target.value if this option is selected
+                value={teacher.id}
+              // print the teacher name as the option text
+              >
+                {teacher.name}
+              </option>
+            ))
+
+          }
+
+        </select>
+
+
+
+
+
+      </div>
+
+      <div>
+
+        <h3>طبقه ها</h3>
+        <select onChange={e => handleDropDown2Change(e.target.value)}>
+          {floor
+            // filter to only completed teachers
+            // .filter((teacher) => teacher.status === "COMPLETED")
+            // render an option for each teacher
+            .map((teacher) => (
+              <option
+                // map needs a unique key, so use the teacher id
+                key={teacher.id}
+                // this will be e.target.value if this option is selected
+                value={teacher.id}
+              // print the teacher name as the option text
+              >
+                {teacher.name}
+              </option>
+            ))
+
+          }
+
+        </select>
+
+
+      </div>
+
+
+
+      <div>
+
+        <h3>واحد ها</h3>
+        <select >
+          {units
+            // filter to only completed teachers
+            // .filter((teacher) => teacher.status === "COMPLETED")
+            // render an option for each teacher
+            .map((teacher) => (
+              <option
+                // map needs a unique key, so use the teacher id
+                key={teacher.id}
+                // this will be e.target.value if this option is selected
+                value={teacher.id}
+              // print the teacher name as the option text
+              >
+                {teacher.name}
+              </option>
+            ))
+
+          }
+
+        </select>
+
+
+      </div>
+      <button onClick={GetAllPerson_Post} > get all person (POST) </button>
+      <button onClick={getAllProjects} > handleGetSheduleActivities </button>
 
 
 
