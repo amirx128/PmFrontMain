@@ -9,6 +9,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { GetAllSuppliers } from '../../redux/features/definitionSlicer';
+
 import { GridColDef } from '@mui/x-data-grid';
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -36,12 +38,17 @@ import { LoadingButton } from '@mui/lab';
 import axiosInstance from '../../utils/axios.config.ts';
 import moment from 'moment';
 import translate from './translate.ts';
+import store from '../../redux/store';
+import { Controller, useForm } from 'react-hook-form';
 const ReportMain = () => {
+  const { control } = useForm<any>();
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { ReportsAndProps } = useSelector((state: any) => state.reporting);
   const [selectedReport, setSelectedReport] = useState();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { suppliers } = useSelector((state: any) => state?.definition);
+
   const [data, setData] = useState<any>({
     PageIndex: 1,
     PageCount: 10,
@@ -146,7 +153,12 @@ const ReportMain = () => {
   useEffect(() => {
     getList();
   }, []);
-
+  useEffect(() => {
+    getAllSupplires();
+  }, []);
+  const getAllSupplires = async () => {
+    await dispatch(GetAllSuppliers());
+  };
   const handleSortModelChange = async (sortArr) => {
     if (!sortArr.at(0)) {
       await handleSearchReports();
@@ -192,7 +204,50 @@ const ReportMain = () => {
             />
           </div>
         );
-        case 'string':
+      case 'string':
+        return (
+          <div>
+            <TextField
+              id={inp.propName}
+              label={inp.propTitle}
+              variant="outlined"
+              onChange={(e) => handleChangeData(inp.propName, e.target.value)}
+              value={data[inp.propName]}
+            />
+          </div>
+        );
+      case 'stringId':
+        {
+          if (inp.propName == 'SupplierId') {
+            return (
+              <div>
+                <Box
+                  sx={{
+                    mb: 6.75,
+                    display: 'flex',
+                    alignItems: 'center',
+                    flex: '1',
+                  }}
+                >
+                  <Controller
+                    control={control}
+                    rules={{ required: ' approve state is required' }}
+                    name="supporterId"
+                    defaultValue={0}
+                    render={({ field }) => (
+                      <SelectComponent
+                        label="تامین کننده"
+                        valuefieldName="id"
+                        labelFieldName="supplierName"
+                        options={suppliers?.data}
+                        field={field}
+                      />
+                    )}
+                  />
+                </Box>
+              </div>
+            )
+          }
           return (
             <div>
               <TextField
@@ -203,34 +258,7 @@ const ReportMain = () => {
                 value={data[inp.propName]}
               />
             </div>
-          );    
-            case 'stringId':
-          {
-        if(inp.propName=='SupplierId')
-        {
-            return (
-            <div>
-              <TextField
-                id={inp.propName}
-                label={inp.propTitle }
-                variant="outlined"
-                onChange={(e) => handleChangeData(inp.propName, e.target.value)}
-                value={data[inp.propName]}
-              />
-            </div>
           )
-            }
-            return (
-              <div>
-                <TextField
-                  id={inp.propName}
-                  label={inp.propTitle}
-                  variant="outlined"
-                  onChange={(e) => handleChangeData(inp.propName, e.target.value)}
-                  value={data[inp.propName]}
-                />
-              </div>
-            )
         };
       case 'long':
         return (
