@@ -687,7 +687,7 @@ export const originalItemsGrid = [
     type: 'actions',
     cellClassName: 'actions',
     disableColumnMenu: true,
-    renderType: gridFunctionsEnum.actionEditColumn,
+    renderType: gridFunctionsEnum.actionEditAndRemoveColumn,
   },
 ];
 

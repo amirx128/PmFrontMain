@@ -1,8 +1,13 @@
-import axiosInstance from "../../utils/axios.config.ts";
+import axiosInstance from '../../utils/axios.config.ts';
 
 export const GetAllOriginalItems = async (userId) =>
   await axiosInstance.post(`/QC/GetAllOriginalItems`, {
     userId,
+  });
+export const DeleteOriginalItem = async (userId, ids) =>
+  await axiosInstance.post(`/QC/DeleteOrginalItem`, {
+    userId,
+    ids,
   });
 export const GetOriginalItemsData = async (userId, selectedItemId) =>
   await axiosInstance.post(`/QC/GetOriginalItemsData`, {
@@ -99,8 +104,8 @@ export const AllActiveCheckLists = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "checkListTitle",
+  orderType = 'desc',
+  orderBy = 'checkListTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/QcManager.AllActiveCheckLists`, {
@@ -210,8 +215,8 @@ export const ContractorAddDateQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Contractor.AddDate.Q`, {
@@ -229,8 +234,8 @@ export const ContractorAddDateSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Contractor.AddDate.SentItems`, {
@@ -261,8 +266,8 @@ export const TechnicalApproveScheduleQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Technical.ApproveSchedule.Q`, {
@@ -280,8 +285,8 @@ export const TechnicalApproveScheduleSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Technical.ApproveSchedule.SentItems`, {
@@ -314,8 +319,8 @@ export const SetQcDateQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Qc.SetQcDate.Q`, {
@@ -333,8 +338,8 @@ export const SetQcDateSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Qc.SetQcDate.SentItems`, {
@@ -369,8 +374,8 @@ export const InspectorEntryCheckListQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Inspector.EntryCheckList.Q`, {
@@ -388,8 +393,8 @@ export const InspectorEntryCheckListSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Inspector.EntryCheckList.SentItems`, {
@@ -414,8 +419,8 @@ export const InspectControlCheckListQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Inspect.ControlCheckList.Q`, {
@@ -433,8 +438,8 @@ export const InspectControlCheckListSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Inspect.ControlCheckList.SentItems`, {
@@ -463,8 +468,8 @@ export const QcManagerControlCheckListQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/QcManager.ControlCheckList.Q`, {
@@ -482,8 +487,8 @@ export const QcManagerControlCheckListSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/QcManager.ControlCheckList.SentItems`, {
@@ -514,8 +519,8 @@ export const QcFinalApproveQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Qc.FinalApprove.Q`, {
@@ -533,8 +538,8 @@ export const QcFinalApproveSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Qc.FinalApprove.SentItems`, {
@@ -569,8 +574,8 @@ export const ContractorSetIsDoneQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Contractor.SetIsDone.Q`, {
@@ -588,8 +593,8 @@ export const ContractorSetIsDoneSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/Contractor.SetIsDone.SentItems`, {
@@ -619,8 +624,8 @@ export const TechnicalOfficeAddOrdersQ = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/TechnicalOffice.AddOrders.Q`, {
@@ -638,8 +643,8 @@ export const TechnicalOfficeAddOrdersSentItems = async (
   pageIndex = 1,
   fromDate = new Date().setMonth(new Date().getMonth() - 1),
   toDate = new Date(),
-  orderType = "desc",
-  orderBy = "subItemTitle",
+  orderType = 'desc',
+  orderBy = 'subItemTitle',
   checkListStateId = 0
 ) =>
   await axiosInstance.post(`/QC/TechnicalOffice.AddOrders.SentItems`, {

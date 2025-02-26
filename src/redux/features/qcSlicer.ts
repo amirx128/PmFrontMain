@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
   GetAllOriginalItems,
   GetOriginalItemsData,
@@ -60,12 +60,13 @@ import {
   QcFinalApproveCheckListRows,
   GetOneValueHistory,
   GetSubItemLevels,
-} from "../../core/QC/qc.service";
+  DeleteOriginalItem,
+} from '../../core/QC/qc.service';
 
 const getUserId = (state) => {
-  return state?.user?.user?.id ?? localStorage.getItem("user")
-    ? JSON.parse(localStorage.getItem("user"))?.id
-    : "1";
+  return state?.user?.user?.id ?? localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user'))?.id
+    : '1';
 };
 
 export interface QcState {
@@ -79,6 +80,10 @@ export interface QcState {
   originalItemsUpdateState: {
     pending: boolean;
   };
+  originalItemsDeleteState: {
+    pending: boolean;
+  };
+
   selectedOriginalItem: {
     data: any;
     pending: boolean;
@@ -305,6 +310,9 @@ const initialState: QcState = {
   originalItemsUpdateState: {
     pending: false,
   },
+  originalItemsDeleteState: {
+    pending: false,
+  },
   selectedOriginalItem: {
     data: undefined,
     pending: false,
@@ -516,7 +524,7 @@ const initialState: QcState = {
 };
 
 export const GetAllOriginalItemsAction = createAsyncThunk(
-  "qc/GetAllOriginalItemsAction",
+  'qc/GetAllOriginalItemsAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -528,8 +536,24 @@ export const GetAllOriginalItemsAction = createAsyncThunk(
     }
   }
 );
+export const DeleteOriginalItemAction = createAsyncThunk(
+  'qc/DeleteOriginalItemAction',
+  async (
+    { ids }: { ids: string[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DeleteOriginalItem(userId, ids);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
 export const GetOriginalItemsDataAction = createAsyncThunk(
-  "qc/GetOriginalItemsDataAction",
+  'qc/GetOriginalItemsDataAction',
   async (
     body: { selectedItemId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -546,7 +570,7 @@ export const GetOriginalItemsDataAction = createAsyncThunk(
   }
 );
 export const AddNewOriginalItemAction = createAsyncThunk(
-  "qc/AddNewOriginalItemAction",
+  'qc/AddNewOriginalItemAction',
   async (
     body: { name: string; subItemsIds: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -563,7 +587,7 @@ export const AddNewOriginalItemAction = createAsyncThunk(
   }
 );
 export const UpdateOriginalItemAction = createAsyncThunk(
-  "qc/UpdateOriginalItemAction",
+  'qc/UpdateOriginalItemAction',
   async (
     body: { id: number; name: string; subItemsIds: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -580,7 +604,7 @@ export const UpdateOriginalItemAction = createAsyncThunk(
   }
 );
 export const GetAllSubItemsAction = createAsyncThunk(
-  "qc/GetAllSubItemsAction",
+  'qc/GetAllSubItemsAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -593,7 +617,7 @@ export const GetAllSubItemsAction = createAsyncThunk(
   }
 );
 export const AddNewSubItemAction = createAsyncThunk(
-  "qc/AddNewSubItemAction",
+  'qc/AddNewSubItemAction',
   async (
     body: any,
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -609,7 +633,7 @@ export const AddNewSubItemAction = createAsyncThunk(
   }
 );
 export const GetSubItemsDataAction = createAsyncThunk(
-  "qc/GetSubItemsDataAction",
+  'qc/GetSubItemsDataAction',
   async (
     body: { selectedItemId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -626,7 +650,7 @@ export const GetSubItemsDataAction = createAsyncThunk(
   }
 );
 export const UpdateSubItemAction = createAsyncThunk(
-  "qc/UpdateSubItemAction",
+  'qc/UpdateSubItemAction',
   async (
     body: { id: number; data: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -642,7 +666,7 @@ export const UpdateSubItemAction = createAsyncThunk(
   }
 );
 export const AddNewUsabilityAction = createAsyncThunk(
-  "qc/AddNewUsabilityAction",
+  'qc/AddNewUsabilityAction',
   async (
     body: { units: number[]; usabilityName: string; code: string },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -664,7 +688,7 @@ export const AddNewUsabilityAction = createAsyncThunk(
   }
 );
 export const UpdateUsabilityAction = createAsyncThunk(
-  "qc/UpdateUsabilityAction",
+  'qc/UpdateUsabilityAction',
   async (
     body: { id: number; units: number[]; usabilityName: string; code: string },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -687,7 +711,7 @@ export const UpdateUsabilityAction = createAsyncThunk(
   }
 );
 export const GetAllUsabilityAction = createAsyncThunk(
-  "qc/GetAllUsabilityAction",
+  'qc/GetAllUsabilityAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -700,7 +724,7 @@ export const GetAllUsabilityAction = createAsyncThunk(
   }
 );
 export const GetUsabilityDataAction = createAsyncThunk(
-  "qc/GetUsabilityDataAction",
+  'qc/GetUsabilityDataAction',
   async (
     body: { selectedItemId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -718,7 +742,7 @@ export const GetUsabilityDataAction = createAsyncThunk(
 );
 
 export const GetAllCheckListsAction = createAsyncThunk(
-  "qc/GetAllCheckListsAction",
+  'qc/GetAllCheckListsAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -731,7 +755,7 @@ export const GetAllCheckListsAction = createAsyncThunk(
   }
 );
 export const GetCheckListsDataAction = createAsyncThunk(
-  "qc/GetCheckListsDataAction",
+  'qc/GetCheckListsDataAction',
   async (
     body: { selectedItemId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -748,7 +772,7 @@ export const GetCheckListsDataAction = createAsyncThunk(
   }
 );
 export const AddNewCheckListAction = createAsyncThunk(
-  "qc/AddNewCheckListAction",
+  'qc/AddNewCheckListAction',
   async (
     body: { name: string; subItemId: number; items: { itemName: string }[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -765,7 +789,7 @@ export const AddNewCheckListAction = createAsyncThunk(
   }
 );
 export const UpdateCheckListAction = createAsyncThunk(
-  "qc/UpdateCheckListAction",
+  'qc/UpdateCheckListAction',
   async (
     body: {
       name: string;
@@ -794,12 +818,12 @@ export const UpdateCheckListAction = createAsyncThunk(
 );
 
 export const AllActiveCheckListsAction = createAsyncThunk(
-  "qc/AllActiveCheckListsAction",
+  'qc/AllActiveCheckListsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -825,7 +849,7 @@ export const AllActiveCheckListsAction = createAsyncThunk(
   }
 );
 export const CreateCheckListInstancesAction = createAsyncThunk(
-  "qc/CreateCheckListInstancesAction",
+  'qc/CreateCheckListInstancesAction',
   async (
     body: {
       contractorUserId: string;
@@ -870,7 +894,7 @@ export const CreateCheckListInstancesAction = createAsyncThunk(
   }
 );
 export const UpdateQcInstanceAction = createAsyncThunk(
-  "qc/UpdateQcInstanceAction",
+  'qc/UpdateQcInstanceAction',
   async (
     body: {
       instanceId: number;
@@ -919,7 +943,7 @@ export const UpdateQcInstanceAction = createAsyncThunk(
 );
 
 export const GetManySubItemsCheckListsAction = createAsyncThunk(
-  "qc/GetManySubItemsCheckListsAction",
+  'qc/GetManySubItemsCheckListsAction',
   async (
     body: { ids: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -935,7 +959,7 @@ export const GetManySubItemsCheckListsAction = createAsyncThunk(
   }
 );
 export const GetManyOrginalItemSubItemsAction = createAsyncThunk(
-  "qc/GetManyOrginalItemSubItemsAction",
+  'qc/GetManyOrginalItemSubItemsAction',
   async (
     body: { ids: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -951,7 +975,7 @@ export const GetManyOrginalItemSubItemsAction = createAsyncThunk(
   }
 );
 export const GetAllContractorAction = createAsyncThunk(
-  "qc/GetAllContractorAction",
+  'qc/GetAllContractorAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -964,7 +988,7 @@ export const GetAllContractorAction = createAsyncThunk(
   }
 );
 export const GetAllOrginal_SubItem_ChechListsAction = createAsyncThunk(
-  "qc/GetAllOrginal_SubItem_ChechListsAction",
+  'qc/GetAllOrginal_SubItem_ChechListsAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -977,7 +1001,7 @@ export const GetAllOrginal_SubItem_ChechListsAction = createAsyncThunk(
   }
 );
 export const GetCheckListStatesAction = createAsyncThunk(
-  "qc/GetCheckListStatesAction",
+  'qc/GetCheckListStatesAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -990,7 +1014,7 @@ export const GetCheckListStatesAction = createAsyncThunk(
   }
 );
 export const GetOneInstanceDataAction = createAsyncThunk(
-  "qc/GetOneInstanceDataAction",
+  'qc/GetOneInstanceDataAction',
   async (
     body: { selectedId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1006,7 +1030,7 @@ export const GetOneInstanceDataAction = createAsyncThunk(
   }
 );
 export const DeleteQcInstanceAction = createAsyncThunk(
-  "qc/DeleteQcInstanceAction",
+  'qc/DeleteQcInstanceAction',
   async (
     body: { instanceIds: number[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1023,12 +1047,12 @@ export const DeleteQcInstanceAction = createAsyncThunk(
 );
 ////////////////////////////////////////////
 export const ContractorAddDateSentItemsAction = createAsyncThunk(
-  "qc/ContractorAddDateSentItemsAction",
+  'qc/ContractorAddDateSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1054,12 +1078,12 @@ export const ContractorAddDateSentItemsAction = createAsyncThunk(
   }
 );
 export const ContractorAddDateQAction = createAsyncThunk(
-  "qc/ContractorAddDateQAction",
+  'qc/ContractorAddDateQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1085,7 +1109,7 @@ export const ContractorAddDateQAction = createAsyncThunk(
   }
 );
 export const ContractorAddDateAction = createAsyncThunk(
-  "qc/ContractorAddDateAction",
+  'qc/ContractorAddDateAction',
   async (
     body: {
       instanceId: number;
@@ -1112,12 +1136,12 @@ export const ContractorAddDateAction = createAsyncThunk(
 );
 ////////////////////////////////////////////
 export const TechnicalApproveScheduleQAction = createAsyncThunk(
-  "qc/TechnicalApproveScheduleQAction",
+  'qc/TechnicalApproveScheduleQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1143,12 +1167,12 @@ export const TechnicalApproveScheduleQAction = createAsyncThunk(
   }
 );
 export const TechnicalApproveScheduleSentItemAction = createAsyncThunk(
-  "qc/TechnicalApproveScheduleSentItemAction",
+  'qc/TechnicalApproveScheduleSentItemAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1174,7 +1198,7 @@ export const TechnicalApproveScheduleSentItemAction = createAsyncThunk(
   }
 );
 export const technicalApproveScheduleAction = createAsyncThunk(
-  "qc/technicalApproveScheduleAction",
+  'qc/technicalApproveScheduleAction',
   async (
     body: {
       instanceId: number;
@@ -1204,12 +1228,12 @@ export const technicalApproveScheduleAction = createAsyncThunk(
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 export const SetQcDateQAction = createAsyncThunk(
-  "qc/SetQcDateQAction",
+  'qc/SetQcDateQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1235,12 +1259,12 @@ export const SetQcDateQAction = createAsyncThunk(
   }
 );
 export const SetQcDateSentItemsAction = createAsyncThunk(
-  "qc/SetQcDateSentItemsAction",
+  'qc/SetQcDateSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1266,7 +1290,7 @@ export const SetQcDateSentItemsAction = createAsyncThunk(
   }
 );
 export const SetQcDateAction = createAsyncThunk(
-  "qc/SetQcDateAction",
+  'qc/SetQcDateAction',
   async (
     body: {
       instanceId: number;
@@ -1304,12 +1328,12 @@ export const SetQcDateAction = createAsyncThunk(
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 export const InspectControlCheckListQAction = createAsyncThunk(
-  "qc/InspectControlCheckListQAction",
+  'qc/InspectControlCheckListQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1335,12 +1359,12 @@ export const InspectControlCheckListQAction = createAsyncThunk(
   }
 );
 export const InspectControlCheckListSentItemsAction = createAsyncThunk(
-  "qc/InspectControlCheckListSentItemsAction",
+  'qc/InspectControlCheckListSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1367,7 +1391,7 @@ export const InspectControlCheckListSentItemsAction = createAsyncThunk(
 );
 
 export const InspectControlCheckListAction = createAsyncThunk(
-  "qc/InspectControlCheckListAction",
+  'qc/InspectControlCheckListAction',
   async (
     body: {
       instanceId: number;
@@ -1393,12 +1417,12 @@ export const InspectControlCheckListAction = createAsyncThunk(
 ////////////////////////////////////////////
 ////////////////////////////////////////////
 export const QcManagerControlCheckListQAction = createAsyncThunk(
-  "qc/QcManagerControlCheckListQAction",
+  'qc/QcManagerControlCheckListQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1424,12 +1448,12 @@ export const QcManagerControlCheckListQAction = createAsyncThunk(
   }
 );
 export const QcManagerControlCheckListSentItemsAction = createAsyncThunk(
-  "qc/QcManagerControlCheckListSentItemsAction",
+  'qc/QcManagerControlCheckListSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1455,7 +1479,7 @@ export const QcManagerControlCheckListSentItemsAction = createAsyncThunk(
   }
 );
 export const QcManagerControlCheckListAction = createAsyncThunk(
-  "qc/QcManagerControlCheckListAction",
+  'qc/QcManagerControlCheckListAction',
   async (
     body: {
       instanceId: number;
@@ -1485,12 +1509,12 @@ export const QcManagerControlCheckListAction = createAsyncThunk(
 ////////////////////////////////////////////
 
 export const QcFinalApproveQAction = createAsyncThunk(
-  "qc/QcFinalApproveQAction",
+  'qc/QcFinalApproveQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1516,12 +1540,12 @@ export const QcFinalApproveQAction = createAsyncThunk(
   }
 );
 export const QcFinalApproveSentItemsAction = createAsyncThunk(
-  "qc/QcFinalApproveSentItemsAction",
+  'qc/QcFinalApproveSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1547,7 +1571,7 @@ export const QcFinalApproveSentItemsAction = createAsyncThunk(
   }
 );
 export const QcFinalApproveAction = createAsyncThunk(
-  "qc/QcFinalApproveAction",
+  'qc/QcFinalApproveAction',
   async (
     body: {
       instanceId: number;
@@ -1567,7 +1591,7 @@ export const QcFinalApproveAction = createAsyncThunk(
   }
 );
 export const QcFinalApproveCheckListRowsAction = createAsyncThunk(
-  "qc/QcFinalApproveCheckListRowsAction",
+  'qc/QcFinalApproveCheckListRowsAction',
   async (
     body: {
       instanceId: number;
@@ -1594,12 +1618,12 @@ export const QcFinalApproveCheckListRowsAction = createAsyncThunk(
 ////////////////////////////////////////////
 
 export const InspectorEntryCheckListQAction = createAsyncThunk(
-  "qc/InspectorEntryCheckListQAction",
+  'qc/InspectorEntryCheckListQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1625,12 +1649,12 @@ export const InspectorEntryCheckListQAction = createAsyncThunk(
   }
 );
 export const InspectorEntryCheckListSentItemsAction = createAsyncThunk(
-  "qc/InspectorEntryCheckListSentItemsAction",
+  'qc/InspectorEntryCheckListSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1656,7 +1680,7 @@ export const InspectorEntryCheckListSentItemsAction = createAsyncThunk(
   }
 );
 export const InspectorEntryCheckListAction = createAsyncThunk(
-  "qc/InspectorEntryCheckListAction",
+  'qc/InspectorEntryCheckListAction',
   async (
     body: {
       instanceId: number;
@@ -1684,12 +1708,12 @@ export const InspectorEntryCheckListAction = createAsyncThunk(
 ////////////////////////////////////////////
 
 export const ContractorSetIsDoneQAction = createAsyncThunk(
-  "qc/ContractorSetIsDoneQAction",
+  'qc/ContractorSetIsDoneQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1715,12 +1739,12 @@ export const ContractorSetIsDoneQAction = createAsyncThunk(
   }
 );
 export const ContractorSetIsDoneSentItemsAction = createAsyncThunk(
-  "qc/ContractorSetIsDoneSentItemsAction",
+  'qc/ContractorSetIsDoneSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1746,7 +1770,7 @@ export const ContractorSetIsDoneSentItemsAction = createAsyncThunk(
   }
 );
 export const ContractorSetIsDoneAction = createAsyncThunk(
-  "qc/ContractorSetIsDoneAction",
+  'qc/ContractorSetIsDoneAction',
   async (
     body: {
       instanceId: number;
@@ -1774,12 +1798,12 @@ export const ContractorSetIsDoneAction = createAsyncThunk(
 ////////////////////////////////////////////
 
 export const TechnicalOfficeAddOrdersQAction = createAsyncThunk(
-  "qc/TechnicalOfficeAddOrdersQAction",
+  'qc/TechnicalOfficeAddOrdersQAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1805,12 +1829,12 @@ export const TechnicalOfficeAddOrdersQAction = createAsyncThunk(
   }
 );
 export const TechnicalOfficeAddOrdersSentItemsAction = createAsyncThunk(
-  "qc/TechnicalOfficeAddOrdersSentItemsAction",
+  'qc/TechnicalOfficeAddOrdersSentItemsAction',
   async (
     body: {
       fromDate?: any;
       toDate?: any;
-      orderType?: "desc" | "asc";
+      orderType?: 'desc' | 'asc';
       orderBy?: string;
       checkListStateId?: number;
     },
@@ -1836,7 +1860,7 @@ export const TechnicalOfficeAddOrdersSentItemsAction = createAsyncThunk(
   }
 );
 export const TechnicalOfficeAddOrdersAction = createAsyncThunk(
-  "qc/TechnicalOfficeAddOrdersAction",
+  'qc/TechnicalOfficeAddOrdersAction',
   async (
     body: { instanceId: number; technicalOfficeOrders: any[] },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1858,7 +1882,7 @@ export const TechnicalOfficeAddOrdersAction = createAsyncThunk(
 );
 ////////////////////////////////////////////
 export const GetOneSubItemDetailsAction = createAsyncThunk(
-  "qc/GetOneSubItemDetailsAction",
+  'qc/GetOneSubItemDetailsAction',
   async (
     body: {
       selectedItemId: number;
@@ -1877,7 +1901,7 @@ export const GetOneSubItemDetailsAction = createAsyncThunk(
   }
 );
 export const GetDuplicatedAction = createAsyncThunk(
-  "qc/GetDuplicatedAction",
+  'qc/GetDuplicatedAction',
   async (
     body: { data: any },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1895,7 +1919,7 @@ export const GetDuplicatedAction = createAsyncThunk(
 /////////////////////////////////////////////
 
 export const GetCheckListsDataAndValuesAction = createAsyncThunk(
-  "qc/GetCheckListsDataAndValuesAction",
+  'qc/GetCheckListsDataAndValuesAction',
   async (
     body: { instanceId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1912,7 +1936,7 @@ export const GetCheckListsDataAndValuesAction = createAsyncThunk(
   }
 );
 export const GetOneValueHistoryAction = createAsyncThunk(
-  "qc/GetOneValueHistoryAction",
+  'qc/GetOneValueHistoryAction',
   async (
     body: { valueId: number },
     { rejectWithValue, fulfillWithValue, dispatch, getState }
@@ -1930,7 +1954,7 @@ export const GetOneValueHistoryAction = createAsyncThunk(
 );
 
 export const GetControlCheckListStatesAction = createAsyncThunk(
-  "qc/GetControlCheckListStatesAction",
+  'qc/GetControlCheckListStatesAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -1943,7 +1967,7 @@ export const GetControlCheckListStatesAction = createAsyncThunk(
   }
 );
 export const GetSubItemLevelsAction = createAsyncThunk(
-  "qc/GetSubItemLevelsAction",
+  'qc/GetSubItemLevelsAction',
   async (_, { rejectWithValue, fulfillWithValue, dispatch, getState }) => {
     try {
       const state: any = getState();
@@ -1957,7 +1981,7 @@ export const GetSubItemLevelsAction = createAsyncThunk(
 );
 
 export const QcSlicer = createSlice({
-  name: "qc",
+  name: 'qc',
   initialState,
   reducers: undefined,
   extraReducers: (builder) => {
@@ -1975,6 +1999,21 @@ export const QcSlicer = createSlice({
       )
       .addCase(GetAllOriginalItemsAction.rejected, (state: QcState) => {
         state.originalItems.pending = false;
+      });
+    //#endregion
+    //#region DeleteOriginalItemAction-----
+    builder
+      .addCase(DeleteOriginalItemAction.pending, (state: QcState) => {
+        state.originalItemsDeleteState.pending = true;
+      })
+      .addCase(
+        DeleteOriginalItemAction.fulfilled,
+        (state: QcState, { payload }) => {
+          state.originalItemsDeleteState.pending = false;
+        }
+      )
+      .addCase(DeleteOriginalItemAction.rejected, (state: QcState) => {
+        state.originalItemsDeleteState.pending = false;
       });
     //#endregion
     //#region GetOriginalItemsDataAction-----
