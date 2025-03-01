@@ -61,6 +61,7 @@ import {
   GetOneValueHistory,
   GetSubItemLevels,
   DeleteOriginalItem,
+  DeleteSubItem,
 } from '../../core/QC/qc.service';
 
 const getUserId = (state) => {
@@ -81,6 +82,9 @@ export interface QcState {
     pending: boolean;
   };
   originalItemsDeleteState: {
+    pending: boolean;
+  };
+  subItemsDeleteState: {
     pending: boolean;
   };
 
@@ -311,6 +315,9 @@ const initialState: QcState = {
     pending: false,
   },
   originalItemsDeleteState: {
+    pending: false,
+  },
+  subItemsDeleteState: {
     pending: false,
   },
   selectedOriginalItem: {
@@ -546,6 +553,22 @@ export const DeleteOriginalItemAction = createAsyncThunk(
       const state: any = getState();
       const userId = getUserId(state);
       const { data } = await DeleteOriginalItem(userId, ids);
+      return fulfillWithValue(data);
+    } catch (err) {
+      throw rejectWithValue(err);
+    }
+  }
+);
+export const DeleteSubItemAction = createAsyncThunk(
+  'qc/DeleteSubItemAction',
+  async (
+    { ids }: { ids: string[] },
+    { rejectWithValue, fulfillWithValue, dispatch, getState }
+  ) => {
+    try {
+      const state: any = getState();
+      const userId = getUserId(state);
+      const { data } = await DeleteSubItem(userId, ids);
       return fulfillWithValue(data);
     } catch (err) {
       throw rejectWithValue(err);
@@ -2014,6 +2037,18 @@ export const QcSlicer = createSlice({
       )
       .addCase(DeleteOriginalItemAction.rejected, (state: QcState) => {
         state.originalItemsDeleteState.pending = false;
+      });
+    //#endregion
+    //#region DeleteSubItemAction-----
+    builder
+      .addCase(DeleteSubItemAction.pending, (state: QcState) => {
+        state.subItemsDeleteState.pending = true;
+      })
+      .addCase(DeleteSubItemAction.fulfilled, (state: QcState, { payload }) => {
+        state.subItemsDeleteState.pending = false;
+      })
+      .addCase(DeleteSubItemAction.rejected, (state: QcState) => {
+        state.subItemsDeleteState.pending = false;
       });
     //#endregion
     //#region GetOriginalItemsDataAction-----

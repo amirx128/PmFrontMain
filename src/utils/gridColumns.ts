@@ -800,7 +800,7 @@ export const subItemsGrid = [
     type: 'actions',
     cellClassName: 'actions',
     disableColumnMenu: true,
-    renderType: gridFunctionsEnum.actionEditColumn,
+    renderType: gridFunctionsEnum.actionEditAndRemoveColumn,
   },
 ];
 

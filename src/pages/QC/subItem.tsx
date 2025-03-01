@@ -11,11 +11,14 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 import Grid from '../../components/grid/grid.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { GetAllSubItemsAction } from '../../redux/features/qcSlicer.ts';
+import {
+  DeleteSubItemAction,
+  GetAllSubItemsAction,
+} from '../../redux/features/qcSlicer.ts';
 import AddIcon from '@mui/icons-material/Add';
 import { Dialog, DialogTitle } from '@material-ui/core';
 import CloseIcon from '@mui/icons-material/Close';
@@ -23,6 +26,7 @@ import TuneIcon from '@mui/icons-material/Tune';
 import CustomizeGrid from '../../components/CustomizeGrid/CustomizeGrid.tsx';
 import useCustomCol from '../../hooks/useCustomCol.tsx';
 import { subItemsGrid } from '../../utils/gridColumns.ts';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 interface IInitialStateReducer {
   selectedCheckLists: any[];
   isOpenCheckListsModal: boolean;
@@ -163,11 +167,11 @@ const SubItemsQCList = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<any>();
   const { subItems } = useSelector((state: any) => state.qc);
-
+  const [selectedRows, setSelectedRows] = useState([]);
   const [state, reduceDispatch] = useReducer(reducer, initialStateReducer);
 
   const handleEditClick = (params) => {
-    navigate(`edit/${params.row.id}`);
+    navigate(`edit/${params.id}`);
   };
   const handleOpenItems = (params) => {
     let type;
@@ -203,6 +207,10 @@ const SubItemsQCList = () => {
       payload: { data: params.value, showModal: true },
     });
   };
+  const handleRemoveClick = async (paramas) => {
+    await dispatch(DeleteSubItemAction({ ids: [paramas.id] }));
+    await dispatch(GetAllSubItemsAction());
+  };
   const {
     isLoading: saveGridColumnsLoading,
     isShowModal: isShowCustomizeTableModal,
@@ -215,10 +223,11 @@ const SubItemsQCList = () => {
     handleSaveColumnsChanges,
     handleSelectAll,
   } = useCustomCol(
-    'QC_SUB_ITEMS',
+    'QC_SUB_ITEMS_2',
     subItemsGrid,
     handleEditClick,
-    handleOpenItems
+    handleOpenItems,
+    handleRemoveClick
   );
   useEffect(() => {
     getList();
@@ -230,6 +239,11 @@ const SubItemsQCList = () => {
 
   const handleDoubleClick = (e) => {
     navigate(`/warehouse/details/${e.row.warehouseOrderId}`);
+  };
+
+  const handleDeleteMulti = async () => {
+    await dispatch(DeleteSubItemAction({ ids: selectedRows }));
+    await dispatch(GetAllSubItemsAction());
   };
 
   return (
@@ -252,6 +266,13 @@ const SubItemsQCList = () => {
           <IconButton color="success" onClick={handleShowCustomizeTabelModal}>
             <TuneIcon />
           </IconButton>
+          <IconButton
+            color="error"
+            onClick={handleDeleteMulti}
+            disabled={!selectedRows.length}
+          >
+            <DeleteSweepIcon />
+          </IconButton>
           <Button variant="outlined" onClick={() => navigate('add')}>
             <AddIcon />
             افزودن
@@ -264,6 +285,9 @@ const SubItemsQCList = () => {
               columns={columns}
               rows={subItems?.data ?? []}
               pagination={{}}
+              onRowSelected={(val) => {
+                setSelectedRows(val);
+              }}
             />
             <CustomizeGrid
               showModal={isShowCustomizeTableModal}

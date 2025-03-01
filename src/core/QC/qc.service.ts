@@ -9,6 +9,11 @@ export const DeleteOriginalItem = async (userId, ids) =>
     userId,
     ids,
   });
+export const DeleteSubItem = async (userId, ids) =>
+  await axiosInstance.post(`/QC/DeleteSubItem`, {
+    userId,
+    ids,
+  });
 export const GetOriginalItemsData = async (userId, selectedItemId) =>
   await axiosInstance.post(`/QC/GetOriginalItemsData`, {
     userId,

@@ -11,25 +11,17 @@ import {
   ListItem,
   ListItemText,
 } from '@mui/material';
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from '@mui/x-data-grid';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Grid from '../../components/grid/grid.tsx';
 import { useDispatch, useSelector } from 'react-redux';
-import gridDict from '../../dictionary/gridDict.ts';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
   DeleteOriginalItemAction,
   GetAllOriginalItemsAction,
-  GetOriginalItemsDataAction,
 } from '../../redux/features/qcSlicer.ts';
 import AddIcon from '@mui/icons-material/Add';
 import { Dialog, DialogTitle } from '@material-ui/core';
 import CloseIcon from '@mui/icons-material/Close';
-import EditIcon from '@mui/icons-material/Edit';
 
 import TuneIcon from '@mui/icons-material/Tune';
 import CustomizeGrid from '../../components/CustomizeGrid/CustomizeGrid.tsx';
