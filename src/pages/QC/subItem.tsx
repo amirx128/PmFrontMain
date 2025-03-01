@@ -10,29 +10,19 @@ import {
   List,
   ListItem,
   ListItemText,
-} from "@mui/material";
-import {
-  GridActionsCellItem,
-  GridColDef,
-  GridRenderCellParams,
-} from "@mui/x-data-grid";
-import { useEffect, useReducer, useRef, useState } from "react";
-import Grid from "../../components/grid/grid.tsx";
-import { useDispatch, useSelector } from "react-redux";
-import gridDict from "../../dictionary/gridDict.ts";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  GetAllOriginalItemsAction,
-  GetAllSubItemsAction,
-} from "../../redux/features/qcSlicer.ts";
-import AddIcon from "@mui/icons-material/Add";
-import { Dialog, DialogTitle } from "@material-ui/core";
-import CloseIcon from "@mui/icons-material/Close";
-import EditIcon from "@mui/icons-material/Edit";
-import TuneIcon from "@mui/icons-material/Tune";
-import CustomizeGrid from "../../components/CustomizeGrid/CustomizeGrid.tsx";
-import useCustomCol from "../../hooks/useCustomCol.tsx";
-import { subItemsGrid } from "../../utils/gridColumns.ts";
+} from '@mui/material';
+import { useEffect, useReducer } from 'react';
+import Grid from '../../components/grid/grid.tsx';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { GetAllSubItemsAction } from '../../redux/features/qcSlicer.ts';
+import AddIcon from '@mui/icons-material/Add';
+import { Dialog, DialogTitle } from '@material-ui/core';
+import CloseIcon from '@mui/icons-material/Close';
+import TuneIcon from '@mui/icons-material/Tune';
+import CustomizeGrid from '../../components/CustomizeGrid/CustomizeGrid.tsx';
+import useCustomCol from '../../hooks/useCustomCol.tsx';
+import { subItemsGrid } from '../../utils/gridColumns.ts';
 interface IInitialStateReducer {
   selectedCheckLists: any[];
   isOpenCheckListsModal: boolean;
@@ -72,10 +62,10 @@ const initialStateReducer: IInitialStateReducer = {
   isOpenRelatedProjectsModal: false,
   isOpenRelatedUnitsModal: false,
   isOpenUnitsModal: false,
-  modal: "",
-  type: "",
-  name: "",
-  data: "",
+  modal: '',
+  type: '',
+  name: '',
+  data: '',
 };
 const reducer: any = (
   state: IInitialStateReducer,
@@ -85,83 +75,83 @@ const reducer: any = (
   }
 ) => {
   switch (action.type) {
-    case "CHECKLISTS":
+    case 'CHECKLISTS':
       return {
         ...state,
-        modal: "isOpenCheckListsModal",
-        type: "CHECKLISTS",
-        name: "چک لیست ها",
-        data: "selectedCheckLists",
+        modal: 'isOpenCheckListsModal',
+        type: 'CHECKLISTS',
+        name: 'چک لیست ها',
+        data: 'selectedCheckLists',
         selectedCheckLists: action.payload.data,
         isOpenCheckListsModal: action.payload.showModal,
       };
-    case "FLOORS":
+    case 'FLOORS':
       return {
         ...state,
-        modal: "isOpenFloorsModal",
-        type: "FLOORS",
-        name: "طبقات",
-        data: "selectedFloors",
+        modal: 'isOpenFloorsModal',
+        type: 'FLOORS',
+        name: 'طبقات',
+        data: 'selectedFloors',
         selectedFloors: action.payload.data,
         isOpenFloorsModal: action.payload.showModal,
       };
-    case "PROJECTS":
+    case 'PROJECTS':
       return {
         ...state,
-        modal: "isOpenProjectsModal",
-        type: "PROJECTS",
-        name: "پروژه ها",
-        data: "selectedProjects",
+        modal: 'isOpenProjectsModal',
+        type: 'PROJECTS',
+        name: 'پروژه ها',
+        data: 'selectedProjects',
         selectedProjects: action.payload.data,
         isOpenProjectsModal: action.payload.showModal,
       };
-    case "UNITS":
+    case 'UNITS':
       return {
         ...state,
-        modal: "isOpenUnitsModal",
-        type: "UNITS",
-        name: "واحد ها",
-        data: "selectedUnits",
+        modal: 'isOpenUnitsModal',
+        type: 'UNITS',
+        name: 'واحد ها',
+        data: 'selectedUnits',
         selectedUnits: action.payload.data,
         isOpenUnitsModal: action.payload.showModal,
       };
-    case "RELATED_CHECKLISTS":
+    case 'RELATED_CHECKLISTS':
       return {
         ...state,
-        modal: "isOpenRelatedCheckListsModal",
-        type: "RELATED_CHECKLISTS",
-        name: "چک لیست های مرتبط",
-        data: "selectedRelatedCheckLists",
+        modal: 'isOpenRelatedCheckListsModal',
+        type: 'RELATED_CHECKLISTS',
+        name: 'چک لیست های مرتبط',
+        data: 'selectedRelatedCheckLists',
         selectedRelatedCheckLists: action.payload.data,
         isOpenRelatedCheckListsModal: action.payload.showModal,
       };
-    case "RELATED_FLOORS":
+    case 'RELATED_FLOORS':
       return {
         ...state,
-        modal: "isOpenRelatedFloorsModal",
-        type: "RELATED_FLOORS",
-        name: "طبقات مرتبط",
-        data: "selectedRelatedFloors",
+        modal: 'isOpenRelatedFloorsModal',
+        type: 'RELATED_FLOORS',
+        name: 'طبقات مرتبط',
+        data: 'selectedRelatedFloors',
         selectedRelatedFloors: action.payload.data,
         isOpenRelatedFloorsModal: action.payload.showModal,
       };
-    case "RELATED_PROJECTS":
+    case 'RELATED_PROJECTS':
       return {
         ...state,
-        modal: "isOpenRelatedProjectsModal",
-        type: "RELATED_PROJECTS",
-        name: "پروژه های مرتبط",
-        data: "selectedRelatedProjects",
+        modal: 'isOpenRelatedProjectsModal',
+        type: 'RELATED_PROJECTS',
+        name: 'پروژه های مرتبط',
+        data: 'selectedRelatedProjects',
         selectedRelatedProjects: action.payload.data,
         isOpenRelatedProjectsModal: action.payload.showModal,
       };
-    case "RELATED_UNITS":
+    case 'RELATED_UNITS':
       return {
         ...state,
-        modal: "isOpenRelatedUnitsModal",
-        type: "RELATED_UNITS",
-        name: "واحد های مرتبط",
-        data: "selectedRelatedUnits",
+        modal: 'isOpenRelatedUnitsModal',
+        type: 'RELATED_UNITS',
+        name: 'واحد های مرتبط',
+        data: 'selectedRelatedUnits',
         selectedRelatedUnits: action.payload.data,
         isOpenRelatedUnitsModal: action.payload.showModal,
       };
@@ -182,29 +172,29 @@ const SubItemsQCList = () => {
   const handleOpenItems = (params) => {
     let type;
     switch (params.field) {
-      case "allCheckList":
-        type = "CHECKLISTS";
+      case 'allCheckList':
+        type = 'CHECKLISTS';
         break;
-      case "allFloor":
-        type = "FLOORS";
+      case 'allFloor':
+        type = 'FLOORS';
         break;
-      case "allProjects":
-        type = "PROJECTS";
+      case 'allProjects':
+        type = 'PROJECTS';
         break;
-      case "allUnit":
-        type = "UNITS";
+      case 'allUnit':
+        type = 'UNITS';
         break;
-      case "relatedCheckList":
-        type = "RELATED_CHECKLISTS";
+      case 'relatedCheckList':
+        type = 'RELATED_CHECKLISTS';
         break;
-      case "relatedFloor":
-        type = "RELATED_FLOORS";
+      case 'relatedFloor':
+        type = 'RELATED_FLOORS';
         break;
-      case "relatedProjects":
-        type = "RELATED_PROJECTS";
+      case 'relatedProjects':
+        type = 'RELATED_PROJECTS';
         break;
-      case "relatedUnit":
-        type = "RELATED_UNITS";
+      case 'relatedUnit':
+        type = 'RELATED_UNITS';
         break;
     }
     // @ts-ignore
@@ -225,7 +215,7 @@ const SubItemsQCList = () => {
     handleSaveColumnsChanges,
     handleSelectAll,
   } = useCustomCol(
-    "QC_SUB_ITEMS",
+    'QC_SUB_ITEMS',
     subItemsGrid,
     handleEditClick,
     handleOpenItems
@@ -248,21 +238,21 @@ const SubItemsQCList = () => {
       xs={12}
       sx={{
         borderRadius: 2,
-        boxShadow: "0px 2px 10px 0px rgba(58, 53, 65, 0.1)",
-        marginBottom: "10px",
+        boxShadow: '0px 2px 10px 0px rgba(58, 53, 65, 0.1)',
+        marginBottom: '10px',
       }}
     >
       <Card sx={{ borderRadius: 3 }}>
         <CardHeader
-          style={{ textAlign: "right" }}
-          title="آیتم اصلی"
-          titleTypographyProps={{ variant: "h6" }}
+          style={{ textAlign: 'right' }}
+          title="آیتم فرعی"
+          titleTypographyProps={{ variant: 'h6' }}
         />
-        <Box sx={{ display: "flex", justifyContent: "end", pr: 10, gap: 5 }}>
+        <Box sx={{ display: 'flex', justifyContent: 'end', pr: 10, gap: 5 }}>
           <IconButton color="success" onClick={handleShowCustomizeTabelModal}>
             <TuneIcon />
           </IconButton>
-          <Button variant="outlined" onClick={() => navigate("add")}>
+          <Button variant="outlined" onClick={() => navigate('add')}>
             <AddIcon />
             افزودن
           </Button>
@@ -288,27 +278,27 @@ const SubItemsQCList = () => {
           </>
         )}
         <Dialog
-          open={state[state["modal"]]}
+          open={state[state['modal']]}
           onClose={() => {
             // @ts-ignore
             reduceDispatch({
-              type: state["type"],
+              type: state['type'],
               payload: { data: [], showModal: false },
             });
           }}
         >
-          <DialogTitle>{state["name"]}</DialogTitle>
+          <DialogTitle>{state['name']}</DialogTitle>
           <IconButton
             aria-label="close"
             onClick={() => {
               // @ts-ignore
               reduceDispatch({
-                type: state["type"],
+                type: state['type'],
                 payload: { data: [], showModal: false },
               });
             }}
             sx={{
-              position: "absolute",
+              position: 'absolute',
               right: 8,
               top: 8,
               color: (theme) => theme.palette.grey[500],
@@ -317,19 +307,19 @@ const SubItemsQCList = () => {
             <CloseIcon />
           </IconButton>
           <DialogContent>
-            <div style={{ width: "30rem", padding: "1.6rem" }}>
-              {state[state["data"]]?.length > 0 && (
+            <div style={{ width: '30rem', padding: '1.6rem' }}>
+              {state[state['data']]?.length > 0 && (
                 <List>
-                  {state[state["data"]].map((subItem) => (
+                  {state[state['data']].map((subItem) => (
                     <ListItem key={subItem.id}>
                       <ListItemText>{subItem?.name}</ListItemText>
                     </ListItem>
                   ))}
                 </List>
               )}
-              {state[state["data"]]?.length > 0 || (
+              {state[state['data']]?.length > 0 || (
                 <Typography>
-                  آیتم فرعی انتخاب شده فاقد {state["name"]} میباشد
+                  آیتم فرعی انتخاب شده فاقد {state['name']} میباشد
                 </Typography>
               )}
             </div>
